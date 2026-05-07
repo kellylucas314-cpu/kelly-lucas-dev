@@ -100,6 +100,34 @@
   font-style: italic;
   font-display: swap;
 }
+@font-face {
+  font-family: "Heliora";
+  src: url("assets/fonts/Heliora-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Heliora";
+  src: url("assets/fonts/Heliora-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Heliora";
+  src: url("assets/fonts/Heliora-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Heliora";
+  src: url("assets/fonts/Heliora-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* ---------- Tokens ---------- */
 :root {
@@ -124,10 +152,10 @@
   --block-pad-x: clamp(28px, 5vw, 80px);
 
   /* === ACTIVE FONTS ===
-     Body uses --font-active (Neutiva). Display uses --font-display-active (Surgena).
+     Body and display both use Heliora.
      Swap either independently by editing the string below. */
-  --font-active: "Neutiva";
-  --font-display-active: "Surgena";
+  --font-active: "Heliora";
+  --font-display-active: "Heliora";
 
   --font-sans: var(--font-active), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-display: var(--font-display-active), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
