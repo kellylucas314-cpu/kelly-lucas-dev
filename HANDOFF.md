@@ -6,7 +6,7 @@ Last updated: 2026-05-07
 
 | Project | Path | Status | Public? |
 |---|---|---|---|
-| **kellylucas.dev** (personal site) | `/home/kellybot/kelly-lucas-dev` | Active dev | Eventually deploys to Vercel |
+| **kellylucas.dev** (personal site) | `/home/kellybot/kelly-lucas-dev` | Live ✅ | Deployed on Vercel, auto-deploys from `main` |
 | **HelioFlux** (investor site) | `/home/kellybot/.openclaw/workspace/helioflux-website` (separate codebase, runs at `localhost:8067`) | Already live, font-testing only | Already live |
 
 Kelly is **only pushing to kellylucas.dev**. HelioFlux is a separate project tested in parallel.
@@ -126,6 +126,7 @@ The 14 batch-3 test pages (altone, certia, company, just-sans, linear-grotesk, l
 - /frontend-design skill was invoked — produced a list of next moves (display font swap, motion, "made in public" signature, accent color).
 - **Split display font from body:** added Surgena `@font-face` blocks to style.css, introduced `--font-display-active` token. Display headlines (`.display`, `.quote blockquote`, `.footer-mail`) now use Surgena; body stays on Neutiva.
 - **Added "made in public" signature** in the footer above `.footer-bottom`: pulsing dot + dot-separated status string (`v0.5 · last edited 2026-05-07 · 47 fonts tested · 1 tool shipped · made in public`). Bump these strings as the site evolves — the version number, last-edited date, and tally are the bits that should drift over time.
+- **🚀 SHIPPED.** `git init` → first commit `05e0966` ("v0.5 — pre-deploy snapshot") → public GitHub repo at `https://github.com/kellylucas314-cpu/kelly-lucas-dev` → imported into Vercel as project `kelly-lucas-dev-site` (note: project name has `-site` suffix because `kelly-lucas-dev` was soft-locked from a prior attempt) → custom domain `kellylucas.dev` attached, SSL valid. Vercel domain config: `www.kellylucas.dev` is canonical Production, apex `kellylucas.dev` redirects to www via 307. Kelly accepted the dated www-canonical default for now; can flip to apex-canonical anytime by editing both domain entries. Auto-deploys from `main` are now live.
 
 ## ⚠️ Gotcha: not a git repo
 
