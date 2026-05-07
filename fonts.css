@@ -1,0 +1,809 @@
+/* =========================================================
+   FONT PLAYGROUND
+   To add a new font:
+   1. Drop the file in assets/fonts/
+   2. Add an @font-face block below
+   3. Duplicate a <section class="specimen"> in all-fonts.html
+      and give it a new class (e.g. specimen--newfont)
+   4. Add a rule that sets font-family for .specimen--newfont
+   ========================================================= */
+
+/* ---------- @font-face declarations ---------- */
+@font-face {
+  font-family: "After";
+  src: url("assets/fonts/After-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CS Anatole";
+  src: url("assets/fonts/CSAnatole-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CS Anatole";
+  src: url("assets/fonts/CSAnatole-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CS Anatole Reverse";
+  src: url("assets/fonts/CSAnatole-ReverseItalic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FR Grey";
+  src: url("assets/fonts/FRGrey-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "FR Grey";
+  src: url("assets/fonts/FRGrey-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Ghetyon Lite";
+  src: url("assets/fonts/Ghetyon-Lite.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Halfre";
+  src: url("assets/fonts/Halfre.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Lenia Sans — multi-weight family */
+@font-face {
+  font-family: "Lenia Sans";
+  src: url("assets/fonts/LeniaSans-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lenia Sans";
+  src: url("assets/fonts/LeniaSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lenia Sans";
+  src: url("assets/fonts/LeniaSans-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lenia Sans";
+  src: url("assets/fonts/LeniaSans-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lenia Sans";
+  src: url("assets/fonts/LeniaSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lenia Sans";
+  src: url("assets/fonts/LeniaSans-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Mazegin";
+  src: url("assets/fonts/Mazegin.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Nuixyber Pro";
+  src: url("assets/fonts/NuixyberPro-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Quano";
+  src: url("assets/fonts/Quano.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Prospec";
+  src: url("assets/fonts/Prospec-ExtraLight.otf") format("opentype");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Qalget";
+  src: url("assets/fonts/Qalget-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Qalget Slant";
+  src: url("assets/fonts/Qalget-Slant.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Qorans";
+  src: url("assets/fonts/Qorans.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Quanta";
+  src: url("assets/fonts/Quanta.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Quantie";
+  src: url("assets/fonts/Quantie.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "GC Quark";
+  src: url("assets/fonts/GCQuark.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Qubix family */
+@font-face {
+  font-family: "Qubix";
+  src: url("assets/fonts/Qubix-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Qubix";
+  src: url("assets/fonts/Qubix-Italic.woff") format("woff");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Qubix";
+  src: url("assets/fonts/Qubix-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Qumelan family */
+@font-face {
+  font-family: "Qumelan";
+  src: url("assets/fonts/Qumelan.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Qumelan";
+  src: url("assets/fonts/Qumelan-Thin.woff") format("woff");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Qumelan";
+  src: url("assets/fonts/Qumelan-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Surgena family */
+@font-face {
+  font-family: "Surgena";
+  src: url("assets/fonts/Surgena-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Surgena";
+  src: url("assets/fonts/Surgena-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Surgena";
+  src: url("assets/fonts/Surgena-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Surgena";
+  src: url("assets/fonts/Surgena-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Surgena";
+  src: url("assets/fonts/Surgena-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Surgena";
+  src: url("assets/fonts/Surgena-BoldItalic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* === BATCH 2 === */
+
+/* Adriatic — full family */
+@font-face { font-family: "Adriatic"; src: url("assets/fonts/Adriatic-Light.woff2") format("woff2"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Adriatic"; src: url("assets/fonts/Adriatic-Medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Adriatic"; src: url("assets/fonts/Adriatic-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+
+@font-face { font-family: "Boulan"; src: url("assets/fonts/Boulan.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Cornea"; src: url("assets/fonts/Cornea.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+
+/* Darky — full family */
+@font-face { font-family: "Darky"; src: url("assets/fonts/Darky-Light.ttf") format("truetype"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Darky"; src: url("assets/fonts/Darky-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Darky"; src: url("assets/fonts/Darky-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Darky"; src: url("assets/fonts/Darky-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Darky"; src: url("assets/fonts/Darky-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Darky"; src: url("assets/fonts/Darky-BoldItalic.ttf") format("truetype"); font-weight: 700; font-style: italic; font-display: swap; }
+
+@font-face { font-family: "Forgate"; src: url("assets/fonts/Forgate.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+
+/* Heliora — full family */
+@font-face { font-family: "Heliora"; src: url("assets/fonts/Heliora-Light.ttf") format("truetype"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Heliora"; src: url("assets/fonts/Heliora-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Heliora"; src: url("assets/fonts/Heliora-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Heliora"; src: url("assets/fonts/Heliora-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+
+@font-face { font-family: "JUST Sans Outline"; src: url("assets/fonts/JustSansOutline-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "JUST Sans Outline"; src: url("assets/fonts/JustSansOutline-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+
+@font-face { font-family: "Lupina"; src: url("assets/fonts/Lupina-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Lupina"; src: url("assets/fonts/Lupina-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+
+/* Molecule */
+@font-face { font-family: "GC Molecule"; src: url("assets/fonts/GCMolecule-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Molecule"; src: url("assets/fonts/GCMolecule-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Molecule"; src: url("assets/fonts/GCMolecule-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+
+/* Monza */
+@font-face { font-family: "GC Monza"; src: url("assets/fonts/GCMonzaSans-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Monza"; src: url("assets/fonts/GCMonzaSans-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Monza"; src: url("assets/fonts/GCMonzaSans-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Monza Condensed"; src: url("assets/fonts/GCMonzaSans-Condensed.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Monza Expanded"; src: url("assets/fonts/GCMonzaSans-Expanded.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+
+/* Neutiva */
+@font-face { font-family: "Neutiva"; src: url("assets/fonts/Neutiva-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Neutiva"; src: url("assets/fonts/Neutiva-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Neutiva"; src: url("assets/fonts/Neutiva-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Neutiva"; src: url("assets/fonts/Neutiva-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+
+/* Protage — full 8-weight family */
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-Thin.woff2") format("woff2"); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-ExtraLight.woff2") format("woff2"); font-weight: 200; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-Light.woff2") format("woff2"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-Medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-SemiBold.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-ExtraBold.woff2") format("woff2"); font-weight: 800; font-style: normal; font-display: swap; }
+
+/* Raela */
+@font-face { font-family: "Raela"; src: url("assets/fonts/Raela-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Raela"; src: url("assets/fonts/Raela-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Raela"; src: url("assets/fonts/Raela-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Raela"; src: url("assets/fonts/Raela-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+
+/* Solo Sans */
+@font-face { font-family: "Solo Sans"; src: url("assets/fonts/solosans-light-webfont.ttf") format("truetype"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Solo Sans"; src: url("assets/fonts/solosans-regular-webfont.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Solo Sans"; src: url("assets/fonts/solosans-bold-webfont.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+
+/* Stark */
+@font-face { font-family: "Stark"; src: url("assets/fonts/Stark-Book.otf") format("opentype"); font-weight: 350; font-style: normal; font-display: swap; }
+@font-face { font-family: "Stark"; src: url("assets/fonts/Stark-Regular.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Stark"; src: url("assets/fonts/Stark-Bold.otf") format("opentype"); font-weight: 700; font-style: normal; font-display: swap; }
+
+/* Syabil */
+@font-face { font-family: "Syabil"; src: url("assets/fonts/Syabil-Book.ttf") format("truetype"); font-weight: 350; font-style: normal; font-display: swap; }
+@font-face { font-family: "Syabil"; src: url("assets/fonts/Syabil-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Syabil"; src: url("assets/fonts/Syabil-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Syabil"; src: url("assets/fonts/Syabil-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Syabil"; src: url("assets/fonts/Syabil-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+
+@font-face { font-family: "Texas"; src: url("assets/fonts/Texas.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+
+/* Welfare — condensed */
+@font-face { font-family: "Welfare"; src: url("assets/fonts/Welfare-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Welfare"; src: url("assets/fonts/Welfare-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Welfare"; src: url("assets/fonts/Welfare-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Welfare"; src: url("assets/fonts/Welfare-BoldItalic.woff2") format("woff2"); font-weight: 700; font-style: italic; font-display: swap; }
+
+/* Add new @font-face blocks here as fonts arrive. */
+
+
+/* ---------- Page shell ---------- */
+:root {
+  --bg: #f4f2ec;
+  --ink: #14201a;
+  --ink-soft: #4a544f;
+  --ink-mute: #8a918d;
+  --line: rgba(20, 32, 26, 0.16);
+  --mint: #c9e6c9;
+  --max-w: 1200px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: inherit; }
+
+/* ---------- Header ---------- */
+.fp-header {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 40px clamp(20px, 4vw, 48px) 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.fp-back {
+  text-decoration: none;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  width: fit-content;
+}
+
+.fp-back:hover { color: var(--ink); }
+
+.fp-title {
+  font-size: clamp(32px, 5vw, 56px);
+  letter-spacing: -0.03em;
+  margin: 0;
+  font-weight: 500;
+}
+
+.fp-sub {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 16px;
+}
+
+/* ---------- Specimens ---------- */
+.specimen {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 72px) clamp(20px, 4vw, 48px);
+  border-bottom: 1px solid var(--line);
+}
+
+.specimen__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(28px, 4vw, 48px);
+}
+
+.specimen__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Inter Tight", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--mint);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+.specimen__meta {
+  font-family: "Inter Tight", sans-serif;
+  font-size: 13px;
+  color: var(--ink-mute);
+}
+
+.specimen__body {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, 3vw, 40px);
+}
+
+.huge {
+  margin: 0;
+  font-size: clamp(56px, 11vw, 168px);
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.mid {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  font-weight: 400;
+  max-width: 22ch;
+}
+
+.small {
+  margin: 0;
+  font-size: clamp(24px, 3vw, 40px);
+  letter-spacing: -0.02em;
+}
+
+.para {
+  margin: 0;
+  max-width: 60ch;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+.alphabet {
+  margin: 0;
+  font-size: clamp(18px, 2vw, 24px);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  color: var(--ink-mute);
+}
+
+/* ---------- Per-font assignments ----------
+   Apply the new font to the headline-style elements
+   inside its specimen. Body (.para) stays in Inter
+   Tight unless the font is meant for body too.
+*/
+
+.specimen--after .huge,
+.specimen--after .mid,
+.specimen--after .small {
+  font-family: "After", sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.specimen--inter .huge,
+.specimen--inter .mid,
+.specimen--inter .small {
+  font-family: "Inter Tight", sans-serif;
+  font-weight: 500;
+}
+
+.specimen--anatole .huge,
+.specimen--anatole .mid,
+.specimen--anatole .small {
+  font-family: "CS Anatole", sans-serif;
+}
+
+.specimen--anatole-italic .huge,
+.specimen--anatole-italic .mid,
+.specimen--anatole-italic .small {
+  font-family: "CS Anatole", sans-serif;
+  font-style: italic;
+}
+
+.specimen--anatole-reverse .huge,
+.specimen--anatole-reverse .mid,
+.specimen--anatole-reverse .small {
+  font-family: "CS Anatole Reverse", sans-serif;
+}
+
+.specimen--frgrey .huge,
+.specimen--frgrey .mid,
+.specimen--frgrey .small {
+  font-family: "FR Grey", sans-serif;
+}
+
+.specimen--frgrey-italic .huge,
+.specimen--frgrey-italic .mid,
+.specimen--frgrey-italic .small {
+  font-family: "FR Grey", sans-serif;
+  font-style: italic;
+}
+
+.specimen--ghetyon .huge,
+.specimen--ghetyon .mid,
+.specimen--ghetyon .small {
+  font-family: "Ghetyon Lite", sans-serif;
+}
+
+.specimen--halfre .huge,
+.specimen--halfre .mid,
+.specimen--halfre .small {
+  font-family: "Halfre", sans-serif;
+}
+
+.specimen--lenia .huge,
+.specimen--lenia .mid,
+.specimen--lenia .small {
+  font-family: "Lenia Sans", sans-serif;
+  font-weight: 500;
+}
+
+.specimen--lenia-bold .huge,
+.specimen--lenia-bold .mid,
+.specimen--lenia-bold .small {
+  font-family: "Lenia Sans", sans-serif;
+  font-weight: 700;
+}
+
+.specimen--mazegin .huge,
+.specimen--mazegin .mid,
+.specimen--mazegin .small {
+  font-family: "Mazegin", sans-serif;
+}
+
+.specimen--nuixyber .huge,
+.specimen--nuixyber .mid,
+.specimen--nuixyber .small {
+  font-family: "Nuixyber Pro", sans-serif;
+}
+
+.specimen--quano .huge,
+.specimen--quano .mid,
+.specimen--quano .small {
+  font-family: "Quano", sans-serif;
+}
+
+.specimen--prospec .huge,
+.specimen--prospec .mid,
+.specimen--prospec .small {
+  font-family: "Prospec", sans-serif;
+  font-weight: 200;
+}
+
+.specimen--qalget .huge,
+.specimen--qalget .mid,
+.specimen--qalget .small {
+  font-family: "Qalget", sans-serif;
+}
+
+.specimen--qalget-slant .huge,
+.specimen--qalget-slant .mid,
+.specimen--qalget-slant .small {
+  font-family: "Qalget Slant", sans-serif;
+}
+
+.specimen--qorans .huge,
+.specimen--qorans .mid,
+.specimen--qorans .small {
+  font-family: "Qorans", sans-serif;
+}
+
+.specimen--quanta .huge,
+.specimen--quanta .mid,
+.specimen--quanta .small {
+  font-family: "Quanta", sans-serif;
+}
+
+.specimen--quantie .huge,
+.specimen--quantie .mid,
+.specimen--quantie .small {
+  font-family: "Quantie", sans-serif;
+}
+
+.specimen--quark .huge,
+.specimen--quark .mid,
+.specimen--quark .small {
+  font-family: "GC Quark", sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.specimen--qubix .huge,
+.specimen--qubix .mid,
+.specimen--qubix .small {
+  font-family: "Qubix", sans-serif;
+}
+
+.specimen--qumelan .huge,
+.specimen--qumelan .mid,
+.specimen--qumelan .small {
+  font-family: "Qumelan", sans-serif;
+}
+
+.specimen--qumelan-thin .huge,
+.specimen--qumelan-thin .mid,
+.specimen--qumelan-thin .small {
+  font-family: "Qumelan", sans-serif;
+  font-weight: 200;
+}
+
+.specimen--surgena .huge,
+.specimen--surgena .mid,
+.specimen--surgena .small {
+  font-family: "Surgena", sans-serif;
+  font-weight: 500;
+}
+
+.specimen--surgena-bold .huge,
+.specimen--surgena-bold .mid,
+.specimen--surgena-bold .small {
+  font-family: "Surgena", sans-serif;
+  font-weight: 700;
+}
+
+/* === BATCH 2 specimen rules === */
+.specimen--adriatic .huge, .specimen--adriatic .mid, .specimen--adriatic .small { font-family: "Adriatic", sans-serif; font-weight: 500; }
+.specimen--boulan   .huge, .specimen--boulan   .mid, .specimen--boulan   .small { font-family: "Boulan", sans-serif; font-weight: 700; }
+.specimen--cornea   .huge, .specimen--cornea   .mid, .specimen--cornea   .small { font-family: "Cornea", sans-serif; }
+.specimen--darky    .huge, .specimen--darky    .mid, .specimen--darky    .small { font-family: "Darky", sans-serif; font-weight: 500; }
+.specimen--forgate  .huge, .specimen--forgate  .mid, .specimen--forgate  .small { font-family: "Forgate", sans-serif; }
+.specimen--heliora  .huge, .specimen--heliora  .mid, .specimen--heliora  .small { font-family: "Heliora", sans-serif; font-weight: 500; }
+.specimen--just     .huge, .specimen--just     .mid, .specimen--just     .small { font-family: "JUST Sans Outline", sans-serif; font-weight: 700; }
+.specimen--lupina   .huge, .specimen--lupina   .mid, .specimen--lupina   .small { font-family: "Lupina", sans-serif; }
+.specimen--molecule .huge, .specimen--molecule .mid, .specimen--molecule .small { font-family: "GC Molecule", sans-serif; font-weight: 500; }
+.specimen--monza    .huge, .specimen--monza    .mid, .specimen--monza    .small { font-family: "GC Monza", sans-serif; font-weight: 500; }
+.specimen--monza-condensed .huge, .specimen--monza-condensed .mid, .specimen--monza-condensed .small { font-family: "GC Monza Condensed", sans-serif; }
+.specimen--monza-expanded  .huge, .specimen--monza-expanded  .mid, .specimen--monza-expanded  .small { font-family: "GC Monza Expanded", sans-serif; }
+.specimen--neutiva  .huge, .specimen--neutiva  .mid, .specimen--neutiva  .small { font-family: "Neutiva", sans-serif; font-weight: 500; }
+.specimen--protage  .huge, .specimen--protage  .mid, .specimen--protage  .small { font-family: "GC Protage", sans-serif; font-weight: 500; }
+.specimen--raela    .huge, .specimen--raela    .mid, .specimen--raela    .small { font-family: "Raela", sans-serif; font-weight: 500; }
+.specimen--solo     .huge, .specimen--solo     .mid, .specimen--solo     .small { font-family: "Solo Sans", sans-serif; }
+.specimen--stark    .huge, .specimen--stark    .mid, .specimen--stark    .small { font-family: "Stark", sans-serif; }
+.specimen--syabil   .huge, .specimen--syabil   .mid, .specimen--syabil   .small { font-family: "Syabil", sans-serif; font-weight: 500; }
+.specimen--texas    .huge, .specimen--texas    .mid, .specimen--texas    .small { font-family: "Texas", sans-serif; }
+.specimen--welfare  .huge, .specimen--welfare  .mid, .specimen--welfare  .small { font-family: "Welfare", sans-serif; }
+
+/* Add new per-font rules below as fonts arrive. */
+
+
+/* ---------- Section divider (Core / Accent) ---------- */
+.fp-divider {
+  max-width: var(--max-w);
+  margin: clamp(48px, 8vw, 96px) auto 0;
+  padding: 0 clamp(20px, 4vw, 48px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fp-divider__chip {
+  font-family: "Inter Tight", sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--mint);
+  padding: 6px 14px;
+  border-radius: 999px;
+  align-self: flex-start;
+  font-weight: 500;
+}
+
+.fp-divider__text {
+  font-family: "Inter Tight", sans-serif;
+  margin: 0;
+  font-size: 15px;
+  color: var(--ink-soft);
+  max-width: 64ch;
+}
+
+/* ---------- Shortlist page: BIG prominent font names ---------- */
+.shortlist-page .specimen__head {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: clamp(20px, 3vw, 32px);
+}
+
+.shortlist-page .specimen__chip {
+  font-family: "Boulan", "Inter Tight", sans-serif;
+  font-size: clamp(40px, 7vw, 92px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--mint);
+  padding: 0.16em 0.36em;
+  border-radius: 999px;
+  display: inline-block;
+  width: auto;
+}
+
+/* Section-colored bubbles */
+.shortlist-page .specimen--plus-jakarta   .specimen__chip { background: #c9e6c9; } /* mint — priority */
+.shortlist-page .specimen--workhorse      .specimen__chip { background: #f5e3a8; } /* butter yellow — supportive */
+.shortlist-page .specimen--different      .specimen__chip { background: #e3e3ee; } /* lilac — set apart */
+.shortlist-page .specimen--accent-group   .specimen__chip { background: #f5d0c0; } /* peach — playful */
+.shortlist-page .specimen--cut            .specimen__chip { background: #d8d3c8; } /* warm gray — cut */
+
+.shortlist-page .specimen__meta {
+  font-family: "Inter Tight", sans-serif;
+  font-size: 14px;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ---------- Footer ---------- */
+.fp-footer {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 32px clamp(20px, 4vw, 48px) 64px;
+  font-size: 14px;
+  color: var(--ink-mute);
+}
+
+.fp-footer code {
+  background: rgba(20, 32, 26, 0.06);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}

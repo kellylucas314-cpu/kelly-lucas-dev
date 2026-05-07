@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kelly Lucas</title>
+  <meta name="description" content="Personal site of Kelly Lucas." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a href="/" class="logo">
+      <span class="logo-mark"></span>
+      Kelly Lucas
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#now">Now</a>
+      <a href="all-fonts.html">Fonts</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="page">
+
+    <!-- HERO BLOCK -->
+    <section class="block block--mint hero">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>a personal site</span>
+      </div>
+      <h1 class="display balance">
+        Learning<br />
+        to build<br />
+        the web.
+      </h1>
+      <div class="hero-aside">
+        <p>
+          A small corner of the internet by Kelly Lucas. Notes, projects, and
+          unfinished things being made in public.
+        </p>
+        <a href="#work" class="cta">
+          <span class="cta__label">See what's here</span>
+          <span class="cta__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <!-- INTRO BLOCK -->
+    <section id="about" class="block block--cream split">
+      <div class="dot-tag dot-tag--top-left">
+        <span class="dot-tag__dot"></span>
+        <span>about</span>
+      </div>
+      <div class="split-left">
+        <p class="lede balance">
+          Hi, I'm Kelly. I'm using this site as a place to practice web
+          development out in the open. Every page here is something I built
+          while figuring it out.
+        </p>
+      </div>
+      <div class="split-right">
+        <p>
+          I'm drawn to clean, considered design and the kind of code that gets
+          out of the way. Right now I'm focused on the fundamentals: HTML, CSS,
+          and just enough JavaScript to make things feel alive.
+        </p>
+      </div>
+    </section>
+
+    <!-- BIG STATEMENT BLOCK -->
+    <section class="block block--mint statement">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>the idea</span>
+      </div>
+      <h2 class="display display--md balance">
+        Build slowly.<br />
+        Ship anyway.<br />
+        Learn in public.
+      </h2>
+    </section>
+
+    <!-- THREE-UP CARDS -->
+    <section id="work" class="block--bare three-up">
+      <div class="three-up__head">
+        <div class="dot-tag">
+          <span class="dot-tag__dot"></span>
+          <span>what I'm making</span>
+        </div>
+      </div>
+      <div class="card-grid u-3cols">
+        <article class="card">
+          <div class="card__top">
+            <div class="dot-tag">
+              <span class="dot-tag__dot"></span>
+              <span>tool</span>
+            </div>
+            <h3 class="card__title balance">YouTube Transcript Generator</h3>
+            <p class="card__desc">Paste a YouTube link and turn captions into a clean Markdown transcript.</p>
+          </div>
+          <a href="https://kelly-youtube-transcriber.vercel.app" target="_blank" rel="noopener noreferrer" class="cta">
+            <span class="cta__label">Open tool</span>
+            <span class="cta__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+              </svg>
+            </span>
+          </a>
+        </article>
+        <article class="card">
+          <div class="card__top">
+            <div class="dot-tag">
+              <span class="dot-tag__dot"></span>
+              <span>project two</span>
+            </div>
+            <h3 class="card__title balance">A short, confident headline about this project.</h3>
+          </div>
+          <a href="#" class="cta">
+            <span class="cta__label">Read more</span>
+            <span class="cta__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+              </svg>
+            </span>
+          </a>
+        </article>
+        <article class="card">
+          <div class="card__top">
+            <div class="dot-tag">
+              <span class="dot-tag__dot"></span>
+              <span>project three</span>
+            </div>
+            <h3 class="card__title balance">A short, confident headline about this project.</h3>
+          </div>
+          <a href="#" class="cta">
+            <span class="cta__label">Read more</span>
+            <span class="cta__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+              </svg>
+            </span>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- NOW BLOCK -->
+    <section id="now" class="block block--cream now">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>now</span>
+      </div>
+      <h2 class="display display--sm">Currently</h2>
+      <ul class="now-list">
+        <li>
+          <span class="now-label">Building</span>
+          <span class="now-body">This very website, one block at a time.</span>
+        </li>
+        <li>
+          <span class="now-label">Reading</span>
+          <span class="now-body">CSS and HTML docs, slowly and properly.</span>
+        </li>
+        <li>
+          <span class="now-label">Next up</span>
+          <span class="now-body">Hooking the site up to a real domain.</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- QUOTE BLOCK -->
+    <section class="block block--mint quote">
+      <div class="dot-tag dot-tag--top-left">
+        <span class="dot-tag__dot"></span>
+        <span>a thought</span>
+      </div>
+      <blockquote class="balance">
+        "The best way to learn is to make the thing you wish existed, badly,
+        and then make it less badly."
+      </blockquote>
+    </section>
+
+  </main>
+
+  <footer id="contact" class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <span class="footer-tag">say hi</span>
+        <a class="footer-mail" href="mailto:hello@kellylucas.dev">hello@kellylucas.dev</a>
+      </div>
+      <p class="footer-signature" aria-label="Build status">
+        <span class="footer-signature__dot" aria-hidden="true"></span>
+        <span>v0.5</span>
+        <span aria-hidden="true">·</span>
+        <span>last edited 2026-05-07</span>
+        <span aria-hidden="true">·</span>
+        <span>47 fonts tested</span>
+        <span aria-hidden="true">·</span>
+        <span>1 tool shipped</span>
+        <span aria-hidden="true">·</span>
+        <span>made in public</span>
+      </p>
+      <div class="footer-bottom">
+        <span class="footer-logo">Kelly Lucas</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="#work">Work</a>
+          <a href="#about">About</a>
+          <a href="#now">Now</a>
+        </nav>
+        <span class="footer-meta">&copy; <span id="year"></span> Kelly Lucas</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Node (not used yet, but in case)
+node_modules/
+.env
+.env.local
+
+# Vercel
+.vercel
