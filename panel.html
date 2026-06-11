@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instrument Panel · Kelly Lucas</title>
+  <meta name="description" content="Every lab needs a wall of switches nobody fully understands. None of these are load-bearing." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='5' fill='%23b1d8b3' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <span class="logo-mark" id="logoMark"></span>
+      Kelly Lucas
+      <span class="version-pill" aria-hidden="true">v0.7</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#now">Now</a>
+      <a href="all-fonts.html">Fonts</a>
+      <a href="quotes.html">Spark</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="page">
+
+    <section class="block block--lilac hero">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>controls</span>
+      </div>
+      <h1 class="display balance">The instrument<br />panel.</h1>
+      <div class="hero-aside">
+        <p class="scribble">(none of these are load-bearing)</p>
+        <p>
+          Every lab needs a wall of switches nobody fully understands. These
+          all do something. Nothing breaks. Probably.
+        </p>
+        <a href="#instruments" class="cta">
+          <span class="cta__label">Touch things</span>
+          <span class="cta__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <section id="instruments" class="panel-grid" aria-label="Instruments">
+
+      <div class="instrument instrument--cream">
+        <div class="dot-tag">
+          <span class="dot-tag__dot"></span>
+          <span>instrument 01</span>
+        </div>
+        <h2 class="instrument__title">The forbidden button</h2>
+        <div class="instrument__body">
+          <button type="button" class="danger-button" id="dangerBtn">do not<br />press</button>
+          <p class="scribble danger-count" id="dangerCount"></p>
+        </div>
+      </div>
+
+      <div class="instrument instrument--ink">
+        <div class="dot-tag">
+          <span class="dot-tag__dot"></span>
+          <span>instrument 02</span>
+        </div>
+        <h2 class="instrument__title">Vibe oscilloscope</h2>
+        <div class="instrument__body">
+          <canvas class="scope" id="scope" aria-label="Decorative oscilloscope wave"></canvas>
+          <div class="scope-controls">
+            <label>
+              chaos
+              <input type="range" id="freq" min="1" max="14" value="4" />
+            </label>
+            <label>
+              enthusiasm
+              <input type="range" id="amp" min="6" max="64" value="30" />
+            </label>
+          </div>
+          <p class="scribble">(this measures nothing. beautifully)</p>
+        </div>
+      </div>
+
+      <div class="instrument instrument--mint">
+        <div class="dot-tag">
+          <span class="dot-tag__dot"></span>
+          <span>instrument 03</span>
+        </div>
+        <h2 class="instrument__title">Environmental controls</h2>
+        <div class="instrument__body">
+          <div class="switch-row">
+            <label class="switch">
+              <span>gravity<span class="switch-note">flips the lab</span></span>
+              <input type="checkbox" id="fxFlip" />
+            </label>
+            <label class="switch">
+              <span>night shift<span class="switch-note">inverts everything</span></span>
+              <input type="checkbox" id="fxInvert" />
+            </label>
+            <label class="switch">
+              <span>wiggle mode<span class="switch-note">the headlines get excited</span></span>
+              <input type="checkbox" id="fxWiggle" />
+            </label>
+            <label class="switch">
+              <span>serious mode<span class="switch-note">removes all fun</span></span>
+              <input type="checkbox" id="fxSerious" />
+            </label>
+          </div>
+          <p class="scribble">(all reversible. the lab has seen worse)</p>
+        </div>
+      </div>
+
+      <div class="instrument instrument--lilac">
+        <div class="dot-tag">
+          <span class="dot-tag__dot"></span>
+          <span>instrument 04</span>
+        </div>
+        <h2 class="instrument__title">Vibe meter</h2>
+        <div class="instrument__body">
+          <div class="gauge" role="img" aria-label="Vibe meter reading: immaculate">
+            <div class="gauge-needle" id="gaugeNeedle"></div>
+          </div>
+          <p class="scribble gauge-label">current vibes: immaculate</p>
+          <button type="button" class="save-spark" id="recalBtn" style="align-self: center;">Recalibrate</button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <span class="footer-tag">back to the lab</span>
+        <a class="footer-mail" href="index.html">kellylucas.dev</a>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-logo">Kelly Lucas</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="log.html">Log</a>
+          <a href="colophon.html">Colophon</a>
+          <a href="claude.html">Garden</a>
+          <a href="pet.html">Pet</a>
+          <a href="noise.html">Noise</a>
+          <a href="quotes.html">Spark</a>
+        </nav>
+        <span class="footer-meta">&copy; <span id="year"></span> Kelly Lucas</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const say = (msg) => { if (typeof toast === "function") toast(msg); };
+
+      /* Forbidden button */
+      const KEY = "kellyLabButtonPresses";
+      const countEl = document.getElementById("dangerCount");
+      let presses = parseInt(localStorage.getItem(KEY) || "0", 10);
+      const renderPresses = () => {
+        countEl.textContent = presses === 0
+          ? "(so far, everyone has listened)"
+          : "(times not listened: " + presses + ")";
+      };
+      renderPresses();
+
+      const dangerBtn = document.getElementById("dangerBtn");
+      let arming = false;
+      dangerBtn.addEventListener("click", () => {
+        if (arming) return;
+        arming = true;
+        presses += 1;
+        localStorage.setItem(KEY, String(presses));
+        renderPresses();
+        if (reduced) {
+          say("nothing exploded. this time.");
+          arming = false;
+          return;
+        }
+        say("3...");
+        setTimeout(() => say("2..."), 700);
+        setTimeout(() => say("1..."), 1400);
+        setTimeout(() => {
+          if (typeof confettiRain === "function") confettiRain(80);
+          say("nothing exploded. this time.");
+          arming = false;
+        }, 2100);
+      });
+
+      /* Oscilloscope */
+      const scope = document.getElementById("scope");
+      const sctx = scope.getContext("2d");
+      const freqEl = document.getElementById("freq");
+      const ampEl = document.getElementById("amp");
+
+      function sizeScope() {
+        const dpr = window.devicePixelRatio || 1;
+        const w = scope.clientWidth;
+        const h = scope.clientHeight;
+        scope.width = w * dpr;
+        scope.height = h * dpr;
+        sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function drawWave(t) {
+        const w = scope.clientWidth;
+        const h = scope.clientHeight;
+        sctx.clearRect(0, 0, w, h);
+        // faint grid
+        sctx.strokeStyle = "rgba(201, 230, 201, 0.08)";
+        sctx.lineWidth = 1;
+        for (let x = 0; x < w; x += 28) {
+          sctx.beginPath(); sctx.moveTo(x, 0); sctx.lineTo(x, h); sctx.stroke();
+        }
+        for (let y = 0; y < h; y += 28) {
+          sctx.beginPath(); sctx.moveTo(0, y); sctx.lineTo(w, y); sctx.stroke();
+        }
+        // wave
+        const freq = Number(freqEl.value);
+        const amp = Number(ampEl.value);
+        sctx.strokeStyle = "#b1d8b3";
+        sctx.lineWidth = 2;
+        sctx.beginPath();
+        for (let x = 0; x <= w; x += 2) {
+          const y = h / 2 + Math.sin((x / w) * freq * Math.PI * 2 + t / 350) * amp;
+          x === 0 ? sctx.moveTo(x, y) : sctx.lineTo(x, y);
+        }
+        sctx.stroke();
+      }
+
+      sizeScope();
+      if (reduced) {
+        drawWave(0);
+        freqEl.addEventListener("input", () => drawWave(0));
+        ampEl.addEventListener("input", () => drawWave(0));
+      } else {
+        const loop = (t) => { drawWave(t); requestAnimationFrame(loop); };
+        requestAnimationFrame(loop);
+      }
+      window.addEventListener("resize", () => { sizeScope(); if (reduced) drawWave(0); });
+
+      /* Environmental controls */
+      const fx = [
+        ["fxFlip", "fx-flip", "gravity is a suggestion now", "gravity restored"],
+        ["fxInvert", "fx-invert", "night shift at the lab", "daylight restored"],
+        ["fxWiggle", "fx-wiggle", "everything is excited now", "the headlines have calmed down"],
+        ["fxSerious", "fx-serious", "fun removed. happy now?", "fun reinstated"],
+      ];
+      fx.forEach(([id, cls, onMsg, offMsg]) => {
+        const input = document.getElementById(id);
+        input.addEventListener("change", () => {
+          document.documentElement.classList.toggle(cls, input.checked);
+          say(input.checked ? onMsg : offMsg);
+        });
+      });
+
+      /* Vibe meter */
+      const needle = document.getElementById("gaugeNeedle");
+      document.getElementById("recalBtn").addEventListener("click", () => {
+        if (reduced) { say("vibes confirmed: immaculate"); return; }
+        const wobbles = [20, 65, 40, 74, 78];
+        wobbles.forEach((deg, i) => {
+          setTimeout(() => {
+            needle.style.transform = "translateX(-50%) rotate(" + deg + "deg)";
+          }, i * 350);
+        });
+        setTimeout(() => say("vibes confirmed: immaculate"), wobbles.length * 350);
+      });
+    })();
+  </script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+  <script defer src="script.js"></script>
+</body>
+</html>

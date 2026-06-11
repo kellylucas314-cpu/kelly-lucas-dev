@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Noise Room · Kelly Lucas</title>
+  <meta name="description" content="A tiny music sequencer in Kelly's lab. Paint some squares, press play, accidentally compose." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='5' fill='%23b1d8b3' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <span class="logo-mark" id="logoMark"></span>
+      Kelly Lucas
+      <span class="version-pill" aria-hidden="true">v0.7</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#now">Now</a>
+      <a href="all-fonts.html">Fonts</a>
+      <a href="quotes.html">Spark</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="page">
+
+    <section class="block block--cream hero">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>the noise room</span>
+      </div>
+      <h1 class="display balance">Accidentally<br />compose.</h1>
+      <div class="hero-aside">
+        <p class="scribble">(headphones optional. joy mandatory)</p>
+        <p>
+          Paint some squares, press play. The grid only knows five notes and
+          they all get along, so whatever you draw becomes a song. Your
+          pattern stays in this browser.
+        </p>
+        <a href="#machine" class="cta">
+          <span class="cta__label">Make noise</span>
+          <span class="cta__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <section id="machine" class="block block--ink-room">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>the machine</span>
+      </div>
+      <h2 class="display display--sm">Bleep machine</h2>
+      <p class="scribble">(five notes. eight steps. zero wrong answers)</p>
+      <div class="seq-grid" id="seqGrid" role="group" aria-label="Step sequencer grid: 5 notes by 8 steps"></div>
+      <div class="garden-controls seq-controls">
+        <button type="button" class="save-spark" id="playBtn">Play</button>
+        <button type="button" class="save-spark" id="randomBtn">Surprise me</button>
+        <button type="button" class="save-spark" id="clearBtn">Clear</button>
+        <label class="seq-tempo">
+          tempo
+          <input type="range" id="tempo" min="70" max="180" value="112" />
+        </label>
+      </div>
+    </section>
+
+    <section class="block block--mint">
+      <div class="dot-tag dot-tag--top-left">
+        <span class="dot-tag__dot"></span>
+        <span>liner notes</span>
+      </div>
+      <blockquote class="balance">
+        "Every square is a note in a pentatonic scale, which is music speak
+        for impossible to mess up. The lab believes in rigged games you
+        always win."
+      </blockquote>
+      <p class="scribble scribble--motto">(your masterpiece is saved in this browser. tour dates tbd)</p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <span class="footer-tag">back to the lab</span>
+        <a class="footer-mail" href="index.html">kellylucas.dev</a>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-logo">Kelly Lucas</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="log.html">Log</a>
+          <a href="colophon.html">Colophon</a>
+          <a href="claude.html">Garden</a>
+          <a href="pet.html">Pet</a>
+          <a href="panel.html">Panel</a>
+          <a href="quotes.html">Spark</a>
+        </nav>
+        <span class="footer-meta">&copy; <span id="year"></span> Kelly Lucas</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const ROWS = 5;
+      const STEPS = 8;
+      const NOTES = [880, 659.25, 523.25, 392, 261.63]; // A5 E5 C5 G4 C4, pentatonic friends
+      const KEY = "kellyLabPattern";
+
+      const grid = document.getElementById("seqGrid");
+      let pattern;
+      try { pattern = JSON.parse(localStorage.getItem(KEY)) || null; } catch { pattern = null; }
+      if (!Array.isArray(pattern) || pattern.length !== ROWS * STEPS) {
+        pattern = new Array(ROWS * STEPS).fill(false);
+        // a little starter riff so play does something out of the box
+        [0, 11, 16, 19, 26, 29, 32, 38].forEach((i) => (pattern[i] = true));
+      }
+      const savePattern = () => localStorage.setItem(KEY, JSON.stringify(pattern));
+
+      const cells = [];
+      for (let r = 0; r < ROWS; r++) {
+        for (let s = 0; s < STEPS; s++) {
+          const i = r * STEPS + s;
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "seq-cell";
+          btn.setAttribute("aria-pressed", String(pattern[i]));
+          btn.setAttribute("aria-label", "note " + (ROWS - r) + ", step " + (s + 1));
+          if (pattern[i]) btn.classList.add("is-on");
+          btn.addEventListener("click", () => {
+            pattern[i] = !pattern[i];
+            btn.classList.toggle("is-on", pattern[i]);
+            btn.setAttribute("aria-pressed", String(pattern[i]));
+            savePattern();
+            if (pattern[i]) blip(NOTES[r], 0.12);
+          });
+          grid.appendChild(btn);
+          cells.push(btn);
+        }
+      }
+
+      let audio = null;
+      function ensureAudio() {
+        if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
+        if (audio.state === "suspended") audio.resume();
+        return audio;
+      }
+
+      function blip(freq, dur) {
+        try {
+          const ctx = ensureAudio();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.22, ctx.currentTime + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
+          osc.connect(gain).connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + dur + 0.05);
+        } catch { /* audio is a luxury, not a requirement */ }
+      }
+
+      let playing = false;
+      let stepIndex = 0;
+      let timer = null;
+      const playBtn = document.getElementById("playBtn");
+      const tempoEl = document.getElementById("tempo");
+
+      function highlight(col) {
+        cells.forEach((c, i) => c.classList.toggle("is-now", i % STEPS === col));
+      }
+
+      function tickStep() {
+        for (let r = 0; r < ROWS; r++) {
+          if (pattern[r * STEPS + stepIndex]) blip(NOTES[r], 0.18);
+        }
+        highlight(stepIndex);
+        stepIndex = (stepIndex + 1) % STEPS;
+      }
+
+      function schedule() {
+        clearInterval(timer);
+        const stepMs = 60000 / Number(tempoEl.value) / 2; // eighth notes
+        timer = setInterval(tickStep, stepMs);
+      }
+
+      playBtn.addEventListener("click", () => {
+        playing = !playing;
+        playBtn.textContent = playing ? "Stop" : "Play";
+        if (playing) {
+          ensureAudio();
+          stepIndex = 0;
+          tickStep();
+          schedule();
+        } else {
+          clearInterval(timer);
+          cells.forEach((c) => c.classList.remove("is-now"));
+        }
+      });
+
+      tempoEl.addEventListener("input", () => { if (playing) schedule(); });
+
+      document.getElementById("randomBtn").addEventListener("click", () => {
+        pattern = pattern.map(() => Math.random() < 0.22);
+        cells.forEach((c, i) => {
+          c.classList.toggle("is-on", pattern[i]);
+          c.setAttribute("aria-pressed", String(pattern[i]));
+        });
+        savePattern();
+      });
+
+      document.getElementById("clearBtn").addEventListener("click", () => {
+        pattern = pattern.map(() => false);
+        cells.forEach((c) => {
+          c.classList.remove("is-on");
+          c.setAttribute("aria-pressed", "false");
+        });
+        savePattern();
+      });
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden && playing) playBtn.click();
+      });
+    })();
+  </script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+  <script defer src="script.js"></script>
+</body>
+</html>

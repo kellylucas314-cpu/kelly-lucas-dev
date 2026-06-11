@@ -323,6 +323,19 @@ if (hasGsap) {
         });
       }
 
+      /* Instrument panel stagger (panel.html) */
+      const instruments = $$(".instrument");
+      if (instruments.length) {
+        gsap.from(instruments, {
+          y: 36,
+          opacity: 0,
+          duration: 0.7,
+          ease: "power3.out",
+          stagger: 0.1,
+          scrollTrigger: { trigger: ".panel-grid", start: "top 85%", once: true },
+        });
+      }
+
       /* Experiment cards stagger */
       const cards = $$(".card");
       if (cards.length) {

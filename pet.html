@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab Pet · Kelly Lucas</title>
+  <meta name="description" content="The lab has a pet. A small pixel creature that lives in your browser and remembers you came back." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='5' fill='%23b1d8b3' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <span class="logo-mark" id="logoMark"></span>
+      Kelly Lucas
+      <span class="version-pill" aria-hidden="true">v0.7</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#now">Now</a>
+      <a href="all-fonts.html">Fonts</a>
+      <a href="quotes.html">Spark</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="page">
+
+    <section class="block block--mint hero">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>resident</span>
+      </div>
+      <h1 class="display balance">The lab<br />has a pet.</h1>
+      <div class="hero-aside">
+        <p class="scribble">(it lives in your browser. it is yours)</p>
+        <p>
+          A small creature generated just for this browser. Feed it, pet it,
+          give it a name. It does not die. It just wonders where you went.
+        </p>
+        <a href="#habitat" class="cta">
+          <span class="cta__label">Meet it</span>
+          <span class="cta__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <section id="habitat" class="block block--cream">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>the habitat</span>
+      </div>
+      <h2 class="display display--sm" id="petTitle">the blob</h2>
+      <p class="scribble pet-status" id="petStatus" aria-live="polite"></p>
+      <div class="pet-stage">
+        <canvas id="petCanvas" aria-label="Your lab pet. A small pixel creature. Click it to pet it."></canvas>
+      </div>
+      <div class="garden-controls">
+        <button type="button" class="save-spark" id="feedBtn">Feed it</button>
+        <button type="button" class="save-spark" id="petBtn">Pet it</button>
+        <span class="pet-name-form">
+          <input type="text" class="pet-name-input" id="nameInput" maxlength="20" placeholder="name it" aria-label="Name your pet" />
+          <button type="button" class="save-spark" id="nameBtn">Save name</button>
+        </span>
+        <span class="garden-count scribble" id="petStats" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="block block--lilac">
+      <div class="dot-tag dot-tag--top-left">
+        <span class="dot-tag__dot"></span>
+        <span>care instructions</span>
+      </div>
+      <blockquote class="balance">
+        "Feed it sometimes. Pet it often. It asks for nothing and waits
+        politely. Honestly, we could all learn from it."
+      </blockquote>
+      <p class="scribble scribble--motto">(no notifications. no guilt. it is a very low maintenance friend)</p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <span class="footer-tag">back to the lab</span>
+        <a class="footer-mail" href="index.html">kellylucas.dev</a>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-logo">Kelly Lucas</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="log.html">Log</a>
+          <a href="colophon.html">Colophon</a>
+          <a href="claude.html">Garden</a>
+          <a href="panel.html">Panel</a>
+          <a href="noise.html">Noise</a>
+          <a href="quotes.html">Spark</a>
+        </nav>
+        <span class="footer-meta">&copy; <span id="year"></span> Kelly Lucas</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById("petCanvas");
+      const ctx = canvas.getContext("2d");
+      const C = 6;
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const KEY = "kellyLabPet";
+
+      function load() {
+        try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch { return null; }
+      }
+      function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
+
+      const fresh = !load();
+      const state = load() || {
+        seed: Math.floor(Math.random() * 1e9),
+        name: "",
+        fed: 0,
+        petted: 0,
+        lastVisit: Date.now(),
+      };
+      const hoursAway = (Date.now() - state.lastVisit) / 3.6e6;
+      state.lastVisit = Date.now();
+      save();
+
+      // seeded randomness so the creature is stable per browser
+      function mulberry32(a) {
+        return () => {
+          a |= 0; a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      const srand = mulberry32(state.seed);
+
+      const BODIES = ["#b1d8b3", "#cdcde0", "#e8e2c9"];
+      const SHADES = ["#8fbe92", "#b0b0cc", "#cfc6a0"];
+      const bodyIdx = Math.floor(srand() * BODIES.length);
+      const BODY = BODIES[bodyIdx];
+      const SHADE = SHADES[bodyIdx];
+      const INK = "#14201a";
+      const hasCheeks = srand() < 0.7;
+      const RX = 7, RY = 5;
+      const spots = Array.from({ length: 3 }, () => ({
+        dx: Math.round((srand() * 2 - 1) * (RX - 2)),
+        dy: Math.round((srand() * 2 - 1) * (RY - 2)),
+      }));
+
+      let cols = 0, rows = 0, ground = 0;
+      function sizeCanvas() {
+        const w = canvas.parentElement.clientWidth;
+        const h = 300;
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        cols = Math.floor(w / C);
+        rows = Math.floor(h / C);
+        ground = rows - 4;
+        pet.x = Math.min(pet.x, cols - RX - 2);
+      }
+
+      function cell(x, y, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(Math.round(x) * C, Math.round(y) * C, C - 1, C - 1);
+      }
+
+      const pet = {
+        x: 24, targetX: 24,
+        mode: "idle",        // idle | walk | eat
+        blinkUntil: 0, nextBlink: performance.now() + 2000,
+        eatUntil: 0,
+      };
+      let snack = null;       // {x}
+      let hearts = [];        // {x, y, vy, life}
+
+      function drawPet(now) {
+        const bob = reduced ? 0 : Math.round(Math.sin(now / 420) * 1);
+        const cx = Math.round(pet.x);
+        const cy = ground - RY - 1 + bob;
+        // body
+        for (let dy = -RY; dy <= RY; dy++) {
+          const span = Math.floor(RX * Math.sqrt(1 - (dy / RY) ** 2));
+          for (let dx = -span; dx <= span; dx++) {
+            const edge = Math.abs(dx) >= span - 0 || Math.abs(dy) === RY;
+            cell(cx + dx, cy + dy, edge ? SHADE : BODY);
+          }
+        }
+        // spots
+        spots.forEach((s) => cell(cx + s.dx, cy + s.dy, SHADE));
+        // cheeks
+        if (hasCheeks) { cell(cx - 4, cy, "#e3b9c9"); cell(cx + 4, cy, "#e3b9c9"); }
+        // eyes (blink = flat line)
+        const blinking = now < pet.blinkUntil;
+        if (blinking) {
+          cell(cx - 2, cy - 1, INK); cell(cx + 2, cy - 1, INK);
+        } else {
+          cell(cx - 2, cy - 1, INK); cell(cx - 2, cy - 2, INK);
+          cell(cx + 2, cy - 1, INK); cell(cx + 2, cy - 2, INK);
+        }
+        // mouth while eating
+        if (pet.mode === "eat" && Math.floor(now / 160) % 2 === 0) cell(cx, cy + 2, INK);
+        // feet
+        cell(cx - 3, ground + bob, "#3b4842"); cell(cx - 2, ground + bob, "#3b4842");
+        cell(cx + 2, ground + bob, "#3b4842"); cell(cx + 3, ground + bob, "#3b4842");
+      }
+
+      function drawSnack() {
+        if (!snack) return;
+        const y = ground - 1;
+        cell(snack.x, y, "#e8e2c9"); cell(snack.x + 1, y, "#e8e2c9");
+        cell(snack.x, y - 1, "#e8e2c9"); cell(snack.x + 1, y - 1, "#e8e2c9");
+        cell(snack.x, y - 1, "#b85c46");
+      }
+
+      function drawHearts(now) {
+        hearts = hearts.filter((h) => h.life > 0);
+        hearts.forEach((h) => {
+          h.y -= 0.18; h.life -= 1;
+          const a = Math.max(0, Math.min(1, h.life / 40));
+          ctx.globalAlpha = a;
+          cell(h.x, h.y, "#d98aa6"); cell(h.x + 1, h.y, "#d98aa6");
+          cell(h.x, h.y - 0.8, "#d98aa6"); cell(h.x + 1, h.y - 0.8, "#d98aa6");
+          ctx.globalAlpha = 1;
+        });
+      }
+
+      function drawFloor() {
+        ctx.fillStyle = INK;
+        ctx.fillRect(0, (ground + 1) * C + 2, cols * C, 2);
+      }
+
+      function render(now) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawFloor();
+        drawSnack();
+        drawPet(now);
+        drawHearts(now);
+      }
+
+      function step(now) {
+        // blinking
+        if (now > pet.nextBlink) { pet.blinkUntil = now + 160; pet.nextBlink = now + 1800 + Math.random() * 3500; }
+        // movement
+        if (pet.mode === "walk" && snack) pet.targetX = snack.x;
+        if (pet.mode === "idle" && Math.random() < 0.004) pet.targetX = 10 + Math.random() * (cols - 20);
+        const dx = pet.targetX - pet.x;
+        if (Math.abs(dx) > 0.6) pet.x += Math.sign(dx) * 0.22;
+        else if (pet.mode === "walk" && snack) { pet.mode = "eat"; pet.eatUntil = now + 1300; }
+        if (pet.mode === "eat" && now > pet.eatUntil) {
+          snack = null; pet.mode = "idle";
+          setStatus(pick(["munch munch. excellent.", "it approves of the snack.", "crumbs everywhere. worth it."]));
+        }
+        render(now);
+        requestAnimationFrame(step);
+      }
+
+      const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+      const statusEl = document.getElementById("petStatus");
+      let statusTimer;
+      function setStatus(text) {
+        statusEl.textContent = "(" + text + ")";
+        clearTimeout(statusTimer);
+        statusTimer = setTimeout(rotateStatus, 9000);
+      }
+      function rotateStatus() {
+        setStatus(pick(["doing science", "thinking about crumbs", "watching you code", "practicing being round", "100% organic pixels", "guarding the lab"]));
+      }
+
+      const statsEl = document.getElementById("petStats");
+      function renderStats() {
+        const times = (n) => n + (n === 1 ? " time" : " times");
+        statsEl.textContent = "(fed " + times(state.fed) + " · petted " + times(state.petted) + ")";
+      }
+
+      const titleEl = document.getElementById("petTitle");
+      function renderName() {
+        titleEl.textContent = state.name || "the blob (unnamed)";
+        document.title = (state.name ? state.name : "Lab Pet") + " · Kelly Lucas";
+      }
+
+      document.getElementById("feedBtn").addEventListener("click", () => {
+        if (pet.mode !== "idle" && !reduced) return;
+        state.fed += 1; save(); renderStats();
+        if (reduced) { setStatus("munch munch. excellent."); render(performance.now()); return; }
+        snack = { x: Math.max(4, Math.min(cols - 6, Math.round(pet.x + (Math.random() < 0.5 ? -1 : 1) * (8 + Math.random() * 14)))) };
+        pet.mode = "walk";
+        setStatus("snack detected. mobilizing.");
+      });
+
+      function doPet() {
+        state.petted += 1; save(); renderStats();
+        setStatus(pick(["it is pleased.", "petting acknowledged.", "this is the good life.", "it would purr if it could."]));
+        if (!reduced) {
+          for (let i = 0; i < 3; i++) {
+            hearts.push({ x: pet.x + (Math.random() * 8 - 4), y: ground - RY * 2 - 3 - Math.random() * 2, life: 40 + Math.random() * 25 });
+          }
+        }
+      }
+      document.getElementById("petBtn").addEventListener("click", doPet);
+      canvas.addEventListener("click", doPet);
+
+      const nameInput = document.getElementById("nameInput");
+      document.getElementById("nameBtn").addEventListener("click", () => {
+        const v = nameInput.value.trim();
+        if (!v) return;
+        state.name = v; save(); renderName();
+        nameInput.value = "";
+        setStatus("it knows its name now. it is " + v + ".");
+      });
+
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => { sizeCanvas(); render(performance.now()); }, 150);
+      });
+
+      sizeCanvas();
+      pet.x = Math.floor(cols / 2);
+      pet.targetX = pet.x;
+      renderName();
+      renderStats();
+      if (fresh) setStatus("it hatched just now. it is yours.");
+      else if (hoursAway > 24) setStatus("it missed you. it forgives you.");
+      else setStatus("it is glad you are back.");
+
+      if (reduced) render(performance.now());
+      else requestAnimationFrame(step);
+    })();
+  </script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+  <script defer src="script.js"></script>
+</body>
+</html>
