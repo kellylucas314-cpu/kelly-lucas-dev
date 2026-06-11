@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entropy Tap · Kelly Lucas</title>
+  <meta name="description" content="A homemade quantum random number generator. Your camera's photon shot noise, debiased into honest coin flips." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='5' fill='%23b1d8b3' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <span class="logo-mark" id="logoMark"></span>
+      Kelly Lucas
+      <span class="version-pill" aria-hidden="true">v0.7</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#now">Now</a>
+      <a href="all-fonts.html">Fonts</a>
+      <a href="quotes.html">Spark</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="page">
+
+    <section class="block block--ink-room hero">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>quantum wing annex</span>
+      </div>
+      <h1 class="display balance">Roll your own<br />randomness.</h1>
+      <div class="hero-aside">
+        <p class="scribble">(a homemade quantum random number generator. actually quantum)</p>
+        <p>
+          Your camera counts photons, and the universe refuses to say exactly
+          how many will arrive. That flicker is quantum shot noise. This page
+          taps it and turns it into honest coin flips.
+        </p>
+        <a href="#tap" class="cta cta--ink">
+          <span class="cta__label">Open the tap</span>
+          <span class="cta__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <section id="tap" class="block block--ink-room">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>the harvester</span>
+      </div>
+      <h2 class="display display--sm">The entropy tap</h2>
+      <p class="scribble">(the video never leaves your device. we only keep the noise)</p>
+
+      <div class="tap-stage">
+        <video id="tapVideo" class="tap-video" autoplay playsinline muted></video>
+        <div class="tap-readout">
+          <canvas id="bitLane" class="bit-lane" aria-label="Stream of recently harvested random bits"></canvas>
+          <div class="pool-meter" role="img" aria-label="Entropy pool level">
+            <div class="pool-meter__bar" id="poolBar"></div>
+          </div>
+          <p class="scribble" id="tapStats">(tap closed. no photons harvested yet)</p>
+        </div>
+      </div>
+
+      <div class="garden-controls">
+        <button type="button" class="save-spark" id="tapBtn">Start harvesting</button>
+        <button type="button" class="save-spark" id="coinBtn">Flip a quantum coin</button>
+        <button type="button" class="save-spark" id="dieBtn">Roll a quantum d6</button>
+        <button type="button" class="save-spark" id="numBtn">Number, 1 to 100</button>
+      </div>
+      <p class="result-line" id="tapResult" aria-live="polite"></p>
+      <p class="scribble" id="bankNote">(harvested bits are banked automatically. the universe splitter spends them)</p>
+    </section>
+
+    <section class="block block--cream">
+      <div class="dot-tag dot-tag--top-left">
+        <span class="dot-tag__dot"></span>
+        <span>how it works</span>
+      </div>
+      <h2 class="display display--sm">The recipe</h2>
+      <ul class="now-list">
+        <li>
+          <span class="now-label">Step 01</span>
+          <span class="now-body">Light hits your camera in photons. Quantum mechanics decides how many arrive each frame, and it does not take requests.</span>
+        </li>
+        <li>
+          <span class="now-label">Step 02</span>
+          <span class="now-body">We XOR each frame against the previous one, so everything that stays still cancels out. Only the flicker survives.</span>
+        </li>
+        <li>
+          <span class="now-label">Step 03</span>
+          <span class="now-body">We keep one bit per sample and run von Neumann debiasing: look at bit pairs, keep 01 as 0 and 10 as 1, throw the rest away. Bias gone.</span>
+        </li>
+        <li>
+          <span class="now-label">Step 04</span>
+          <span class="now-body">Clean bits drip into the pool. Coins, dice, and the universe splitter drink from it.</span>
+        </li>
+        <li>
+          <span class="now-label">Honesty</span>
+          <span class="now-body">Some of the flicker is boring classical sensor noise too. Real labs measure the ratio. We are a personal website, so we wave at them respectfully.</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="block block--mint">
+      <div class="dot-tag dot-tag--top-left">
+        <span class="dot-tag__dot"></span>
+        <span>fine print</span>
+      </div>
+      <blockquote class="balance">
+        "Anyone who considers arithmetical methods of producing random digits
+        is, of course, in a state of sin."
+      </blockquote>
+      <p class="scribble scribble--motto">(john von neumann. this page is sin free, photons only)</p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <span class="footer-tag">back to the lab</span>
+        <a class="footer-mail" href="index.html">kellylucas.dev</a>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-logo">Kelly Lucas</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="log.html">Log</a>
+          <a href="colophon.html">Colophon</a>
+          <a href="quantum.html">Quantum</a>
+          <a href="claude.html">Garden</a>
+          <a href="pet.html">Pet</a>
+          <a href="panel.html">Panel</a>
+          <a href="noise.html">Noise</a>
+          <a href="quotes.html">Spark</a>
+        </nav>
+        <span class="footer-meta">&copy; <span id="year"></span> Kelly Lucas</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const POOL_KEY = "kellyLabEntropy";
+      const video = document.getElementById("tapVideo");
+      const lane = document.getElementById("bitLane");
+      const lctx = lane.getContext("2d");
+      const poolBar = document.getElementById("poolBar");
+      const statsEl = document.getElementById("tapStats");
+      const resultEl = document.getElementById("tapResult");
+      const tapBtn = document.getElementById("tapBtn");
+
+      const GW = 160, GH = 120;
+      const grab = document.createElement("canvas");
+      grab.width = GW; grab.height = GH;
+      const gctx = grab.getContext("2d", { willReadFrequently: true });
+
+      const POOL_MAX = 4096; // bits
+      let pool = [];         // bits, newest last
+      try {
+        const saved = JSON.parse(localStorage.getItem(POOL_KEY));
+        if (Array.isArray(saved)) pool = saved.slice(0, POOL_MAX);
+      } catch { /* fresh pool */ }
+
+      let stream = null;
+      let prevFrame = null;
+      let harvesting = false;
+      let totalBits = pool.length;
+      let totalOnes = pool.reduce((a, b) => a + b, 0);
+      let recentBits = [];
+
+      function savePool() {
+        localStorage.setItem(POOL_KEY, JSON.stringify(pool));
+      }
+
+      function sizeLane() {
+        const dpr = window.devicePixelRatio || 1;
+        const w = lane.parentElement.clientWidth;
+        lane.width = w * dpr;
+        lane.height = 36 * dpr;
+        lane.style.width = w + "px";
+        lane.style.height = "36px";
+        lctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function drawLane() {
+        const w = lane.clientWidth;
+        lctx.clearRect(0, 0, w, 36);
+        const cellW = 8;
+        const n = Math.floor(w / cellW);
+        const bits = recentBits.slice(-n);
+        bits.forEach((b, i) => {
+          lctx.fillStyle = b ? "#b1d8b3" : "rgba(201, 230, 201, 0.15)";
+          lctx.fillRect(i * cellW, b ? 4 : 18, cellW - 2, 14);
+        });
+      }
+
+      function updateReadout() {
+        poolBar.style.width = Math.min(100, (pool.length / POOL_MAX) * 100) + "%";
+        if (totalBits === 0) {
+          statsEl.textContent = "(tap closed. no photons harvested yet)";
+        } else {
+          const ones = (totalOnes / totalBits) * 100;
+          const verdict = Math.abs(ones - 50) < 2.5 ? "the universe is fair today" : "slightly moody universe. the debiaser is on it";
+          statsEl.textContent = "(pool: " + pool.length + " of " + POOL_MAX + " bits · lifetime harvest: " + totalBits + " bits · " + ones.toFixed(1) + "% ones. " + verdict + ")";
+        }
+        drawLane();
+      }
+
+      function harvestFrame() {
+        if (!harvesting || video.readyState < 2) return;
+        gctx.drawImage(video, 0, 0, GW, GH);
+        let data;
+        try { data = gctx.getImageData(0, 0, GW, GH).data; } catch { return; }
+        if (!prevFrame) { prevFrame = data.slice(0); return; }
+        const raw = [];
+        for (let i = 0; i < data.length; i += 16) { // every 4th pixel, green channel
+          raw.push((data[i + 1] ^ prevFrame[i + 1]) & 1);
+        }
+        prevFrame = data.slice(0);
+        // von Neumann debias: 01 -> 0, 10 -> 1, 00/11 -> discard
+        const clean = [];
+        for (let i = 0; i + 1 < raw.length; i += 2) {
+          if (raw[i] !== raw[i + 1]) clean.push(raw[i]);
+        }
+        if (!clean.length) return;
+        clean.forEach((b) => {
+          totalBits += 1;
+          totalOnes += b;
+          if (pool.length < POOL_MAX) pool.push(b);
+          recentBits.push(b);
+        });
+        if (recentBits.length > 400) recentBits = recentBits.slice(-400);
+        savePool();
+        updateReadout();
+      }
+
+      let harvestTimer = null;
+
+      async function startTap() {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 }, audio: false });
+          video.srcObject = stream;
+          video.classList.add("is-live");
+          harvesting = true;
+          prevFrame = null;
+          harvestTimer = setInterval(harvestFrame, 160);
+          tapBtn.textContent = "Stop harvesting";
+          resultEl.textContent = "";
+        } catch {
+          statsEl.textContent = "(camera said no. that is fair. the buttons below will use boring classical entropy instead)";
+        }
+      }
+
+      function stopTap() {
+        harvesting = false;
+        clearInterval(harvestTimer);
+        if (stream) stream.getTracks().forEach((t) => t.stop());
+        stream = null;
+        video.srcObject = null;
+        video.classList.remove("is-live");
+        tapBtn.textContent = "Start harvesting";
+        savePool();
+        updateReadout();
+      }
+
+      tapBtn.addEventListener("click", () => (harvesting ? stopTap() : startTap()));
+      window.addEventListener("pagehide", stopTap);
+
+      /* ---- drawing from the pool ---- */
+      function takeBits(n) {
+        if (pool.length >= n) {
+          const bits = pool.splice(0, n);
+          savePool();
+          updateReadout();
+          return { bits, quantum: true };
+        }
+        const buf = new Uint8Array(Math.ceil(n / 8));
+        crypto.getRandomValues(buf);
+        const bits = [];
+        for (let i = 0; i < n; i++) bits.push((buf[i >> 3] >> (i & 7)) & 1);
+        return { bits, quantum: false };
+      }
+
+      const tag = (q) => (q ? "quantum, from your photons" : "classical fallback, harvest some photons for the real thing");
+
+      document.getElementById("coinBtn").addEventListener("click", () => {
+        const { bits, quantum } = takeBits(1);
+        resultEl.textContent = (bits[0] ? "heads" : "tails") + " · " + tag(quantum);
+      });
+
+      document.getElementById("dieBtn").addEventListener("click", () => {
+        for (let tries = 0; tries < 40; tries++) {
+          const { bits, quantum } = takeBits(3);
+          const v = bits[0] * 4 + bits[1] * 2 + bits[2];
+          if (v < 6) {
+            resultEl.textContent = "rolled a " + (v + 1) + " · " + tag(quantum);
+            return;
+          }
+        }
+        resultEl.textContent = "the die rolled off the table. try again";
+      });
+
+      document.getElementById("numBtn").addEventListener("click", () => {
+        for (let tries = 0; tries < 60; tries++) {
+          const { bits, quantum } = takeBits(7);
+          const v = bits.reduce((a, b) => a * 2 + b, 0);
+          if (v < 100) {
+            resultEl.textContent = "your number is " + (v + 1) + " · " + tag(quantum);
+            return;
+          }
+        }
+        resultEl.textContent = "the number escaped. try again";
+      });
+
+      sizeLane();
+      updateReadout();
+      window.addEventListener("resize", () => { sizeLane(); drawLane(); });
+    })();
+  </script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+  <script defer src="script.js"></script>
+</body>
+</html>

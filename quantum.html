@@ -162,6 +162,7 @@
       </div>
       <p class="scribble" id="splitStats"></p>
       <p class="scribble">(per the many worlds interpretation, both genuinely happen. inspired by the universe splitter app. in another universe we built something else)</p>
+      <p class="scribble">(want it split with real quantum randomness? harvest your own photons at <a class="inline-link" href="qrng.html">the entropy tap</a>)</p>
     </section>
 
     <section class="block block--mint">
@@ -562,11 +563,20 @@
       }
       renderSplitStats();
 
-      // one random bit from the device's entropy pool
+      // one random bit: homemade photon noise from the entropy tap if you
+      // harvested any, otherwise the device's classical entropy pool
       async function quantumBit() {
+        try {
+          const pool = JSON.parse(localStorage.getItem("kellyLabEntropy"));
+          if (Array.isArray(pool) && pool.length) {
+            const bit = pool.shift();
+            localStorage.setItem("kellyLabEntropy", JSON.stringify(pool));
+            return { bit: bit ? 1 : 0, source: "photon noise you harvested yourself at the entropy tap. certified homemade quantum" };
+          }
+        } catch { /* pool unavailable */ }
         const buf = new Uint8Array(1);
         crypto.getRandomValues(buf);
-        return { bit: buf[0] % 2, source: "this device's entropy pool. the geneva photon lab does not take our calls" };
+        return { bit: buf[0] % 2, source: "this device's classical entropy. harvest photons at the entropy tap for the real thing" };
       }
 
       let splitting = false;
