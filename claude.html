@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pixel Garden · Kelly Lucas</title>
+  <meta name="description" content="Claude's project: a tiny generative pixel garden growing in Kelly's lab. Click the soil, something grows." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='5' fill='%23b1d8b3' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <span class="logo-mark" id="logoMark"></span>
+      Kelly Lucas
+      <span class="version-pill" aria-hidden="true">v0.7</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#now">Now</a>
+      <a href="all-fonts.html">Fonts</a>
+      <a href="quotes.html">Spark</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="page">
+
+    <section class="block block--mint hero garden-hero">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>experiment 03 &middot; claude's project</span>
+      </div>
+      <h1 class="display balance">A garden,<br />grown by code.</h1>
+      <div class="hero-aside">
+        <p class="scribble">(kelly let claude plant one experiment. it chose a garden)</p>
+        <p>
+          Click the soil and something grows. Every plant is generated on the
+          spot, so no two are the same. Gardens are temporary. The code is not.
+        </p>
+        <a href="#plot" class="cta">
+          <span class="cta__label">Go to the plot</span>
+          <span class="cta__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <section id="plot" class="block block--cream garden-block">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>the plot</span>
+      </div>
+      <h2 class="display display--sm">Click to plant</h2>
+      <p class="scribble">(anywhere on the soil works)</p>
+      <div class="garden-wrap">
+        <canvas id="garden" aria-label="Interactive pixel garden. Activate the plant button to grow a plant."></canvas>
+      </div>
+      <div class="garden-controls">
+        <button type="button" class="save-spark" id="plantBtn">Plant one for me</button>
+        <button type="button" class="save-spark" id="clearBtn">Start over</button>
+        <button type="button" class="save-spark" id="saveBtn">Save a snapshot</button>
+        <span class="garden-count scribble" id="gardenCount" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="block block--lilac">
+      <div class="dot-tag dot-tag--top-left">
+        <span class="dot-tag__dot"></span>
+        <span>field notes</span>
+      </div>
+      <blockquote class="balance">
+        "Each plant is a random walk on a five pixel grid. Stems wander,
+        branches just happen, and blooms pick their own colors from the lab
+        palette."
+      </blockquote>
+      <p class="scribble scribble--motto">(signed, claude. resident gardener)</p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <span class="footer-tag">back to the lab</span>
+        <a class="footer-mail" href="index.html">kellylucas.dev</a>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-logo">Kelly Lucas</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="log.html">Log</a>
+          <a href="colophon.html">Colophon</a>
+          <a href="quotes.html">Spark</a>
+        </nav>
+        <span class="footer-meta">&copy; <span id="year"></span> Kelly Lucas</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById("garden");
+      const ctx = canvas.getContext("2d");
+      const C = 5; // pixel cell size
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      const STEMS = ["#3b4842", "#5d7561", "#46604c"];
+      const LEAVES = ["#b1d8b3", "#9cc99f", "#c9e6c9"];
+      const BLOOMS = ["#e3e3ee", "#cdcde0", "#f6f3e8", "#c9e6c9", "#b1d8b3"];
+      const SOIL = "#14201a";
+
+      let plants = [];
+      let cols = 0;
+      let rows = 0;
+      let soilRow = 0;
+
+      function sizeCanvas() {
+        const w = canvas.parentElement.clientWidth;
+        const h = Math.min(520, Math.max(340, Math.round(window.innerHeight * 0.5)));
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        cols = Math.floor(w / C);
+        rows = Math.floor(h / C);
+        soilRow = rows - 4;
+      }
+
+      function cell(x, y, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x * C, y * C, C - 1, C - 1);
+      }
+
+      const rand = (a, b) => a + Math.random() * (b - a);
+      const randi = (a, b) => Math.floor(rand(a, b + 1));
+      const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+      /* A plant is a list of cells in growth order. */
+      function makePlant(col) {
+        const cells = [];
+        const stem = pick(STEMS);
+        const leaf = pick(LEAVES);
+        const height = randi(14, Math.min(34, soilRow - 4));
+        const superbloom = Math.random() < 0.08;
+
+        let x = col;
+        let y = soilRow;
+        const tips = [];
+
+        for (let i = 0; i < height; i++) {
+          cells.push({ x, y, color: stem });
+          // leaves come in alternating pairs partway up
+          if (i > 3 && i % 3 === 0 && i < height - 3) {
+            const side = i % 2 === 0 ? 1 : -1;
+            cells.push({ x: x + side, y, color: leaf });
+            if (Math.random() < 0.5) cells.push({ x: x + side * 2, y: y + (Math.random() < 0.5 ? 0 : 1), color: leaf });
+          }
+          // occasional branch in the upper half
+          if (i > height * 0.45 && Math.random() < 0.18 && tips.length < 3) {
+            const side = Math.random() < 0.5 ? 1 : -1;
+            let bx = x;
+            let by = y;
+            const blen = randi(3, 6);
+            for (let j = 0; j < blen; j++) {
+              bx += side;
+              by -= Math.random() < 0.7 ? 1 : 0;
+              cells.push({ x: bx, y: by, color: stem });
+            }
+            tips.push({ x: bx, y: by - 1 });
+          }
+          y -= 1;
+          if (Math.random() < 0.3) x += Math.random() < 0.5 ? -1 : 1;
+          x = Math.max(1, Math.min(cols - 2, x));
+        }
+        tips.push({ x, y });
+
+        // blooms on every tip
+        tips.forEach((tip) => {
+          const a = pick(BLOOMS);
+          const b = pick(BLOOMS);
+          const r = superbloom ? 2 : 1;
+          for (let dx = -r; dx <= r; dx++) {
+            for (let dy = -r; dy <= r; dy++) {
+              if (Math.abs(dx) + Math.abs(dy) <= r) {
+                cells.push({ x: tip.x + dx, y: tip.y + dy, color: dx === 0 && dy === 0 ? b : a });
+              }
+            }
+          }
+        });
+
+        return { cells, grown: reduced ? cells.length : 0 };
+      }
+
+      function drawSoil() {
+        ctx.fillStyle = SOIL;
+        ctx.fillRect(0, (soilRow + 1) * C, cols * C, 2);
+        for (let i = 0; i < cols; i += 2) {
+          if (Math.random() < 0.35) cell(i, soilRow + randi(1, 2), "rgba(20,32,26,0.35)");
+        }
+      }
+
+      let soilSeeded = false;
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawSoil();
+        plants.forEach((p) => {
+          for (let i = 0; i < p.grown; i++) {
+            const c = p.cells[i];
+            cell(c.x, c.y, c.color);
+          }
+        });
+      }
+
+      let raf = null;
+      function tick() {
+        let growing = false;
+        plants.forEach((p) => {
+          if (p.grown < p.cells.length) {
+            p.grown = Math.min(p.cells.length, p.grown + 3);
+            growing = true;
+          }
+        });
+        render();
+        raf = growing ? requestAnimationFrame(tick) : null;
+      }
+
+      function grow() {
+        if (reduced) {
+          plants.forEach((p) => (p.grown = p.cells.length));
+          render();
+          return;
+        }
+        if (!raf) raf = requestAnimationFrame(tick);
+      }
+
+      const countEl = document.getElementById("gardenCount");
+      function updateCount() {
+        const n = plants.length;
+        countEl.textContent = n === 0 ? "(empty plot. very full of potential)" : n === 1 ? "(1 plant growing)" : "(" + n + " plants growing)";
+      }
+
+      function plantAt(col) {
+        if (plants.length >= 60) return;
+        plants.push(makePlant(Math.max(1, Math.min(cols - 2, col))));
+        updateCount();
+        grow();
+      }
+
+      canvas.addEventListener("click", (e) => {
+        const rect = canvas.getBoundingClientRect();
+        plantAt(Math.floor((e.clientX - rect.left) / C));
+      });
+
+      document.getElementById("plantBtn").addEventListener("click", () => plantAt(randi(2, cols - 3)));
+
+      document.getElementById("clearBtn").addEventListener("click", () => {
+        plants = [];
+        updateCount();
+        render();
+      });
+
+      document.getElementById("saveBtn").addEventListener("click", () => {
+        const link = document.createElement("a");
+        link.download = "pixel-garden.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          sizeCanvas();
+          render();
+        }, 150);
+      });
+
+      sizeCanvas();
+      // a few starter plants so the plot is never lonely
+      [0.2, 0.45, 0.72].forEach((f) => plantAt(Math.floor(cols * f)));
+      updateCount();
+      grow();
+    })();
+  </script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+  <script defer src="script.js"></script>
+</body>
+</html>

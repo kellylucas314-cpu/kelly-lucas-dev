@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lab Log · Kelly Lucas</title>
+  <meta name="description" content="A running record of what shipped, what broke, and what got learned at kellylucas.dev." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='5' fill='%23b1d8b3' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <span class="logo-mark" id="logoMark"></span>
+      Kelly Lucas
+      <span class="version-pill" aria-hidden="true">v0.7</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#now">Now</a>
+      <a href="all-fonts.html">Fonts</a>
+      <a href="quotes.html">Spark</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="page">
+
+    <section class="block block--cream hero log-hero">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>the lab log</span>
+      </div>
+      <h1 class="display balance">Lab<br />log.</h1>
+      <div class="hero-aside">
+        <p class="scribble">(newest first. the log only moves forward.)</p>
+        <p>
+          A running record of what shipped, what broke, and what got learned.
+          Learning in public means keeping the receipts.
+        </p>
+      </div>
+    </section>
+
+    <section class="block block--mint log-entries">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>entries</span>
+      </div>
+      <h2 class="display display--sm">Receipts</h2>
+      <ul class="now-list">
+        <li>
+          <span class="now-label">2026-06-10 &middot; v0.7</span>
+          <span class="now-body">The site became a lab. GSAP moved in: draggable stickers, confetti when you ship, a konami code. Claude planted a pixel garden. Four new pages, including this one.</span>
+        </li>
+        <li>
+          <span class="now-label">2026-05-11 &middot; v0.6</span>
+          <span class="now-body">Spark Notes shipped: a living quote wall with favorites that survive a refresh, thanks to localStorage.</span>
+        </li>
+        <li>
+          <span class="now-label">2026-05-07 &middot; v0.5</span>
+          <span class="now-body">kellylucas.dev went live on Vercel. First domain, first deploy, real internet.</span>
+        </li>
+        <li>
+          <span class="now-label">2026-05-07 &middot; type</span>
+          <span class="now-body">Auditioned 97 fonts across three batches. Heliora survived and became the face of the site.</span>
+        </li>
+        <li>
+          <span class="now-label">before the log</span>
+          <span class="now-body">Built the YouTube Transcript Generator, the first experiment to leave the lab.</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="block block--lilac log-next">
+      <div class="dot-tag dot-tag--top-left">
+        <span class="dot-tag__dot"></span>
+        <span>next entry</span>
+      </div>
+      <blockquote class="balance">
+        "loading&hellip;"
+      </blockquote>
+      <p class="scribble scribble--motto">(this space reserved for the next thing I break)</p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <span class="footer-tag">back to the lab</span>
+        <a class="footer-mail" href="index.html">kellylucas.dev</a>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-logo">Kelly Lucas</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="log.html" aria-current="page">Log</a>
+          <a href="colophon.html">Colophon</a>
+          <a href="quotes.html">Spark</a>
+        </nav>
+        <span class="footer-meta">&copy; <span id="year"></span> Kelly Lucas</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+  <script defer src="script.js"></script>
+</body>
+</html>

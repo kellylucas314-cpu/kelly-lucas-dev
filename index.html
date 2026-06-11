@@ -4,14 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kelly Lucas</title>
-  <meta name="description" content="Personal site of Kelly Lucas." />
+  <meta name="description" content="Kelly Lucas is learning to build the web in public. Welcome to the lab." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='5' fill='%23b1d8b3' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="site-header">
     <a href="/" class="logo">
-      <span class="logo-mark"></span>
+      <span class="logo-mark" id="logoMark"></span>
       Kelly Lucas
+      <span class="version-pill" aria-hidden="true">v0.7</span>
     </a>
     <nav class="site-nav" aria-label="Primary">
       <a href="#work">Work</a>
@@ -29,20 +31,36 @@
     <section class="block block--mint hero">
       <div class="dot-tag dot-tag--top-right">
         <span class="dot-tag__dot"></span>
-        <span>a personal site</span>
+        <span>kelly's lab</span>
       </div>
-      <h1 class="display balance">
-        Learning<br />
-        to build<br />
-        the web.
+
+      <div class="sticker-shelf" id="stickerShelf">
+        <p class="scribble scribble--shelf">
+          drag these
+          <svg class="scribble-arrow" viewBox="0 0 60 40" aria-hidden="true">
+            <path d="M4 6 C 18 30, 38 34, 52 24 M 44 22 L 53 24 L 49 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </p>
+        <div class="sticker-row">
+          <span class="sticker sticker--mint" style="--tilt:-4deg">html</span>
+          <span class="sticker sticker--lilac" style="--tilt:3deg">css</span>
+          <span class="sticker sticker--cream" style="--tilt:-2deg">just enough js</span>
+        </div>
+      </div>
+
+      <h1 class="display balance" id="heroTitle">
+        Welcome to<br />
+        the lab.
       </h1>
       <div class="hero-aside">
+        <p class="scribble hero-greeting" id="greeting">you found the lab.</p>
         <p>
-          A small corner of the internet by Kelly Lucas. Notes, projects, and
-          unfinished things being made in public.
+          I'm Kelly. I'm learning web development by building this site in
+          public, breaking it, and fixing it where you can see. Everything
+          here is an experiment.
         </p>
         <a href="#work" class="cta">
-          <span class="cta__label">See what's here</span>
+          <span class="cta__label">See the experiments</span>
           <span class="cta__icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none">
               <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
@@ -52,7 +70,7 @@
       </div>
     </section>
 
-    <!-- INTRO BLOCK -->
+    <!-- ABOUT BLOCK -->
     <section id="about" class="block block--cream split">
       <div class="dot-tag dot-tag--top-left">
         <span class="dot-tag__dot"></span>
@@ -60,39 +78,43 @@
       </div>
       <div class="split-left">
         <p class="lede balance">
-          Hi, I'm Kelly. I'm using this site as a place to practice web
-          development out in the open. Every page here is something I built
-          while figuring it out.
+          This whole site is my practice space. Every page is something I
+          built while figuring it out, and I keep the seams visible on
+          purpose.
         </p>
+        <p class="scribble">(yes, the site is the portfolio)</p>
       </div>
       <div class="split-right">
         <p>
-          I'm drawn to clean, considered design and the kind of code that gets
-          out of the way. Right now I'm focused on the fundamentals: HTML, CSS,
-          and just enough JavaScript to make things feel alive.
+          I care about clean design and code that gets out of the way. Right
+          now I'm on the fundamentals: HTML, CSS, and just enough JavaScript
+          to make things feel alive. So far,
+          <button type="button" class="egg-fonts" id="fontEgg">97 fonts auditioned</button>
+          and one survivor.
         </p>
       </div>
     </section>
 
-    <!-- BIG STATEMENT BLOCK -->
+    <!-- MOTTO BLOCK -->
     <section class="block block--mint statement">
       <div class="dot-tag dot-tag--top-right">
         <span class="dot-tag__dot"></span>
         <span>the idea</span>
       </div>
-      <h2 class="display display--md balance">
-        Build slowly.<br />
-        Ship anyway.<br />
-        Learn in public.
+      <h2 class="display display--md balance motto">
+        <span class="motto-line">Build slowly.</span><br />
+        <button type="button" class="motto-line motto-ship" id="shipBtn">Ship anyway.</button><br />
+        <span class="motto-line">Learn in public.</span>
       </h2>
+      <p class="scribble scribble--motto">(the middle one is a button)</p>
     </section>
 
-    <!-- THREE-UP CARDS -->
+    <!-- EXPERIMENTS -->
     <section id="work" class="block--bare three-up">
       <div class="three-up__head">
         <div class="dot-tag">
           <span class="dot-tag__dot"></span>
-          <span>what I'm making</span>
+          <span>experiments</span>
         </div>
       </div>
       <div class="card-grid u-3cols">
@@ -100,10 +122,10 @@
           <div class="card__top">
             <div class="dot-tag">
               <span class="dot-tag__dot"></span>
-              <span>tool</span>
+              <span>experiment 01 &middot; tool</span>
             </div>
             <h3 class="card__title balance">YouTube Transcript Generator</h3>
-            <p class="card__desc">Paste a YouTube link and turn captions into a clean Markdown transcript.</p>
+            <p class="card__desc">Paste a YouTube link, get a clean Markdown transcript. Built to scratch my own itch.</p>
           </div>
           <a href="https://kelly-youtube-transcriber.vercel.app" target="_blank" rel="noopener noreferrer" class="cta">
             <span class="cta__label">Open tool</span>
@@ -118,10 +140,10 @@
           <div class="card__top">
             <div class="dot-tag">
               <span class="dot-tag__dot"></span>
-              <span>project two</span>
+              <span>experiment 02 &middot; page</span>
             </div>
             <h3 class="card__title balance">Spark Notes</h3>
-            <p class="card__desc">A living quote wall for saved lines, vision fuel, and tiny reminders to keep building.</p>
+            <p class="card__desc">A living quote wall. The lines I save to keep building.</p>
           </div>
           <a href="quotes.html" class="cta">
             <span class="cta__label">Open page</span>
@@ -136,18 +158,33 @@
           <div class="card__top">
             <div class="dot-tag">
               <span class="dot-tag__dot"></span>
-              <span>project three</span>
+              <span>experiment 03 &middot; claude's project</span>
             </div>
-            <h3 class="card__title balance">A short, confident headline about this project.</h3>
+            <h3 class="card__title balance">Pixel Garden</h3>
+            <p class="card__desc">A tiny generative garden Claude planted in the lab. Click the soil, something grows.</p>
           </div>
-          <a href="#" class="cta">
-            <span class="cta__label">Read more</span>
+          <a href="claude.html" class="cta">
+            <span class="cta__label">Open garden</span>
             <span class="cta__icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none">
                 <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
               </svg>
             </span>
           </a>
+        </article>
+        <article class="card card--experiment card--wide">
+          <div class="card__top">
+            <div class="dot-tag">
+              <span class="dot-tag__dot"></span>
+              <span>experiment 04</span>
+            </div>
+            <h3 class="card__title balance">loading&hellip;</h3>
+            <p class="card__desc">Something is cooking here. It ships when it ships.</p>
+            <div class="progress" role="img" aria-label="Progress: 62 percent, stalled">
+              <div class="progress__bar" id="expProgress"></div>
+            </div>
+          </div>
+          <button type="button" class="exp-status" id="expStatus">still cooking</button>
         </article>
       </div>
     </section>
@@ -159,18 +196,19 @@
         <span>now</span>
       </div>
       <h2 class="display display--sm">Currently</h2>
+      <p class="scribble">(updates when life does)</p>
       <ul class="now-list">
         <li>
           <span class="now-label">Building</span>
-          <span class="now-body">This very website, one block at a time.</span>
+          <span class="now-body">This redesign. The page you are reading is the project.</span>
         </li>
         <li>
           <span class="now-label">Reading</span>
-          <span class="now-body">CSS and HTML docs, slowly and properly.</span>
+          <span class="now-body">GSAP docs, one plugin at a time.</span>
         </li>
         <li>
           <span class="now-label">Next up</span>
-          <span class="now-body">Hooking the site up to a real domain.</span>
+          <span class="now-body">Experiment 04, once it tells me what it is.</span>
         </li>
       </ul>
     </section>
@@ -181,10 +219,18 @@
         <span class="dot-tag__dot"></span>
         <span>a thought</span>
       </div>
-      <blockquote class="balance">
+      <blockquote class="balance" id="quoteText">
         "The best way to learn is to make the thing you wish existed, badly,
         and then make it less badly."
       </blockquote>
+      <a href="quotes.html" class="cta quote__cta">
+        <span class="cta__label">More of these in Spark Notes</span>
+        <span class="cta__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          </svg>
+        </span>
+      </a>
     </section>
 
   </main>
@@ -197,15 +243,24 @@
       </div>
       <p class="footer-signature" aria-label="Build status">
         <span class="footer-signature__dot" aria-hidden="true"></span>
-        <span>v0.6</span>
-        <span aria-hidden="true">·</span>
-        <span>last edited 2026-05-11</span>
-        <span aria-hidden="true">·</span>
-        <span>47 fonts tested</span>
-        <span aria-hidden="true">·</span>
-        <span>2 projects live</span>
-        <span aria-hidden="true">·</span>
+        <button type="button" class="footer-version" id="changelogBtn" aria-expanded="false" aria-controls="changelogPop">v0.7</button>
+        <span aria-hidden="true">&middot;</span>
+        <span>last edited 2026-06-10</span>
+        <span aria-hidden="true">&middot;</span>
+        <span>97 fonts auditioned</span>
+        <span aria-hidden="true">&middot;</span>
+        <span>3 experiments live</span>
+        <span aria-hidden="true">&middot;</span>
+        <span>1 loading</span>
+        <span aria-hidden="true">&middot;</span>
+        <span id="labClock"></span>
+        <span aria-hidden="true">&middot;</span>
         <span>made in public</span>
+        <span class="changelog-pop" id="changelogPop" hidden>
+          <span>v0.5 shipped the site</span>
+          <span>v0.6 grew spark notes</span>
+          <span>v0.7 became a lab</span>
+        </span>
       </p>
       <div class="footer-bottom">
         <span class="footer-logo">Kelly Lucas</span>
@@ -213,12 +268,20 @@
           <a href="#work">Work</a>
           <a href="#about">About</a>
           <a href="#now">Now</a>
+          <a href="log.html">Log</a>
+          <a href="colophon.html">Colophon</a>
         </nav>
         <span class="footer-meta">&copy; <span id="year"></span> Kelly Lucas</span>
       </div>
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+  <script defer src="script.js"></script>
 </body>
 </html>

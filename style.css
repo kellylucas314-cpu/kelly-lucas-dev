@@ -501,11 +501,17 @@ ul {
   flex-direction: column;
   gap: 32px;
   min-height: 320px;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
   background: rgba(20, 32, 26, 0.03);
+  transform: translateY(-6px) rotate(-0.4deg);
+  box-shadow: 0 16px 32px rgba(20, 32, 26, 0.08);
+}
+
+.card:nth-child(even):hover {
+  transform: translateY(-6px) rotate(0.4deg);
 }
 
 .card__top {
@@ -714,18 +720,7 @@ ul {
   }
 }
 
-/* ---------- Reveal ---------- */
-.reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
-
+/* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -733,7 +728,6 @@ ul {
     transition: none !important;
     animation: none !important;
   }
-  .reveal { opacity: 1; transform: none; }
 }
 
 /* ---------- Mobile tweaks ---------- */
@@ -946,4 +940,395 @@ ul {
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+/* ---------- Lab components ---------- */
+::selection {
+  background: var(--mint-deep);
+  color: var(--ink);
+}
+
+/* Version pill (header) */
+.version-pill {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid rgba(20, 32, 26, 0.25);
+  border-radius: 999px;
+  padding: 3px 8px;
+  color: var(--ink-soft);
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.logo:hover .version-pill {
+  transform: rotate(-6deg) translateY(-1px);
+  background: var(--mint);
+}
+
+/* Dot tags get a tiny spin on hover */
+.dot-tag__dot {
+  transition: transform 0.35s ease;
+}
+
+.dot-tag:hover .dot-tag__dot {
+  transform: rotate(135deg);
+}
+
+/* Stickers */
+.sticker-shelf {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.sticker-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sticker {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  background: var(--cream);
+  transform: rotate(var(--tilt, 0deg));
+  box-shadow: 0 2px 0 rgba(20, 32, 26, 0.16);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  will-change: transform;
+}
+
+.sticker:active {
+  cursor: grabbing;
+}
+
+.sticker--mint  { background: var(--mint-deep); }
+.sticker--lilac { background: var(--lilac); }
+.sticker--cream { background: var(--cream); }
+
+@media (min-width: 900px) {
+  .sticker-shelf {
+    position: absolute;
+    top: clamp(70px, 9vw, 116px);
+    left: var(--block-pad-x);
+    z-index: 5;
+  }
+}
+
+/* Scribbles (margin notes) */
+.scribble {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-mute);
+  transform: rotate(-2deg);
+  max-width: 30ch;
+}
+
+.scribble--shelf {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 6px;
+  margin-left: 4px;
+}
+
+.scribble-arrow {
+  width: 34px;
+  height: 22px;
+  color: var(--ink-mute);
+}
+
+.hero-greeting {
+  margin-bottom: -6px;
+}
+
+.split-left .scribble {
+  margin-top: 18px;
+}
+
+.now .scribble {
+  margin-top: 12px;
+}
+
+/* Motto lines */
+.motto-line {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.motto-line:hover {
+  transform: rotate(-1deg) translateY(-2px);
+}
+
+.motto-ship {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
+.motto-ship:hover {
+  transform: rotate(1deg) translateY(-3px);
+}
+
+.scribble--motto {
+  margin-top: clamp(18px, 3vw, 30px);
+}
+
+/* About font easter egg */
+.egg-fonts {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  padding: 0 2px;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.egg-fonts:hover {
+  background: var(--mint);
+}
+
+/* Experiment 03 card */
+.card--experiment {
+  background: var(--lilac);
+  outline: 1.5px dashed rgba(20, 32, 26, 0.35);
+  outline-offset: -12px;
+}
+
+.card--experiment:hover {
+  background: var(--lilac);
+}
+
+.progress {
+  height: 6px;
+  max-width: 220px;
+  border-radius: 999px;
+  background: rgba(20, 32, 26, 0.12);
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.progress__bar {
+  height: 100%;
+  width: 62%;
+  border-radius: inherit;
+  background: var(--ink);
+  transform-origin: left center;
+}
+
+.exp-status {
+  align-self: flex-start;
+  border: 1px dashed var(--ink-soft);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  padding: 11px 18px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.exp-status:hover {
+  transform: rotate(-2deg);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Quote CTA */
+.quote__cta {
+  margin-top: clamp(28px, 4vw, 44px);
+}
+
+/* Footer version + changelog popover */
+.footer-signature {
+  position: relative;
+}
+
+.footer-version {
+  border: 1px solid rgba(201, 230, 201, 0.35);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  border-radius: 999px;
+  padding: 2px 9px;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.footer-version:hover,
+.footer-version[aria-expanded="true"] {
+  color: var(--footer-ink);
+  border-color: var(--footer-ink);
+}
+
+.changelog-pop {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 200px;
+  background: #0e1813;
+  border: 1px solid rgba(201, 230, 201, 0.25);
+  border-radius: 14px;
+  padding: 14px 18px;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  color: rgba(201, 230, 201, 0.85);
+}
+
+.changelog-pop[hidden] {
+  display: none;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translate(-50%, 16px);
+  background: var(--ink);
+  color: var(--mint);
+  padding: 12px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 80;
+  max-width: min(86vw, 480px);
+  text-align: center;
+}
+
+.toast.is-shown {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Cursor follower (desktop pointers only) */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 90;
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor-dot { display: none; }
+}
+
+/* Confetti */
+.confetti-piece {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 70;
+}
+
+/* Split-text spans (built by script.js) */
+.word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0.06em 0.04em 0.14em 0;
+  margin: -0.06em -0.04em -0.14em 0;
+}
+
+.word {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Small screens: header wraps to two rows so the nav never overflows */
+@media (max-width: 640px) {
+  .site-header {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+  .site-nav {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+}
+
+/* ---------- Pixel garden (claude.html) ---------- */
+.garden-wrap {
+  margin-top: clamp(24px, 4vw, 40px);
+  border: 1px solid rgba(20, 32, 26, 0.18);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+#garden {
+  display: block;
+  cursor: crosshair;
+}
+
+.garden-controls {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.garden-controls .save-spark {
+  margin-top: 0;
+}
+
+/* ---------- Wide "loading" card (experiment 04) ---------- */
+.card--wide {
+  min-height: auto;
+}
+
+@media (min-width: 760px) {
+  .card--wide {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--ink);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+  }
+  .card--wide .card__top {
+    flex-direction: row;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    flex: 1;
+  }
 }
