@@ -122,6 +122,116 @@
         text: "Nobody should die from a cancer caught too late.",
         attribution: "HelioFlux mission",
         category: "Mission"
+      },
+      {
+        text: "I have not failed. I've just found 10,000 ways that won't work.",
+        attribution: "Thomas Edison",
+        category: "Grit"
+      },
+      {
+        text: "Genius is one percent inspiration and ninety-nine percent perspiration.",
+        attribution: "Thomas Edison",
+        category: "Grit"
+      },
+      {
+        text: "The way to get started is to quit talking and begin doing.",
+        attribution: "Walt Disney",
+        category: "Momentum"
+      },
+      {
+        text: "It's kind of fun to do the impossible.",
+        attribution: "Walt Disney",
+        category: "Vision"
+      },
+      {
+        text: "If you can dream it, you can do it.",
+        attribution: "Walt Disney",
+        category: "Vision"
+      },
+      {
+        text: "The most important thing is to try and inspire people so that they can be great in whatever they want to do.",
+        attribution: "Kobe Bryant",
+        category: "Leadership"
+      },
+      {
+        text: "Rest at the end, not in the middle.",
+        attribution: "Kobe Bryant",
+        category: "Grit"
+      },
+      {
+        text: "When something is important enough, you do it even if the odds are not in your favor.",
+        attribution: "Elon Musk",
+        category: "Courage"
+      },
+      {
+        text: "I think it is possible for ordinary people to choose to be extraordinary.",
+        attribution: "Elon Musk",
+        category: "Vision"
+      },
+      {
+        text: "Always flat out.",
+        attribution: "Max Verstappen",
+        category: "Speed"
+      },
+      {
+        text: "If you no longer go for a gap that exists, you are no longer a racing driver.",
+        attribution: "Ayrton Senna",
+        category: "Speed"
+      },
+      {
+        text: "I've failed over and over and over again in my life. And that is why I succeed.",
+        attribution: "Michael Jordan",
+        category: "Grit"
+      },
+      {
+        text: "A champion is defined not by their wins but by how they can recover when they fall.",
+        attribution: "Serena Williams",
+        category: "Grit"
+      },
+      {
+        text: "Don't count the days; make the days count.",
+        attribution: "Muhammad Ali",
+        category: "Momentum"
+      },
+      {
+        text: "Nothing in life is to be feared, it is only to be understood.",
+        attribution: "Marie Curie",
+        category: "Courage"
+      },
+      {
+        text: "I have no special talents. I am only passionately curious.",
+        attribution: "Albert Einstein",
+        category: "Curiosity"
+      },
+      {
+        text: "What I cannot create, I do not understand.",
+        attribution: "Richard Feynman",
+        category: "Making"
+      },
+      {
+        text: "The most effective way to do it, is to do it.",
+        attribution: "Amelia Earhart",
+        category: "Momentum"
+      },
+      {
+        text: "Do the best you can until you know better. Then when you know better, do better.",
+        attribution: "Maya Angelou",
+        category: "Growth"
+      },
+      {
+        text: "Whether you think you can, or you think you can't, you're right.",
+        attribution: "Henry Ford",
+        category: "Mindset"
+      },
+      {
+        text: "Great things are done by a series of small things brought together.",
+        attribution: "Vincent van Gogh",
+        category: "Making"
+      },
+      {
+        text: "The most damaging phrase in the language is: we've always done it this way.",
+        attribution: "Grace Hopper",
+        category: "Courage"
       }
     ];
 
@@ -201,7 +311,8 @@
       renderFeatured(currentQuote);
     });
 
-    renderFeatured(quotes[0]);
+    // today's spark rotates daily, for real
+    renderFeatured(quotes[Math.floor(Date.now() / 86400000) % quotes.length]);
     renderGrid();
     renderFavorites();
   </script>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantum Wing · Kelly Lucas</title>
+  <meta name="description" content="The quantum wing of the lab: a working double slit experiment, a cat in a box, entangled particles, and other real physics. Unfortunately." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='5' fill='%23b1d8b3' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <span class="logo-mark" id="logoMark"></span>
+      Kelly Lucas
+      <span class="version-pill" aria-hidden="true">v0.7</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#now">Now</a>
+      <a href="all-fonts.html">Fonts</a>
+      <a href="quotes.html">Spark</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="page">
+
+    <section class="block block--ink-room hero">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>the quantum wing</span>
+      </div>
+      <h1 class="display balance">Reality is<br />in beta.</h1>
+      <div class="hero-aside">
+        <p class="scribble">(everything in this room is real physics. unfortunately)</p>
+        <p>
+          A working double slit experiment, a cat in a box, and particles
+          that coordinate faster than light. The universe shipped this and
+          never patched it.
+        </p>
+        <a href="#doubleslit" class="cta cta--ink">
+          <span class="cta__label">Get weird</span>
+          <span class="cta__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <section id="doubleslit" class="block block--ink-room">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>experiment q1</span>
+      </div>
+      <h2 class="display display--sm">The double slit</h2>
+      <p class="scribble">(fire particles at two slits. count the stripes. then try watching)</p>
+      <div class="q-stage">
+        <canvas id="slitCanvas" aria-label="Double slit experiment simulation. Particles build an interference pattern on a screen."></canvas>
+      </div>
+      <div class="garden-controls">
+        <button type="button" class="save-spark" id="fireOne">Fire one</button>
+        <button type="button" class="save-spark" id="fireStream">Open the faucet</button>
+        <button type="button" class="save-spark" id="fire500">Fire 500</button>
+        <button type="button" class="save-spark" id="slitReset">Reset screen</button>
+        <label class="switch switch--ink">
+          <span>watch the slits</span>
+          <input type="checkbox" id="observeToggle" />
+        </label>
+      </div>
+      <p class="scribble" id="slitStatus" aria-live="polite"></p>
+    </section>
+
+    <section class="panel-grid" aria-label="More quantum experiments">
+
+      <div class="instrument instrument--cream">
+        <div class="dot-tag">
+          <span class="dot-tag__dot"></span>
+          <span>experiment q2</span>
+        </div>
+        <h2 class="instrument__title">The cat situation</h2>
+        <div class="instrument__body">
+          <canvas class="q-cat" id="catCanvas" aria-label="A box containing a cat in superposition"></canvas>
+          <p class="scribble" id="catStatus" aria-live="polite">(the box is closed. the cat is awake and asleep at the same time)</p>
+          <div class="garden-controls">
+            <button type="button" class="save-spark" id="catBtn">Open the box</button>
+          </div>
+          <p class="scribble" id="catStats"></p>
+        </div>
+      </div>
+
+      <div class="instrument instrument--lilac">
+        <div class="dot-tag">
+          <span class="dot-tag__dot"></span>
+          <span>experiment q3</span>
+        </div>
+        <h2 class="instrument__title">Spooky action</h2>
+        <div class="instrument__body">
+          <div class="q-pair">
+            <button type="button" class="q-orb" id="orbA" aria-label="Measure particle a">?</button>
+            <span class="q-link" aria-hidden="true"></span>
+            <button type="button" class="q-orb" id="orbB" aria-label="Measure particle b">?</button>
+          </div>
+          <p class="scribble" id="pairStatus" aria-live="polite">(two entangled particles. measure either one)</p>
+          <div class="garden-controls">
+            <button type="button" class="save-spark" id="pairReset">Re-entangle</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="instrument instrument--mint">
+        <div class="dot-tag">
+          <span class="dot-tag__dot"></span>
+          <span>experiment q4</span>
+        </div>
+        <h2 class="instrument__title">The uncertainty principle</h2>
+        <div class="instrument__body">
+          <canvas class="q-cloud" id="cloudCanvas" aria-label="A particle whose position and momentum trade certainty"></canvas>
+          <label class="seq-tempo q-slider">
+            how badly do you want to know where it is
+            <input type="range" id="certainty" min="0" max="100" value="20" />
+          </label>
+          <p class="scribble" id="cloudStatus" aria-live="polite"></p>
+        </div>
+      </div>
+
+    </section>
+
+    <section id="splitter" class="block block--ink-room">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>experiment q5</span>
+      </div>
+      <h2 class="display display--sm">The universe splitter</h2>
+      <p class="scribble">(can't decide? do both. in different universes)</p>
+      <div class="splitter-form">
+        <label class="splitter-field">
+          in one universe I will
+          <input type="text" class="splitter-input" id="optionA" maxlength="60" placeholder="have a snack" />
+        </label>
+        <label class="splitter-field">
+          in the other universe I will
+          <input type="text" class="splitter-input" id="optionB" maxlength="60" placeholder="keep building" />
+        </label>
+        <button type="button" class="save-spark splitter-go" id="splitBtn">Split the universe</button>
+      </div>
+      <p class="scribble" id="splitStatus" aria-live="polite"></p>
+      <div class="universe-pair" id="universePair" hidden>
+        <div class="universe-card" id="hereCard">
+          <span class="universe-tag">this universe</span>
+          <p class="universe-text" id="hereText"></p>
+          <p class="scribble">(that one is yours. get to it)</p>
+        </div>
+        <div class="universe-card universe-card--elsewhere" id="elseCard">
+          <span class="universe-tag">the other you</span>
+          <p class="universe-text" id="elseText"></p>
+          <p class="scribble">(already doing it. show off)</p>
+        </div>
+      </div>
+      <p class="scribble" id="splitStats"></p>
+      <p class="scribble">(per the many worlds interpretation, both genuinely happen. inspired by the universe splitter app. in another universe we built something else)</p>
+    </section>
+
+    <section class="block block--mint">
+      <div class="dot-tag dot-tag--top-left">
+        <span class="dot-tag__dot"></span>
+        <span>exit through the gift shop</span>
+      </div>
+      <blockquote class="balance">
+        "If quantum mechanics hasn't profoundly shocked you, you haven't
+        understood it yet."
+      </blockquote>
+      <p class="scribble scribble--motto">(niels bohr, who would have loved this website)</p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <span class="footer-tag">back to the lab</span>
+        <a class="footer-mail" href="index.html">kellylucas.dev</a>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-logo">Kelly Lucas</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="log.html">Log</a>
+          <a href="colophon.html">Colophon</a>
+          <a href="claude.html">Garden</a>
+          <a href="pet.html">Pet</a>
+          <a href="panel.html">Panel</a>
+          <a href="noise.html">Noise</a>
+          <a href="quotes.html">Spark</a>
+        </nav>
+        <span class="footer-meta">&copy; <span id="year"></span> Kelly Lucas</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const gauss = () => {
+        let u = 0, v = 0;
+        while (u === 0) u = Math.random();
+        while (v === 0) v = Math.random();
+        return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+      };
+
+      /* ============ THE DOUBLE SLIT ============ */
+      const canvas = document.getElementById("slitCanvas");
+      const ctx = canvas.getContext("2d");
+      let W = 0, H = 0;
+      const MINT = "#b1d8b3";
+      const observeEl = document.getElementById("observeToggle");
+      const statusEl = document.getElementById("slitStatus");
+
+      let dots = [];      // {x, y, watched}
+      let flights = [];   // {p: 0..1, watched, slit, endY}
+      let faucet = false;
+      let lastSpawn = 0;
+
+      function sizeSlit() {
+        const dpr = window.devicePixelRatio || 1;
+        const w = canvas.parentElement.clientWidth;
+        const h = Math.min(420, Math.max(300, Math.round(w * 0.42)));
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        W = w; H = h;
+      }
+
+      const barrierX = () => W * 0.38;
+      const slitGap = () => Math.min(34, H * 0.1);
+      const slitY = (s) => H / 2 + s * slitGap(); // s = -1 or 1
+      const screenX = () => W - 40;
+
+      // interference intensity on the screen, t in [-1, 1]
+      function intensity(t) {
+        const fringe = Math.cos(t * 10.5) ** 2;
+        const z = t * 2.6;
+        const env = z === 0 ? 1 : (Math.sin(z) / z) ** 2;
+        return fringe * env;
+      }
+
+      function sampleY(watched) {
+        if (watched) {
+          const s = Math.random() < 0.5 ? -1 : 1;
+          return { y: Math.max(8, Math.min(H - 8, slitY(s) + gauss() * 14)), slit: s };
+        }
+        for (let i = 0; i < 200; i++) {
+          const t = Math.random() * 2 - 1;
+          if (Math.random() < intensity(t)) {
+            return { y: H / 2 + t * (H / 2 - 14), slit: Math.random() < 0.5 ? -1 : 1 };
+          }
+        }
+        return { y: H / 2, slit: 1 };
+      }
+
+      function fire(watched, animate) {
+        const { y, slit } = sampleY(watched);
+        if (!animate || reduced) {
+          dots.push({ x: screenX() + Math.random() * 26, y, watched });
+        } else {
+          flights.push({ p: 0, watched, slit, endY: y });
+        }
+        updateStatus();
+      }
+
+      function updateStatus() {
+        const watching = observeEl.checked;
+        const mode = watching
+          ? "watching: yes. each particle picks one slit. the stripes are gone."
+          : "watching: no. each particle takes both slits. stripes appear.";
+        statusEl.textContent = "(" + dots.length + " particles counted. " + mode + ")";
+      }
+
+      function drawScene() {
+        ctx.clearRect(0, 0, W, H);
+        // emitter
+        ctx.fillStyle = MINT;
+        ctx.fillRect(10, H / 2 - 12, 8, 24);
+        // barrier with slits
+        const bx = barrierX();
+        ctx.fillStyle = "rgba(201, 230, 201, 0.5)";
+        const g = slitGap(), sw = 9;
+        ctx.fillRect(bx, 0, 3, slitY(-1) - sw);
+        ctx.fillRect(bx, slitY(-1) + sw, 3, slitY(1) - slitY(-1) - sw * 2);
+        ctx.fillRect(bx, slitY(1) + sw, 3, H - slitY(1) - sw);
+        // detectors when watching
+        if (observeEl.checked) {
+          [-1, 1].forEach((s) => {
+            ctx.beginPath();
+            ctx.arc(bx + 12, slitY(s), 4, 0, Math.PI * 2);
+            ctx.fillStyle = "#e07a5f";
+            ctx.fill();
+          });
+        }
+        // screen
+        ctx.fillStyle = "rgba(201, 230, 201, 0.16)";
+        ctx.fillRect(screenX() - 4, 6, 34, H - 12);
+        // landed particles
+        dots.forEach((d) => {
+          ctx.fillStyle = d.watched ? "rgba(224, 122, 95, 0.8)" : "rgba(177, 216, 179, 0.8)";
+          ctx.fillRect(d.x, d.y, 2.5, 2.5);
+        });
+        // flights
+        flights.forEach((f) => {
+          if (f.watched) {
+            // a marble: emitter -> chosen slit -> screen
+            const bxx = barrierX();
+            let x, y;
+            if (f.p < 0.5) {
+              const q = f.p / 0.5;
+              x = 18 + (bxx - 18) * q;
+              y = H / 2 + (slitY(f.slit) - H / 2) * q;
+            } else {
+              const q = (f.p - 0.5) / 0.5;
+              x = bxx + (screenX() - bxx) * q;
+              y = slitY(f.slit) + (f.endY - slitY(f.slit)) * q;
+            }
+            ctx.beginPath();
+            ctx.arc(x, y, 3.5, 0, Math.PI * 2);
+            ctx.fillStyle = "#e07a5f";
+            ctx.fill();
+          } else {
+            // a wave: ripples from the emitter, then from both slits
+            ctx.strokeStyle = "rgba(177, 216, 179, 0.4)";
+            ctx.lineWidth = 1.5;
+            const bxx = barrierX();
+            if (f.p < 0.5) {
+              const r = (f.p / 0.5) * (bxx - 18);
+              for (let k = 0; k < 3; k++) {
+                const rr = r - k * 16;
+                if (rr > 2) {
+                  ctx.beginPath();
+                  ctx.arc(18, H / 2, rr, -1.1, 1.1);
+                  ctx.stroke();
+                }
+              }
+            } else {
+              const r = ((f.p - 0.5) / 0.5) * (screenX() - bxx);
+              [-1, 1].forEach((s) => {
+                for (let k = 0; k < 3; k++) {
+                  const rr = r - k * 16;
+                  if (rr > 2) {
+                    ctx.beginPath();
+                    ctx.arc(bxx + 2, slitY(s), rr, -1.2, 1.2);
+                    ctx.stroke();
+                  }
+                }
+              });
+            }
+          }
+        });
+      }
+
+      function slitTick(now) {
+        if (faucet && now - lastSpawn > 90) {
+          lastSpawn = now;
+          fire(observeEl.checked, true);
+        }
+        flights.forEach((f) => (f.p += 0.022));
+        flights = flights.filter((f) => {
+          if (f.p >= 1) {
+            dots.push({ x: screenX() + Math.random() * 26, y: f.endY, watched: f.watched });
+            return false;
+          }
+          return true;
+        });
+        if (flights.length === 0 && dots.length) updateStatus();
+        drawScene();
+        requestAnimationFrame(slitTick);
+      }
+
+      document.getElementById("fireOne").addEventListener("click", () => fire(observeEl.checked, true));
+      document.getElementById("fire500").addEventListener("click", () => {
+        for (let i = 0; i < 500; i++) fire(observeEl.checked, false);
+        if (reduced) drawScene();
+      });
+      const faucetBtn = document.getElementById("fireStream");
+      faucetBtn.addEventListener("click", () => {
+        if (reduced) {
+          for (let i = 0; i < 100; i++) fire(observeEl.checked, false);
+          drawScene();
+          return;
+        }
+        faucet = !faucet;
+        faucetBtn.textContent = faucet ? "Close the faucet" : "Open the faucet";
+      });
+      document.getElementById("slitReset").addEventListener("click", () => {
+        dots = []; flights = [];
+        updateStatus();
+        if (reduced) drawScene();
+      });
+      observeEl.addEventListener("change", () => {
+        updateStatus();
+        if (reduced) drawScene();
+      });
+
+      sizeSlit();
+      updateStatus();
+      if (reduced) drawScene();
+      else requestAnimationFrame(slitTick);
+
+      /* ============ THE CAT SITUATION ============ */
+      const catCanvas = document.getElementById("catCanvas");
+      const cctx = catCanvas.getContext("2d");
+      const catStatus = document.getElementById("catStatus");
+      const catStats = document.getElementById("catStats");
+      const CAT_KEY = "kellyLabCat";
+      let catData;
+      try { catData = JSON.parse(localStorage.getItem(CAT_KEY)) || { opened: 0, naps: 0 }; } catch { catData = { opened: 0, naps: 0 }; }
+      let catState = "closed"; // closed | awake | asleep
+
+      function sizeCat() {
+        const dpr = window.devicePixelRatio || 1;
+        const w = catCanvas.parentElement.clientWidth;
+        const h = 150;
+        catCanvas.width = w * dpr;
+        catCanvas.height = h * dpr;
+        catCanvas.style.width = w + "px";
+        catCanvas.style.height = h + "px";
+        cctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function ccell(x, y, color, cw, cx0, cy0) {
+        cctx.fillStyle = color;
+        cctx.fillRect(cx0 + x * cw, cy0 + y * cw, cw - 1, cw - 1);
+      }
+
+      function drawCat(now) {
+        const w = catCanvas.clientWidth, h = catCanvas.clientHeight;
+        cctx.clearRect(0, 0, w, h);
+        const cx0 = w / 2 - 60, cy0 = 18;
+        if (catState === "closed") {
+          const wob = reduced ? 0 : Math.sin(now / 180) * 1.6;
+          cctx.save();
+          cctx.translate(w / 2, 80);
+          cctx.rotate((wob * Math.PI) / 180);
+          cctx.fillStyle = "#14201a";
+          cctx.fillRect(-55, -45, 110, 90);
+          cctx.fillStyle = "#3b4842";
+          cctx.fillRect(-55, -45, 110, 14);
+          cctx.fillStyle = "#c9e6c9";
+          cctx.font = "600 34px sans-serif";
+          cctx.textAlign = "center";
+          cctx.textBaseline = "middle";
+          cctx.fillText("?", 0, 8);
+          cctx.restore();
+        } else {
+          const cw = 8;
+          const asleep = catState === "asleep";
+          const C_BODY = asleep ? "#cdcde0" : "#b1d8b3";
+          const C_SHADE = asleep ? "#b0b0cc" : "#8fbe92";
+          // ears
+          ccell(3, 0, C_SHADE, cw, cx0, cy0); ccell(11, 0, C_SHADE, cw, cx0, cy0);
+          ccell(3, 1, C_BODY, cw, cx0, cy0); ccell(11, 1, C_BODY, cw, cx0, cy0);
+          // head
+          for (let y = 2; y <= 6; y++) for (let x = 2; x <= 12; x++) ccell(x, y, y === 2 || y === 6 || x === 2 || x === 12 ? C_SHADE : C_BODY, cw, cx0, cy0);
+          // eyes
+          if (asleep) {
+            ccell(5, 4, "#14201a", cw, cx0, cy0); ccell(9, 4, "#14201a", cw, cx0, cy0);
+          } else {
+            ccell(5, 3, "#14201a", cw, cx0, cy0); ccell(5, 4, "#14201a", cw, cx0, cy0);
+            ccell(9, 3, "#14201a", cw, cx0, cy0); ccell(9, 4, "#14201a", cw, cx0, cy0);
+          }
+          // nose + whiskers
+          ccell(7, 5, "#d98aa6", cw, cx0, cy0);
+          ccell(1, 4, C_SHADE, cw, cx0, cy0); ccell(13, 4, C_SHADE, cw, cx0, cy0);
+          // body
+          for (let y = 7; y <= 10; y++) for (let x = 3; x <= 11; x++) ccell(x, y, y === 10 || x === 3 || x === 11 ? C_SHADE : C_BODY, cw, cx0, cy0);
+          // tail
+          ccell(12, 8, C_SHADE, cw, cx0, cy0); ccell(13, 7, C_SHADE, cw, cx0, cy0);
+          if (asleep) {
+            cctx.fillStyle = "#6c766f";
+            cctx.font = "500 16px sans-serif";
+            const drift = reduced ? 0 : Math.sin(now / 600) * 3;
+            cctx.fillText("z", cx0 + 130, cy0 + 24 + drift);
+            cctx.fillText("z", cx0 + 142, cy0 + 12 - drift);
+          }
+        }
+        if (!reduced) requestAnimationFrame(drawCat);
+      }
+
+      function renderCatStats() {
+        catStats.textContent = "(boxes opened: " + catData.opened + " · naps observed: " + catData.naps + " · cats harmed: 0)";
+      }
+
+      const catBtn = document.getElementById("catBtn");
+      catBtn.addEventListener("click", () => {
+        if (catState === "closed") {
+          catState = Math.random() < 0.5 ? "awake" : "asleep";
+          catData.opened += 1;
+          if (catState === "asleep") catData.naps += 1;
+          localStorage.setItem(CAT_KEY, JSON.stringify(catData));
+          catStatus.textContent = catState === "awake"
+            ? "(the wavefunction collapsed. the cat is awake and mildly annoyed)"
+            : "(the wavefunction collapsed. the cat is napping. it was always going to nap)";
+          catBtn.textContent = "Restore superposition";
+          renderCatStats();
+        } else {
+          catState = "closed";
+          catStatus.textContent = "(the box is closed. the cat is awake and asleep at the same time)";
+          catBtn.textContent = "Open the box";
+        }
+        if (reduced) drawCat(0);
+      });
+
+      sizeCat();
+      renderCatStats();
+      if (reduced) drawCat(0);
+      else requestAnimationFrame(drawCat);
+
+      /* ============ SPOOKY ACTION ============ */
+      const orbA = document.getElementById("orbA");
+      const orbB = document.getElementById("orbB");
+      const pairStatus = document.getElementById("pairStatus");
+      let measured = false;
+      let agreements = 0;
+
+      function measure(first) {
+        if (measured) return;
+        measured = true;
+        const up = Math.random() < 0.5;
+        const [a, b] = first === orbA ? [up, !up] : [!up, up];
+        orbA.textContent = a ? "↑" : "↓";
+        orbB.textContent = b ? "↑" : "↓";
+        orbA.classList.add(a ? "is-up" : "is-down");
+        orbB.classList.add(b ? "is-up" : "is-down");
+        agreements += 1;
+        pairStatus.textContent = "(measured. instantly opposite, as always. " + agreements + " for " + agreements + ". nobody is sending messages. probably)";
+      }
+      orbA.addEventListener("click", () => measure(orbA));
+      orbB.addEventListener("click", () => measure(orbB));
+      document.getElementById("pairReset").addEventListener("click", () => {
+        measured = false;
+        [orbA, orbB].forEach((o) => {
+          o.textContent = "?";
+          o.classList.remove("is-up", "is-down");
+        });
+        pairStatus.textContent = "(re-entangled. measure either one)";
+      });
+
+      /* ============ THE UNIVERSE SPLITTER ============ */
+      const splitBtn = document.getElementById("splitBtn");
+      const splitStatus = document.getElementById("splitStatus");
+      const splitStats = document.getElementById("splitStats");
+      const pairEl = document.getElementById("universePair");
+      const SPLIT_KEY = "kellyLabUniverses";
+      let universes = parseInt(localStorage.getItem(SPLIT_KEY) || "0", 10);
+
+      function renderSplitStats() {
+        splitStats.textContent = universes === 0
+          ? ""
+          : "(universes created from this browser: " + universes + ". they are all doing great)";
+      }
+      renderSplitStats();
+
+      // one random bit from the device's entropy pool
+      async function quantumBit() {
+        const buf = new Uint8Array(1);
+        crypto.getRandomValues(buf);
+        return { bit: buf[0] % 2, source: "this device's entropy pool. the geneva photon lab does not take our calls" };
+      }
+
+      let splitting = false;
+      splitBtn.addEventListener("click", async () => {
+        if (splitting) return;
+        const a = document.getElementById("optionA").value.trim() || "have a snack";
+        const b = document.getElementById("optionB").value.trim() || "keep building";
+        splitting = true;
+        splitBtn.disabled = true;
+        pairEl.hidden = true;
+        const theater = reduced ? [] : [
+          "preparing one photon...",
+          "aiming it at a beam splitter...",
+          "the photon went both ways. so did everything else...",
+        ];
+        for (const line of theater) {
+          splitStatus.textContent = "(" + line + ")";
+          await new Promise((r) => setTimeout(r, 800));
+        }
+        const { bit, source } = await quantumBit();
+        const here = bit === 0 ? a : b;
+        const there = bit === 0 ? b : a;
+        document.getElementById("hereText").textContent = here;
+        document.getElementById("elseText").textContent = there;
+        pairEl.hidden = false;
+        splitStatus.textContent = "(split complete. randomness courtesy of " + source + ")";
+        universes += 1;
+        localStorage.setItem(SPLIT_KEY, String(universes));
+        renderSplitStats();
+        splitting = false;
+        splitBtn.disabled = false;
+        splitBtn.textContent = "Split it again";
+      });
+
+      /* ============ UNCERTAINTY ============ */
+      const cloud = document.getElementById("cloudCanvas");
+      const uctx = cloud.getContext("2d");
+      const certEl = document.getElementById("certainty");
+      const cloudStatus = document.getElementById("cloudStatus");
+      let cCenter = 0.5;
+
+      function sizeCloud() {
+        const dpr = window.devicePixelRatio || 1;
+        const w = cloud.parentElement.clientWidth;
+        const h = 140;
+        cloud.width = w * dpr;
+        cloud.height = h * dpr;
+        cloud.style.width = w + "px";
+        cloud.style.height = h + "px";
+        uctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function cloudTick() {
+        const w = cloud.clientWidth, h = cloud.clientHeight;
+        const c = Number(certEl.value) / 100;     // 0 = chill, 1 = pinned down
+        const spread = (1 - c) * w * 0.3 + 6;     // position uncertainty
+        const jitter = c * w * 0.25;              // momentum uncertainty
+        cCenter += gauss() * jitter * 0.06;
+        cCenter = Math.max(0.15, Math.min(0.85, cCenter));
+        if (reduced) cCenter = 0.5;
+        uctx.clearRect(0, 0, w, h);
+        uctx.fillStyle = "rgba(20, 32, 26, 0.55)";
+        for (let i = 0; i < 46; i++) {
+          const x = cCenter * w + gauss() * spread;
+          const y = h / 2 + gauss() * spread * 0.4;
+          uctx.fillRect(x, y, 3, 3);
+        }
+        const pos = c > 0.75 ? "pinned down" : c > 0.4 ? "roughly there" : "somewhere, probably";
+        const mom = c > 0.75 ? "absolutely no idea" : c > 0.4 ? "hazy" : "calm and knowable";
+        cloudStatus.textContent = "(position: " + pos + " · momentum: " + mom + ")";
+        if (!reduced) requestAnimationFrame(cloudTick);
+      }
+
+      sizeCloud();
+      cloudTick();
+      certEl.addEventListener("input", () => { if (reduced) cloudTick(); });
+      window.addEventListener("resize", () => { sizeSlit(); sizeCat(); sizeCloud(); if (reduced) { drawScene(); drawCat(0); cloudTick(); } });
+    })();
+  </script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+  <script defer src="script.js"></script>
+</body>
+</html>

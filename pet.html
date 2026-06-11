@@ -69,6 +69,11 @@
         </span>
         <span class="garden-count scribble" id="petStats" aria-live="polite"></span>
       </div>
+      <div class="gene-lab">
+        <p class="scribble">(the gene lab. fully reversible, ethically dubious)</p>
+        <div class="gene-row" id="geneColors" role="group" aria-label="Pet color"></div>
+        <div class="gene-row" id="geneAccessories" role="group" aria-label="Pet accessory"></div>
+      </div>
     </section>
 
     <section class="block block--lilac">
@@ -99,6 +104,7 @@
           <a href="claude.html">Garden</a>
           <a href="panel.html">Panel</a>
           <a href="noise.html">Noise</a>
+          <a href="quantum.html">Quantum</a>
           <a href="quotes.html">Spark</a>
         </nav>
         <span class="footer-meta">&copy; <span id="year"></span> Kelly Lucas</span>
@@ -127,6 +133,8 @@
         petted: 0,
         lastVisit: Date.now(),
       };
+      if (state.color === undefined) state.color = -1; // -1 = whatever it hatched with
+      if (!state.accessory) state.accessory = "none";
       const hoursAway = (Date.now() - state.lastVisit) / 3.6e6;
       state.lastVisit = Date.now();
       save();
@@ -142,11 +150,15 @@
       }
       const srand = mulberry32(state.seed);
 
-      const BODIES = ["#b1d8b3", "#cdcde0", "#e8e2c9"];
-      const SHADES = ["#8fbe92", "#b0b0cc", "#cfc6a0"];
-      const bodyIdx = Math.floor(srand() * BODIES.length);
-      const BODY = BODIES[bodyIdx];
-      const SHADE = SHADES[bodyIdx];
+      const PALETTE = [
+        { name: "mint",  body: "#b1d8b3", shade: "#8fbe92" },
+        { name: "lilac", body: "#cdcde0", shade: "#b0b0cc" },
+        { name: "cream", body: "#e8e2c9", shade: "#cfc6a0" },
+        { name: "peach", body: "#f0c9b9", shade: "#dba893" },
+        { name: "sky",   body: "#bcd8e6", shade: "#9bbfd2" },
+      ];
+      const bodyIdx = Math.floor(srand() * 3); // hatch color comes from the seed
+      const colors = () => PALETTE[state.color === -1 ? bodyIdx : state.color];
       const INK = "#14201a";
       const hasCheeks = srand() < 0.7;
       const RX = 7, RY = 5;
@@ -186,6 +198,8 @@
       let hearts = [];        // {x, y, vy, life}
 
       function drawPet(now) {
+        const BODY = colors().body;
+        const SHADE = colors().shade;
         const bob = reduced ? 0 : Math.round(Math.sin(now / 420) * 1);
         const cx = Math.round(pet.x);
         const cy = ground - RY - 1 + bob;
@@ -214,6 +228,24 @@
         // feet
         cell(cx - 3, ground + bob, "#3b4842"); cell(cx - 2, ground + bob, "#3b4842");
         cell(cx + 2, ground + bob, "#3b4842"); cell(cx + 3, ground + bob, "#3b4842");
+        // accessory (the gene lab's finest work)
+        const top = cy - RY;
+        if (state.accessory === "bow") {
+          cell(cx - 1, top, "#d98aa6"); cell(cx + 1, top, "#d98aa6");
+          cell(cx, top, "#c46d8d");
+          cell(cx - 1, top - 1, "#d98aa6"); cell(cx + 1, top - 1, "#d98aa6");
+        } else if (state.accessory === "antenna") {
+          cell(cx, top - 1, "#3b4842"); cell(cx, top - 2, "#3b4842");
+          cell(cx, top - 3, "#e07a5f");
+          if (!reduced && Math.floor(now / 500) % 2 === 0) cell(cx, top - 4, "rgba(224,122,95,0.4)");
+        } else if (state.accessory === "hat") {
+          for (let dx = -3; dx <= 3; dx++) cell(cx + dx, top, INK);
+          for (let dy = 1; dy <= 3; dy++) for (let dx = -2; dx <= 2; dx++) cell(cx + dx, top - dy, INK);
+          for (let dx = -2; dx <= 2; dx++) cell(cx + dx, top - 1, "#46604c");
+        } else if (state.accessory === "crown") {
+          for (let dx = -2; dx <= 2; dx++) cell(cx + dx, top, "#e6c95c");
+          cell(cx - 2, top - 1, "#e6c95c"); cell(cx, top - 1, "#e6c95c"); cell(cx + 2, top - 1, "#e6c95c");
+        }
       }
 
       function drawSnack() {
@@ -311,6 +343,49 @@
       }
       document.getElementById("petBtn").addEventListener("click", doPet);
       canvas.addEventListener("click", doPet);
+
+      /* Gene lab */
+      const colorRow = document.getElementById("geneColors");
+      PALETTE.forEach((p, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "swatch";
+        b.style.background = p.body;
+        b.setAttribute("aria-label", "color: " + p.name);
+        b.addEventListener("click", () => {
+          state.color = i; save();
+          colorRow.querySelectorAll(".swatch").forEach((s) => s.classList.remove("is-active"));
+          b.classList.add("is-active");
+          setStatus(pick(["genes spliced. it is " + p.name + " now.", "a bold new look.", "it did not consent but it does approve."]));
+          if (reduced) render(performance.now());
+        });
+        if ((state.color === -1 ? bodyIdx : state.color) === i) b.classList.add("is-active");
+        colorRow.appendChild(b);
+      });
+
+      const ACCESSORIES = [
+        ["none", "au naturel"],
+        ["bow", "bow"],
+        ["antenna", "antenna"],
+        ["hat", "top hat"],
+        ["crown", "crown"],
+      ];
+      const accRow = document.getElementById("geneAccessories");
+      ACCESSORIES.forEach(([key, label]) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "save-spark gene-pill";
+        b.textContent = label;
+        b.addEventListener("click", () => {
+          state.accessory = key; save();
+          accRow.querySelectorAll(".gene-pill").forEach((s) => s.classList.remove("is-active"));
+          b.classList.add("is-active");
+          setStatus(key === "none" ? "back to basics. timeless." : key === "crown" ? "it rules the lab now. obviously." : "very distinguished.");
+          if (reduced) render(performance.now());
+        });
+        if (state.accessory === key) b.classList.add("is-active");
+        accRow.appendChild(b);
+      });
 
       const nameInput = document.getElementById("nameInput");
       document.getElementById("nameBtn").addEventListener("click", () => {

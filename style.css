@@ -705,7 +705,8 @@ ul {
 
 .footer-nav {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 12px 20px;
 }
 
 .footer-nav a:hover {
@@ -1692,4 +1693,250 @@ html.fx-serious .site-footer {
 .seq-tempo input {
   accent-color: var(--mint-deep);
   width: 140px;
+}
+
+/* ---------- Gene lab (pet.html) ---------- */
+.gene-lab {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gene-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.swatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid rgba(20, 32, 26, 0.3);
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.swatch:hover {
+  transform: scale(1.12);
+}
+
+.swatch.is-active {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.gene-pill {
+  margin-top: 0;
+}
+
+.gene-pill.is-active {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+/* ---------- Quantum wing (quantum.html) ---------- */
+.block--ink-room .hero-aside {
+  color: rgba(201, 230, 201, 0.75);
+}
+
+.cta--ink {
+  color: var(--mint);
+}
+
+.cta--ink .cta__icon {
+  border-color: var(--mint);
+}
+
+.cta--ink:hover .cta__icon {
+  background: var(--mint);
+  color: var(--ink);
+}
+
+.q-stage {
+  margin-top: clamp(24px, 4vw, 40px);
+  border: 1px solid rgba(201, 230, 201, 0.2);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: #0e1813;
+}
+
+#slitCanvas {
+  display: block;
+}
+
+.switch--ink {
+  color: var(--mint);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.switch--ink input {
+  background: rgba(201, 230, 201, 0.2);
+}
+
+.switch--ink input:checked {
+  background: #e07a5f;
+}
+
+.block--ink-room .garden-controls {
+  align-items: center;
+}
+
+.q-cat,
+.q-cloud {
+  display: block;
+  width: 100%;
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(20, 32, 26, 0.12);
+}
+
+.q-pair {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 12px 0;
+}
+
+.q-link {
+  flex: 1;
+  max-width: 120px;
+  height: 0;
+  border-top: 1.5px dashed rgba(20, 32, 26, 0.4);
+}
+
+.q-orb {
+  width: 86px;
+  height: 86px;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  background: rgba(255, 255, 255, 0.55);
+  font-family: var(--font-display);
+  font-size: 38px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.q-orb:hover {
+  transform: scale(1.06);
+}
+
+.q-orb.is-up {
+  background: var(--mint-deep);
+}
+
+.q-orb.is-down {
+  background: #e07a5f;
+  color: #fff8f4;
+}
+
+.q-slider {
+  color: var(--ink-soft);
+}
+
+.q-slider input {
+  accent-color: var(--ink);
+  width: 100%;
+  max-width: 280px;
+}
+
+/* ---------- Universe splitter (quantum.html) ---------- */
+.splitter-form {
+  margin-top: clamp(20px, 3vw, 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 520px;
+}
+
+.splitter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(201, 230, 201, 0.7);
+}
+
+.splitter-input {
+  border: 1px solid rgba(201, 230, 201, 0.35);
+  border-radius: 999px;
+  background: rgba(201, 230, 201, 0.07);
+  padding: 13px 18px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--mint);
+}
+
+.splitter-input::placeholder {
+  color: rgba(201, 230, 201, 0.35);
+}
+
+.splitter-input:focus {
+  outline: 2px solid var(--mint-deep);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+.splitter-go {
+  align-self: flex-start;
+}
+
+.universe-pair {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  max-width: 760px;
+}
+
+@media (min-width: 760px) {
+  .universe-pair {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.universe-card {
+  border: 1px solid var(--mint-deep);
+  border-radius: var(--radius-card);
+  background: rgba(177, 216, 179, 0.1);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.universe-card--elsewhere {
+  border-color: rgba(201, 230, 201, 0.25);
+  background: transparent;
+  opacity: 0.7;
+}
+
+.universe-tag {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(201, 230, 201, 0.6);
+}
+
+.universe-text {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.4vw, 28px);
+  letter-spacing: -0.02em;
+  color: var(--mint);
+}
+
+#splitStatus,
+#splitStats {
+  margin-top: 14px;
 }
