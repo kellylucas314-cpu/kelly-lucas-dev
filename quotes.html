@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spark Notes · Kelly Lucas</title>
+  <meta name="description" content="A small inspiration page for quotes, sparks, and saved lines." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <span class="logo-mark"></span>
+      Kelly Lucas
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#now">Now</a>
+      <a href="quotes.html" aria-current="page">Spark</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="page spark-page">
+    <section class="block block--mint spark-hero">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>project two</span>
+      </div>
+      <h1 class="display balance">Spark<br />notes.</h1>
+      <div class="hero-aside">
+        <p>
+          A living quote wall for the lines that pull me forward: vision,
+          courage, creative momentum, and tiny reminders to keep building.
+        </p>
+        <button class="cta button-reset" id="randomQuoteBtn" type="button">
+          <span class="cta__label">Shuffle quote</span>
+          <span class="cta__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+            </svg>
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <section class="block block--cream featured-spark" aria-live="polite">
+      <div class="dot-tag dot-tag--top-left">
+        <span class="dot-tag__dot"></span>
+        <span>today's spark</span>
+      </div>
+      <blockquote id="featuredQuote" class="balance"></blockquote>
+      <div class="spark-meta">
+        <span id="featuredAttribution"></span>
+        <span id="featuredCategory"></span>
+      </div>
+      <button class="save-spark" id="saveQuoteBtn" type="button">Save to favorites</button>
+    </section>
+
+    <section class="block--bare spark-grid-wrap">
+      <div class="three-up__head spark-head">
+        <div class="dot-tag">
+          <span class="dot-tag__dot"></span>
+          <span>quote garden</span>
+        </div>
+        <p>Collected lines for when the page needs a little oxygen.</p>
+      </div>
+      <div class="spark-grid" id="quoteGrid"></div>
+    </section>
+
+    <section class="block block--mint favorites-panel">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>saved</span>
+      </div>
+      <h2 class="display display--sm">Favorites</h2>
+      <div id="favoritesList" class="favorites-list"></div>
+    </section>
+  </main>
+
+  <footer id="contact" class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <span class="footer-tag">back to the lab</span>
+        <a class="footer-mail" href="index.html">kellylucas.dev</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const quotes = [
+      {
+        text: "If you are working on something exciting that you really care about, you don't have to be pushed. The vision pulls you.",
+        attribution: "Steve Jobs",
+        category: "Vision"
+      },
+      {
+        text: "There needs to be someone who is sort of the keeper and reiterator of the vision.",
+        attribution: "Steve Jobs",
+        category: "Leadership"
+      },
+      {
+        text: "The greatest people are self-managing. What they need is a common vision.",
+        attribution: "Steve Jobs",
+        category: "Leadership"
+      },
+      {
+        text: "Build slowly. Ship anyway. Learn in public.",
+        attribution: "Kelly's lab rule",
+        category: "Making"
+      },
+      {
+        text: "Make the thing you wish existed, badly, and then make it less badly.",
+        attribution: "A working note",
+        category: "Momentum"
+      },
+      {
+        text: "Nobody should die from a cancer caught too late.",
+        attribution: "HelioFlux mission",
+        category: "Mission"
+      }
+    ];
+
+    const storageKey = "kellySparkFavorites";
+    let currentQuote = quotes[0];
+
+    function getFavorites() {
+      try { return JSON.parse(localStorage.getItem(storageKey)) || []; }
+      catch { return []; }
+    }
+
+    function saveFavorites(items) {
+      localStorage.setItem(storageKey, JSON.stringify(items));
+    }
+
+    function renderFeatured(quote) {
+      currentQuote = quote;
+      document.getElementById("featuredQuote").textContent = `“${quote.text}”`;
+      document.getElementById("featuredAttribution").textContent = quote.attribution;
+      document.getElementById("featuredCategory").textContent = quote.category;
+      const exists = getFavorites().some(item => item.text === quote.text);
+      document.getElementById("saveQuoteBtn").textContent = exists ? "Saved" : "Save to favorites";
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById("quoteGrid");
+      grid.innerHTML = quotes.map((quote, index) => `
+        <article class="spark-card" data-index="${index}">
+          <p>“${quote.text}”</p>
+          <div><span>${quote.attribution}</span><span>${quote.category}</span></div>
+        </article>
+      `).join("");
+      grid.querySelectorAll(".spark-card").forEach(card => {
+        card.addEventListener("click", () => renderFeatured(quotes[Number(card.dataset.index)]));
+      });
+    }
+
+    function renderFavorites() {
+      const list = document.getElementById("favoritesList");
+      const favorites = getFavorites();
+      if (!favorites.length) {
+        list.innerHTML = "<p>No favorites saved yet. Tap a line when it hits.</p>";
+        return;
+      }
+      list.innerHTML = favorites.map((quote, index) => `
+        <article class="favorite-item">
+          <p>“${quote.text}”</p>
+          <div>
+            <span>${quote.attribution}</span>
+            <button type="button" data-index="${index}">Remove</button>
+          </div>
+        </article>
+      `).join("");
+      list.querySelectorAll("button").forEach(button => {
+        button.addEventListener("click", () => {
+          const next = getFavorites();
+          next.splice(Number(button.dataset.index), 1);
+          saveFavorites(next);
+          renderFavorites();
+          renderFeatured(currentQuote);
+        });
+      });
+    }
+
+    document.getElementById("randomQuoteBtn").addEventListener("click", () => {
+      const next = quotes[Math.floor(Math.random() * quotes.length)];
+      renderFeatured(next);
+    });
+
+    document.getElementById("saveQuoteBtn").addEventListener("click", () => {
+      const favorites = getFavorites();
+      if (!favorites.some(item => item.text === currentQuote.text)) {
+        favorites.push(currentQuote);
+        saveFavorites(favorites);
+      }
+      renderFavorites();
+      renderFeatured(currentQuote);
+    });
+
+    renderFeatured(quotes[0]);
+    renderGrid();
+    renderFavorites();
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

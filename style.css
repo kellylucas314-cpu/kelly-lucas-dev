@@ -743,3 +743,207 @@ ul {
   .tag--top-right { right: 16px; }
   .tag--top-left  { left: 16px; }
 }
+
+/* ---------- Spark page ---------- */
+.button-reset {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.site-nav [aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+.spark-page {
+  counter-reset: spark;
+}
+
+.spark-hero {
+  min-height: clamp(420px, 66vh, 680px);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(32px, 6vw, 72px);
+  padding-top: clamp(68px, 10vw, 128px);
+}
+
+.spark-hero .display {
+  align-self: end;
+}
+
+@media (min-width: 900px) {
+  .spark-hero {
+    grid-template-columns: 1.35fr 1fr;
+    align-items: end;
+  }
+}
+
+.featured-spark {
+  padding-top: clamp(76px, 9vw, 132px);
+  padding-bottom: clamp(56px, 7vw, 96px);
+}
+
+.featured-spark blockquote {
+  margin: 0;
+  max-width: 17ch;
+  font-family: var(--font-display);
+  font-size: clamp(38px, 7vw, 104px);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+}
+
+.spark-meta {
+  margin-top: clamp(24px, 4vw, 44px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  color: var(--ink-soft);
+}
+
+.spark-meta span:last-child {
+  border: 1px solid rgba(20, 32, 26, 0.18);
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.save-spark {
+  margin-top: 26px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  padding: 12px 18px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.save-spark:hover {
+  background: var(--ink);
+  color: var(--cream);
+  transform: translateY(-1px);
+}
+
+.spark-head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.spark-head p {
+  color: var(--ink-soft);
+  max-width: 42ch;
+}
+
+.spark-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.spark-card {
+  padding: clamp(24px, 3vw, 36px);
+  min-height: 230px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 28px;
+  border-top: 1px solid var(--ink);
+  margin-top: -1px;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.spark-card:hover {
+  background: rgba(20, 32, 26, 0.035);
+}
+
+.spark-card p {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 38px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.spark-card div,
+.favorite-item div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--ink-mute);
+  font-size: 13px;
+}
+
+.spark-card div span:last-child {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+@media (min-width: 760px) {
+  .spark-grid {
+    grid-template-columns: repeat(2, 1fr);
+    border-left: 1px solid var(--ink);
+    border-right: 1px solid var(--ink);
+  }
+
+  .spark-card {
+    border-left: 1px solid var(--ink);
+    margin-left: -1px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .spark-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.favorites-panel {
+  padding-top: clamp(72px, 9vw, 120px);
+}
+
+.favorites-list {
+  margin-top: clamp(32px, 5vw, 56px);
+  display: grid;
+  gap: 14px;
+}
+
+.favorites-list > p {
+  color: var(--ink-soft);
+  font-size: clamp(20px, 2.2vw, 28px);
+}
+
+.favorite-item {
+  background: rgba(255, 255, 255, 0.38);
+  border: 1px solid rgba(20, 32, 26, 0.12);
+  border-radius: 18px;
+  padding: 22px;
+}
+
+.favorite-item p {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.8vw, 34px);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin-bottom: 18px;
+}
+
+.favorite-item button {
+  border: 0;
+  background: transparent;
+  color: var(--ink-mute);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
