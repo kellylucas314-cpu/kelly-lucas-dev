@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kelly's Lab — tools</title>
+<meta name="description" content="Kelly Lucas's little laboratory: collectors, transcribers, and a second brain.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧪%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --paper: #fdfbf7; --card: #ffffff; --ink: #23201b; --muted: #8d857a;
+    --faint: #b9b1a4; --line: #eee8dc; --blue: #2f6fe4; --blue-soft: #e9f0fd;
+    --serif: "Palatino Linotype", Palatino, "Iowan Old Style", Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 64px 24px 80px; min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background:
+      radial-gradient(900px 400px at 85% -180px, #f3f7ff 0%, rgba(243,247,255,0) 65%),
+      radial-gradient(700px 380px at -10% 108%, #fdf3e7 0%, rgba(253,243,231,0) 60%),
+      var(--paper);
+    color: var(--ink); -webkit-font-smoothing: antialiased;
+  }
+  main { max-width: 880px; margin: 0 auto; }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .26em;
+    text-transform: uppercase; color: var(--faint); margin: 0 0 14px; }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(34px, 6vw, 52px);
+    line-height: 1.06; margin: 0 0 16px; letter-spacing: -.015em; text-wrap: balance; }
+  h1 .em { color: var(--blue); font-style: italic; }
+  .lede { font-size: 17px; line-height: 1.65; color: var(--muted); max-width: 56ch;
+    margin: 0 0 46px; font-weight: 300; }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); }
+  a.card {
+    display: flex; flex-direction: column; gap: 9px; text-decoration: none;
+    background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+    padding: 22px 22px 20px; color: var(--ink);
+    box-shadow: 0 1px 2px rgba(90,74,48,.04), 0 6px 20px rgba(90,74,48,.05);
+    transition: transform .16s ease, box-shadow .16s ease, border-color .16s;
+  }
+  a.card:hover { transform: translateY(-4px); border-color: #d9e4fb;
+    box-shadow: 0 10px 26px rgba(47,111,228,.12), 0 20px 50px rgba(90,74,48,.08); }
+  .icon { font-size: 26px; line-height: 1; }
+  .card h2 { font-size: 16.5px; font-weight: 650; margin: 2px 0 0; letter-spacing: -.01em; }
+  .card p { font-size: 13.5px; line-height: 1.55; color: var(--muted); margin: 0; font-weight: 300; }
+  .cta { margin-top: auto; padding-top: 10px; font-size: 12.5px; font-weight: 650; color: var(--blue); }
+  .badge { align-self: flex-start; font-size: 10px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; padding: 3px 9px; border-radius: 99px;
+    background: var(--blue-soft); color: var(--blue); }
+  .badge.private { background: #f6f1e7; color: #a08a5f; }
+  footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line);
+    font-size: 13px; color: var(--faint); font-weight: 300; }
+  footer b { color: var(--muted); font-weight: 600; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Kelly Lucas · the lab</p>
+  <h1>Small tools, built for fun,<br>that turned into a <span class="em">second brain</span>.</h1>
+  <p class="lede">A little laboratory of things I've built with my AI collaborators — collectors, transcribers, and the beginnings of an agentic operating system that remembers everything I find interesting.</p>
+
+  <div class="grid">
+    <a class="card" href="https://mighty-trail-690.higgsfield.app" target="_blank" rel="noopener">
+      <span class="icon">🪶</span>
+      <h2>Magpie Collector</h2>
+      <p>My shiny-things collector. Paste anything, share from a phone, and it auto-files itself into boards and clusters.</p>
+      <span class="cta">Open the collector →</span>
+    </a>
+
+    <a class="card" href="https://kelly-youtube-transcriber.vercel.app" target="_blank" rel="noopener">
+      <span class="icon">🎬</span>
+      <h2>YouTube Transcriber</h2>
+      <p>Paste a YouTube link, get a clean Markdown transcript. Serverless, instant, no strings attached.</p>
+      <span class="cta">Transcribe something →</span>
+    </a>
+
+    <a class="card" href="https://kellylucas314-cpu.github.io/command-center/" target="_blank" rel="noopener">
+      <span class="icon">🛰️</span>
+      <h2>Command Center</h2>
+      <p>The dashboard my agent Kip and I share — knowledge base, profiles, and the day's moving pieces.</p>
+      <span class="cta">Peek inside →</span>
+    </a>
+
+    <a class="card" href="https://kellylucas314-cpu.github.io/helioflux-website/" target="_blank" rel="noopener">
+      <span class="icon">☀️</span>
+      <h2>HelioFlux</h2>
+      <p>The real job: biophotonic cancer detection — finding cancer by the light our own cells emit.</p>
+      <span class="cta">Visit HelioFlux →</span>
+    </a>
+
+    <a class="card" href="/brain/galaxy.html">
+      <span class="icon">✨</span>
+      <span class="badge">live · the garden</span>
+      <h2>The Second Brain Galaxy</h2>
+      <p>My knowledge as a night sky — every note a star, clustered by theme, wired together by an AI librarian named Kip.</p>
+      <span class="cta">Fly through it →</span>
+    </a>
+
+    <a class="card" href="/brain/gallery.html">
+      <span class="icon">🖼️</span>
+      <span class="badge">live · the garden</span>
+      <h2>The Shiny Things Gallery</h2>
+      <p>Everything the magpie has collected — 160+ clips, searchable, tagged, with all my little notes on why.</p>
+      <span class="cta">Browse the collection →</span>
+    </a>
+
+    <a class="card" href="mailto:kellylucas314@gmail.com">
+      <span class="icon">💌</span>
+      <h2>Say hi</h2>
+      <p>Curious how any of this works, or want one of your own? I love talking about this stuff.</p>
+      <span class="cta">Email me →</span>
+    </a>
+  </div>
+
+  <footer>Built by <b>Kelly</b> with <b>Claude</b> and <b>Kip</b> 🪶 · everything here is plain Markdown, one vault, and joy.</footer>
+</main>
+</body>
+</html>
