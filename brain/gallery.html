@@ -283,6 +283,8 @@ function render() {
 }
 document.getElementById("tagline-count").textContent = ITEMS.length + " clips";
 document.getElementById("searchbox").addEventListener("input", render);
+const preset = new URLSearchParams(location.search).get("q");
+if (preset) document.getElementById("searchbox").value = preset;
 render();
 </script>
 </body>
