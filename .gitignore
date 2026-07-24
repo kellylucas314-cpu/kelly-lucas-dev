@@ -14,3 +14,7 @@ node_modules/
 
 # Vercel
 .vercel
+.env*.local
+
+# Local browser QA
+.playwright-cli/
