@@ -1311,7 +1311,7 @@ ul {
   margin-top: 0;
 }
 
-/* ---------- Wide "loading" card (experiment 04) ---------- */
+/* ---------- Wide experiment card ---------- */
 .card--wide {
   min-height: auto;
 }
@@ -1331,6 +1331,57 @@ ul {
     gap: 28px;
     flex-wrap: wrap;
     flex: 1;
+  }
+}
+
+/* ---------- AI Workspace Field Guide card ---------- */
+.card--guide {
+  background: var(--cream);
+}
+
+.card--guide:hover,
+.card--guide:nth-child(even):hover {
+  background: var(--cream);
+}
+
+.card--guide:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: -3px;
+}
+
+.guide-card__media {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(20, 32, 26, 0.2);
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(20, 32, 26, 0.1);
+}
+
+.guide-card__image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1730 / 909;
+  object-fit: cover;
+}
+
+.card--guide .card__top {
+  gap: 16px;
+}
+
+.card--guide .card__desc {
+  max-width: 44ch;
+}
+
+@media (min-width: 760px) {
+  .guide-card__media {
+    flex: 0 1 480px;
+  }
+
+  .card--guide .card__top {
+    flex: 1;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
   }
 }
 

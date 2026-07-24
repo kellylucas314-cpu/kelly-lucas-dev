@@ -13,7 +13,7 @@
     <a href="/" class="logo">
       <span class="logo-mark" id="logoMark"></span>
       Kelly Lucas
-      <span class="version-pill" aria-hidden="true">v0.7</span>
+      <span class="version-pill" aria-hidden="true">v0.8</span>
     </a>
     <nav class="site-nav" aria-label="Primary">
       <a href="#work">Work</a>
@@ -173,20 +173,40 @@
             </span>
           </a>
         </article>
-        <article class="card card--experiment card--wide">
+        <a
+          href="https://guide.kellylucas.dev"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="card card--wide card--guide"
+          aria-label="Open Kelly's AI Workspace Field Guide"
+        >
+          <div class="guide-card__media">
+            <img
+              class="guide-card__image"
+              src="assets/ai-workspace-field-guide.png"
+              width="1730"
+              height="909"
+              loading="lazy"
+              alt="Kelly's AI Workspace Field Guide illustrated system map"
+            />
+          </div>
           <div class="card__top">
             <div class="dot-tag">
               <span class="dot-tag__dot"></span>
-              <span>experiment 04</span>
+              <span>experiment 04 &middot; field guide</span>
             </div>
-            <h3 class="card__title balance">loading&hellip;</h3>
-            <p class="card__desc">Something is cooking here. It ships when it ships.</p>
-            <div class="progress" role="img" aria-label="Progress: 62 percent, stalled">
-              <div class="progress__bar" id="expProgress"></div>
-            </div>
+            <h3 class="card__title balance">AI Workspace Field Guide</h3>
+            <p class="card__desc">A calm, searchable map of AI tools, skills, memory, Obsidian, Git, and project handoffs.</p>
           </div>
-          <button type="button" class="exp-status" id="expStatus">still cooking</button>
-        </article>
+          <span class="cta">
+            <span class="cta__label">Open guide</span>
+            <span class="cta__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+              </svg>
+            </span>
+          </span>
+        </a>
       </div>
     </section>
 
@@ -300,15 +320,13 @@
       </div>
       <p class="footer-signature" aria-label="Build status">
         <span class="footer-signature__dot" aria-hidden="true"></span>
-        <button type="button" class="footer-version" id="changelogBtn" aria-expanded="false" aria-controls="changelogPop">v0.7</button>
+        <button type="button" class="footer-version" id="changelogBtn" aria-expanded="false" aria-controls="changelogPop">v0.8</button>
         <span aria-hidden="true">&middot;</span>
-        <span>last edited 2026-06-10</span>
+        <span>last edited 2026-07-23</span>
         <span aria-hidden="true">&middot;</span>
         <span>97 fonts auditioned</span>
         <span aria-hidden="true">&middot;</span>
-        <span>3 experiments live</span>
-        <span aria-hidden="true">&middot;</span>
-        <span>1 loading</span>
+        <span>4 experiments live</span>
         <span aria-hidden="true">&middot;</span>
         <span id="labClock"></span>
         <span aria-hidden="true">&middot;</span>
@@ -317,6 +335,7 @@
           <span>v0.5 shipped the site</span>
           <span>v0.6 grew spark notes</span>
           <span>v0.7 became a lab</span>
+          <span>v0.8 mapped the AI workspace</span>
         </span>
       </p>
       <div class="footer-bottom">
