@@ -29,9 +29,9 @@ const URL = 'file://' + resolve(root, 'army.html');
 const CAP_MS = 60000;
 
 const RANKS = [
-  [0, 'Lawn Private'], [250, 'Corporal of Clippings'], [700, 'Turf Sergeant'],
-  [1300, 'Lieutenant of the Air Guard'], [2200, 'Major Mulch'],
-  [3500, 'General of the Lawn'], [5500, 'Field Marshal When Pigs Fly'],
+  [0, 'Lawn Private'], [300, 'Corporal of Clippings'], [900, 'Turf Sergeant'],
+  [1600, 'Lieutenant of the Air Guard'], [2600, 'Major Mulch'],
+  [4000, 'General of the Lawn'], [6000, 'Field Marshal When Pigs Fly'],
 ];
 const rankFor = s => RANKS.reduce((r, [min, name]) => (s >= min ? name : r), RANKS[0][1]);
 const median = a => { const s = [...a].sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; };
@@ -68,11 +68,21 @@ const runPersona = async ({ name, capMs }) => {
         setTimeout(() => { jump(420); }, 300);
         jumps++;
       }
+      // ...and sometimes panic-jumps at an incoming pig, like real novices do
+      const pig = s.obs.find(o => o.t === 'pig' && o.dx > 0 && o.dx < s.speed * 0.5);
+      if (!s.air && pig && Math.random() < 0.02 && now - lastQueue > 900) {
+        lastQueue = now;
+        jump(300);
+      }
     } else if (name === 'veteran') {
       // strong human: pair-aware late takeoffs; under a trailing pig, jumps
-      // EARLY so a full hold still lands before the pig — never short-hops
+      // EARLY so a full hold still lands before the pig — never short-hops.
+      // On an accidental crate catch, hops clear before any pig arrives.
       const s = window.__bootcamp.snap;
-      if (!s.air) {
+      if (s.onPlat) {
+        // a jump from a crate arcs clear over any swoop; exit early, never ride into one
+        if (s.obs.some(o => o.t === 'pig' && o.dx > -60 && o.dx < s.speed * 1.2)) jump(400);
+      } else if (!s.air) {
         const ms_ = s.obs.filter(o => o.t === 'mower' && o.dx > -40).sort((a, b) => a.dx - b.dx);
         const m = ms_[0];
         if (m) {
@@ -87,9 +97,13 @@ const runPersona = async ({ name, capMs }) => {
         }
       }
     } else if (name === 'ace') {
-      // near-optimal: pair-aware late takeoffs AND short hops under trailing pigs
+      // near-optimal: pair-aware late takeoffs AND short hops under trailing
+      // pigs; exits crates early when a pig approaches
       const s = window.__bootcamp.snap;
-      if (!s.air) {
+      if (s.onPlat) {
+        // a jump from a crate arcs clear over any swoop; exit early, never ride into one
+        if (s.obs.some(o => o.t === 'pig' && o.dx > -60 && o.dx < s.speed * 1.2)) jump(400);
+      } else if (!s.air) {
         const ms_ = s.obs.filter(o => o.t === 'mower' && o.dx > -40).sort((a, b) => a.dx - b.dx);
         const m = ms_[0];
         if (m) {
@@ -193,48 +207,115 @@ await Promise.all([
 ]);
 const chaosState = await page.evaluate(() => window.__bootcamp.state);
 
-/* ——— Scorecard ——— */
+/* ——— Reward layer probes: do the Mario mechanics actually work? ——— */
+// Stomper: descends onto mower backs; counts BOING bounces
+await freshRun();
+const stompProbe = await page.evaluate(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const key = t => document.dispatchEvent(new KeyboardEvent(t, { code: 'Space', bubbles: true, cancelable: true }));
+  const k = Math.min(1.3, Math.max(0.65, window.innerHeight / 900));
+  let boings = 0;
+  const seen = new Set();
+  const watch = setInterval(() => {
+    document.querySelectorAll('.wordpop').forEach(w => {
+      if (!seen.has(w)) { seen.add(w); if (w.textContent.includes('BOING')) boings++; }
+    });
+  }, 40);
+  const t0 = performance.now();
+  while (window.__bootcamp.state === 'playing' && performance.now() - t0 < 22000) {
+    const s = window.__bootcamp.snap;
+    if (!s.air && !s.onPlat) {
+      const m = s.obs.filter(o => o.t === 'mower' && o.dx > 0).sort((a, b) => a.dx - b.dx)[0];
+      if (m && m.dx - 88 * k < s.speed * 0.3) { key('keydown'); setTimeout(() => key('keyup'), 110); }
+    }
+    await sleep(28);
+  }
+  clearInterval(watch);
+  return { boings, nuts: window.__bootcamp.snap.nuts, state: window.__bootcamp.state };
+});
+console.log('stomp probe:', JSON.stringify(stompProbe));
+
+// Platformer: full-hold jumps timed to catch low crate strips
+await freshRun();
+const platProbe = await page.evaluate(async () => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const key = t => document.dispatchEvent(new KeyboardEvent(t, { code: 'Space', bubbles: true, cancelable: true }));
+  const k = Math.min(1.3, Math.max(0.65, window.innerHeight / 900));
+  let landings = 0, rideMs = 0, wasOn = false;
+  const t0 = performance.now();
+  while (window.__bootcamp.state === 'playing' && performance.now() - t0 < 32000) {
+    const s = window.__bootcamp.snap;
+    if (!s.air && !s.onPlat) {
+      // intercept math: the descent crosses crate-top height at t≈0.47–0.53s of
+      // a full jump, so the strip front belongs 0.18–0.38s out at takeoff
+      const plat = s.platDetail.find(q => q.y < 200 * k &&
+        q.dx - 88 * k > s.speed * 0.18 && q.dx - 88 * k < s.speed * 0.38);
+      if (plat) { key('keydown'); setTimeout(() => key('keyup'), 420); }
+      else {
+        const m = s.obs.filter(o => o.t === 'mower' && o.dx > 0).sort((x, y) => x.dx - y.dx)[0];
+        if (m && m.dx - 88 * k < s.speed * 0.13) { key('keydown'); setTimeout(() => key('keyup'), 330); }
+      }
+    }
+    if (s.onPlat) { rideMs += 28; if (!wasOn) landings++; }
+    wasOn = s.onPlat;
+    await sleep(28);
+  }
+  return { landings, rideSec: +(rideMs / 1000).toFixed(2), nuts: window.__bootcamp.snap.nuts, state: window.__bootcamp.state };
+});
+console.log('platform probe:', JSON.stringify(platProbe));
+
+/* ——— Grades ———
+   Honest formulas, defined before results are seen. 100 = the design intent
+   fully holds; deductions scale with distance from it. */
 const med = {};
 for (const [name] of PLAN) med[name] = median(results[name].map(r => r.score));
-const aceCapRate = results.ace.filter(r => r.cause === 'survived-cap').length / results.ace.length;
-const masherPigShare = results.masher.filter(r => r.cause === 'pig').length /
-  Math.max(1, results.masher.filter(r => r.cause !== 'survived-cap').length);
+const aceSurv = median(results.ace.map(r => r.ms)) / 1000;
 const statueGrace = median(results.statue.map(r => r.ms)) / 1000;
 const vetTimes = results.veteran.map(r => r.ms / 1000);
+const clamp100 = v => Math.max(0, Math.min(100, Math.round(v)));
 
-const checks = [
-  ['FAIRNESS   ace median >= 35s or caps out', median(results.ace.map(r => r.ms)) / 1000 >= 35 || aceCapRate >= 0.6],
-  ['GRACE      statue survives >= 3.5s', statueGrace >= 3.5],
-  // spam can luck over an obstacle or two, and statue's near-zero score is too
-  // noisy to be a yardstick — the claim that matters is that mashing is not a
-  // VIABLE strategy: it never reaches the first rank threshold (250) and stays
-  // far below informed play
-  ['DEPTH      spam is not a viable strategy', med.masher < 250 && med.masher < med.novice / 4],
-  ['SKILL      informed > uninformed, mastery > competence', med.novice > Math.max(med.statue, med.masher) * 3 && med.veteran > med.novice * 1.2 && med.ace >= med.veteran * 0.9],
-  ['RANKS      tiers land different ranks', new Set([rankFor(med.masher), rankFor(med.novice), rankFor(med.veteran), rankFor(med.ace)]).size >= 3],
-  ['PERF       p95 frame <= 20ms', perf.frames > 100 && perf.p95 <= 20],
-  ['LEAKS      effect residue < 10, obstacles bounded', perf.residue < 10 && perf.obstacles <= 10],
-  ['ROBUST     no errors after chaos input+resize', errors.length === 0 && (chaosState === 'playing' || chaosState === 'dead')],
-];
+const grades = {
+  // near-optimal play should live >= 38s of the 60s window
+  FAIRNESS: clamp100(aceSurv / 38 * 100),
+  // a frozen beginner deserves >= 4s before first contact
+  GRACE: clamp100(statueGrace / 4 * 100),
+  // mashing must stay under rank one (250) and far below informed play
+  DEPTH: med.masher >= 250 ? 40 : clamp100(100 * Math.min(1, (med.novice / 4) / Math.max(1, med.masher))),
+  // margins: informed 3x uninformed; mastery 1.2x competence; ace >= 0.9x veteran
+  SKILL: clamp100(100 * Math.min(1,
+    med.novice / (3 * Math.max(med.statue, med.masher, 1)),
+    med.veteran / (1.2 * Math.max(med.novice, 1)),
+    med.ace / (0.9 * Math.max(med.veteran, 1)))),
+  RANKS: [0, 20, 60, 95, 100][new Set([rankFor(med.masher), rankFor(med.novice), rankFor(med.veteran), rankFor(med.ace)]).size],
+  PERF: perf.frames > 100 ? clamp100(100 - Math.max(0, perf.p95 - 17) * 5 - (perf.max > 80 ? 10 : 0)) : 0,
+  LEAKS: clamp100(100 - (perf.residue >= 10 ? 30 : 0) - (perf.obstacles > 10 ? 30 : 0)
+    - (perf.heapMB !== null && perf.heapMB > 5 ? 30 : 0)),
+  ROBUST: errors.length === 0 && (chaosState === 'playing' || chaosState === 'dead') ? 100 : 40,
+  // the Mario layer must demonstrably work: three independent bounces proves the
+  // stomp; a landing with ride time proves crates; acorns must actually flow
+  REWARD: clamp100((stompProbe.boings >= 3 ? 40 : stompProbe.boings * 12) + (platProbe.landings >= 1 ? 25 : 0)
+    + (platProbe.rideSec >= 0.15 ? 5 : 0) + Math.min(30, stompProbe.nuts + platProbe.nuts)),
+};
 
-console.log('\n=== SCORECARD ===');
+console.log('\n=== LADDER ===');
 for (const [name] of PLAN) {
   const rs = results[name];
   console.log(`${name.padEnd(8)} median score ${String(med[name]).padStart(4)} → ${rankFor(med[name]).padEnd(28)}` +
     ` | survival ${(median(rs.map(r => r.ms)) / 1000).toFixed(1)}s | causes: ${rs.map(r => r.cause[0]).join(',')}`);
 }
-console.log(`veteran death spread: ${Math.min(...vetTimes).toFixed(1)}s – ${Math.max(...vetTimes).toFixed(1)}s` +
-  ` | masher pig-death share: ${(masherPigShare * 100).toFixed(0)}%`);
+console.log(`veteran death spread: ${Math.min(...vetTimes).toFixed(1)}s – ${Math.max(...vetTimes).toFixed(1)}s`);
 if (perf.frames > 100) {
   console.log(`frame mean ${perf.mean.toFixed(2)}ms p95 ${perf.p95.toFixed(1)} p99 ${perf.p99.toFixed(1)} max ${perf.max.toFixed(0)}` +
     (perf.heapMB !== null ? ` | heap +${perf.heapMB.toFixed(1)}MB/30s` : '') + ` | residue ${perf.residue} | obstacles ${perf.obstacles}`);
-} else {
-  console.log(`perf probe invalid: only ${perf.frames} frames captured`);
 }
-console.log('');
-let pass = 0;
-for (const [label, ok] of checks) { console.log(`${ok ? 'PASS' : 'FAIL'}  ${label}`); if (ok) pass++; }
-console.log(`\n${pass}/${checks.length} checks passed`);
+
+console.log('\n=== GRADES ===');
+let worst = 100;
+for (const [area, g] of Object.entries(grades)) {
+  console.log(`${area.padEnd(9)} ${String(g).padStart(3)}/100 ${g >= 95 ? '✓' : '✗ BELOW BAR'}`);
+  worst = Math.min(worst, g);
+}
+console.log(`\nworst area: ${worst}/100 — ${worst >= 95 ? 'ALL AREAS AT OR ABOVE 95' : 'iteration required'}`);
 if (errors.length) console.log('errors:', errors);
 await browser.close();
-process.exit(pass === checks.length ? 0 : 1);
+process.exit(worst >= 95 ? 0 : 1);
