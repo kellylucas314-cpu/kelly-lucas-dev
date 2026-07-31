@@ -5,7 +5,8 @@
   "scripts": {
     "build:magpie": "node scripts/build-private-magpie.mjs",
     "sync:magpie": "node --env-file=.env.local scripts/sync-magpie.mjs",
-    "test:magpie": "node --test tests/magpie-auth.test.mjs"
+    "test:magpie": "node --test tests/magpie-auth.test.mjs",
+    "eval:army": "node scripts/eval-army.mjs"
   },
   "dependencies": {
     "@vercel/blob": "^2.6.1"

@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#87c5dd">
+  <title>Boot Camp — The Army of Lawnmower Vacuums &amp; Flying Pigs</title>
+  <meta name="description" content="A one-button side-scroller: a little alien recruit must jump the lawnmower vacuums and dodge the flying pigs. Enlist now.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2387c5dd'/><text x='50' y='72' font-size='58' text-anchor='middle'>🐷</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Special+Elite&display=swap">
+  <style>
+    /* ============================================================
+       BOOT CAMP — THE ARMY OF LAWNMOWER VACUUMS & FLYING PIGS
+       Creative North Star: a WWII recruitment poster that came to
+       life, then handed you a helmet. The poster is the title
+       screen; enlisting drops a little alien recruit onto the lawn
+       for a one-button runner — jump the mowers, and when the pigs
+       swoop, keep your boots on the ground.
+       ============================================================ */
+
+    :root {
+      --sky-hi: #7fc2dd;
+      --sky-lo: #cfeaef;
+      --paper: #f6eed9;
+      --ink: #2c3140;
+      --ink-soft: #4c5361;
+      --red: #c8402e;
+      --red-deep: #a33122;
+      --grass-a: #57a24b;
+      --grass-b: #4b9040;
+      --grass-dark: #3c7a35;
+      --pink: #f2a9ba;
+      --pink-deep: #d4808f;
+      --olive: #7d8752;
+      --olive-deep: #5d673c;
+      --alien: #8fd06c;
+
+      --font-poster: 'Alfa Slab One', 'Rockwell', Georgia, serif;
+      --font-wire: 'Special Elite', 'Courier New', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* clip (not hidden): forbids even programmatic scrolling, so off-screen
+       units and word pops can never shove the viewport around */
+    html, body { height: 100%; overflow: hidden; overflow: clip; }
+
+    body {
+      font-family: var(--font-wire);
+      color: var(--ink);
+      background: var(--sky-lo);
+      touch-action: manipulation; /* no double-tap zoom while mashing jump */
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .theater {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .theater.charging { animation: rumble 0.28s linear infinite; }
+    .theater.shaking { animation: rumble 0.09s linear 5; }
+    @keyframes rumble {
+      0%   { transform: translate(0, 0); }
+      25%  { transform: translate(1.5px, -1px); }
+      50%  { transform: translate(-1px, 1.5px); }
+      75%  { transform: translate(1px, 1px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    /* ——— Sky ——— */
+    .sky {
+      position: relative;
+      flex: 0 0 58%;
+      background: linear-gradient(var(--sky-hi), var(--sky-lo));
+      transition: filter 0.8s;
+    }
+    .charging .sky { filter: saturate(1.25) hue-rotate(-10deg) brightness(1.04); }
+
+    .sun {
+      position: absolute;
+      top: 4%;
+      left: 5%;
+      width: clamp(90px, 14vw, 170px);
+      height: auto;
+      animation: sunspin 70s linear infinite;
+      transform-origin: 50% 50%;
+    }
+    @keyframes sunspin { to { transform: rotate(360deg); } }
+
+    .cloud {
+      position: absolute;
+      width: var(--w);
+      top: var(--lane);
+      left: 0;
+      opacity: var(--fade);
+      animation: drift var(--dur) linear infinite;
+      animation-delay: var(--delay);
+    }
+    @keyframes drift {
+      from { transform: translateX(-30vw); }
+      to   { transform: translateX(110vw); }
+    }
+
+    /* ——— Lawn ——— */
+    .lawn {
+      position: relative;
+      flex: 1 1 auto;
+      background:
+        radial-gradient(circle 3px at 12% 30%, #ffd94f 0 2px, transparent 3px),
+        radial-gradient(circle 3px at 38% 68%, #ff8f6b 0 2px, transparent 3px),
+        radial-gradient(circle 3px at 63% 42%, #ffd94f 0 2px, transparent 3px),
+        radial-gradient(circle 3px at 87% 74%, #ff8f6b 0 2px, transparent 3px),
+        repeating-linear-gradient(180deg,
+          var(--grass-a) 0 34px,
+          var(--grass-b) 34px 68px);
+      border-top: 6px solid var(--grass-dark);
+      transition: filter 0.8s;
+    }
+    .charging .lawn { filter: saturate(1.2) brightness(1.03); }
+
+    /* ——— Parade units (title screen) ——— */
+    .unit {
+      position: absolute;
+      top: var(--lane);
+      left: 0;
+      width: var(--w);
+      animation: advance var(--dur) linear infinite;
+      animation-delay: var(--delay);
+      cursor: pointer;
+      transform: translateX(var(--rest-x, 40vw));
+      z-index: var(--z, 1);
+      transition: opacity 0.55s;
+    }
+    .unit.retreat { opacity: 0; pointer-events: none; }
+    @keyframes advance {
+      from { transform: translateX(-18vw); }
+      to   { transform: translateX(112vw); }
+    }
+
+    .unit .body {
+      transform: scale(var(--scale, 1));
+      transform-origin: 50% 100%;
+    }
+    .unit svg, .gob svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+    /* Pig flight: bob + flap (works on parade units and game swoopers) */
+    .pig .body { animation: bob var(--bob, 2.4s) ease-in-out infinite alternate; }
+    @keyframes bob {
+      from { transform: scale(var(--scale, 1)) translateY(-10px); }
+      to   { transform: scale(var(--scale, 1)) translateY(10px); }
+    }
+    .wing-near, .wing-far { animation: flap 0.4s ease-in-out infinite alternate; }
+    .wing-near { transform-origin: 62px 36px; }
+    .wing-far  { transform-origin: 54px 34px; animation-delay: 0.12s; }
+    @keyframes flap {
+      from { transform: rotate(-24deg); }
+      to   { transform: rotate(16deg); }
+    }
+    .charging .wing-near, .charging .wing-far { animation-duration: 0.16s; }
+
+    /* Mower ground game: rumble, wheels, brush, clippings */
+    .mower .body { animation: trundle 0.22s steps(2) infinite; }
+    @keyframes trundle {
+      from { transform: scale(var(--scale, 1)) translateY(0); }
+      to   { transform: scale(var(--scale, 1)) translateY(-1.6px); }
+    }
+    .wheel { animation: roll 0.9s linear infinite; }
+    .wheel-front { transform-origin: 100px 74px; }
+    .wheel-rear  { transform-origin: 48px 74px; }
+    @keyframes roll { to { transform: rotate(360deg); } }
+    .brush {
+      transform-origin: 133px 82px;
+      animation: whisk 0.5s linear infinite;
+    }
+    @keyframes whisk { to { transform: rotate(-360deg); } }
+    .charging .wheel { animation-duration: 0.3s; }
+    .charging .brush { animation-duration: 0.18s; }
+
+    .clips {
+      position: absolute;
+      left: 6%;
+      bottom: 18%;
+      pointer-events: none;
+    }
+    .clips i {
+      position: absolute;
+      width: 8px;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--grass-dark);
+      animation: clipfly var(--d, 0.8s) linear infinite;
+      animation-delay: var(--dl, 0s);
+      opacity: 0;
+    }
+    @keyframes clipfly {
+      0%   { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+      12%  { opacity: 1; }
+      55%  { transform: translate(-26px, -24px) rotate(160deg); opacity: 1; }
+      100% { transform: translate(-44px, 6px) rotate(340deg); opacity: 0; }
+    }
+
+    /* Click reactions (title screen) */
+    .unit.stunt .body { animation: stunt 0.7s ease-in-out 1; }
+    @keyframes stunt {
+      0%   { transform: scale(var(--scale, 1)) rotate(0); }
+      50%  { transform: scale(var(--scale, 1)) translateY(-26px) rotate(190deg); }
+      100% { transform: scale(var(--scale, 1)) rotate(360deg); }
+    }
+
+    /* ——— Game objects ——— */
+    .gob {
+      position: absolute;
+      top: 0;
+      left: 0;
+      will-change: transform;
+      pointer-events: none;
+      z-index: 20;
+    }
+    .flip { transform: scaleX(-1); }
+
+    /* The recruit: run cycle on the ground, tuck in the air, spin on defeat */
+    .player { z-index: 24; }
+    .player .leg-a { transform-origin: 41px 86px; animation: stride 0.26s ease-in-out infinite alternate; }
+    .player .leg-b { transform-origin: 50px 86px; animation: stride 0.26s ease-in-out -0.13s infinite alternate-reverse; }
+    @keyframes stride {
+      from { transform: rotate(36deg); }
+      to   { transform: rotate(-32deg); }
+    }
+    .player .arm-a { transform-origin: 37px 64px; animation: pump 0.26s ease-in-out -0.13s infinite alternate; }
+    .player .arm-b { transform-origin: 53px 64px; animation: pump 0.26s ease-in-out infinite alternate-reverse; }
+    @keyframes pump {
+      from { transform: rotate(28deg); }
+      to   { transform: rotate(-24deg); }
+    }
+    .player .al-antenna { transform-origin: 45px 18px; animation: antwob 0.5s ease-in-out infinite alternate; }
+    @keyframes antwob {
+      from { transform: rotate(-8deg); }
+      to   { transform: rotate(10deg); }
+    }
+    .player.air .leg-a { animation: none; transform: rotate(-38deg); }
+    .player.air .leg-b { animation: none; transform: rotate(44deg); }
+    .player.air .arm-a { animation: none; transform: rotate(-60deg); }
+    .player.air .arm-b { animation: none; transform: rotate(40deg); }
+    .player .pbody { transform-origin: 50% 90%; }
+    .player.dead .pbody { animation: ko 0.9s ease-in forwards; }
+    @keyframes ko {
+      30%  { transform: translateY(-34px) rotate(-70deg); opacity: 1; }
+      100% { transform: translateY(26px) rotate(-190deg); opacity: 0.25; }
+    }
+
+    .puff {
+      position: absolute;
+      width: 16px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(246, 238, 217, 0.85);
+      pointer-events: none;
+      z-index: 19;
+      animation: puff 0.45s ease-out forwards;
+    }
+    @keyframes puff {
+      from { transform: translate(0, 0) scale(0.6); opacity: 0.9; }
+      to   { transform: translate(-30px, -10px) scale(1.8); opacity: 0; }
+    }
+
+    .confetto {
+      position: fixed;
+      width: 9px;
+      height: 4px;
+      border-radius: 2px;
+      z-index: 220;
+      pointer-events: none;
+      animation: burst 1.1s ease-out forwards;
+    }
+    @keyframes burst {
+      from { transform: translate(0, 0) rotate(0); opacity: 1; }
+      70%  { opacity: 1; }
+      to   { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity: 0; }
+    }
+
+    .wordpop {
+      position: fixed;
+      z-index: 200;
+      font-family: var(--font-poster);
+      font-size: clamp(0.9rem, 2.2vw, 1.5rem);
+      color: var(--paper);
+      -webkit-text-stroke: 1px var(--ink);
+      text-shadow: 2px 2px 0 var(--ink);
+      pointer-events: none;
+      animation: popfloat 0.9s ease-out forwards;
+      white-space: nowrap;
+    }
+    .wordpop.mini {
+      font-size: clamp(0.7rem, 1.6vw, 1.05rem);
+      color: #eaffa8;
+    }
+    @keyframes popfloat {
+      0%   { transform: translateY(0) scale(0.4) rotate(-8deg); opacity: 0; }
+      20%  { transform: translateY(-12px) scale(1.15) rotate(3deg); opacity: 1; }
+      100% { transform: translateY(-52px) scale(1) rotate(-3deg); opacity: 0; }
+    }
+
+    .chargecry {
+      position: fixed;
+      top: 34%;
+      left: 50%;
+      z-index: 300;
+      font-family: var(--font-poster);
+      font-size: clamp(2.4rem, 9vw, 6.5rem);
+      color: var(--red);
+      -webkit-text-stroke: 2px var(--ink);
+      text-shadow: 0.05em 0.05em 0 var(--ink);
+      pointer-events: none;
+      animation: crygrow 2.4s ease-out forwards;
+      white-space: nowrap;
+    }
+    @keyframes crygrow {
+      0%   { transform: translate(-50%, -50%) scale(0.2) rotate(-10deg); opacity: 0; }
+      12%  { transform: translate(-50%, -50%) scale(1.2) rotate(2deg); opacity: 1; }
+      70%  { transform: translate(-50%, -50%) scale(1.05) rotate(-1deg); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1.6) rotate(1deg); opacity: 0; }
+    }
+
+    /* ——— Poster type (title screen) ——— */
+    .poster {
+      position: absolute;
+      top: clamp(10px, 3.5vh, 40px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(94vw, 980px);
+      text-align: center;
+      z-index: 30;
+      pointer-events: none;
+      transition: opacity 0.45s, transform 0.45s, visibility 0s;
+    }
+    .st-playing .poster, .st-dead .poster {
+      opacity: 0;
+      transform: translateX(-50%) translateY(-36px);
+      visibility: hidden;
+      transition: opacity 0.45s, transform 0.45s, visibility 0s 0.45s;
+    }
+    .kicker {
+      display: inline-block;
+      font-family: var(--font-wire);
+      font-size: clamp(0.8rem, 1.7vw, 1.1rem);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--red-deep);
+      background: var(--paper);
+      border: 2px solid var(--ink);
+      box-shadow: 3px 3px 0 var(--ink);
+      padding: 5px 16px 3px 20px;
+      transform: rotate(-1.2deg);
+      margin-bottom: clamp(8px, 1.6vh, 18px);
+    }
+    h1 {
+      font-family: var(--font-poster);
+      font-weight: 400;
+      font-size: clamp(1.65rem, 5.6vw, 4.4rem);
+      line-height: 1.02;
+      text-transform: uppercase;
+      color: var(--paper);
+      -webkit-text-stroke: 2px var(--ink);
+      text-shadow:
+        0.045em 0.045em 0 var(--ink),
+        0.1em 0.1em 0 rgba(200, 64, 46, 0.85);
+    }
+    h1 .amp { color: var(--red); -webkit-text-stroke: 2px var(--ink); }
+    .sub {
+      margin-top: clamp(8px, 1.6vh, 16px);
+      font-size: clamp(0.85rem, 1.9vw, 1.2rem);
+      color: var(--ink);
+      background: rgba(246, 238, 217, 0.85);
+      display: inline-block;
+      padding: 3px 14px;
+      border-radius: 3px;
+      transform: rotate(0.6deg);
+    }
+    .stamp {
+      position: absolute;
+      right: 90px;
+      top: 8px;
+      font-family: var(--font-wire);
+      font-size: clamp(0.6rem, 1.3vw, 0.95rem);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--red);
+      border: 3px double var(--red);
+      border-radius: 6px;
+      padding: 7px 12px;
+      transform: rotate(9deg);
+      opacity: 0.9;
+      background: rgba(246, 238, 217, 0.55);
+    }
+
+    /* ——— Command console (title screen) ——— */
+    .console {
+      position: absolute;
+      bottom: clamp(48px, 8vh, 64px);
+      left: 50%;
+      transform: translateX(-50%) rotate(-0.8deg);
+      z-index: 100; /* above every unit, so the fleet marches behind HQ and can't steal button clicks */
+      background: var(--paper);
+      border: 3px solid var(--ink);
+      box-shadow: 6px 6px 0 rgba(44, 49, 64, 0.55);
+      border-radius: 10px;
+      padding: clamp(10px, 1.6vh, 16px) clamp(12px, 2vw, 22px);
+      text-align: center;
+      max-width: min(94vw, 680px);
+      transition: opacity 0.45s, transform 0.45s, visibility 0s;
+    }
+    .st-playing .console, .st-dead .console {
+      opacity: 0;
+      transform: translateX(-50%) translateY(70px) rotate(-0.8deg);
+      visibility: hidden;
+      transition: opacity 0.45s, transform 0.45s, visibility 0s 0.45s;
+      pointer-events: none;
+    }
+    .console .readout {
+      font-size: clamp(0.72rem, 1.6vw, 0.95rem);
+      letter-spacing: 0.06em;
+      margin-bottom: clamp(8px, 1.4vh, 12px);
+      color: var(--ink-soft);
+    }
+    .console .readout strong { color: var(--ink); font-weight: 700; }
+    .console .readout .stat { white-space: nowrap; }
+    .btnrow {
+      display: flex;
+      gap: clamp(8px, 1.4vw, 14px);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      font-family: var(--font-poster);
+      font-size: clamp(0.72rem, 1.7vw, 1rem);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+      background: var(--paper);
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      box-shadow: 0 4px 0 var(--ink);
+      padding: 9px 14px 7px;
+      cursor: pointer;
+      transition: transform 0.08s, box-shadow 0.08s, background 0.15s;
+    }
+    .btn:hover { background: #fff7e2; }
+    .btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--ink); }
+    .btn-charge { background: var(--red); color: var(--paper); }
+    .btn-charge:hover { background: #d9503d; }
+    .btn-charge[disabled] { opacity: 0.55; cursor: wait; transform: none; }
+    .btn-play { background: var(--grass-b); color: var(--paper); }
+    .btn-play:hover { background: var(--grass-a); }
+    .console .hint {
+      margin-top: clamp(8px, 1.4vh, 12px);
+      font-size: clamp(0.66rem, 1.4vw, 0.85rem);
+      color: var(--ink-soft);
+    }
+
+    /* ——— HUD (in game) ——— */
+    .hud {
+      position: absolute;
+      top: clamp(10px, 2vh, 18px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 120;
+      display: none;
+      gap: 14px;
+      font-family: var(--font-poster);
+      font-size: clamp(0.85rem, 2vw, 1.3rem);
+      color: var(--paper);
+      -webkit-text-stroke: 1px var(--ink);
+      text-shadow: 2px 2px 0 var(--ink);
+      white-space: nowrap;
+    }
+    .st-playing .hud, .st-dead .hud { display: flex; }
+    .hud .hud-best { color: #ffd94f; }
+
+    .ready {
+      position: absolute;
+      top: 36%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 130;
+      font-family: var(--font-poster);
+      font-size: clamp(1.6rem, 5vw, 3.4rem);
+      color: var(--paper);
+      -webkit-text-stroke: 2px var(--ink);
+      text-shadow: 0.06em 0.06em 0 var(--ink);
+      pointer-events: none;
+      opacity: 0;
+      white-space: nowrap;
+    }
+    .ready.show { animation: readypop 0.85s ease-out forwards; }
+    @keyframes readypop {
+      0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.5) rotate(-6deg); }
+      18%  { opacity: 1; transform: translate(-50%, -50%) scale(1.1) rotate(2deg); }
+      70%  { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05); }
+    }
+
+    /* ——— Debrief card (game over) ——— */
+    .gameover {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-0.6deg);
+      z-index: 140;
+      background: var(--paper);
+      border: 3px solid var(--ink);
+      box-shadow: 6px 6px 0 rgba(44, 49, 64, 0.55);
+      border-radius: 10px;
+      padding: clamp(14px, 2.4vh, 24px) clamp(16px, 3vw, 30px);
+      text-align: center;
+      max-width: min(92vw, 560px);
+    }
+    .gameover[hidden] { display: none; }
+    .go-title {
+      font-family: var(--font-poster);
+      font-size: clamp(1.7rem, 5.4vw, 3rem);
+      color: var(--red);
+      -webkit-text-stroke: 1.5px var(--ink);
+      text-shadow: 0.06em 0.06em 0 var(--ink);
+      text-transform: uppercase;
+    }
+    .go-cause {
+      margin-top: 4px;
+      font-size: clamp(0.75rem, 1.7vw, 1rem);
+      color: var(--ink-soft);
+    }
+    .go-score {
+      margin-top: clamp(8px, 1.6vh, 14px);
+      font-family: var(--font-poster);
+      font-size: clamp(1.1rem, 3vw, 1.7rem);
+      color: var(--ink);
+    }
+    .go-rank {
+      margin-top: 2px;
+      font-size: clamp(0.75rem, 1.7vw, 1rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--red-deep);
+    }
+    .go-record {
+      display: none;
+      margin-top: 6px;
+      font-family: var(--font-poster);
+      font-size: clamp(0.9rem, 2.2vw, 1.3rem);
+      color: var(--grass-dark);
+    }
+    .gameover.record .go-record { display: block; }
+    .gameover .btnrow { margin-top: clamp(10px, 2vh, 18px); }
+
+    /* ——— Dispatch ticker ——— */
+    .ticker {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 105;
+      background: var(--ink);
+      color: var(--paper);
+      overflow: hidden;
+      border-top: 3px solid var(--red);
+      height: clamp(30px, 4.6vh, 38px);
+      display: flex;
+      align-items: center;
+    }
+    .ticker-track {
+      display: inline-flex;
+      gap: 4em;
+      white-space: nowrap;
+      padding-left: 2em;
+      font-size: clamp(0.72rem, 1.5vw, 0.92rem);
+      letter-spacing: 0.04em;
+      animation: wire 60s linear infinite;
+    }
+    @keyframes wire { to { transform: translateX(-50%); } }
+    .ticker-track b { color: #ffd94f; font-weight: 400; }
+
+    /* ——— Back to HQ ——— */
+    .back {
+      position: absolute;
+      top: clamp(10px, 2vh, 18px);
+      right: clamp(10px, 2vw, 18px);
+      z-index: 110;
+      font-family: var(--font-wire);
+      font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+      color: var(--ink);
+      background: var(--paper);
+      border: 2px solid var(--ink);
+      box-shadow: 3px 3px 0 var(--ink);
+      border-radius: 6px;
+      padding: 6px 12px 4px;
+      text-decoration: none;
+      transition: transform 0.08s, box-shadow 0.08s;
+    }
+    .back:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--ink); }
+
+    noscript {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 999;
+      background: var(--paper);
+      border: 3px solid var(--ink);
+      padding: 18px 24px;
+      font-size: 1rem;
+    }
+
+    @media (max-width: 1100px) {
+      .stamp { display: none; }
+    }
+    @media (max-width: 640px) {
+      .poster { top: 52px; } /* clear the Ring In HQ chip */
+      .hud { top: 52px; }
+      .console { bottom: 44px; width: 94vw; }
+      h1 { -webkit-text-stroke-width: 1.2px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      /* decorations freeze; the game itself moves via JS and stays playable */
+      .sun, .cloud, .unit, .unit .body, .ticker-track,
+      .wing-near, .wing-far, .wheel, .brush, .clips i,
+      .player .leg-a, .player .leg-b, .player .arm-a, .player .arm-b,
+      .player .al-antenna { animation: none !important; }
+      .unit { transform: translateX(var(--rest-x, 40vw)); }
+      .cloud { transform: translateX(var(--rest-x, 30vw)); }
+    }
+  </style>
+</head>
+<body>
+  <main class="theater st-title" id="theater">
+    <div class="sky" id="sky" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 100 100">
+        <g stroke="#f4c94f" stroke-width="5" stroke-linecap="round">
+          <path d="M50 2 v 12 M50 86 v 12 M2 50 h 12 M86 50 h 12 M16 16 l 8.5 8.5 M75.5 75.5 l 8.5 8.5 M84 16 l -8.5 8.5 M24.5 75.5 L 16 84"/>
+        </g>
+        <circle cx="50" cy="50" r="26" fill="#ffd94f" stroke="#e8b73a" stroke-width="4"/>
+      </svg>
+    </div>
+    <div class="lawn" id="lawn" aria-hidden="true"></div>
+
+    <header class="poster">
+      <div class="kicker">★ Now Recruiting ★</div>
+      <h1>The Army of<br>Lawnmower Vacuums <span class="amp">&amp;</span> Flying Pigs</h1>
+      <p class="sub">Boot camp is open: jump the mowers, dodge the pigs, make the Field Marshal proud.</p>
+      <div class="stamp">Est. when<br>pigs fly</div>
+    </header>
+
+    <section class="console" id="console" aria-label="Command console">
+      <p class="readout">
+        <span class="stat">🤖 Mowers: <strong id="count-mowers">0</strong></span> ·
+        <span class="stat">🐷 Pigs: <strong id="count-pigs">0</strong></span> ·
+        <span class="stat">Best run: <strong id="best-readout">0</strong></span>
+      </p>
+      <div class="btnrow">
+        <button class="btn btn-play" id="btn-enlist">🎖️ Enlist &amp; Run</button>
+        <button class="btn" id="btn-mower">Deploy Mower</button>
+        <button class="btn" id="btn-pig">Scramble a Pig</button>
+        <button class="btn btn-charge" id="btn-charge">Sound the Charge 📯</button>
+      </div>
+      <p class="hint">Boot camp: SPACE / ↑ / tap to jump — hold to jump higher. Mowers: jump them. Swooping pigs: keep your boots down.</p>
+    </section>
+
+    <div class="hud" aria-hidden="true">
+      <span id="hud-score">SCORE 0000</span>
+      <span class="hud-best" id="hud-best">BEST 0000</span>
+    </div>
+    <div class="ready" id="ready" aria-hidden="true"></div>
+
+    <section class="gameover" id="gameover" hidden>
+      <div class="go-title" id="go-title">Mulched!</div>
+      <div class="go-cause" id="go-cause">Court-martialed by the 3rd Mowing Brigade.</div>
+      <div class="go-score" id="go-score">SCORE 0000</div>
+      <div class="go-rank" id="go-rank">Rank earned: Lawn Private</div>
+      <div class="go-record">★ New camp record ★</div>
+      <div class="btnrow">
+        <button class="btn btn-play" id="btn-again">Re-enlist (Space)</button>
+        <button class="btn" id="btn-retreat">Back to the Parade</button>
+      </div>
+    </section>
+
+    <a class="back" href="/">← kellylucas.dev</a>
+
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track" id="ticker-track"></div>
+    </div>
+  </main>
+
+  <noscript>Boot camp requires JavaScript. The mowers idle. The pigs walk. Nothing is jumped.</noscript>
+
+  <script>
+    (() => {
+      const theater = document.getElementById('theater');
+      const sky = document.getElementById('sky');
+      const lawn = document.getElementById('lawn');
+      const countMowers = document.getElementById('count-mowers');
+      const countPigs = document.getElementById('count-pigs');
+      const rand = (lo, hi) => lo + Math.random() * (hi - lo);
+
+      /* ============================================================
+         Sprites — inlined per instance (not <use>) so CSS can reach
+         wings, wheels, and limbs inside each copy.
+         ============================================================ */
+      const PIG_SVG = `
+        <svg viewBox="0 0 130 100"><g stroke="#2c3140" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+          <g class="wing-far"><path d="M54 34 C 42 10, 20 8, 15 19 C 27 20 29 26 24 29 C 34 29 38 33 36 37 C 44 40 51 38 54 34 z" fill="#e4dbc6"/></g>
+          <path d="M24 52 c -11 -7 -17 3 -8 9 c 6 4 11 -2 4 -7" fill="none"/>
+          <ellipse cx="58" cy="58" rx="34" ry="26" fill="#f2a9ba"/>
+          <rect x="38" y="72" width="10" height="16" rx="5" fill="#d4808f" transform="rotate(16 43 80)"/>
+          <rect x="55" y="76" width="10" height="15" rx="5" fill="#f2a9ba"/>
+          <rect x="72" y="73" width="10" height="16" rx="5" fill="#d4808f" transform="rotate(-13 77 81)"/>
+          <circle cx="92" cy="46" r="21" fill="#f2a9ba"/>
+          <path d="M80 30 l -7 -13 l 14 4 z" fill="#d4808f"/>
+          <path d="M98 27 l 3 -15 l 10 11 z" fill="#d4808f"/>
+          <path d="M83 40 H 64" fill="none"/>
+          <circle cx="88" cy="42" r="7.5" fill="#cfe8f2"/>
+          <circle cx="90" cy="42" r="2.2" fill="#2c3140" stroke="none"/>
+          <ellipse cx="104" cy="51" rx="9.5" ry="7.5" fill="#d4808f"/>
+          <ellipse cx="101.5" cy="51" rx="1.6" ry="2.6" fill="#2c3140" stroke="none"/>
+          <ellipse cx="107.5" cy="51" rx="1.6" ry="2.6" fill="#2c3140" stroke="none"/>
+          <ellipse cx="84" cy="55" rx="4.5" ry="3" fill="#eb8ba1" stroke="none"/>
+          <g class="wing-near"><path d="M62 36 C 48 6, 20 4, 14 17 C 28 19 31 26 25 30 C 37 30 41 34 39 39 C 49 43 58 41 62 36 z" fill="#fcfaf0"/></g>
+        </g></svg>`;
+
+      const MOWER_SVG = `
+        <svg viewBox="0 0 150 100"><g stroke="#2c3140" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M4 42 h 18 M2 54 h 16 M6 66 h 14" stroke="rgba(44,49,64,0.35)"/>
+          <ellipse cx="76" cy="91" rx="48" ry="5" fill="rgba(44,49,64,0.18)" stroke="none"/>
+          <path d="M108 34 V 12" fill="none"/>
+          <path d="M108 12 l 17 5 l -17 5 z" fill="#c8402e"/>
+          <rect x="22" y="34" width="104" height="38" rx="19" fill="#7d8752"/>
+          <path d="M24 58 h 100 v 2 a 12 12 0 0 1 -12 12 h -76 a 12 12 0 0 1 -12 -12 z" fill="#5d673c" stroke="none"/>
+          <path d="M52 41 l 3.4 7 l 7.7 1.1 l -5.6 5.4 l 1.4 7.6 l -6.9 -3.6 l -6.9 3.6 l 1.4 -7.6 l -5.6 -5.4 l 7.7 -1.1 z" fill="#fcfaf0" stroke-width="2"/>
+          <path d="M74 34 a 13 13 0 0 1 26 0 z" fill="#9fc4c9"/>
+          <circle cx="93" cy="26" r="2.6" fill="#c8402e" stroke="none"/>
+          <rect x="118" y="36" width="11" height="34" rx="5.5" fill="#4c5433"/>
+          <g class="wheel wheel-rear"><circle cx="48" cy="74" r="13" fill="#333a46"/><circle cx="48" cy="74" r="5.5" fill="#e4dbc6"/><path d="M48 69 v 10 M43 74 h 10" stroke-width="2"/></g>
+          <g class="wheel wheel-front"><circle cx="100" cy="74" r="13" fill="#333a46"/><circle cx="100" cy="74" r="5.5" fill="#e4dbc6"/><path d="M100 69 v 10 M95 74 h 10" stroke-width="2"/></g>
+          <g class="brush" stroke-width="2.5"><path d="M133 82 l 9 -5 M133 82 l 10 3 M133 82 l 2 10 M133 82 l -7 8 M133 82 l -4 -9" stroke="#c9b98a"/><circle cx="133" cy="82" r="3" fill="#4c5433"/></g>
+        </g></svg>`;
+
+      // The recruit: little green alien in an army helmet, facing right
+      const ALIEN_SVG = `
+        <svg viewBox="0 0 90 120"><g stroke="#2c3140" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+          <g class="al-antenna"><path d="M45 18 C 45 10, 40 9, 37 5" fill="none"/><circle cx="36" cy="4" r="3.6" fill="#ffd94f"/></g>
+          <g class="arm-b"><path d="M53 64 L 63 76" fill="none" stroke-width="6" stroke="#6cbf5a"/><circle cx="64" cy="78" r="4" fill="#8fd06c"/></g>
+          <g class="leg-a"><path d="M41 86 L 37 102" fill="none" stroke-width="6" stroke="#6cbf5a"/><rect x="27" y="100" width="17" height="9" rx="4" fill="#4c5433"/></g>
+          <g class="leg-b"><path d="M50 86 L 54 102" fill="none" stroke-width="6" stroke="#6cbf5a"/><rect x="46" y="100" width="17" height="9" rx="4" fill="#4c5433"/></g>
+          <rect x="32" y="56" width="26" height="32" rx="10" fill="#6cbf5a"/>
+          <path d="M36 66 h 18" stroke-width="2" stroke="rgba(44,49,64,0.4)"/>
+          <circle cx="45" cy="42" r="17" fill="#8fd06c"/>
+          <ellipse cx="40" cy="43" rx="4.2" ry="6" fill="#2c3140" stroke="none"/>
+          <ellipse cx="53" cy="43" rx="4.2" ry="6" fill="#2c3140" stroke="none"/>
+          <ellipse cx="41.5" cy="41" rx="1.3" ry="1.8" fill="#fcfaf0" stroke="none"/>
+          <ellipse cx="54.5" cy="41" rx="1.3" ry="1.8" fill="#fcfaf0" stroke="none"/>
+          <path d="M42 53 q 4 3 8 0" fill="none" stroke-width="2.5"/>
+          <path d="M25 28 a 20 14 0 0 1 40 0 z" fill="#7d8752"/>
+          <rect x="20" y="26" width="50" height="8" rx="4" fill="#5d673c"/>
+          <path d="M45 15 l 1.8 3.8 l 4.2 0.6 l -3 3 l 0.7 4.2 l -3.7 -2 l -3.7 2 l 0.7 -4.2 l -3 -3 l 4.2 -0.6 z" fill="#fcfaf0" stroke-width="1.5"/>
+          <g class="arm-a"><path d="M37 64 L 28 77" fill="none" stroke-width="6" stroke="#8fd06c"/><circle cx="27" cy="79" r="4" fill="#8fd06c"/></g>
+        </g></svg>`;
+
+      const CLOUD_SVG = `
+        <svg viewBox="0 0 90 50"><path d="M12 46 a14 14 0 0 1 6 -27 a20 20 0 0 1 38 -7 a16 16 0 0 1 26 12 a12 12 0 0 1 -4 22 z"
+          fill="rgba(252,250,240,0.92)" stroke="rgba(44,49,64,0.14)" stroke-width="3"/></svg>`;
+
+      /* ============================================================
+         Ambience: ticker + clouds
+         ============================================================ */
+      const DISPATCHES = [
+        '<b>0600 HOURS</b> — 3rd Mowing Brigade reports the lawn is "basically carpet now."',
+        '<b>AIR COMMAND</b> — Squadron Oinkbird Nine achieves record altitude of eleven feet.',
+        '<b>SUPPLY</b> — Requisition for 400 acorns approved. Reason listed: morale.',
+        '<b>INTEL</b> — Local garden gnome believed to be spying. Situation monitored.',
+        '<b>WEATHER</b> — Clear skies. 100% chance of clippings.',
+        '<b>VALOR</b> — Mower Unit LM-07 decorated for bravery against a garden hose.',
+        '<b>HQ MEMO</b> — Wings are for flying, not for fanning the sergeant.',
+        '<b>BOOT CAMP</b> — New recruit spotted. Green. Very green.',
+        '<b>MESS HALL</b> — Tonight: mulch. Again.',
+      ];
+      const reel = DISPATCHES.map(d => `<span>${d}</span>`).join('');
+      document.getElementById('ticker-track').innerHTML = reel + reel;
+
+      for (let i = 0; i < 6; i++) {
+        const c = document.createElement('div');
+        c.className = 'cloud';
+        const depth = Math.random();
+        c.style.setProperty('--w', `${Math.round(rand(70, 200))}px`);
+        c.style.setProperty('--lane', `${Math.round(rand(2, 62))}%`);
+        c.style.setProperty('--dur', `${Math.round(rand(55, 110))}s`);
+        c.style.setProperty('--delay', `${(-rand(0, 110)).toFixed(1)}s`);
+        c.style.setProperty('--fade', (0.4 + depth * 0.55).toFixed(2));
+        c.style.setProperty('--rest-x', `${Math.round(rand(2, 85))}vw`);
+        c.innerHTML = CLOUD_SVG;
+        sky.appendChild(c);
+      }
+
+      function wordpop(text, x, y, mini) {
+        const w = document.createElement('span');
+        w.className = mini ? 'wordpop mini' : 'wordpop';
+        w.textContent = text;
+        w.style.left = `${x}px`;
+        w.style.top = `${y}px`;
+        document.body.appendChild(w);
+        w.addEventListener('animationend', () => w.remove());
+      }
+
+      /* ============================================================
+         Title-screen parade
+         ============================================================ */
+      const MAX = { pig: 26, mower: 22 };
+      const fleet = { pig: [], mower: [] };
+
+      function deploy(kind, opts = {}) {
+        const roster = fleet[kind];
+        if (roster.length >= MAX[kind]) roster.shift().remove();
+
+        const u = document.createElement('div');
+        const lane = rand(4, kind === 'pig' ? 70 : 74);       // % from top of its band
+        const depth = lane / 100;                              // deeper lane = closer = bigger
+        const scale = (0.5 + depth * 0.65).toFixed(2);
+        const dur = opts.fast ? rand(5, 9) : rand(16, 34);
+
+        u.className = `unit ${kind}`;
+        u.style.setProperty('--lane', `${lane.toFixed(1)}%`);
+        u.style.setProperty('--w', kind === 'pig' ? 'clamp(52px, 8vw, 110px)' : 'clamp(64px, 10vw, 132px)');
+        u.style.setProperty('--dur', `${dur.toFixed(1)}s`);
+        u.style.setProperty('--delay', `${(opts.fresh ? 0 : -rand(0, dur)).toFixed(1)}s`);
+        u.style.setProperty('--scale', scale);
+        u.style.setProperty('--bob', `${rand(1.8, 3.2).toFixed(1)}s`);
+        u.style.setProperty('--z', String(Math.round(lane)));
+        u.style.setProperty('--rest-x', `${Math.round(rand(4, 88))}vw`);
+
+        if (kind === 'pig') {
+          u.innerHTML = `<div class="body">${PIG_SVG}</div>`;
+          sky.appendChild(u);
+        } else {
+          const clips = [0, 1, 2, 3].map(i =>
+            `<i style="--d:${rand(0.6, 1.1).toFixed(2)}s; --dl:${(i * 0.22).toFixed(2)}s; left:${i * 4}px"></i>`
+          ).join('');
+          u.innerHTML = `<div class="body">${MOWER_SVG}<span class="clips">${clips}</span></div>`;
+          lawn.appendChild(u);
+        }
+
+        u.addEventListener('click', () => salute(u, kind));
+        roster.push(u);
+        muster();
+        return u;
+      }
+
+      function muster() {
+        countMowers.textContent = fleet.mower.length;
+        countPigs.textContent = fleet.pig.length;
+      }
+
+      const CRIES = { pig: ['OINK!', 'WHEE!', 'SQUEE!', 'TALLY-HO!'], mower: ['VRRRM!', 'BRRRT!', 'MULCH!', 'BEEP.'] };
+      function salute(u, kind) {
+        if (state !== 'title') return;
+        u.classList.remove('stunt');
+        void u.offsetWidth; // restart animation
+        u.classList.add('stunt');
+        const r = u.getBoundingClientRect();
+        wordpop(CRIES[kind][Math.floor(Math.random() * CRIES[kind].length)], r.left + r.width / 2, r.top - 8);
+      }
+
+      const btnCharge = document.getElementById('btn-charge');
+      let chargeTimer = null;
+      function soundTheCharge() {
+        if (state !== 'title') return;
+        btnCharge.disabled = true;
+        theater.classList.add('charging');
+
+        const cry = document.createElement('div');
+        cry.className = 'chargecry';
+        cry.textContent = 'CHAAARGE!';
+        document.body.appendChild(cry);
+        cry.addEventListener('animationend', () => cry.remove());
+
+        let wave = 0;
+        const drum = setInterval(() => {
+          if (state !== 'title') { clearInterval(drum); return; }
+          deploy('mower', { fast: true, fresh: true });
+          deploy('pig', { fast: true, fresh: true });
+          if (++wave >= 7) clearInterval(drum);
+        }, 380);
+
+        chargeTimer = setTimeout(() => {
+          theater.classList.remove('charging');
+          btnCharge.disabled = false;
+        }, 8000);
+      }
+
+      function clearParade() {
+        [...fleet.pig, ...fleet.mower].forEach(u => {
+          u.classList.add('retreat');
+          setTimeout(() => u.remove(), 650);
+        });
+        fleet.pig = [];
+        fleet.mower = [];
+      }
+
+      function paradeMuster() {
+        for (let i = 0; i < 9; i++) deploy('mower');
+        for (let i = 0; i < 8; i++) deploy('pig');
+      }
+
+      document.getElementById('btn-mower').addEventListener('click', () => { if (state === 'title') deploy('mower', { fresh: true }); });
+      document.getElementById('btn-pig').addEventListener('click', () => { if (state === 'title') deploy('pig', { fresh: true }); });
+      btnCharge.addEventListener('click', soundTheCharge);
+
+      /* ============================================================
+         BOOT CAMP — the runner
+         ============================================================ */
+      const hudScore = document.getElementById('hud-score');
+      const hudBest = document.getElementById('hud-best');
+      const bestReadout = document.getElementById('best-readout');
+      const readyEl = document.getElementById('ready');
+      const goCard = document.getElementById('gameover');
+      const goTitle = document.getElementById('go-title');
+      const goCause = document.getElementById('go-cause');
+      const goScore = document.getElementById('go-score');
+      const goRank = document.getElementById('go-rank');
+
+      const BEST_KEY = 'armyBootCampBest';
+      let best = parseInt(localStorage.getItem(BEST_KEY) || '0', 10) || 0;
+      bestReadout.textContent = best;
+
+      const RANKS = [
+        [0, 'Lawn Private'],
+        [250, 'Corporal of Clippings'],
+        [700, 'Turf Sergeant'],
+        [1300, 'Lieutenant of the Air Guard'],
+        [2200, 'Major Mulch'],
+        [3500, 'General of the Lawn'],
+        [5500, '★ Field Marshal When Pigs Fly ★'],
+      ];
+      const rankFor = s => RANKS.reduce((r, [min, name]) => (s >= min ? name : r), RANKS[0][1]);
+
+      let state = 'title';           // 'title' | 'playing' | 'dead'
+      let k, groundY, playerX;       // world scale + geometry (px)
+      let player, py, vy, airborne, holding;
+      let obstacles = [];            // {el, x, y, w, h, mult, type, cleared}
+      let speed, runTime, score, spawnIn, pending;
+      let lastT = 0, rafId = 0, paused = false, diedAt = 0;
+      let jumpBufferedAt = -1;
+
+      function metrics() {
+        k = Math.min(1.3, Math.max(0.65, window.innerHeight / 900));
+        groundY = window.innerHeight * 0.8;
+        playerX = Math.max(70, window.innerWidth * 0.14);
+      }
+      window.addEventListener('resize', () => { if (state !== 'title') metrics(); });
+
+      const GRAV = () => 3000 * k;
+      const JUMP_V = () => 1000 * k;
+
+      function makeGob(cls, svg, w, h) {
+        const g = document.createElement('div');
+        g.className = `gob ${cls}`;
+        g.style.width = `${w}px`;
+        g.style.height = `${h}px`;
+        g.innerHTML = svg;
+        theater.appendChild(g);
+        return g;
+      }
+
+      function place(el, x, topY) {
+        el.style.transform = `translate(${x}px, ${topY}px)`;
+      }
+
+      function startGame() {
+        metrics();
+        if (document.activeElement) document.activeElement.blur();
+        clearParade();
+        theater.classList.remove('charging');
+        if (chargeTimer) { clearTimeout(chargeTimer); btnCharge.disabled = false; }
+        theater.classList.remove('st-title', 'st-dead');
+        theater.classList.add('st-playing');
+        goCard.hidden = true;
+        goCard.classList.remove('record');
+
+        obstacles.forEach(o => o.el.remove());
+        obstacles = [];
+        pending = [];
+        if (player) player.remove();
+
+        const pw = 88 * k, ph = pw * (120 / 90);
+        player = makeGob('player', `<div class="pbody">${ALIEN_SVG}</div>`, pw, ph);
+        player.w = pw; player.h = ph;
+        py = 0; vy = 0; airborne = false; holding = false;
+        place(player, playerX, groundY - ph);
+
+        speed = 380 * k;
+        runTime = 0;
+        score = 0;
+        jumpBufferedAt = -1;
+        spawnIn = 2.2;               // grace period before the first obstacle
+        hudBest.textContent = `BEST ${String(best).padStart(4, '0')}`;
+        hudScore.textContent = 'SCORE 0000';
+
+        readyEl.textContent = 'REPORT FOR DUTY — MARCH!';
+        readyEl.classList.remove('show');
+        void readyEl.offsetWidth;
+        readyEl.classList.add('show');
+
+        state = 'playing';
+        paused = false;
+        lastT = performance.now();
+        cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(tick);
+      }
+
+      /* ——— Obstacles ——— */
+      function spawnMower(xOffset = 0) {
+        const w = 128 * k, h = w * (100 / 150);
+        const clips = [0, 1, 2].map(i =>
+          `<i style="--d:${rand(0.6, 1.0).toFixed(2)}s; --dl:${(i * 0.2).toFixed(2)}s; left:${i * 4}px"></i>`
+        ).join('');
+        // mirrored to face the recruit; clippings spray behind (screen right)
+        const el = makeGob('mower', `<div class="body"><div class="flip">${MOWER_SVG}</div><span class="clips" style="left:auto; right:4%">${clips}</span></div>`, w, h);
+        obstacles.push({ el, x: window.innerWidth + 60 + xOffset, y: 0, w, h, mult: 1, type: 'mower', cleared: false });
+      }
+
+      // Pigs fly at convoy pace (mult 1) on purpose: a faster pig closing on a
+      // mower compresses the jump-then-land window below human reaction time.
+      function spawnSwoop(xOffset = 0, mult = 1.0) {
+        const w = 104 * k, h = w * (100 / 130);
+        const el = makeGob('pig swoop', `<div class="body" style="--scale:1; --bob:${rand(0.9, 1.4).toFixed(2)}s"><div class="flip">${PIG_SVG}</div></div>`, w, h);
+        const alt = rand(135, 195) * k;  // above a standing recruit, square in the jump arc
+        obstacles.push({ el, x: window.innerWidth + 60 + xOffset, y: alt, w, h, mult, type: 'pig', cleared: false });
+      }
+
+      function pickPattern() {
+        const roll = Math.random();
+        if (runTime > 24 && speed > 560 * k && roll < 0.18) {
+          // 1.15 widths keeps the pair one committed long jump: at the unlock
+          // speed a wider pair leaves less takeoff window than the jump's own
+          // rise time — i.e. no window at all
+          spawnMower(); spawnMower(128 * k * 1.15);
+        } else if (runTime > 16 && roll < 0.42) {
+          spawnMower();                                       // jump, then stay down —
+          pending.push({ t: rand(0.5, 0.85), fn: () => spawnSwoop() }); // tightest rolls still reward a quick hop
+        } else if (roll < 0.68) {
+          spawnMower();
+        } else {
+          spawnSwoop();
+        }
+        spawnIn = Math.max(0.78, rand(1.05, 1.7) * (560 * k) / speed);
+      }
+
+      /* ——— Physics + loop ——— */
+      function jump() {
+        if (airborne) { jumpBufferedAt = performance.now(); return; } // buffer a slightly-early press
+        airborne = true;
+        holding = true;
+        vy = JUMP_V();
+        player.classList.add('air');
+      }
+      function jumpCut() {
+        holding = false;
+        if (airborne && vy > 0) vy *= 0.45;
+      }
+      function land() {
+        airborne = false;
+        py = 0;
+        vy = 0;
+        player.classList.remove('air');
+        const puff = document.createElement('div');
+        puff.className = 'puff';
+        puff.style.left = `${playerX + player.w * 0.2}px`;
+        puff.style.top = `${groundY - 8}px`;
+        theater.appendChild(puff);
+        puff.addEventListener('animationend', () => puff.remove());
+        if (performance.now() - jumpBufferedAt < 120) { jumpBufferedAt = -1; jump(); }
+      }
+
+      function hitbox(o) {
+        // forgiving boxes: trim art fringes (antenna, flags, trotters)
+        if (o.type === 'mower') return { x: o.x + o.w * 0.1, y: o.y, w: o.w * 0.8, h: o.h * 0.62 };
+        return { x: o.x + o.w * 0.15, y: o.y + o.h * 0.18, w: o.w * 0.7, h: o.h * 0.6 };
+      }
+
+      function tick(now) {
+        rafId = requestAnimationFrame(tick);
+        if (paused || state !== 'playing') { lastT = now; return; }
+        const dt = Math.min(0.033, (now - lastT) / 1000);
+        lastT = now;
+
+        runTime += dt;
+        speed = Math.min(820 * k, 380 * k + 4.5 * k * runTime);
+        score += dt * speed * 0.022;
+
+        // player physics
+        if (airborne) {
+          vy -= GRAV() * dt;
+          py += vy * dt;
+          if (py <= 0) land();
+        }
+        const lean = airborne ? Math.max(-14, Math.min(10, -vy * 0.012)) : 0;
+        player.querySelector('.pbody').style.transform = `rotate(${lean.toFixed(1)}deg)`;
+        place(player, playerX, groundY - player.h - py);
+
+        // spawner
+        spawnIn -= dt;
+        if (spawnIn <= 0) pickPattern();
+        pending = pending.filter(p => { p.t -= dt; if (p.t <= 0) { p.fn(); return false; } return true; });
+
+        // obstacles
+        const px1 = playerX + player.w * 0.22, px2 = playerX + player.w * 0.78;
+        const pyTop = py + player.h * 0.92, pyBot = py + player.h * 0.06;
+        for (const o of obstacles) {
+          o.x -= speed * o.mult * dt;
+          place(o.el, o.x, groundY - o.h - o.y);
+          if (!o.cleared && o.x + o.w < playerX) {
+            o.cleared = true;
+            const pts = o.type === 'pig' ? 40 : 25;
+            score += pts;
+            wordpop(`+${pts}`, playerX + player.w, groundY - player.h - py - 10, true);
+          }
+          const b = hitbox(o);
+          if (px1 < b.x + b.w && px2 > b.x && pyBot < b.y + b.h && pyTop > b.y) {
+            return defeat(o.type);
+          }
+        }
+        obstacles = obstacles.filter(o => {
+          if (o.x < -260) { o.el.remove(); return false; }
+          return true;
+        });
+
+        const s = Math.floor(score);
+        hudScore.textContent = `SCORE ${String(s).padStart(4, '0')}`;
+      }
+
+      /* ——— Defeat + debrief ——— */
+      function defeat(cause) {
+        state = 'dead';
+        diedAt = performance.now();
+        player.classList.add('dead');
+        theater.classList.remove('shaking');
+        void theater.offsetWidth;
+        theater.classList.add('shaking');
+
+        const s = Math.floor(score);
+        goTitle.textContent = cause === 'pig' ? "OINK'D!" : 'MULCHED!';
+        goCause.textContent = cause === 'pig'
+          ? 'Swept out of the sky lane by Squadron Oinkbird Nine.'
+          : 'Court-martialed by the 3rd Mowing Brigade.';
+        goScore.textContent = `SCORE ${String(s).padStart(4, '0')}`;
+        goRank.textContent = `Rank earned: ${rankFor(s)}`;
+
+        if (s > best) {
+          best = s;
+          localStorage.setItem(BEST_KEY, String(best));
+          goCard.classList.add('record');
+          confetti();
+        }
+        bestReadout.textContent = best;
+        hudBest.textContent = `BEST ${String(best).padStart(4, '0')}`;
+
+        theater.classList.remove('st-playing');
+        theater.classList.add('st-dead');
+        setTimeout(() => { goCard.hidden = false; }, 550);
+      }
+
+      function confetti() {
+        const cx = window.innerWidth / 2, cy = window.innerHeight * 0.4;
+        const hues = ['#57a24b', '#ffd94f', '#f2a9ba', '#c8402e', '#f6eed9'];
+        for (let i = 0; i < 26; i++) {
+          const c = document.createElement('i');
+          c.className = 'confetto';
+          c.style.left = `${cx}px`;
+          c.style.top = `${cy}px`;
+          c.style.background = hues[i % hues.length];
+          c.style.setProperty('--dx', `${Math.round(rand(-260, 260))}px`);
+          c.style.setProperty('--dy', `${Math.round(rand(-200, 160))}px`);
+          c.style.setProperty('--rot', `${Math.round(rand(-540, 540))}deg`);
+          document.body.appendChild(c);
+          c.addEventListener('animationend', () => c.remove());
+        }
+      }
+
+      function backToParade() {
+        state = 'title';
+        cancelAnimationFrame(rafId);
+        obstacles.forEach(o => o.el.remove());
+        obstacles = [];
+        if (player) { player.remove(); player = null; }
+        goCard.hidden = true;
+        theater.classList.remove('st-playing', 'st-dead');
+        theater.classList.add('st-title');
+        paradeMuster();
+      }
+
+      /* ——— Input ——— */
+      function pressJump() {
+        if (state === 'playing') jump();
+        else if (state === 'dead' && performance.now() - diedAt > 600) startGame();
+      }
+
+      document.addEventListener('keydown', e => {
+        if (e.repeat) return;
+        if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') {
+          e.preventDefault();
+          if (state === 'title') startGame();
+          else pressJump();
+        }
+      });
+      document.addEventListener('keyup', e => {
+        if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') jumpCut();
+      });
+      theater.addEventListener('pointerdown', e => {
+        if (state === 'title') return;                      // parade clicks handled per-unit
+        if (e.target.closest('button, a, .gameover')) return;
+        pressJump();
+      });
+      theater.addEventListener('pointerup', () => { if (state === 'playing') jumpCut(); });
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && state === 'playing') paused = true;
+        else if (state === 'playing') { paused = false; lastT = performance.now(); }
+      });
+
+      document.getElementById('btn-enlist').addEventListener('click', startGame);
+      document.getElementById('btn-again').addEventListener('click', startGame);
+      document.getElementById('btn-retreat').addEventListener('click', backToParade);
+
+      // test hook: lets automation read game state without poking internals
+      window.__bootcamp = {
+        get state() { return state; },
+        get score() { return Math.floor(score || 0); },
+        get obstacles() { return obstacles.length; },
+        get nearest() {
+          if (state !== 'playing' || !player) return 'none';
+          let closest = null;
+          for (const o of obstacles) {
+            if (o.x + o.w < playerX) continue;
+            if (!closest || o.x < closest.x) closest = o;
+          }
+          if (!closest) return 'run';
+          const gap = closest.x - (playerX + player.w);
+          return (closest.type === 'mower' && gap < speed * 0.18) ? 'jump' : 'run';
+        },
+        get pigNear() {
+          if (state !== 'playing' || !player) return false;
+          return obstacles.some(o => o.type === 'pig' &&
+            o.x + o.w > playerX && o.x - (playerX + player.w) < speed * 0.5);
+        },
+        get snap() {
+          return {
+            air: !!airborne, py: Math.round(py || 0), speed: Math.round(speed || 0),
+            obs: obstacles.map(o => ({ t: o.type, dx: Math.round(o.x - playerX), y: Math.round(o.y) })),
+          };
+        },
+      };
+
+      /* ——— Opening formation: the parade is mid-march on arrival ——— */
+      paradeMuster();
+    })();
+  </script>
+</body>
+</html>
