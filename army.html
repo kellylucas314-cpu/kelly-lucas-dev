@@ -205,6 +205,31 @@
       100% { transform: translate(-44px, 6px) rotate(340deg); opacity: 0; }
     }
 
+    /* Stomp reactions: a bonked mower squashes and shakes it off; a bonked pig dips */
+    .mower.bonked .body { animation: bonk 0.55s ease-out; }
+    @keyframes bonk {
+      0%   { transform: scale(var(--scale, 1)) scaleY(0.68) translateY(7px); }
+      55%  { transform: scale(var(--scale, 1)) scaleY(1.12) translateY(-3px); }
+      100% { transform: scale(var(--scale, 1)); }
+    }
+    .pig.bonked .body { animation: pigdip 0.55s ease-out; }
+    @keyframes pigdip {
+      0%   { transform: scale(var(--scale, 1)) translateY(15px) rotate(7deg); }
+      100% { transform: scale(var(--scale, 1)) translateY(0); }
+    }
+
+    /* Collected acorns pop */
+    .acorn.got svg { animation: nab 0.3s ease-out forwards; }
+    @keyframes nab {
+      to { transform: scale(1.9) rotate(24deg); opacity: 0; }
+    }
+    .hud .hud-acorns { color: #f6d8a8; }
+    .go-acorns {
+      margin-top: 2px;
+      font-size: clamp(0.75rem, 1.7vw, 1rem);
+      color: var(--ink-soft);
+    }
+
     /* Click reactions (title screen) */
     .unit.stunt .body { animation: stunt 0.7s ease-in-out 1; }
     @keyframes stunt {
@@ -238,7 +263,7 @@
       from { transform: rotate(28deg); }
       to   { transform: rotate(-24deg); }
     }
-    .player .al-antenna { transform-origin: 45px 18px; animation: antwob 0.5s ease-in-out infinite alternate; }
+    .player .plume { transform-origin: 62px 26px; animation: antwob 0.5s ease-in-out infinite alternate; }
     @keyframes antwob {
       from { transform: rotate(-8deg); }
       to   { transform: rotate(10deg); }
@@ -462,6 +487,27 @@
       font-size: clamp(0.66rem, 1.4vw, 0.85rem);
       color: var(--ink-soft);
     }
+    .console .toybox {
+      margin-top: clamp(8px, 1.4vh, 12px);
+      padding-top: clamp(8px, 1.4vh, 12px);
+      border-top: 1px dashed rgba(44, 49, 64, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: clamp(0.62rem, 1.3vw, 0.8rem);
+      color: var(--ink-soft);
+    }
+    .toybox-label { flex-basis: 100%; }
+    .btn-mini {
+      font-size: clamp(0.6rem, 1.3vw, 0.78rem);
+      padding: 5px 9px 4px;
+      border-width: 2px;
+      border-radius: 6px;
+      box-shadow: 0 3px 0 var(--ink);
+    }
+    .muster { white-space: nowrap; }
 
     /* ——— HUD (in game) ——— */
     .hud {
@@ -630,7 +676,7 @@
       .sun, .cloud, .unit, .unit .body, .ticker-track,
       .wing-near, .wing-far, .wheel, .brush, .clips i,
       .player .leg-a, .player .leg-b, .player .arm-a, .player .arm-b,
-      .player .al-antenna { animation: none !important; }
+      .player .plume { animation: none !important; }
       .unit { transform: translateX(var(--rest-x, 40vw)); }
       .cloud { transform: translateX(var(--rest-x, 30vw)); }
     }
@@ -656,22 +702,25 @@
     </header>
 
     <section class="console" id="console" aria-label="Command console">
-      <p class="readout">
-        <span class="stat">🤖 Mowers: <strong id="count-mowers">0</strong></span> ·
-        <span class="stat">🐷 Pigs: <strong id="count-pigs">0</strong></span> ·
-        <span class="stat">Best run: <strong id="best-readout">0</strong></span>
-      </p>
+      <p class="readout">🎖️ Best score: <strong id="best-readout">0</strong></p>
       <div class="btnrow">
         <button class="btn btn-play" id="btn-enlist">🎖️ Enlist &amp; Run</button>
-        <button class="btn" id="btn-mower">Deploy Mower</button>
-        <button class="btn" id="btn-pig">Scramble a Pig</button>
-        <button class="btn btn-charge" id="btn-charge">Sound the Charge 📯</button>
       </div>
-      <p class="hint">Boot camp: SPACE / ↑ / tap to jump — hold to jump higher. Mowers: jump them. Swooping pigs: keep your boots down.</p>
+      <p class="hint">SPACE / ↑ / tap to jump — hold to jump higher. Jump the mowers; when pigs swoop, stay
+        low — or stomp a pig's back to springboard up to the sky crates. Hoover up acorns 🌰, chain
+        bounces for big points.</p>
+      <div class="toybox">
+        <span class="toybox-label">Parade toys — just for fun, no effect on your run:</span>
+        <button class="btn btn-mini" id="btn-mower">+ 🤖 mower</button>
+        <button class="btn btn-mini" id="btn-pig">+ 🐷 pig</button>
+        <button class="btn btn-mini btn-charge" id="btn-charge">📯 charge!</button>
+        <span class="muster">marching: <strong id="count-mowers">0</strong> 🤖 · <strong id="count-pigs">0</strong> 🐷</span>
+      </div>
     </section>
 
     <div class="hud" aria-hidden="true">
       <span id="hud-score">SCORE 0000</span>
+      <span class="hud-acorns" id="hud-acorns">🌰 0</span>
       <span class="hud-best" id="hud-best">BEST 0000</span>
     </div>
     <div class="ready" id="ready" aria-hidden="true"></div>
@@ -681,6 +730,7 @@
       <div class="go-cause" id="go-cause">Court-martialed by the 3rd Mowing Brigade.</div>
       <div class="go-score" id="go-score">SCORE 0000</div>
       <div class="go-rank" id="go-rank">Rank earned: Lawn Private</div>
+      <div class="go-acorns">🌰 <strong id="go-acorns">0</strong> acorns for the mess hall</div>
       <div class="go-record">★ New camp record ★</div>
       <div class="btnrow">
         <button class="btn btn-play" id="btn-again">Re-enlist (Space)</button>
@@ -748,30 +798,59 @@
           <g class="brush" stroke-width="2.5"><path d="M133 82 l 9 -5 M133 82 l 10 3 M133 82 l 2 10 M133 82 l -7 8 M133 82 l -4 -9" stroke="#c9b98a"/><circle cx="133" cy="82" r="3" fill="#4c5433"/></g>
         </g></svg>`;
 
-      // The recruit: little green alien in an army helmet, facing right
-      const ALIEN_SVG = `
+      // The recruit: a little colonial minuteman — tricorn with a red plume,
+      // powdered wig, Continental-blue coat — facing right
+      const RECRUIT_SVG = `
         <svg viewBox="0 0 90 120"><g stroke="#2c3140" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
-          <g class="al-antenna"><path d="M45 18 C 45 10, 40 9, 37 5" fill="none"/><circle cx="36" cy="4" r="3.6" fill="#ffd94f"/></g>
-          <g class="arm-b"><path d="M53 64 L 63 76" fill="none" stroke-width="6" stroke="#6cbf5a"/><circle cx="64" cy="78" r="4" fill="#8fd06c"/></g>
-          <g class="leg-a"><path d="M41 86 L 37 102" fill="none" stroke-width="6" stroke="#6cbf5a"/><rect x="27" y="100" width="17" height="9" rx="4" fill="#4c5433"/></g>
-          <g class="leg-b"><path d="M50 86 L 54 102" fill="none" stroke-width="6" stroke="#6cbf5a"/><rect x="46" y="100" width="17" height="9" rx="4" fill="#4c5433"/></g>
-          <rect x="32" y="56" width="26" height="32" rx="10" fill="#6cbf5a"/>
-          <path d="M36 66 h 18" stroke-width="2" stroke="rgba(44,49,64,0.4)"/>
-          <circle cx="45" cy="42" r="17" fill="#8fd06c"/>
-          <ellipse cx="40" cy="43" rx="4.2" ry="6" fill="#2c3140" stroke="none"/>
-          <ellipse cx="53" cy="43" rx="4.2" ry="6" fill="#2c3140" stroke="none"/>
-          <ellipse cx="41.5" cy="41" rx="1.3" ry="1.8" fill="#fcfaf0" stroke="none"/>
-          <ellipse cx="54.5" cy="41" rx="1.3" ry="1.8" fill="#fcfaf0" stroke="none"/>
-          <path d="M42 53 q 4 3 8 0" fill="none" stroke-width="2.5"/>
-          <path d="M25 28 a 20 14 0 0 1 40 0 z" fill="#7d8752"/>
-          <rect x="20" y="26" width="50" height="8" rx="4" fill="#5d673c"/>
-          <path d="M45 15 l 1.8 3.8 l 4.2 0.6 l -3 3 l 0.7 4.2 l -3.7 -2 l -3.7 2 l 0.7 -4.2 l -3 -3 l 4.2 -0.6 z" fill="#fcfaf0" stroke-width="1.5"/>
-          <g class="arm-a"><path d="M37 64 L 28 77" fill="none" stroke-width="6" stroke="#8fd06c"/><circle cx="27" cy="79" r="4" fill="#8fd06c"/></g>
+          <g class="arm-b"><path d="M53 64 L 63 76" fill="none" stroke-width="6" stroke="#33508f"/><path d="M60 72 l 4 5" stroke-width="7" stroke="#c8402e"/><circle cx="65" cy="79" r="4" fill="#f2c9a0"/></g>
+          <g class="leg-a"><path d="M41 86 L 37 102" fill="none" stroke-width="6" stroke="#e3d4b4"/><rect x="27" y="100" width="17" height="9" rx="4" fill="#2f2a26"/><rect x="35" y="101.5" width="4.5" height="6" rx="1" fill="#ffd94f" stroke-width="1.6"/></g>
+          <g class="leg-b"><path d="M50 86 L 54 102" fill="none" stroke-width="6" stroke="#e3d4b4"/><rect x="46" y="100" width="17" height="9" rx="4" fill="#2f2a26"/><rect x="54" y="101.5" width="4.5" height="6" rx="1" fill="#ffd94f" stroke-width="1.6"/></g>
+          <rect x="32" y="56" width="26" height="32" rx="10" fill="#3f5fa8"/>
+          <path d="M45 58 v 28" stroke="#f3ead8" stroke-width="5"/>
+          <circle cx="45" cy="65" r="1.6" fill="#ffd94f" stroke="none"/>
+          <circle cx="45" cy="72" r="1.6" fill="#ffd94f" stroke="none"/>
+          <circle cx="45" cy="79" r="1.6" fill="#ffd94f" stroke="none"/>
+          <path d="M30 50 c -8 2 -10 8 -7 12" stroke-width="6" stroke="#f3ead8" fill="none"/>
+          <path d="M23 59 l 7 3" stroke-width="2.5"/>
+          <circle cx="45" cy="44" r="16" fill="#f2c9a0"/>
+          <circle cx="31" cy="47" r="5" fill="#f3ead8" stroke-width="2.5"/>
+          <circle cx="41" cy="43" r="2" fill="#2c3140" stroke="none"/>
+          <circle cx="52" cy="43" r="2" fill="#2c3140" stroke="none"/>
+          <ellipse cx="39" cy="48" rx="2.5" ry="1.6" fill="#eb9d8a" stroke="none"/>
+          <ellipse cx="53.5" cy="48" rx="2.5" ry="1.6" fill="#eb9d8a" stroke="none"/>
+          <path d="M42 51 q 3.5 2.6 7 0" fill="none" stroke-width="2.5"/>
+          <path d="M31 25 a 14 10 0 0 1 28 0 z" fill="#26262b"/>
+          <path d="M21 33 Q 27 21 45 20 Q 63 21 69 33 Q 56 26 45 26 Q 34 26 21 33 z" fill="#26262b"/>
+          <path d="M21 33 Q 34 26 45 26 Q 56 26 69 33" fill="none" stroke="#d8a85a" stroke-width="2"/>
+          <g class="plume"><path d="M61 25 C 63 17 69 12 74 12 C 71 18 68 23 63 27 z" fill="#c8402e" stroke-width="2"/></g>
+          <circle cx="60" cy="28" r="3.4" fill="#c8402e" stroke-width="2"/>
+          <circle cx="60" cy="28" r="1.4" fill="#f3ead8" stroke="none"/>
+          <g class="arm-a"><path d="M37 64 L 28 77" fill="none" stroke-width="6" stroke="#3f5fa8"/><path d="M31 73 l -4 5" stroke-width="7" stroke="#c8402e"/><circle cx="27" cy="79" r="4" fill="#f2c9a0"/></g>
         </g></svg>`;
 
       const CLOUD_SVG = `
         <svg viewBox="0 0 90 50"><path d="M12 46 a14 14 0 0 1 6 -27 a20 20 0 0 1 38 -7 a16 16 0 0 1 26 12 a12 12 0 0 1 -4 22 z"
           fill="rgba(252,250,240,0.92)" stroke="rgba(44,49,64,0.14)" stroke-width="3"/></svg>`;
+
+      const ACORN_SVG = `
+        <svg viewBox="0 0 30 34"><g stroke="#2c3140" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M15 3 v 4" fill="none"/>
+          <path d="M5 12 a10 6 0 0 1 20 0 z" fill="#8a6a3f"/>
+          <path d="M6.5 12 h 17 c 0 9 -5 16 -8.5 18 c -3.5 -2 -8.5 -9 -8.5 -18 z" fill="#d8a85a"/>
+          <path d="M11 15 c 0 6 2 10 4 13" fill="none" stroke="rgba(44,49,64,0.35)" stroke-width="1.6"/>
+        </g></svg>`;
+
+      const CRATE_UNIT = `<g stroke="#2c3140" stroke-width="3" stroke-linejoin="round">
+          <rect x="2" y="2" width="42" height="36" rx="4" fill="#b3854f"/>
+          <path d="M2 12 h 42 M2 28 h 42 M6 12 L 40 28" stroke-width="2" stroke="rgba(44,49,64,0.45)" fill="none"/>
+          <path d="M23 15 l 1.7 3.4 l 3.8 0.6 l -2.8 2.7 l 0.7 3.8 l -3.4 -1.8 l -3.4 1.8 l 0.7 -3.8 l -2.8 -2.7 l 3.8 -0.6 z"
+            fill="#f6eed9" stroke-width="1.4"/>
+        </g>`;
+      const crateStrip = n => {
+        let g = '';
+        for (let i = 0; i < n; i++) g += `<g transform="translate(${i * 46} 0)">${CRATE_UNIT}</g>`;
+        return `<svg viewBox="0 0 ${n * 46} 40">${g}</svg>`;
+      };
 
       /* ============================================================
          Ambience: ticker + clouds
@@ -929,6 +1008,8 @@
       const goCause = document.getElementById('go-cause');
       const goScore = document.getElementById('go-score');
       const goRank = document.getElementById('go-rank');
+      const goAcorns = document.getElementById('go-acorns');
+      const hudAcorns = document.getElementById('hud-acorns');
 
       const BEST_KEY = 'armyBootCampBest';
       let best = parseInt(localStorage.getItem(BEST_KEY) || '0', 10) || 0;
@@ -949,9 +1030,13 @@
       let k, groundY, playerX;       // world scale + geometry (px)
       let player, py, vy, airborne, holding;
       let obstacles = [];            // {el, x, y, w, h, mult, type, cleared}
+      let platforms = [];            // crate strips: {el, x, y(top height), w, h}
+      let acorns = [];               // {el, x, y(center height), w, h, got}
+      let onPlat = null, acornCount = 0;
       let speed, runTime, score, spawnIn, pending;
       let lastT = 0, rafId = 0, paused = false, diedAt = 0;
       let jumpBufferedAt = -1;
+      let bounceChain = 0;
 
       function metrics() {
         k = Math.min(1.3, Math.max(0.65, window.innerHeight / 900));
@@ -990,13 +1075,20 @@
 
         obstacles.forEach(o => o.el.remove());
         obstacles = [];
+        platforms.forEach(p => p.el.remove());
+        platforms = [];
+        acorns.forEach(a => a.el.remove());
+        acorns = [];
+        onPlat = null;
+        acornCount = 0;
+        hudAcorns.textContent = '🌰 0';
         pending = [];
         if (player) player.remove();
 
         const pw = 88 * k, ph = pw * (120 / 90);
-        player = makeGob('player', `<div class="pbody">${ALIEN_SVG}</div>`, pw, ph);
+        player = makeGob('player', `<div class="pbody">${RECRUIT_SVG}</div>`, pw, ph);
         player.w = pw; player.h = ph;
-        py = 0; vy = 0; airborne = false; holding = false;
+        py = 0; vy = 0; airborne = false; holding = false; bounceChain = 0;
         place(player, playerX, groundY - ph);
 
         speed = 380 * k;
@@ -1039,20 +1131,51 @@
         obstacles.push({ el, x: window.innerWidth + 60 + xOffset, y: alt, w, h, mult, type: 'pig', cleared: false });
       }
 
+      /* Sky structure: supply-crate platforms to run along and acorns to hoover
+         up. Low strips are one full jump away; high strips want a pig
+         springboard, which spawns just ahead of them as the ladder. */
+      function spawnAcorn(x, y) {
+        const s = 26 * k, h = s * (34 / 30);
+        const el = makeGob('acorn', ACORN_SVG, s, h);
+        acorns.push({ el, x, y, w: s, h, got: false });
+      }
+      function spawnCrates(band) {
+        const n = 2 + Math.floor(rand(0, 3));
+        const cw = 52 * k, w = n * cw, h = cw * (40 / 46);
+        // low band: a full-hold jump's feet peak ~174k — leave real margin.
+        // high band: pig-springboard (or low-crate hop) territory.
+        const y = (band === 'high' ? rand(250, 280) : rand(120, 150)) * k;
+        const el = makeGob('crates', crateStrip(n), w, h);
+        const x = window.innerWidth + 60;
+        platforms.push({ el, x, y, w, h });
+        for (let i = 0; i <= n; i++) spawnAcorn(x + (i + 0.15) * (w / (n + 1)), y + 36 * k);
+        if (band === 'high') spawnSwoop(-Math.round(rand(180, 260) * k)); // the springboard arrives first
+      }
+      function acornArc(x0, peak) {
+        for (let i = 0; i < 5; i++) {
+          const t = (i - 2) / 2;
+          spawnAcorn(x0 + i * 44 * k, peak - t * t * peak * 0.5);
+        }
+      }
+
       function pickPattern() {
         const roll = Math.random();
-        if (runTime > 24 && speed > 560 * k && roll < 0.18) {
+        if (runTime > 24 && speed > 560 * k && roll < 0.15) {
           // 1.15 widths keeps the pair one committed long jump: at the unlock
           // speed a wider pair leaves less takeoff window than the jump's own
           // rise time — i.e. no window at all
           spawnMower(); spawnMower(128 * k * 1.15);
-        } else if (runTime > 16 && roll < 0.42) {
+        } else if (runTime > 16 && roll < 0.34) {
           spawnMower();                                       // jump, then stay down —
           pending.push({ t: rand(0.5, 0.85), fn: () => spawnSwoop() }); // tightest rolls still reward a quick hop
-        } else if (roll < 0.68) {
+        } else if (runTime > 8 && roll < 0.52) {
+          spawnCrates(runTime > 20 && Math.random() < 0.45 ? 'high' : 'low');
+        } else if (roll < 0.76) {
           spawnMower();
+          if (Math.random() < 0.5) acornArc(window.innerWidth - 30 * k, 150 * k); // jump the mower, catch the arc
         } else {
           spawnSwoop();
+          if (Math.random() < 0.6) acornArc(window.innerWidth + 30, 255 * k);     // treasure above the pig — stomp to harvest
         }
         spawnIn = Math.max(0.78, rand(1.05, 1.7) * (560 * k) / speed);
       }
@@ -1061,6 +1184,7 @@
       function jump() {
         if (airborne) { jumpBufferedAt = performance.now(); return; } // buffer a slightly-early press
         airborne = true;
+        onPlat = null;
         holding = true;
         vy = JUMP_V();
         player.classList.add('air');
@@ -1073,6 +1197,7 @@
         airborne = false;
         py = 0;
         vy = 0;
+        bounceChain = 0;
         player.classList.remove('air');
         const puff = document.createElement('div');
         puff.className = 'puff';
@@ -1081,6 +1206,24 @@
         theater.appendChild(puff);
         puff.addEventListener('animationend', () => puff.remove());
         if (performance.now() - jumpBufferedAt < 120) { jumpBufferedAt = -1; jump(); }
+      }
+
+      // Bounce off a back, Mario-style. Hold jump through the stomp for a
+      // full-height bounce; consecutive stomps without touching grass multiply.
+      function stomp(o, boxTop) {
+        py = boxTop - player.h * 0.06;
+        // pigs are springboards — always a big launch, high enough for the sky
+        // crates. Mowers: hold to bounce higher.
+        vy = (o.type === 'pig' ? 1.05 : holding ? 0.9 : 0.6) * JUMP_V();
+        bounceChain = Math.min(bounceChain + 1, 5);
+        const pts = (o.type === 'pig' ? 30 : 15) * bounceChain;
+        score += pts;
+        const cry = o.type === 'pig' ? 'OINK!' : 'BOING!';
+        wordpop(bounceChain > 1 ? `${cry} x${bounceChain} +${pts}` : `${cry} +${pts}`,
+          playerX + player.w, groundY - player.h - py - 14, true);
+        o.el.classList.remove('bonked');
+        void o.el.offsetWidth; // restart animation
+        o.el.classList.add('bonked');
       }
 
       function hitbox(o) {
@@ -1099,11 +1242,38 @@
         speed = Math.min(820 * k, 380 * k + 4.5 * k * runTime);
         score += dt * speed * 0.022;
 
-        // player physics
+        // riding a crate strip: stick to its top until it slides out from underfoot
+        if (onPlat) {
+          if (onPlat.x + onPlat.w < playerX + player.w * 0.3 || onPlat.x > playerX + player.w * 0.7) {
+            onPlat = null;
+            airborne = true;
+            vy = 0;
+            player.classList.add('air');
+          } else {
+            py = onPlat.y - player.h * 0.06;
+          }
+        }
+        // player physics (feetPrev: where the boots were BEFORE this frame,
+        // so a fast fall can't tunnel past a stomp or a crate top)
+        const feetPrev = py + player.h * 0.06;
         if (airborne) {
           vy -= GRAV() * dt;
           py += vy * dt;
-          if (py <= 0) land();
+          if (vy < 0) {
+            for (const p of platforms) {
+              if (feetPrev >= p.y - 12 * k && py + player.h * 0.06 <= p.y &&
+                  p.x < playerX + player.w * 0.7 && p.x + p.w > playerX + player.w * 0.3) {
+                onPlat = p;
+                airborne = false;
+                vy = 0;
+                py = p.y - player.h * 0.06;
+                bounceChain = 0;
+                player.classList.remove('air');
+                break;
+              }
+            }
+          }
+          if (airborne && py <= 0) land();
         }
         const lean = airborne ? Math.max(-14, Math.min(10, -vy * 0.012)) : 0;
         player.querySelector('.pbody').style.transform = `rotate(${lean.toFixed(1)}deg)`;
@@ -1114,9 +1284,7 @@
         if (spawnIn <= 0) pickPattern();
         pending = pending.filter(p => { p.t -= dt; if (p.t <= 0) { p.fn(); return false; } return true; });
 
-        // obstacles
-        const px1 = playerX + player.w * 0.22, px2 = playerX + player.w * 0.78;
-        const pyTop = py + player.h * 0.92, pyBot = py + player.h * 0.06;
+        // obstacles: move + score clears first, then resolve contacts
         for (const o of obstacles) {
           o.x -= speed * o.mult * dt;
           place(o.el, o.x, groundY - o.h - o.y);
@@ -1126,8 +1294,49 @@
             score += pts;
             wordpop(`+${pts}`, playerX + player.w, groundY - player.h - py - 10, true);
           }
+        }
+
+        // crates + acorns ride the same wind
+        for (const p of platforms) {
+          p.x -= speed * dt;
+          place(p.el, p.x, groundY - p.y);
+        }
+        platforms = platforms.filter(p => {
+          if (p.x + p.w < -80) {
+            if (onPlat === p) onPlat = null;
+            p.el.remove();
+            return false;
+          }
+          return true;
+        });
+        const pcx = playerX + player.w * 0.5, pcy = py + player.h * 0.5;
+        for (const a of acorns) {
+          a.x -= speed * dt;
+          place(a.el, a.x, groundY - a.y - a.h / 2);
+          if (!a.got && Math.abs(a.x + a.w / 2 - pcx) < 60 * k && Math.abs(a.y - pcy) < 72 * k) {
+            a.got = true;
+            acornCount++;
+            score += 5;
+            hudAcorns.textContent = `🌰 ${acornCount}`;
+            a.el.classList.add('got');
+            a.el.addEventListener('animationend', () => a.el.remove());
+          }
+        }
+        acorns = acorns.filter(a => {
+          if (a.got) return false;
+          if (a.x < -60) { a.el.remove(); return false; }
+          return true;
+        });
+        const px1 = playerX + player.w * 0.22, px2 = playerX + player.w * 0.78;
+        const pyTop = py + player.h * 0.92, pyBot = py + player.h * 0.06;
+        for (const o of obstacles) {
           const b = hitbox(o);
           if (px1 < b.x + b.w && px2 > b.x && pyBot < b.y + b.h && pyTop > b.y) {
+            // Mario rules: falling onto a back is a stomp, not a death
+            if (airborne && vy < 0 && feetPrev >= b.y + b.h - 12 * k) {
+              stomp(o, b.y + b.h);
+              break; // py just changed — recheck the rest next frame
+            }
             return defeat(o.type);
           }
         }
@@ -1156,6 +1365,7 @@
           : 'Court-martialed by the 3rd Mowing Brigade.';
         goScore.textContent = `SCORE ${String(s).padStart(4, '0')}`;
         goRank.textContent = `Rank earned: ${rankFor(s)}`;
+        goAcorns.textContent = acornCount;
 
         if (s > best) {
           best = s;
@@ -1257,6 +1467,8 @@
         get snap() {
           return {
             air: !!airborne, py: Math.round(py || 0), speed: Math.round(speed || 0),
+            onPlat: !!onPlat, plats: platforms.length, nuts: acornCount || 0,
+            platDetail: platforms.map(p => ({ dx: Math.round(p.x - playerX), y: Math.round(p.y), w: Math.round(p.w) })),
             obs: obstacles.map(o => ({ t: o.type, dx: Math.round(o.x - playerX), y: Math.round(o.y) })),
           };
         },
