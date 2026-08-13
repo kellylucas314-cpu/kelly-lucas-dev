@@ -129,17 +129,31 @@
   font-display: swap;
 }
 
+/* GC Protage, the display face. Full 8-weight family, local files. */
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-Thin.woff2") format("woff2"); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-ExtraLight.woff2") format("woff2"); font-weight: 200; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-Light.woff2") format("woff2"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-Medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-SemiBold.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "GC Protage"; src: url("assets/fonts/GCPROTAGE-ExtraBold.woff2") format("woff2"); font-weight: 800; font-style: normal; font-display: swap; }
+
 /* ---------- Tokens ---------- */
 :root {
   --page-bg: #f4f2ec;
-  --mint: #c9e6c9;
-  --mint-deep: #b1d8b3;
+  --mint: #cfe9d3;
+  --mint-deep: #a9d3b0;
   --cream: #f6f3e8;
-  --lilac: #e3e3ee;
+  --lilac: #e4e4f3;
+  --sky: #e4f1fb;
+  --blush: #f8ece5;
   --ink: #14201a;
   --ink-soft: #3b4842;
   --ink-mute: #6c766f;
-  --line: #1420201a;
+  --line: rgba(20, 32, 26, 0.14);
+  --rule: rgba(20, 32, 26, 0.3);
+  --grid-line: rgba(20, 32, 26, 0.04);
   --footer-bg: #14201a;
   --footer-ink: #c9e6c9;
 
@@ -152,13 +166,14 @@
   --block-pad-x: clamp(28px, 5vw, 80px);
 
   /* === ACTIVE FONTS ===
-     Body and display both use Heliora.
+     Display runs GC Protage (thin lab lettering), body runs Neutiva.
      Swap either independently by editing the string below. */
-  --font-active: "Heliora";
-  --font-display-active: "Heliora";
+  --font-active: "Neutiva";
+  --font-display-active: "GC Protage";
 
   --font-sans: var(--font-active), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-display: var(--font-display-active), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
 }
 
 /* ---------- Reset ---------- */
@@ -179,9 +194,9 @@ body {
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: 17px;
-  line-height: 1.5;
+  line-height: 1.55;
   font-weight: 400;
-  letter-spacing: -0.005em;
+  letter-spacing: 0;
 }
 
 a {
@@ -196,8 +211,8 @@ img {
 
 h1, h2, h3 {
   margin: 0;
-  font-weight: 500;
-  letter-spacing: -0.03em;
+  font-weight: 400;
+  letter-spacing: -0.02em;
   line-height: 0.98;
 }
 
@@ -233,9 +248,10 @@ ul {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-weight: 500;
   font-size: 16px;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.01em;
 }
 
 .logo-mark {
@@ -300,29 +316,39 @@ ul {
   border-radius: var(--radius-block);
   padding: var(--block-pad-y) var(--block-pad-x);
   overflow: hidden;
-  border: 1px solid rgba(20, 32, 26, 0.10);
+  border: 1px solid var(--line);
 }
 
-.block--mint  { background: linear-gradient(0deg, #e6f7ff 0%, #e9ffe9 100%); }
+.block--mint  { background: linear-gradient(0deg, var(--sky) 0%, #eaf6ec 100%); }
 .block--cream { background: var(--cream); }
 .block--lilac { background: var(--lilac); }
+.block--blush { background: linear-gradient(0deg, var(--blush) 0%, #faf2ec 100%); }
+
+/* Graph paper under the hero, like a lab notebook */
+.hero.block--mint {
+  background:
+    linear-gradient(0deg, var(--grid-line) 1px, transparent 1px) 0 0 / 100% 56px,
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / 56px 100%,
+    linear-gradient(0deg, var(--sky) 0%, #eaf6ec 100%);
+}
 
 /* ---------- Dot tag (Iso style) ---------- */
 .dot-tag {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
-  letter-spacing: 0.06em;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .dot-tag__dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 1.5px;
+  width: 7px;
+  height: 7px;
+  border-radius: 1px;
   background: var(--ink);
   display: inline-block;
 }
@@ -345,27 +371,28 @@ ul {
 .display {
   font-family: var(--font-display);
   font-size: clamp(56px, 10.5vw, 168px);
-  font-weight: 400;
-  line-height: 0.92;
-  letter-spacing: -0.005em;
+  font-weight: 200;
+  line-height: 0.94;
+  letter-spacing: -0.01em;
   margin: 0;
 }
 
 .display--md {
   font-size: clamp(44px, 7.5vw, 116px);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
   line-height: 0.96;
 }
 
 .display--sm {
   font-size: clamp(36px, 5.5vw, 80px);
-  letter-spacing: -0.035em;
+  font-weight: 250;
+  letter-spacing: -0.02em;
 }
 
 .quote blockquote,
 .footer-mail {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 200;
 }
 
 /* ---------- Hero ---------- */
@@ -413,14 +440,16 @@ ul {
 }
 
 .cta__label {
-  font-size: 13px;
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .cta__icon {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
   border: 1px solid var(--ink);
   display: inline-flex;
@@ -455,10 +484,11 @@ ul {
 }
 
 .split-left .lede {
-  font-size: clamp(24px, 3vw, 38px);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-size: clamp(26px, 3.2vw, 40px);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  font-weight: 300;
   color: var(--ink);
   max-width: 22ch;
 }
@@ -493,12 +523,12 @@ ul {
 .card-grid {
   display: grid;
   grid-template-columns: 1fr;
-  border-top: 1px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
 }
 
 .card-grid > * {
-  border-top: 1px solid var(--ink);
+  border-top: 1px solid var(--rule);
   margin-top: -1px;
 }
 
@@ -515,7 +545,7 @@ ul {
 .card:hover {
   background: rgba(20, 32, 26, 0.03);
   transform: translateY(-6px) rotate(-0.4deg);
-  box-shadow: 0 16px 32px rgba(20, 32, 26, 0.08);
+  box-shadow: 0 12px 28px rgba(20, 32, 26, 0.06);
 }
 
 .card:nth-child(even):hover {
@@ -530,10 +560,11 @@ ul {
 }
 
 .card__title {
-  font-size: clamp(22px, 2.4vw, 32px);
-  letter-spacing: -0.02em;
-  line-height: 1.08;
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.6vw, 34px);
+  letter-spacing: -0.015em;
+  line-height: 1.06;
+  font-weight: 300;
   margin: 0;
   max-width: 22ch;
 }
@@ -549,12 +580,12 @@ ul {
 @media (min-width: 760px) {
   .card-grid {
     grid-template-columns: repeat(3, 1fr);
-    border-left: 1px solid var(--ink);
-    border-right: 1px solid var(--ink);
+    border-left: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
   }
   .card-grid > * {
     border-top: none;
-    border-left: 1px solid var(--ink);
+    border-left: 1px solid var(--rule);
     margin-top: 0;
     margin-left: -1px;
   }
@@ -581,15 +612,18 @@ ul {
 }
 
 .now-label {
-  font-size: 13px;
-  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--ink-mute);
 }
 
 .now-body {
+  font-family: var(--font-display);
   font-size: clamp(20px, 2.4vw, 28px);
-  letter-spacing: -0.02em;
-  font-weight: 500;
+  letter-spacing: -0.015em;
+  font-weight: 300;
 }
 
 @media (min-width: 760px) {
@@ -609,15 +643,18 @@ ul {
 .quote blockquote {
   margin: 0;
   font-size: clamp(28px, 4vw, 56px);
-  line-height: 1.1;
-  letter-spacing: -0.025em;
-  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  font-weight: 300;
   max-width: 22ch;
 }
 
 /* ---------- Footer ---------- */
 .site-footer {
-  background: var(--footer-bg);
+  background:
+    linear-gradient(0deg, rgba(201, 230, 201, 0.05) 1px, transparent 1px) 0 0 / 100% 64px,
+    linear-gradient(90deg, rgba(201, 230, 201, 0.05) 1px, transparent 1px) 0 0 / 64px 100%,
+    var(--footer-bg);
   color: var(--footer-ink);
   margin-top: 14px;
   border-top-left-radius: var(--radius-block);
@@ -640,8 +677,10 @@ ul {
 }
 
 .footer-tag {
-  font-size: 12px;
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--footer-ink);
   border: 1px solid rgba(201, 230, 201, 0.35);
   padding: 6px 12px;
@@ -652,8 +691,8 @@ ul {
 .footer-mail {
   font-family: var(--font-display);
   font-size: clamp(40px, 8vw, 112px);
-  font-weight: 400;
-  letter-spacing: -0.04em;
+  font-weight: 200;
+  letter-spacing: -0.02em;
   line-height: 0.95;
   align-self: flex-start;
   border-bottom: 1px solid transparent;
@@ -672,8 +711,9 @@ ul {
   margin: 0;
   padding-top: 24px;
   border-top: 1px solid rgba(201, 230, 201, 0.18);
-  font-size: 12px;
-  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
   color: rgba(201, 230, 201, 0.55);
 }
 
@@ -706,9 +746,11 @@ ul {
 }
 
 .footer-logo {
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-weight: 500;
   color: var(--footer-ink);
   font-size: 16px;
+  letter-spacing: 0.01em;
 }
 
 .footer-nav {
@@ -792,9 +834,9 @@ ul {
   max-width: 17ch;
   font-family: var(--font-display);
   font-size: clamp(38px, 7vw, 104px);
-  font-weight: 400;
-  line-height: 0.98;
-  letter-spacing: -0.04em;
+  font-weight: 200;
+  line-height: 1;
+  letter-spacing: -0.015em;
 }
 
 .spark-meta {
@@ -810,8 +852,9 @@ ul {
   border: 1px solid rgba(20, 32, 26, 0.18);
   border-radius: 999px;
   padding: 5px 10px;
-  font-size: 12px;
-  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -822,9 +865,9 @@ ul {
   background: transparent;
   color: var(--ink);
   padding: 12px 18px;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
@@ -850,8 +893,8 @@ ul {
 .spark-grid {
   display: grid;
   grid-template-columns: 1fr;
-  border-top: 1px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
 }
 
 .spark-card {
@@ -861,7 +904,7 @@ ul {
   flex-direction: column;
   justify-content: space-between;
   gap: 28px;
-  border-top: 1px solid var(--ink);
+  border-top: 1px solid var(--rule);
   margin-top: -1px;
   cursor: pointer;
   transition: background 0.25s ease, transform 0.25s ease;
@@ -874,8 +917,9 @@ ul {
 .spark-card p {
   font-family: var(--font-display);
   font-size: clamp(24px, 3vw, 38px);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
 }
 
 .spark-card div,
@@ -895,12 +939,12 @@ ul {
 @media (min-width: 760px) {
   .spark-grid {
     grid-template-columns: repeat(2, 1fr);
-    border-left: 1px solid var(--ink);
-    border-right: 1px solid var(--ink);
+    border-left: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
   }
 
   .spark-card {
-    border-left: 1px solid var(--ink);
+    border-left: 1px solid var(--rule);
     margin-left: -1px;
   }
 }
@@ -936,8 +980,9 @@ ul {
 .favorite-item p {
   font-family: var(--font-display);
   font-size: clamp(22px, 2.8vw, 34px);
-  line-height: 1.08;
-  letter-spacing: -0.03em;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
   margin-bottom: 18px;
 }
 
@@ -959,9 +1004,10 @@ ul {
 
 /* Version pill (header) */
 .version-pill {
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   border: 1px solid rgba(20, 32, 26, 0.25);
   border-radius: 999px;
@@ -1001,16 +1047,16 @@ ul {
 .sticker {
   display: inline-flex;
   align-items: center;
-  padding: 10px 16px;
+  padding: 9px 15px;
   border-radius: 999px;
-  border: 1px solid var(--ink);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  border: 1px solid rgba(20, 32, 26, 0.5);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.03em;
   color: var(--ink);
-  background: var(--cream);
+  background: rgba(255, 255, 255, 0.55);
   transform: rotate(var(--tilt, 0deg));
-  box-shadow: 0 2px 0 rgba(20, 32, 26, 0.16);
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
@@ -1022,9 +1068,9 @@ ul {
   cursor: grabbing;
 }
 
-.sticker--mint  { background: var(--mint-deep); }
-.sticker--lilac { background: var(--lilac); }
-.sticker--cream { background: var(--cream); }
+.sticker--mint  { background: #dcefe0; }
+.sticker--lilac { background: #e9e9f6; }
+.sticker--cream { background: rgba(255, 255, 255, 0.6); }
 
 @media (min-width: 900px) {
   .sticker-shelf {
@@ -1038,6 +1084,7 @@ ul {
 /* Scribbles (margin notes) */
 .scribble {
   font-size: 13px;
+  font-style: italic;
   line-height: 1.4;
   color: var(--ink-mute);
   transform: rotate(-2deg);
@@ -1067,6 +1114,10 @@ ul {
 
 .now .scribble {
   margin-top: 12px;
+}
+
+.field-guide .scribble {
+  margin-top: 14px;
 }
 
 /* Motto lines */
@@ -1127,7 +1178,7 @@ ul {
 }
 
 .progress {
-  height: 6px;
+  height: 4px;
   max-width: 220px;
   border-radius: 999px;
   background: rgba(20, 32, 26, 0.12);
@@ -1150,9 +1201,9 @@ ul {
   background: transparent;
   color: var(--ink);
   padding: 11px 18px;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
   transition: transform 0.2s ease, background 0.2s ease;
@@ -1197,13 +1248,13 @@ ul {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-width: 200px;
+  min-width: 220px;
   background: #0e1813;
   border: 1px solid rgba(201, 230, 201, 0.25);
   border-radius: 14px;
   padding: 14px 18px;
-  font-size: 12px;
-  letter-spacing: 0.03em;
+  font-size: 11px;
+  letter-spacing: 0.04em;
   color: rgba(201, 230, 201, 0.85);
 }
 
@@ -1243,7 +1294,7 @@ ul {
   left: 0;
   width: 28px;
   height: 28px;
-  border: 1.5px solid var(--ink);
+  border: 1px solid var(--ink);
   border-radius: 999px;
   pointer-events: none;
   opacity: 0;
@@ -1334,7 +1385,7 @@ ul {
 @media (min-width: 760px) {
   .card--wide {
     grid-column: 1 / -1;
-    border-top: 1px solid var(--ink);
+    border-top: 1px solid var(--rule);
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -1367,9 +1418,9 @@ ul {
 .guide-card__media {
   width: 100%;
   overflow: hidden;
-  border: 1px solid rgba(20, 32, 26, 0.2);
+  border: 1px solid var(--line);
   border-radius: 14px;
-  box-shadow: 0 10px 24px rgba(20, 32, 26, 0.1);
+  box-shadow: 0 8px 22px rgba(20, 32, 26, 0.07);
 }
 
 .guide-card__image {
@@ -1473,7 +1524,7 @@ ul {
 .instrument {
   position: relative;
   border-radius: var(--radius-block);
-  border: 1px solid rgba(20, 32, 26, 0.10);
+  border: 1px solid var(--line);
   padding: clamp(28px, 4vw, 44px);
   display: flex;
   flex-direction: column;
@@ -1482,7 +1533,7 @@ ul {
 }
 
 .instrument--cream { background: var(--cream); }
-.instrument--mint  { background: linear-gradient(0deg, #e6f7ff 0%, #e9ffe9 100%); }
+.instrument--mint  { background: linear-gradient(0deg, var(--sky) 0%, #eaf6ec 100%); }
 .instrument--lilac { background: var(--lilac); }
 .instrument--ink   { background: var(--ink); color: var(--mint); }
 .instrument--ink .dot-tag { color: var(--mint); }
@@ -1490,9 +1541,10 @@ ul {
 .instrument--ink .scribble { color: rgba(201, 230, 201, 0.6); }
 
 .instrument__title {
-  font-size: clamp(20px, 2vw, 26px);
-  letter-spacing: -0.02em;
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-size: clamp(21px, 2.1vw, 27px);
+  letter-spacing: -0.01em;
+  font-weight: 300;
 }
 
 .instrument__body {
@@ -1551,8 +1603,9 @@ ul {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 11px;
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -1750,8 +1803,9 @@ html.fx-serious .site-footer {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 11px;
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(201, 230, 201, 0.7);
 }

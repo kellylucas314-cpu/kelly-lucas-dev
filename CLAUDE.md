@@ -14,8 +14,11 @@ small easter eggs.
 
 ### Visual rules
 - Page background is warm off-white (`--page-bg: #f4f2ec`).
-- Section blocks alternate: **mint** (`#c9e6c9`), **cream** (`#f6f3e8`),
-  **lilac** (`#e3e3ee`). Footer is **deep ink green** (`#14201a`).
+- Section blocks alternate soft pastels: **mint** (sky-to-mint gradient,
+  `--sky #e4f1fb` to `#eaf6ec`), **cream** (`#f6f3e8`), **lilac** (`#e4e4f3`),
+  **blush** (`#f8ece5`, quote block). Footer is **deep ink green** (`#14201a`).
+- Lines are thin: hairline borders (`--line`), light grid rules (`--rule`),
+  graph-paper texture on the hero and footer. No heavy shadows.
 - **Lilac means "experiment in progress / unfinished"** (e.g. the experiment 03 card).
 - Each block is a generously padded rounded slab (`border-radius: 28px`).
 - Every block has a **dot tag** in a top corner.
@@ -41,7 +44,11 @@ small easter eggs.
 - Mobile responsive from the start.
 
 ## Typography
-- **Heliora** for everything (local files in `assets/fonts/`, weights 300 to 700).
+- **GC Protage** for display type (headlines, ledes, card titles; ExtraLight
+  200 at hero sizes, Light 300 below that). Local files, weights 100 to 800.
+- **Neutiva** for body copy (400/500).
+- **System mono stack** (`--font-mono`) for the little instrument labels:
+  dot tags, nav-adjacent pills, CTA labels, list labels, footer signature.
 - `assets/fonts/` also holds the other auditioned fonts used by the
   `all-fonts.html` testing rig and the font roulette easter egg.
 
