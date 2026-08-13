@@ -276,6 +276,14 @@ ul {
   transform: scaleX(1);
 }
 
+/* In-page anchor targets land clear of the sticky header */
+#work,
+#about,
+#now,
+#experiments {
+  scroll-margin-top: 88px;
+}
+
 /* ---------- Page (block stack) ---------- */
 .page {
   max-width: var(--max-w);
@@ -1273,7 +1281,7 @@ ul {
 }
 
 /* Small screens: header wraps to two rows so the nav never overflows */
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .site-header {
     flex-wrap: wrap;
     row-gap: 10px;
@@ -1281,7 +1289,14 @@ ul {
   .site-nav {
     width: 100%;
     justify-content: space-between;
+    flex-wrap: wrap;
     gap: 8px;
+  }
+  #work,
+  #about,
+  #now,
+  #experiments {
+    scroll-margin-top: 132px;
   }
 }
 
