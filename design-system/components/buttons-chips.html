@@ -1,0 +1,38 @@
+<!-- @dsCard group="Components" name="Buttons and chips" subtitle="Arrow CTA, pill buttons, stickers, version pill" width="640" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Buttons and chips · Kelly's Lab</title>
+<style>
+  @font-face { font-family: "Neutiva"; src: url("../fonts/Neutiva-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+  body { margin: 0; padding: 28px; background: #f6f3e8; color: #14201a; font-family: "Neutiva", sans-serif; display: flex; flex-direction: column; gap: 26px; }
+  .label { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #6c766f; margin: 0 0 10px; }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  .cta { display: inline-flex; align-items: center; gap: 14px; color: #14201a; text-decoration: none; }
+  .cta__label { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .cta__icon { width: 40px; height: 40px; border-radius: 999px; border: 1px solid #14201a; display: inline-flex; align-items: center; justify-content: center; }
+  .cta__icon svg { width: 18px; height: 18px; }
+  .pill { display: inline-block; border: 1px solid #14201a; border-radius: 999px; background: transparent; padding: 12px 18px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .pill--dashed { border-style: dashed; border-color: #3b4842; }
+  .sticker-row { display: flex; gap: 10px; }
+  .sticker { display: inline-flex; padding: 9px 15px; border-radius: 999px; border: 1px solid rgba(20, 32, 26, 0.5); font-size: 12px; letter-spacing: 0.03em; }
+  .sticker--mint { background: #dcefe0; transform: rotate(-4deg); }
+  .sticker--lilac { background: #e9e9f6; transform: rotate(3deg); }
+  .sticker--cream { background: rgba(255, 255, 255, 0.6); transform: rotate(-2deg); }
+  .version-pill { display: inline-block; font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; border: 1px solid rgba(20, 32, 26, 0.25); border-radius: 999px; padding: 3px 8px; color: #3b4842; }
+</style>
+</head>
+<body>
+<div><p class="label">primary cta · mono label + arrow circle</p>
+  <a class="cta" href="#"><span class="cta__label">See the experiments</span><span class="cta__icon"><svg viewBox="0 0 24 24" fill="none"><path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1"/></svg></span></a>
+</div>
+<div><p class="label">pill buttons · outline and dashed status</p>
+  <span class="pill mono">Save this one</span>&nbsp; <span class="pill pill--dashed mono">Still cooking</span>
+</div>
+<div><p class="label">draggable stickers · mono chips</p>
+  <div class="sticker-row"><span class="sticker sticker--mint mono">html</span><span class="sticker sticker--lilac mono">css</span><span class="sticker sticker--cream mono">just enough js</span></div>
+</div>
+<div><p class="label">version pill</p><span class="version-pill mono">v0.9</span></div>
+</body>
+</html>

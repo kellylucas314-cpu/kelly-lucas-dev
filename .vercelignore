@@ -5,3 +5,4 @@ scripts/
 tests/
 .playwright-cli/
 .claude/
+design-system/
