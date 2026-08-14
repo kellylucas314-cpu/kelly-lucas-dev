@@ -4,3 +4,4 @@ HTML isomorphic labs.md
 scripts/
 tests/
 .playwright-cli/
+.claude/
