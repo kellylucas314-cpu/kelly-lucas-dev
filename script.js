@@ -148,7 +148,7 @@ if (logoMark) {
 /* ---------- Easter egg: font roulette ---------- */
 const fontEgg = $("#fontEgg");
 if (fontEgg) {
-  const auditioned = ["Neutiva", "Solo Sans", "Surgena", "After"];
+  const auditioned = ["Heliora", "Solo Sans", "Surgena", "After"];
   let spinning = false;
   fontEgg.addEventListener("click", () => {
     const target = $("h1.display");
@@ -162,7 +162,7 @@ if (fontEgg) {
         clearInterval(spin);
         target.style.fontFamily = "";
         spinning = false;
-        toast("97 auditioned. heliora survived.");
+        toast("97 auditioned. protage took the crown.");
       }
     }, 140);
   });

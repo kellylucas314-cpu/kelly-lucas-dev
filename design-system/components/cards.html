@@ -1,0 +1,30 @@
+<!-- @dsCard group="Components" name="Experiment card" subtitle="Hairline grid cell with mono tag and arrow CTA" width="420" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Experiment card · Kelly's Lab</title>
+<style>
+  @font-face { font-family: "GC Protage"; src: url("../fonts/GCPROTAGE-Light.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+  @font-face { font-family: "Neutiva"; src: url("../fonts/Neutiva-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+  body { margin: 0; padding: 28px; background: #f4f2ec; color: #14201a; font-family: "Neutiva", sans-serif; }
+  .card { border: 1px solid rgba(20, 32, 26, 0.3); padding: 32px 28px; display: flex; flex-direction: column; gap: 26px; max-width: 340px; background: transparent; }
+  .dot-tag { display: inline-flex; align-items: center; gap: 8px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .dot-tag::before { content: ""; width: 7px; height: 7px; border-radius: 1px; background: #14201a; }
+  .card__title { font-family: "GC Protage", sans-serif; font-weight: 300; font-size: 27px; letter-spacing: -0.015em; line-height: 1.06; margin: 0; }
+  .card__desc { font-size: 15px; line-height: 1.55; color: #3b4842; margin: 0; }
+  .cta { display: inline-flex; align-items: center; gap: 14px; color: #14201a; text-decoration: none; }
+  .cta__label { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .cta__icon { width: 40px; height: 40px; border-radius: 999px; border: 1px solid #14201a; display: inline-flex; align-items: center; justify-content: center; }
+  .cta__icon svg { width: 18px; height: 18px; }
+</style>
+</head>
+<body>
+<article class="card">
+  <span class="dot-tag">experiment 02 &middot; page</span>
+  <h3 class="card__title">Spark Notes</h3>
+  <p class="card__desc">A living quote wall. The lines I save to keep building.</p>
+  <a class="cta" href="#"><span class="cta__label">Open page</span><span class="cta__icon"><svg viewBox="0 0 24 24" fill="none"><path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1"/></svg></span></a>
+</article>
+</body>
+</html>

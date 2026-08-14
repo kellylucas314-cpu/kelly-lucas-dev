@@ -1,0 +1,24 @@
+<!-- @dsCard group="Components" name="Manifest rows" subtitle="Mono label + thin display body, hairline dividers" width="680" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Manifest rows · Kelly's Lab</title>
+<style>
+  @font-face { font-family: "GC Protage"; src: url("../fonts/GCPROTAGE-Light.woff2") format("woff2"); font-weight: 300; font-display: swap; }
+  body { margin: 0; padding: 28px; background: #e4e4f3; color: #14201a; font-family: sans-serif; }
+  ul { margin: 0; padding: 0; list-style: none; border-top: 1px solid rgba(20, 32, 26, 0.12); }
+  li { display: grid; grid-template-columns: 170px 1fr; gap: 24px; align-items: baseline; padding: 20px 0; border-bottom: 1px solid rgba(20, 32, 26, 0.12); }
+  .row-label { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #6c766f; }
+  .row-label a { color: #14201a; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  .row-body { font-family: "GC Protage", sans-serif; font-weight: 300; font-size: 24px; letter-spacing: -0.015em; }
+</style>
+</head>
+<body>
+<ul>
+  <li><span class="row-label"><a href="#">the garden</a></span><span class="row-body">Plants made of math. Claude's project.</span></li>
+  <li><span class="row-label"><a href="#">the pet</a></span><span class="row-body">Small. Round. Lives in your browser. Judges nothing.</span></li>
+  <li><span class="row-label"><a href="#">boot camp</a></span><span class="row-body">One button. Lawnmower vacuums. Flying pigs. Good luck.</span></li>
+</ul>
+</body>
+</html>
