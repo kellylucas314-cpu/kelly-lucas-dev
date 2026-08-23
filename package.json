@@ -9,6 +9,7 @@
     "room:list": "node scripts/agent-room-cli.mjs list",
     "room:send": "node scripts/agent-room-cli.mjs send",
     "room:log": "node scripts/agent-room-cli.mjs log",
+    "room:doctor": "node scripts/agent-room-cli.mjs doctor",
     "sync:magpie": "node --env-file=.env.local scripts/sync-magpie.mjs",
     "test:dashboard": "node --test tests/dashboard-*.test.mjs",
     "test:room": "node --test tests/agent-room-*.test.mjs",

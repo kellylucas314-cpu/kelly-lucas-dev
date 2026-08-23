@@ -86,6 +86,13 @@ Kip's protected environment. Until that endpoint is explicitly approved,
 reviewed, deployed, and configured, Kip continues to use Agent Mail/Telegram as
 fallback and the room must label Kip access as pending.
 
+The HTTPS change is an all-agent cutover, not a Kip-only second room. Kelly and
+the Mac agents continue using the familiar loopback page and CLI through a
+mode-600 local proxy configuration; the proxy maps each local actor to its own
+remote bearer token. Kip connects directly to the same remote API with only
+Kip's token. The pre-cutover local state remains recoverable and no raw token
+belongs in Git, chat, Agent Mail, screenshots, or browser code.
+
 ## Acceptance
 
 This becomes the standing shared channel only after each worker writes one of

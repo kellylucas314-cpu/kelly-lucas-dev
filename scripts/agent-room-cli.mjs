@@ -7,6 +7,7 @@ Usage:
   node scripts/agent-room-cli.mjs list --actor codex [--after 0] [--inbox]
   node scripts/agent-room-cli.mjs send --actor codex --to all --body "Hello"
   node scripts/agent-room-cli.mjs log --actor codex --project "Agent Commons" --did "Added work receipts" [options]
+  node scripts/agent-room-cli.mjs doctor --actor codex
   node scripts/agent-room-cli.mjs ack --actor codex --through 12
 
 Work receipt options:
@@ -156,6 +157,18 @@ async function main() {
       body: JSON.stringify(payload),
     });
     process.stdout.write(`${result.duplicate ? "Already logged" : "Logged"} as ${actor}: receipt ${result.message.seq}\n`);
+    return;
+  }
+
+  if (command === "doctor") {
+    const url = new URL(baseUrl);
+    url.searchParams.set("after", "0");
+    url.searchParams.set("limit", "1");
+    const result = await requestJson(url, { headers: headers(baseUrl, actor) });
+    if (result.viewer !== actor) {
+      throw new Error(`Identity mismatch: expected ${actor}, received ${result.viewer || "unknown"}`);
+    }
+    process.stdout.write(`Agent Commons ready: ${actor} · ${result.transport || "unknown transport"} · schema ${result.schemaVersion} · revision ${result.revision}\n`);
     return;
   }
 

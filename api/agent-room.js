@@ -112,7 +112,7 @@ export default async function handler(request, response) {
         limit: url.searchParams.get("limit"),
         inboxOnly: url.searchParams.get("inbox") === "1",
       });
-      return sendJson(response, view, 200, responseHeaders(view.revision, methods));
+      return sendJson(response, { ...view, transport: "https-room" }, 200, responseHeaders(view.revision, methods));
     }
 
     const body = requestBody(request);

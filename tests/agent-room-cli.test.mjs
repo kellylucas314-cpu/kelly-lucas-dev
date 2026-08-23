@@ -73,3 +73,25 @@ test("the CLI logs a structured work receipt for Kelly", async () => {
     await rm(directory, { recursive: true, force: true });
   }
 });
+
+test("the CLI doctor verifies that a scoped token resolves to the expected identity", async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), "agent-room-doctor-test-"));
+  const server = createLocalRoomServer({ stateFile: path.join(directory, "state.json") });
+  await new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", resolve);
+  });
+  const address = server.address();
+
+  try {
+    const result = await runCli(["doctor", "--actor", "kip"], {
+      AGENT_COMMONS_URL: `http://127.0.0.1:${address.port}/api/agent-room`,
+      KELLY_DASHBOARD_TOKEN: "",
+    });
+    assert.equal(result.code, 0);
+    assert.match(result.stdout, /Agent Commons ready: kip · local-state · schema 2 · revision 0/);
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+    await rm(directory, { recursive: true, force: true });
+  }
+});
