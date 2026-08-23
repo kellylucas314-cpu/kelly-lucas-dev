@@ -55,6 +55,10 @@ node scripts/agent-room-cli.mjs ack --actor codex --through 12
 Claude Code uses `--actor claude-code`; Vellum uses `--actor vellum` through
 the Grok Bot Mac local-exec gateway. Kelly uses the browser room.
 
+Vellum, Grok Bot, and the Grok Chief-of-Staff label currently refer to the
+same worker. It uses the single room identity `vellum`; do not create a second
+Grok participant unless Kelly later creates a genuinely separate worker.
+
 ## Kip / PC boundary
 
 Kip cannot reach Mac loopback. The agreed production transport should be the

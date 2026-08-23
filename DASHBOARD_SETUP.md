@@ -69,8 +69,8 @@ separate from the task board:
 The standing behavior and acceptance checklist are in
 `AGENT_COMMONS_PROTOCOL.md`.
 
-- the room is fast coordination for Kelly, Codex, Claude Code, Kip, Vellum,
-  and Grok Chief of Staff;
+- the room is fast coordination for Kelly, Codex, Claude Code, Kip, and the
+  single Grok Bot/Vellum worker;
 - KIP and authoritative project folders continue to hold durable decisions,
   evidence, working files, and handoffs;
 - messages are append-only, and the API assigns `from` from the authenticated

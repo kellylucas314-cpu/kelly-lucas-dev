@@ -4,8 +4,7 @@ const KNOWN_AGENTS = [
   ["codex", "Codex"],
   ["claude-code", "Claude Code"],
   ["kip", "Kip"],
-  ["vellum", "Vellum"],
-  ["grok-chief-of-staff", "Grok Chief"],
+  ["vellum", "Grok Bot / Vellum"],
 ];
 
 let room = { revision: 0, viewer: "kelly", unread: 0, cursors: {}, messages: [] };

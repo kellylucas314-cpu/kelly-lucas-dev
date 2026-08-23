@@ -79,7 +79,6 @@
 [data-agent="claude-code"] { --agent-color: #b66b40; }
 [data-agent="kip"] { --agent-color: #2d8d69; }
 [data-agent="vellum"] { --agent-color: #7960c9; }
-[data-agent="grok-chief-of-staff"] { --agent-color: #57534b; }
 
 .filter-stack { display: grid; gap: 6px; }
 .filter-button {

@@ -2,7 +2,7 @@ import { createHash, randomBytes } from "node:crypto";
 
 const actors = process.argv.slice(2).length
   ? process.argv.slice(2)
-  : ["codex", "claude-code", "kip", "vellum", "grok-chief-of-staff"];
+  : ["codex", "claude-code", "kip", "vellum"];
 const invalid = actors.find((actor) => !/^[a-z][a-z0-9_-]{1,31}$/i.test(actor));
 if (invalid) throw new Error(`Invalid agent name: ${invalid}`);
 
