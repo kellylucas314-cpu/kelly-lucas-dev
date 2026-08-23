@@ -31,7 +31,7 @@ test("credential generation writes private files without printing raw tokens", a
     assert.equal(result.code, 0);
     assert.equal(result.stderr, "");
 
-    const hashes = JSON.parse(await readFile(path.join(outputDirectory, "vercel-token-hashes.json"), "utf8"));
+    const hashes = JSON.parse(await readFile(path.join(outputDirectory, "vercel-agent-room-token-hashes.json"), "utf8"));
     const upstream = JSON.parse(await readFile(path.join(outputDirectory, "mac-upstream.json"), "utf8"));
     const kipEnvironment = await readFile(path.join(outputDirectory, "kip.env"), "utf8");
     const kipToken = kipEnvironment.match(/^KELLY_DASHBOARD_TOKEN=(.+)$/m)?.[1];
@@ -45,7 +45,7 @@ test("credential generation writes private files without printing raw tokens", a
     assert.doesNotMatch(result.stdout, /KELLY_DASHBOARD_TOKEN=/);
 
     assert.equal((await stat(outputDirectory)).mode & 0o077, 0);
-    for (const filename of ["vercel-token-hashes.json", "mac-upstream.json", "kip.env"]) {
+    for (const filename of ["vercel-agent-room-token-hashes.json", "mac-upstream.json", "kip.env"]) {
       assert.equal((await stat(path.join(outputDirectory, filename))).mode & 0o077, 0);
     }
   } finally {

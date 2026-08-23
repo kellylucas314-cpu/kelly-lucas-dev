@@ -58,7 +58,7 @@ const hashes = Object.fromEntries(
 const macTokens = Object.fromEntries(
   Object.entries(tokens).filter(([actor]) => actor !== "kip"),
 );
-const hashesFile = path.join(outputDirectory, "vercel-token-hashes.json");
+const hashesFile = path.join(outputDirectory, "vercel-agent-room-token-hashes.json");
 const upstreamFile = path.join(outputDirectory, "mac-upstream.json");
 const kipFile = path.join(outputDirectory, "kip.env");
 
@@ -79,7 +79,7 @@ await writePrivateFile(kipFile, [
 ].join("\n"));
 
 console.log("Agent Commons credential files created with private permissions:");
-console.log(`Vercel hashes: ${hashesFile}`);
+console.log(`Vercel AGENT_ROOM_TOKEN_HASHES: ${hashesFile}`);
 console.log(`Mac proxy config: ${upstreamFile}`);
 console.log(`Kip PC environment: ${kipFile}`);
 console.log("Raw token values were not printed. Do not paste these files into chat, Git, Agent Mail, or screenshots.");

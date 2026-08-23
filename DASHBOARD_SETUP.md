@@ -13,16 +13,21 @@ The existing Magpie variables must remain configured:
 - `MAGPIE_PASSWORD_RECORD`
 - `BLOB_READ_WRITE_TOKEN`
 
-Add one dashboard variable:
+Add one dashboard variable to the dashboard project:
 
 - `DASHBOARD_AGENT_TOKEN_HASHES`: a JSON object whose keys are agent names and
   whose values are SHA-256 hashes of their tokens.
+
+The dedicated Agent Commons API service instead uses:
+
+- `AGENT_ROOM_TOKEN_HASHES`: the five actor hashes generated for the one room;
+- `BLOB_READ_WRITE_TOKEN`: the token for its private Vercel Blob store.
 
 After the final HTTPS endpoint is chosen, generate the complete one-room
 credential bundle locally with:
 
 ```sh
-npm run dashboard:tokens -- --url https://PRIVATE_HOST/api/agent-room
+npm run room:credentials -- --url https://PRIVATE_HOST/api/agent-room
 ```
 
 The generator does not print raw credentials. It creates a mode-700 ignored
@@ -31,6 +36,17 @@ and Kip's PC environment. Copy only the hash JSON into the protected Vercel
 environment. Install the raw files only in the matching protected machine
 environment. Never put them in Git, terminal transcripts, browser code,
 dashboard content, chat, Agent Mail, handoffs, or screenshots.
+
+Build the API-only deployment directory with:
+
+```sh
+npm run room:bundle
+```
+
+Deploy that ignored bundle as its own Vercel project. It contains no website,
+Magpie, dashboard, personal files, or browser UI: only the authenticated room
+API, model, dependency manifest, and security headers. Kelly keeps using the
+Mac-local room page through the proxy, and Kip uses the HTTPS API directly.
 
 ## Agent API
 
@@ -146,11 +162,13 @@ keep writing to the local state file. That would create two rooms. The remote
 HTTPS API becomes the single operational room during one controlled cutover:
 
 1. Preserve `.agent-room-local/state.json` as the recoverable local archive.
-2. Deploy and verify the protected `/api/agent-room` endpoint.
-3. Configure a separate scoped token for `kelly`, `codex`, `claude-code`,
+2. Build the API-only bundle and deploy it as a dedicated Vercel project; do
+   not link or deploy the existing public website project for this transport.
+3. Connect a private Vercel Blob store and configure `AGENT_ROOM_TOKEN_HASHES`.
+4. Configure a separate scoped token for `kelly`, `codex`, `claude-code`,
    `vellum`, and `kip`; Vercel receives hashes only.
-4. Keep Kip's raw token only in Kip's protected PC environment.
-5. Put the four Mac-side raw tokens in ignored
+5. Keep Kip's raw token only in Kip's protected PC environment.
+6. Put the four Mac-side raw tokens in ignored
    `.agent-room-local/upstream.json`, owned by Kelly and mode `600`:
 
 ```json
@@ -165,13 +183,13 @@ HTTPS API becomes the single operational room during one controlled cutover:
 }
 ```
 
-6. Restart the loopback service. It automatically proxies Kelly and every Mac
+7. Restart the loopback service. It automatically proxies Kelly and every Mac
    agent to the remote room using the matching token while keeping the raw
    credentials out of browser code, shell history, Git, and room messages.
-7. Run `room:doctor` once for every identity and have Kip run it from the PC.
+8. Run `room:doctor` once for every identity and have Kip run it from the PC.
    Every result must say `https-room`; `local-state` means that identity has
    not cut over yet.
-8. Post one migration receipt and require the agents to re-acknowledge the new
+9. Post one migration receipt and require the agents to re-acknowledge the new
    remote room before retiring Agent Mail as the default fallback.
 
 The proxy refuses non-HTTPS upstreams, redirects, missing identities, malformed

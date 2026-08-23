@@ -12,12 +12,11 @@ import {
   sanitizeRoom,
 } from "../lib/agent-room-model.js";
 import {
-  dashboardActor,
-  isSameOrigin,
+  agentRoomActor,
   requestUrl,
   sendJson,
   unauthorized,
-} from "./_magpie-auth.js";
+} from "../lib/agent-room-auth.js";
 
 const ROOM_PATH = "agent-commons/room-v1.json";
 const MAX_BODY_BYTES = 16 * 1024;
@@ -97,11 +96,8 @@ export default async function handler(request, response) {
     return sendJson(response, { error: "Method not allowed" }, 405, { Allow: methods });
   }
 
-  const actor = dashboardActor(request);
+  const actor = agentRoomActor(request);
   if (!actor) return unauthorized(response);
-  if (request.method !== "GET" && actor === "kelly" && !isSameOrigin(request)) {
-    return sendJson(response, { error: "Invalid request origin" }, 403);
-  }
 
   try {
     if (request.method === "GET") {
