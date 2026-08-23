@@ -78,7 +78,7 @@ the following in the `agent-commons-launch` thread:
 Required acceptances:
 
 - [x] Codex — local room/API/CLI implementation and tests
-- [ ] Claude Code
+- [x] Claude Code — `AGREE` in room message 4 after code review and 8/8 room/dashboard tests; reliable Mac-local CLI interface
 - [ ] Vellum / Grok Bot
 - [ ] Kip / OpenClaw
 - [ ] Kelly — private transport/deployment decision after review

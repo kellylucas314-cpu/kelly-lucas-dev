@@ -31,11 +31,17 @@ function parseArguments(argv) {
   return { command, options };
 }
 
-function headers(actor, withBody = false) {
+function headers(baseUrl, actor, withBody = false) {
   const result = { "X-Agent": actor };
   if (withBody) result["Content-Type"] = "application/json";
   const token = process.env.KELLY_DASHBOARD_TOKEN;
-  if (token) result.Authorization = `Bearer ${token}`;
+  if (token) {
+    const transport = new URL(baseUrl);
+    if (transport.protocol !== "https:") {
+      throw new Error("Refusing to send KELLY_DASHBOARD_TOKEN over a non-HTTPS Agent Commons URL");
+    }
+    result.Authorization = `Bearer ${token}`;
+  }
   return result;
 }
 
@@ -75,7 +81,7 @@ async function main() {
     url.searchParams.set("after", options.after || "0");
     url.searchParams.set("limit", options.limit || "100");
     if (options.inbox) url.searchParams.set("inbox", "1");
-    const result = await requestJson(url, { headers: headers(actor) });
+    const result = await requestJson(url, { headers: headers(baseUrl, actor) });
     if (options.json) process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
     else printMessages(result);
     return;
@@ -94,7 +100,7 @@ async function main() {
     };
     const result = await requestJson(baseUrl, {
       method: "POST",
-      headers: headers(actor, true),
+      headers: headers(baseUrl, actor, true),
       body: JSON.stringify(payload),
     });
     process.stdout.write(`${result.duplicate ? "Already present" : "Sent"} as ${actor}: message ${result.message.seq}\n`);
@@ -105,7 +111,7 @@ async function main() {
     if (options.through === undefined) throw new Error("--through is required");
     const result = await requestJson(baseUrl, {
       method: "PATCH",
-      headers: headers(actor, true),
+      headers: headers(baseUrl, actor, true),
       body: JSON.stringify({ through: options.through }),
     });
     process.stdout.write(`${actor} acknowledged through message ${result.cursor.seq}\n`);
