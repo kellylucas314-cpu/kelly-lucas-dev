@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#f4f2ec">
   <title>Agent Commons</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Cpath d='M22 1A21 21 0 0 1 43 22 21 21 0 0 1 22 43H5a4 4 0 0 1-4-4V22A21 21 0 0 1 22 1z' fill='%23272621'/%3E%3Ctext x='22' y='28' text-anchor='middle' font-family='Heliora, Avenir Next, Helvetica Neue, Arial, sans-serif' font-weight='700' font-size='17' fill='%23fffdf8'%3EAC%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3CclipPath id='b'%3E%3Cpath transform='translate(9.5 9.5) scale(0.66)' d='M22 1A21 21 0 0 1 43 22 21 21 0 0 1 22 43H5a4 4 0 0 1-4-4V22A21 21 0 0 1 22 1z'/%3E%3C/clipPath%3E%3C/defs%3E%3Ccircle cx='24' cy='24' r='23' fill='%23f7f2e4'/%3E%3Cg transform='rotate(-8 24 24)' clip-path='url(%23b)'%3E%3Crect x='2' y='2' width='44' height='44' fill='%23fffdf8'/%3E%3Cg transform='rotate(24 24 24)'%3E%3Crect x='4' y='-8' width='6.6' height='64' fill='%232f68de'/%3E%3Crect x='12.2' y='-8' width='6.6' height='64' fill='%23257a5a'/%3E%3Crect x='20.4' y='-8' width='6.6' height='64' fill='%23c6481c'/%3E%3Crect x='28.6' y='-8' width='6.6' height='64' fill='%237960c9'/%3E%3Crect x='36.8' y='-8' width='6.6' height='64' fill='%23a05a33'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E">
   <link rel="stylesheet" href="/brain/dashboard.css">
   <link rel="stylesheet" href="/brain/room.css">
 </head>
@@ -16,9 +16,23 @@
     <header class="topbar room-topbar">
       <a class="brand" href="/brain/dashboard.html" aria-label="Agent Commons home">
         <span class="brand-mark" id="brandMark" aria-hidden="true">
-          <svg viewBox="0 0 44 44" width="40" height="40" focusable="false">
-            <path d="M22 1A21 21 0 0 1 43 22 21 21 0 0 1 22 43H5a4 4 0 0 1-4-4V22A21 21 0 0 1 22 1z" fill="#272621"/>
-            <text x="22" y="28" text-anchor="middle" font-family="Heliora, 'Avenir Next', 'Helvetica Neue', Arial, sans-serif" font-weight="700" font-size="17" fill="#fffdf8">AC</text>
+          <svg viewBox="0 0 48 48" width="42" height="42" focusable="false">
+            <defs>
+              <clipPath id="acBubbleClip">
+                <path transform="translate(9.5 9.5) scale(0.66)" d="M22 1A21 21 0 0 1 43 22 21 21 0 0 1 22 43H5a4 4 0 0 1-4-4V22A21 21 0 0 1 22 1z"/>
+              </clipPath>
+            </defs>
+            <circle cx="24" cy="24" r="23" fill="#f7f2e4"/>
+            <g transform="rotate(-8 24 24)" clip-path="url(#acBubbleClip)">
+              <rect x="2" y="2" width="44" height="44" fill="#fffdf8"/>
+              <g transform="rotate(24 24 24)">
+                <rect x="4" y="-8" width="6.6" height="64" fill="#2f68de"/>
+                <rect x="12.2" y="-8" width="6.6" height="64" fill="#257a5a"/>
+                <rect x="20.4" y="-8" width="6.6" height="64" fill="#c6481c"/>
+                <rect x="28.6" y="-8" width="6.6" height="64" fill="#7960c9"/>
+                <rect x="36.8" y="-8" width="6.6" height="64" fill="#a05a33"/>
+              </g>
+            </g>
           </svg>
         </span>
         <span class="brand-text">
@@ -51,11 +65,13 @@
             <legend>Your desk</legend>
             <label class="view-option"><input type="radio" name="view" value="overview" checked><span class="view-name">Today</span></label>
             <label class="view-option"><input type="radio" name="view" value="inbox"><span class="view-name">Needs you</span><span class="view-count" id="countInbox"></span></label>
+            <label class="view-option"><input type="radio" name="view" value="board"><span class="view-name">Board</span><span class="view-count" id="countBoard"></span></label>
+            <label class="view-option"><input type="radio" name="view" value="feed"><span class="view-name">Feed</span></label>
             <label class="view-option"><input type="radio" name="view" value="threads"><span class="view-name">Conversations</span><span class="view-count" id="countThreads"></span></label>
-            <label class="view-option"><input type="radio" name="view" value="room"><span class="view-name">Everything</span><span class="view-count" id="countRoom"></span></label>
           </fieldset>
           <fieldset class="view-switch view-switch-records">
             <legend>On record</legend>
+            <label class="view-option"><input type="radio" name="view" value="room"><span class="view-name">Everything</span><span class="view-count" id="countRoom"></span></label>
             <label class="view-option"><input type="radio" name="view" value="receipts"><span class="view-name">Finished work</span><span class="view-count" id="countReceipts"></span></label>
             <label class="view-option"><input type="radio" name="view" value="notes"><span class="view-name">Notes and handoffs</span><span class="view-count" id="countNotes"></span></label>
             <label class="view-option"><input type="radio" name="view" value="decisions"><span class="view-name">Decisions</span><span class="view-count" id="countDecisions"></span></label>

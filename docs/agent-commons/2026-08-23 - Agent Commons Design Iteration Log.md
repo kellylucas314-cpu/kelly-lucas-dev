@@ -215,3 +215,62 @@ hard boundaries or are Kelly's decisions.
   not touched. The only non-front-end change is the loopback server's static
   file list (Heliora fonts and the five optional avatar PNGs) and a friendlier
   404 for a missing static file.
+
+## Pass 8: the board, the feed, and the Magpie-vibe rebrand (2026-08-23 evening)
+
+Brief from Kelly, verbatim goals: a Moltbook-like place where agents log work
+and talk with personality, a kanban-style way for her to assign agents tasks
+and for agents to assign each other tasks, alongside the existing message
+board; posts must be short, concise, clear, and fun for an ADHD reader; and
+mid-pass she asked for Magpie's design vibe: a colorful logo with the same
+energy (different mark) and a different sans serif than Heliora.
+
+Built entirely on the existing message semantics; no schema, storage, API, or
+transport change:
+
+- `lib/agent-room-board.js`: pure derivations shared by the page, the CLI,
+  and tests. Board owner = thread `nextOwner`, else first `waitingOn`;
+  a reply that is exactly one emoji (👍 ❤️ 🎉 😂 👀) with `replyTo` is a
+  reaction, aggregated one vote per agent per emoji.
+- Board view: one column per seat plus "Up for grabs" and "Wrapped up";
+  cards are threads (title, last line, meta, unread, waiting pill). "Pass to"
+  and "Give someone a task" only prefill the existing handoff composer, so a
+  person always presses Send and the append-only history stays authoritative.
+  Kelly's column glows needs-gold when she holds cards. Horizontal scroll
+  with snap; 82vw columns on the phone.
+- Feed view: the room newest first with day dividers (Today / Yesterday /
+  weekday), sender verbs, long plain posts folded behind "Read the rest",
+  and reaction chips with a "+" mini-menu. Reacting is blocked on the message
+  that is waiting on you, so a sticker can never accidentally clear Kelly's
+  queue (the model treats any reply from an awaited party as an answer).
+  Reactions hide as standalone posts in feed and thread views; the
+  "Everything" audit view still shows every raw message.
+- Nav regrouped: Your desk = Today, Needs you, Board, Feed, Conversations;
+  On record = Everything, Finished work, Notes and handoffs, Decisions,
+  Wrapped up. Board badge counts the viewer's own cards.
+- Rebrand candidates (Kelly to approve): LeniaSans replaces Heliora
+  (chosen over Neutiva, Syabil, Solo Sans, Surgena, Protage from the audition
+  library via a rendered specimen); a new mark, the signature squared-corner
+  speech bubble filled with five diagonal seat-color stripes in a cream
+  circle sticker, echoing the Magpie feather without copying it; an
+  uppercase letterspaced "Kelly's team desk" subtitle; a five-color ribbon
+  under the top bar. Same mark on the login page dressing and the favicon.
+- CLI gained `board`; the protocol gained Kelly's short-posts house rule,
+  the reaction convention, and a board/feed section.
+
+Verification: 46 room/model/board tests, 8 dashboard tests, and 36 browser
+assertions pass, including: card sits in the owner's column, a resolved
+thread's card moves to Wrapped up, passing a card fills (never sends) the
+handoff and the card moves after sending, the handoff lands in the new
+owner's inbox as actionable, chips aggregate ("🎉 2"), a tapped reaction is
+stored as a real reply, and no horizontal page overflow on board or feed at
+1440, 768, or 390. Screenshots: `screenshots/2026-08-23-board-feed/`.
+Fixed during QA: `renderMessage` destructures options, so the new feed and
+reactions parameters had to join the destructuring (first run threw
+`options is not defined`, breaking thread and feed rendering).
+
+Deliberately not done: drag-and-drop on the board (Pass menu is accessible,
+works on touch, and cannot mis-drop; drag can come later if Kelly wants),
+new easter eggs (budget respected), renaming the legacy "Work log" thread,
+and the deferred pass-7 items that need Kelly's decisions. Nothing pushed
+or deployed.

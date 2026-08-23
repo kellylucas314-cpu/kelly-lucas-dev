@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { deriveBoard } from "../lib/agent-room-board.js";
 import { humanizeSlug, slugify } from "../lib/agent-room-model.js";
 
 const DEFAULT_URL = "http://127.0.0.1:4399/api/agent-room";
@@ -13,6 +14,7 @@ function usage() {
 Read:
   inbox    --actor codex [--json]                 Only what needs you, with the reason for each item
   threads  --actor codex [--all] [--json]         Thread list (active by default; --all includes resolved)
+  board    --actor codex [--json]                 Who owns what: open conversations by seat (assign with handoff)
   show     --actor codex --thread lantern-demo    One thread's full append-only history
   list     --actor codex [--after 0] [--inbox]    Raw messages (legacy view)
   doctor   --actor codex                          Verify identity and transport
@@ -259,6 +261,24 @@ async function main() {
     if (options.json) return out(options, { viewer: result.viewer, revision: result.revision, threads });
     process.stdout.write(`Threads for ${result.viewer} · ${threads.length} shown${options.all ? "" : " (active only; --all for resolved)"}\n`);
     for (const thread of threads) process.stdout.write(`${threadLine(thread)}\n`);
+    return undefined;
+  }
+
+  if (command === "board") {
+    const result = await readRoom(baseUrl, actor);
+    const board = deriveBoard(result.threads || [], { viewer: result.viewer });
+    if (options.json) return out(options, { viewer: result.viewer, revision: result.revision, board });
+    process.stdout.write(`The board · viewer ${result.viewer}\n`);
+    for (const column of board.columns) {
+      process.stdout.write(`\n${column.id}${column.id === result.viewer ? " (you)" : ""} · ${column.threads.length} card${column.threads.length === 1 ? "" : "s"}\n`);
+      for (const thread of column.threads) process.stdout.write(`  ${threadLine(thread)}\n`);
+    }
+    if (board.unassigned.length) {
+      process.stdout.write(`\nup for grabs · ${board.unassigned.length}\n`);
+      for (const thread of board.unassigned) process.stdout.write(`  ${threadLine(thread)}\n`);
+    }
+    process.stdout.write(`\nwrapped up · ${board.doneTotal}\n`);
+    for (const thread of board.done) process.stdout.write(`  ${threadLine(thread)}\n`);
     return undefined;
   }
 

@@ -21,10 +21,11 @@ const STATIC_FILES = new Map([
   ["/brain/room.css", ["brain/room.css", "text/css; charset=utf-8"]],
   ["/brain/room.js", ["brain/room.js", "text/javascript; charset=utf-8"]],
   ["/brain/dashboard.css", ["brain/dashboard.css", "text/css; charset=utf-8"]],
+  ["/lib/agent-room-board.js", ["lib/agent-room-board.js", "text/javascript; charset=utf-8"]],
   ["/assets/fonts/Adriatic-Medium.woff2", ["assets/fonts/Adriatic-Medium.woff2", "font/woff2"]],
-  ["/assets/fonts/Heliora-Regular.ttf", ["assets/fonts/Heliora-Regular.ttf", "font/ttf"]],
-  ["/assets/fonts/Heliora-Medium.ttf", ["assets/fonts/Heliora-Medium.ttf", "font/ttf"]],
-  ["/assets/fonts/Heliora-Bold.ttf", ["assets/fonts/Heliora-Bold.ttf", "font/ttf"]],
+  ["/assets/fonts/LeniaSans-Regular.ttf", ["assets/fonts/LeniaSans-Regular.ttf", "font/ttf"]],
+  ["/assets/fonts/LeniaSans-Medium.ttf", ["assets/fonts/LeniaSans-Medium.ttf", "font/ttf"]],
+  ["/assets/fonts/LeniaSans-Bold.ttf", ["assets/fonts/LeniaSans-Bold.ttf", "font/ttf"]],
 ]);
 
 function json(response, body, status = 200) {

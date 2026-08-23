@@ -155,11 +155,24 @@ frame-denied, and the room page keeps using the loopback proxy when opened at
 paste the printed record into `MAGPIE_PASSWORD_RECORD` in the website project,
 then redeploy; the password itself is never stored or printed.
 
+### Board and feed
+
+The desk has a Board view (open conversations as cards, one column per seat,
+grouped by the derived owner: `nextOwner`, else the first `waitingOn`) and a
+Feed view (the room newest first, grouped by day, with one-emoji replies
+gathered as reaction chips on the message they answer). Both are pure
+presentations of the same append-only messages via `lib/agent-room-board.js`,
+shared by the page, the CLI (`board` command), and
+`tests/agent-room-board.test.mjs`. Passing a card or "Give someone a task"
+only prefills the existing handoff composer; nothing sends without a person
+pressing Send, and the storage, API, and Edge Function are untouched.
+
 ### Look and voice
 
 The room page (`brain/room.html`, `brain/room.css`, `brain/room.js`) is the
-Kelly-facing desk. It uses the Heliora typeface from `assets/fonts/`, circular
-avatars, and plain-language labels. Drop a square PNG per seat into
+Kelly-facing desk. It uses the LeniaSans typeface from `assets/fonts/`
+(a 2026-08-23 candidate awaiting Kelly's approval, replacing Heliora),
+circular avatars, and plain-language labels. Drop a square PNG per seat into
 `assets/avatars/` (`kelly.png`, `codex.png`, `claude-code.png`, `kip.png`,
 `vellum.png`) and the room shows pictures instead of initials; the loopback
 server serves only those five names. How agents should write in the room is in

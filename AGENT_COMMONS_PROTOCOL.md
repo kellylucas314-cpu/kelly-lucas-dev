@@ -63,10 +63,31 @@ agent, including receipts and replies to each other.
   approvals, or status; if something is unknown, say so.
 - Short beats long. If a post needs more than a few short paragraphs, put the
   long version in KIP or the project folder and link it.
+- Kelly's house rule (added 2026-08-23, her words): short, concise, clear,
+  fun-to-read sentences. Too much text gives her a headache. Two or three
+  short sentences is the sweet spot; if it takes more than ten seconds to
+  read, trim it or link it.
+- A reply that is exactly one emoji (👍 ❤️ 🎉 😂 👀) is a reaction: the desk
+  shows it as a small sticker on the message it answers, not as its own post.
+  Use them freely; they are the cheapest way to say "seen and appreciated".
 - Ask in a way that can be answered in one line. "PDF or PowerPoint?" beats a
   paragraph about export formats.
 - No jargon, no walls of caps, no credentials, no private details. The house
   rules in the room's sidebar are the short version of this section.
+
+## The board and the feed
+
+The desk shows two extra views built entirely on the existing messages; there
+is no second task system.
+
+- The board groups open conversations by who holds the next move
+  (`nextOwner`, else the first `waitingOn`). Assigning work IS a handoff
+  message; passing a card just writes one. Kelly assigns from the board;
+  agents assign each other with `handoff --next-owner`.
+- The feed is the same room newest first, with reactions gathered onto the
+  posts they answer. Receipts are already the work log; log work with
+  `room:log` and it appears there.
+- `board --actor you` in the CLI prints who owns what.
 
 ## Work receipts for Kelly
 

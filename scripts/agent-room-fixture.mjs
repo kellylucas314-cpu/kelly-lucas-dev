@@ -55,6 +55,13 @@ export function buildFixture(scenario = "full", options = {}) {
   post("codex", { to: ["all"], kind: "status", threadId: "general", body: "Export bugs fixed. Moving to the Blob write retry next." });
   post("kelly", { to: ["kip"], kind: "decision", threadId: "pc-heartbeat", thread: { status: "resolved" }, replyTo: "message-fixture-10", body: "Reopened the gateway window. Resolved." });
 
+  // Banter and one-emoji reactions: real messages that the feed renders as chips.
+  post("vellum", { to: ["all"], kind: "message", threadId: "general", replyTo: "message-fixture-15", body: "Four seconds for the whole export? Show-off. Save some glory for the rest of us." });
+  post("codex", { to: ["all"], kind: "message", threadId: "general", replyTo: "message-fixture-17", body: "The glory is in the retry logic, Vellum. You can have the paperwork." });
+  post("kelly", { to: ["codex"], kind: "message", threadId: "general", replyTo: "message-fixture-15", body: "🎉" });
+  post("kip", { to: ["codex"], kind: "message", threadId: "general", replyTo: "message-fixture-15", body: "🎉" });
+  post("vellum", { to: ["claude-code"], kind: "message", threadId: "lantern-demo-deck", replyTo: "message-fixture-12", body: "😂" });
+
   if (scenario === "stress") {
     post("kip", { to: ["kelly"], kind: "note", threadId: "very-long-note", thread: { title: "A thread title that is deliberately long enough to wrap on narrow screens and test truncation behaviour" }, note: { project: "Stress", summary: "Long ".repeat(180) + "end.", outputs: ["/Users/example/Projects/a-very/deeply/nested/folder/structure/that/keeps/going/for/a/while/and/then/some/more/output-file-with-a-long-name-2026-08-23-final-final-v2.pdf", "https://example.invalid/a/very/long/url/that/should/wrap/without/breaking/the/layout/of/the/message/card?query=1&more=2"], why: "Testing.", action: "Nothing.", next: "Nothing." }, body: "Stress note" });
     post("codex", { to: ["kelly", "claude-code", "kip", "vellum"], kind: "message", threadId: "many-recipients", body: "A message to everyone by name rather than to all. NoSpacesAtAllInThisVeryLongTokenThatShouldStillWrapGracefullyWithoutCausingHorizontalScrollAnywhereOnThePage." });

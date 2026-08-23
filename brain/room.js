@@ -1,3 +1,14 @@
+import {
+  BOARD_SEATS,
+  REACTION_EMOJI,
+  boardOwner,
+  collectReactions,
+  deriveBoard,
+  hasReacted,
+  isReactionMessage,
+  reactionSummary,
+} from "/lib/agent-room-board.js";
+
 // On the Mac loopback service the page talks to the local proxy; on
 // kellylucas.dev it talks to the session door that accepts Kelly's sign-in.
 const LOCAL_HOSTS = ["127.0.0.1", "localhost"];
@@ -36,6 +47,8 @@ const HEALTH_LABELS = { "on-track": "on track", "at-risk": "at risk", "off-track
 const VIEWS = {
   overview: { eyebrow: "Today", title: "Today", meaning: "" },
   inbox: { eyebrow: "Needs you", title: "What needs you", meaning: "Everything addressed to you, waiting on you, or handed to you, with the reason it is here." },
+  board: { eyebrow: "Board", title: "The board", meaning: "Every open conversation is a card on someone's plate. Pass a card to hand the work over." },
+  feed: { eyebrow: "Feed", title: "The feed", meaning: "What the team is doing and saying, newest first. Cheer things on." },
   threads: { eyebrow: "Conversations", title: "Active conversations", meaning: "Every conversation that is still going. Open one to read it in order and reply right there." },
   room: { eyebrow: "Everything", title: "Everything, in order", meaning: "Every message on the desk, oldest to newest. Nothing is hidden." },
   receipts: { eyebrow: "Finished work", title: "What got finished", meaning: "One short write-up per piece of finished work, newest first." },
@@ -44,7 +57,7 @@ const VIEWS = {
   resolved: { eyebrow: "Wrapped up", title: "Wrapped up", meaning: "Conversations that are finished. You can still read them, and reopen one if it comes back." },
   thread: { eyebrow: "Conversation", title: "", meaning: "" },
 };
-const VIEW_ORDER = ["overview", "inbox", "threads", "room", "receipts", "notes", "decisions", "resolved"];
+const VIEW_ORDER = ["overview", "inbox", "board", "feed", "threads", "room", "receipts", "notes", "decisions", "resolved"];
 const ALL_CLEAR_LINES = [
   "Nothing needs you. The team has it.",
   "All clear. Go touch some grass.",
@@ -485,8 +498,10 @@ function renderRail() {
   const unreadInbox = room.inbox.filter((item) => item.unread).length;
   const active = room.threads.filter((thread) => thread.status !== "resolved");
   const resolved = room.threads.filter((thread) => thread.status === "resolved");
+  const mine = active.filter((thread) => boardOwner(thread) === room.viewer).length;
   const counts = {
     countInbox: actionable || unreadInbox ? `${actionable || unreadInbox}` : "",
+    countBoard: mine ? `${mine}` : "",
     countThreads: active.length ? `${active.length}` : "",
     countRoom: room.messages.length ? `${room.messages.length}` : "",
     countReceipts: String(room.messages.filter((message) => message.kind === "receipt").length || ""),
@@ -631,7 +646,7 @@ function messageBody(message, { calm = false } = {}) {
   return body;
 }
 
-function renderMessage(message, { inThread = false, previousId = "", calm = false, pinnedId = "" } = {}) {
+function renderMessage(message, { inThread = false, previousId = "", calm = false, pinnedId = "", feed = false, reactions = null } = {}) {
   const thread = threadById(message.threadId);
   const labelId = `message-${message.seq}-label`;
   if (pinnedId && message.id === pinnedId) {
@@ -670,7 +685,7 @@ function renderMessage(message, { inThread = false, previousId = "", calm = fals
       ? `Replying to ${youOr(parent.from)}: "${messageExcerpt(parent, 90)}"`
       : "Replying to an earlier message" }));
   }
-  parts.push(messageBody(message, { calm }));
+  parts.push(feed ? feedBody(message, { calm }) : messageBody(message, { calm }));
 
   const footer = el("footer", { class: "message-footer" });
   if (!inThread) {
@@ -704,6 +719,10 @@ function renderMessage(message, { inThread = false, previousId = "", calm = fals
     "aria-label": `Reply to ${agentLabel(message.from)}`,
   }));
   parts.push(footer);
+  if (reactions) {
+    const row = reactionRow(message, reactions);
+    if (row) parts.push(row);
+  }
 
   item.append(avatarNode(message.from), el("article", { class: "message-content", "aria-labelledby": labelId }, parts));
   return item;
@@ -905,6 +924,169 @@ function renderResolved() {
   return [threadList(resolved, "Nothing is wrapped up yet.", "Wrapping up a conversation keeps its history and clears it from the active lists.")];
 }
 
+/* ---------- the board ---------- */
+
+function passMenu(thread) {
+  const owner = boardOwner(thread);
+  const seats = KNOWN_AGENTS.filter(([id]) => id !== owner);
+  return el("details", { class: "board-pass" }, [
+    el("summary", { "aria-label": `Pass ${thread.title} to someone` }, ["Pass to"]),
+    el("div", { class: "board-pass-menu" }, seats.map(([id, label]) => el("button", {
+      class: "board-pass-option",
+      type: "button",
+      "data-pass-thread": thread.id,
+      "data-pass-to": id,
+    }, [avatarNode(id, "xs"), viewerIs(id) ? "Me" : label]))),
+  ]);
+}
+
+function boardCard(thread, lastByThread) {
+  const done = thread.status === "resolved";
+  const last = lastByThread.get(thread.id);
+  const metaParts = [];
+  if (done) metaParts.push(`wrapped up ${relativeTime(thread.resolvedAt)}`);
+  else metaParts.push(`last from ${youOr(thread.lastFrom)} ${relativeTime(thread.lastAt)}`);
+  if (thread.project && !thread.title.toLowerCase().includes(thread.project.toLowerCase())) metaParts.push(thread.project);
+  const foot = done ? null : el("div", { class: "board-card-foot" }, [
+    passMenu(thread),
+    thread.unread ? el("span", { class: "new-pill", text: `${thread.unread} new` }) : null,
+    thread.status === "waiting" ? statusPill(thread) : null,
+  ]);
+  return el("article", {
+    class: "board-card",
+    "data-needs-viewer": !done && needsViewer(thread) ? "true" : undefined,
+    "data-done": done ? "true" : undefined,
+  }, [
+    el("button", { class: "board-card-title", type: "button", "data-open-thread": thread.id, text: thread.title, "aria-label": `Open ${thread.title}` }),
+    last ? el("p", { class: "board-card-excerpt", text: messageExcerpt(last, 110) }) : null,
+    el("p", { class: "board-card-meta", text: metaParts.join(" · ") }),
+    foot,
+  ]);
+}
+
+function boardColumn(name, id, threads, lastByThread, emptyText) {
+  const head = el("div", { class: "board-column-head" }, [
+    BOARD_SEATS.includes(id) ? avatarNode(id, "sm") : null,
+    el("h2", { class: "board-column-name", text: viewerIs(id) ? `${name} (you)` : name }),
+    threads.length ? el("span", { class: "board-count", text: String(threads.length) }) : null,
+  ]);
+  return el("section", {
+    class: "board-column",
+    "data-column": id,
+    "data-has-cards": threads.length ? "true" : undefined,
+    "aria-label": name,
+  }, [
+    head,
+    ...(threads.length ? threads.map((thread) => boardCard(thread, lastByThread)) : (emptyText ? [el("p", { class: "board-empty", text: emptyText })] : [])),
+  ]);
+}
+
+function renderBoard() {
+  const board = deriveBoard(state.room.threads, { viewer: state.room.viewer });
+  const lastByThread = new Map();
+  for (const message of state.room.messages) {
+    if (!isReactionMessage(message)) lastByThread.set(message.threadId, message);
+  }
+  const bar = el("div", { class: "board-bar" }, [
+    el("p", { class: "board-hint", text: "Cards are conversations. Pass one to put it on someone's plate." }),
+    el("button", { class: "primary-button", type: "button", "data-new-task": "true", text: "Give someone a task" }),
+  ]);
+  const columns = board.columns.map((column) => boardColumn(
+    agentLabel(column.id),
+    column.id,
+    column.threads,
+    lastByThread,
+    viewerIs(column.id) ? "Nothing on your plate." : `Nothing on ${agentLabel(column.id)}'s plate.`,
+  ));
+  if (board.unassigned.length) columns.push(boardColumn("Up for grabs", "up-for-grabs", board.unassigned, lastByThread, ""));
+  const doneColumn = boardColumn("Wrapped up", "done", board.done, lastByThread, "Nothing wrapped up yet.");
+  if (board.doneTotal > board.done.length) {
+    doneColumn.append(el("button", { class: "text-link-button board-done-more", type: "button", "data-goto-view": "resolved", text: `See all ${board.doneTotal} wrapped up` }));
+  }
+  columns.push(doneColumn);
+  return [bar, el("div", { class: "board", "aria-label": "The board" }, columns)];
+}
+
+/* ---------- the feed ---------- */
+
+function dayLabel(value) {
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "Sometime";
+  const startOf = (input) => new Date(input.getFullYear(), input.getMonth(), input.getDate()).getTime();
+  const days = Math.round((startOf(new Date()) - startOf(date)) / 86400000);
+  if (days <= 0) return "Today";
+  if (days === 1) return "Yesterday";
+  if (days < 7) return new Intl.DateTimeFormat(undefined, { weekday: "long" }).format(date);
+  return new Intl.DateTimeFormat(undefined, { month: "long", day: "numeric" }).format(date);
+}
+
+function reactionRow(message, reactions) {
+  const viewer = state.room.viewer;
+  const list = reactions.get(message.id) || [];
+  const thread = threadById(message.threadId);
+  const isAsk = thread && needsViewer(thread) && askMessage(thread)?.id === message.id;
+  // The message that needs your answer gets a real reply, not a sticker.
+  const canReact = message.from !== viewer && !isAsk;
+  const summary = reactionSummary(list);
+  if (!summary.length && !canReact) return null;
+  const chips = summary.map(({ emoji, count, agents }) => {
+    const mine = hasReacted(list, viewer, emoji);
+    return el("button", {
+      class: `react-chip${mine ? " mine" : ""}`,
+      type: "button",
+      "data-react-to": message.id,
+      "data-react": emoji,
+      disabled: mine || !canReact ? true : undefined,
+      title: listLabels(agents, { you: true }),
+      "aria-label": `${emoji} from ${listLabels(agents, { you: true })}`,
+      text: `${emoji} ${count}`,
+    });
+  });
+  const add = canReact ? el("details", { class: "react-add" }, [
+    el("summary", { title: "React", "aria-label": `React to ${agentLabel(message.from)}` }, ["+"]),
+    el("div", { class: "react-add-menu" }, REACTION_EMOJI.map((emoji) => el("button", {
+      class: "react-option",
+      type: "button",
+      "data-react-to": message.id,
+      "data-react": emoji,
+      disabled: hasReacted(list, viewer, emoji) ? true : undefined,
+      "aria-label": `React with ${emoji}`,
+      text: emoji,
+    }))),
+  ]) : null;
+  return el("div", { class: "react-row" }, [...chips, add]);
+}
+
+function feedBody(message, options = {}) {
+  const plain = ["message", "question", "status", "alert"].includes(message.kind) && !message.note;
+  const body = String(message.body || "");
+  if (!plain || (body.length <= 340 && body.split("\n").length <= 5)) return messageBody(message, options);
+  return el("div", {}, [
+    el("p", { class: "message-body", text: `${firstLine(body, 220)}` }),
+    el("details", { class: "card-more feed-fold" }, [
+      el("summary", { text: "Read the rest" }),
+      el("p", { class: "message-body", text: body }),
+    ]),
+  ]);
+}
+
+function renderFeed() {
+  const reactions = collectReactions(state.room.messages);
+  const items = state.room.messages.filter((message) => !isReactionMessage(message));
+  if (!items.length) return [emptyState("The desk is quiet.", "Once the team gets moving, the day lands here newest first.")];
+  const nodes = [];
+  let lastDay = "";
+  for (const message of [...items].reverse()) {
+    const day = dayLabel(message.createdAt);
+    if (day !== lastDay) {
+      nodes.push(el("li", { class: "feed-day", text: day }));
+      lastDay = day;
+    }
+    nodes.push(renderMessage(message, { reactions, feed: true }));
+  }
+  return [el("ol", { class: "message-feed feed-list", "aria-label": "Team feed" }, nodes)];
+}
+
 function renderFiltered(predicate, empty, label, hint = "", options = {}) {
   const messages = state.room.messages.filter(predicate);
   return [messages.length ? messageList(messages, { label, ...options }) : emptyState(empty, hint)];
@@ -913,7 +1095,8 @@ function renderFiltered(predicate, empty, label, hint = "", options = {}) {
 function renderThreadView() {
   const thread = threadById(state.threadId);
   if (!thread) return [emptyState("That conversation does not exist yet.", "Start it from the box below and it will appear here.")];
-  const messages = state.room.messages.filter((message) => message.threadId === thread.id);
+  const reactions = collectReactions(state.room.messages);
+  const messages = state.room.messages.filter((message) => message.threadId === thread.id && !isReactionMessage(message));
   const ask = askMessage(thread);
   const latestWaiting = thread.status === "waiting" && !ask
     ? [...messages].reverse().find((message) => message.waitingOn.some((agent) => thread.waitingOn.includes(agent)))
@@ -977,7 +1160,7 @@ function renderThreadView() {
     askMore,
     facts.length ? el("dl", { class: "thread-facts" }, facts.map(([term, detail]) => el("div", {}, [el("dt", { text: term }), el("dd", { text: detail })]))) : null,
   ]);
-  return [head, messageList(messages, { inThread: true, newDivider: true, pinnedId: ask?.id || "", label: `Messages in ${thread.title}` })];
+  return [head, messageList(messages, { inThread: true, newDivider: true, pinnedId: ask?.id || "", reactions, label: `Messages in ${thread.title}` })];
 }
 
 function renderOverviewHeader() {
@@ -1035,6 +1218,8 @@ function renderWorkspace({ force = false } = {}) {
   switch (state.view) {
     case "overview": blocks = renderOverview(); break;
     case "inbox": blocks = renderInbox(); break;
+    case "board": blocks = renderBoard(); break;
+    case "feed": blocks = renderFeed(); break;
     case "threads": blocks = renderThreads(); break;
     case "resolved": blocks = renderResolved(); break;
     case "receipts": blocks = renderFiltered((message) => message.kind === "receipt", "Nothing finished yet.", "Finished work", "Each agent leaves a short write-up after finishing a piece of work.", { calm: true }).map((node) => reverseFeed(node)); break;
@@ -1489,6 +1674,61 @@ async function threadAction(status, trigger) {
   }
 }
 
+/* ---------- board and feed actions ---------- */
+
+// Passing a card never sends by itself: it fills the handoff form so the
+// sender can add a line and stays in charge of the send.
+function startPass(threadId, seat) {
+  cancelReply();
+  renderComposerThreads();
+  const select = byId("threadSelect");
+  if ([...select.options].some((option) => option.value === threadId)) select.value = threadId;
+  byId("titleField").hidden = true;
+  byId("kindSelect").value = "handoff";
+  byId("recipientSelect").value = seat;
+  byId("nextOwnerSelect").value = seat;
+  updateComposerMode();
+  const input = byId("messageInput");
+  if (!input.value.trim()) {
+    input.value = viewerIs(seat) ? "I'll take this one." : `Over to you, ${agentLabel(seat)}.`;
+  }
+  setComposerOpen(true, { focus: true });
+  input.setSelectionRange(input.value.length, input.value.length);
+  announce(`Handing ${threadTitle(threadId)} to ${viewerIs(seat) ? "you" : agentLabel(seat)}. Add a line and send.`);
+}
+
+function startNewTask() {
+  cancelReply();
+  byId("kindSelect").value = "handoff";
+  const select = byId("threadSelect");
+  select.value = "__new";
+  byId("titleField").hidden = false;
+  updateComposerMode();
+  setComposerOpen(true);
+  byId("titleInput").focus();
+  announce("Name the task, say who picks it up, and send");
+}
+
+async function sendReaction(messageId, emoji) {
+  const parent = messageById(messageId);
+  if (!parent) return;
+  const payload = {
+    body: emoji,
+    to: [parent.from],
+    kind: "message",
+    threadId: parent.threadId,
+    replyTo: parent.id,
+    waitingOn: [],
+    clientId: `${state.room.viewer}-web-${crypto.randomUUID()}`,
+  };
+  try {
+    await postMessage(payload, { successText: `${emoji} sent to ${agentLabel(parent.from)}` });
+    render({ force: true });
+  } catch {
+    // the toast already explained
+  }
+}
+
 /* ---------- events ---------- */
 
 document.querySelectorAll('input[name="view"]').forEach((radio) => {
@@ -1505,6 +1745,27 @@ byId("needsKellyButton").addEventListener("click", () => {
 });
 
 byId("viewContent").addEventListener("click", (event) => {
+  const react = event.target.closest("[data-react]");
+  if (react) {
+    react.closest("details")?.removeAttribute("open");
+    sendReaction(react.dataset.reactTo, react.dataset.react);
+    return;
+  }
+  const pass = event.target.closest("[data-pass-to]");
+  if (pass) {
+    startPass(pass.dataset.passThread, pass.dataset.passTo);
+    return;
+  }
+  if (event.target.closest("[data-new-task]")) {
+    startNewTask();
+    return;
+  }
+  const goto = event.target.closest("[data-goto-view]");
+  if (goto) {
+    setView(goto.dataset.gotoView);
+    byId("viewHeading").focus();
+    return;
+  }
   const open = event.target.closest("[data-open-thread]");
   if (open) {
     openThread(open.dataset.openThread, { focusHeading: !open.dataset.replySeq });

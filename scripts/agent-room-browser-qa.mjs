@@ -149,6 +149,48 @@ async function main() {
     const kipInboxAfter = await fetch(`${origin}/api/agent-room`, { headers: { "X-Agent": "kip" } }).then((response) => response.json());
     assert(!kipInboxAfter.inbox.some((item) => item.threadId === "lantern-demo-deck"), "Resolved thread leaves Kip's inbox", failures);
 
+    process.stdout.write("The board\n");
+    await cli(["goto", `${origin}/brain/room.html#view=board`], { cwd });
+    await wait(1200);
+    const columns = await evaluate("(() => [...document.querySelectorAll('.board-column')].map((column) => column.dataset.column))()", cwd);
+    assert(Array.isArray(columns) && ["kelly", "codex", "claude-code", "kip", "vellum", "done"].every((seat) => columns.includes(seat)), `Board shows a column per seat plus wrapped up (${JSON.stringify(columns)})`, failures);
+    const lanternColumn = await evaluate("(() => { const card = [...document.querySelectorAll('.board-card-title')].find((node) => node.textContent === 'Lantern demo deck'); return card ? card.closest('.board-column').dataset.column : 'missing'; })()", cwd);
+    assert(lanternColumn === "done", `The wrapped-up conversation card moved to Wrapped up (got ${lanternColumn})`, failures);
+    const launchColumn = await evaluate("(() => { const card = [...document.querySelectorAll('.board-card-title')].find((node) => node.textContent === 'Agent commons launch'); return card ? card.closest('.board-column').dataset.column : 'missing'; })()", cwd);
+    assert(launchColumn === "kip", `A thread waiting on Kip sits in Kip's column (got ${launchColumn})`, failures);
+    if (shots) await cli(["screenshot", "--filename=desktop-board.png"], { cwd });
+
+    process.stdout.write("Pass a card (assignment is a handoff)\n");
+    await cli(["eval", "(() => { const card = [...document.querySelectorAll('.board-card')].find((node) => node.querySelector('.board-card-title')?.textContent === 'Wiki inbox triage'); card.querySelector('.board-pass').setAttribute('open', ''); card.querySelector('[data-pass-to=\"vellum\"]').click(); return 'ok'; })()"], { cwd });
+    await wait(500);
+    const passState = await evaluate("(() => ({ kind: document.getElementById('kindSelect').value, owner: document.getElementById('nextOwnerSelect').value, thread: document.getElementById('threadSelect').value, body: document.getElementById('messageInput').value }))()", cwd);
+    assert(passState && passState.kind === "handoff" && passState.owner === "vellum" && passState.thread === "wiki-inbox-triage" && /Vellum/.test(passState.body), `Pass fills a handoff for the chosen seat without sending (${JSON.stringify(passState)})`, failures);
+    await cli(["eval", "document.getElementById('sendButton').click()"], { cwd });
+    await wait(1800);
+    const vellumInbox = await fetch(`${origin}/api/agent-room`, { headers: { "X-Agent": "vellum" } }).then((response) => response.json());
+    assert(vellumInbox.inbox.some((item) => item.threadId === "wiki-inbox-triage" && item.actionable), "The handoff lands in Vellum's inbox as actionable", failures);
+    await cli(["goto", `${origin}/brain/room.html#view=board`], { cwd });
+    await wait(1200);
+    const wikiColumn = await evaluate("(() => { const card = [...document.querySelectorAll('.board-card-title')].find((node) => node.textContent === 'Wiki inbox triage'); return card ? card.closest('.board-column').dataset.column : 'missing'; })()", cwd);
+    assert(wikiColumn === "vellum", `The passed card moved to Vellum's column (got ${wikiColumn})`, failures);
+
+    process.stdout.write("The feed and reactions\n");
+    await cli(["goto", `${origin}/brain/room.html#view=feed`], { cwd });
+    await wait(1200);
+    const chips = await evaluate("(() => [...document.querySelectorAll('.react-chip')].map((node) => node.textContent.trim()))()", cwd);
+    assert(Array.isArray(chips) && chips.includes("🎉 2"), `One-emoji replies aggregate into chips with counts (${JSON.stringify(chips)})`, failures);
+    const rawHidden = await evaluate("(() => [...document.querySelectorAll('.feed-list .message-body')].every((node) => node.textContent.trim() !== '🎉'))()", cwd);
+    assert(rawHidden === true, "Reaction replies never appear as standalone feed posts", failures);
+    const dayHeader = await evaluate("document.querySelector('.feed-day')?.textContent || ''", cwd);
+    assert(dayHeader.length > 0, `Feed groups messages by day (got ${dayHeader})`, failures);
+    await cli(["eval", "(() => { const item = document.querySelector('#message-18'); item.querySelector('.react-add').setAttribute('open', ''); [...item.querySelectorAll('.react-option')].find((node) => node.textContent === '👀').click(); return 'ok'; })()"], { cwd });
+    await wait(1800);
+    const eyes = await evaluate("(() => [...document.querySelectorAll('#message-18 .react-chip')].map((node) => node.textContent.trim()))()", cwd);
+    assert(Array.isArray(eyes) && eyes.includes("👀 1"), `Tapping a reaction posts it and renders the chip (${JSON.stringify(eyes)})`, failures);
+    const storedReaction = await fetch(`${origin}/api/agent-room`, { headers: { "X-Agent": "codex" } }).then((response) => response.json());
+    assert(storedReaction.messages.some((message) => message.body === "👀" && message.from === "kelly" && message.replyTo === "message-fixture-18"), "The reaction is stored as a real reply message", failures);
+    if (shots) await cli(["screenshot", "--filename=desktop-feed.png"], { cwd });
+
     for (const [width, height, name] of [[768, 1024, "tablet-768"], [390, 844, "mobile-390"]]) {
       process.stdout.write(`Reflow at ${width}\n`);
       await cli(["resize", String(width), String(height)], { cwd });
@@ -162,6 +204,13 @@ async function main() {
       assert(typeof firstItemTop === "number" && firstItemTop < height, `First queue item starts inside the first viewport at ${width} (top ${firstItemTop})`, failures);
       if (shots) await cli(["screenshot", `--filename=${name}.png`], { cwd });
       if (shots && width === 390) await cli(["screenshot", "--full-page", `--filename=${name}-full.png`], { cwd });
+      for (const view of ["board", "feed"]) {
+        await cli(["goto", `${origin}/brain/room.html#view=${view}`], { cwd });
+        await wait(1000);
+        const viewOverflow = await evaluate("document.documentElement.scrollWidth - window.innerWidth", cwd);
+        assert(viewOverflow === 0, `No horizontal page overflow on the ${view} at ${width} (delta ${viewOverflow})`, failures);
+        if (shots) await cli(["screenshot", `--filename=${name}-${view}.png`], { cwd });
+      }
     }
   } finally {
     await cli(["close"], { cwd });

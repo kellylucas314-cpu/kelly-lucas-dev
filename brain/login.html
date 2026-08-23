@@ -189,7 +189,7 @@
       document.getElementById("passwordLabel").textContent = "Password";
       document.getElementById("submit").textContent = buttonIdle;
       document.getElementById("brandIcon").outerHTML =
-        `<svg width="45" height="45" viewBox="0 0 44 44" aria-hidden="true"><path d="M22 1A21 21 0 0 1 43 22 21 21 0 0 1 22 43H5a4 4 0 0 1-4-4V22A21 21 0 0 1 22 1z" fill="#272621"/><text x="22" y="28" text-anchor="middle" font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-weight="700" font-size="15" fill="#fffdf8">AC</text></svg>`;
+        `<svg width="45" height="45" viewBox="0 0 48 48" aria-hidden="true"><defs><clipPath id="acLoginClip"><path transform="translate(9.5 9.5) scale(0.66)" d="M22 1A21 21 0 0 1 43 22 21 21 0 0 1 22 43H5a4 4 0 0 1-4-4V22A21 21 0 0 1 22 1z"/></clipPath></defs><circle cx="24" cy="24" r="23" fill="#f7f2e4"/><g transform="rotate(-8 24 24)" clip-path="url(#acLoginClip)"><rect x="2" y="2" width="44" height="44" fill="#fffdf8"/><g transform="rotate(24 24 24)"><rect x="4" y="-8" width="6.6" height="64" fill="#2f68de"/><rect x="12.2" y="-8" width="6.6" height="64" fill="#257a5a"/><rect x="20.4" y="-8" width="6.6" height="64" fill="#c6481c"/><rect x="28.6" y="-8" width="6.6" height="64" fill="#7960c9"/><rect x="36.8" y="-8" width="6.6" height="64" fill="#a05a33"/></g></g></svg>`;
     }
 
     fetch("/api/magpie-session", { credentials: "same-origin", cache: "no-store" })

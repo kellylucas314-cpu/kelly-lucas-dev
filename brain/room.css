@@ -6,31 +6,33 @@
    pills do; rows and hairlines before boxes-in-boxes; an 8px rhythm; the
    signature shape is a rounded slab with a squared bottom-left corner. */
 
+/* Candidate typeface (Kelly to approve): LeniaSans, a friendlier workhorse
+   sans than Heliora at small sizes. Swap the three files to change it back. */
 @font-face {
-  font-family: "Heliora";
-  src: url("/assets/fonts/Heliora-Regular.ttf") format("truetype");
+  font-family: "LeniaSans";
+  src: url("/assets/fonts/LeniaSans-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Heliora";
-  src: url("/assets/fonts/Heliora-Medium.ttf") format("truetype");
+  font-family: "LeniaSans";
+  src: url("/assets/fonts/LeniaSans-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Heliora";
-  src: url("/assets/fonts/Heliora-Bold.ttf") format("truetype");
+  font-family: "LeniaSans";
+  src: url("/assets/fonts/LeniaSans-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 :root {
-  --sans: "Heliora", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --display: "Heliora", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --sans: "LeniaSans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --display: "LeniaSans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   --ink: #272621;
@@ -145,12 +147,23 @@ h1:focus-visible { outline: none; }
 
 /* ---------- top bar ---------- */
 
-.room-topbar { min-height: 78px; gap: 12px; border-bottom-color: var(--line-soft); }
+.room-topbar { position: relative; min-height: 78px; gap: 12px; border-bottom-color: var(--line-soft); }
+/* Five seats, one thin ribbon: the Magpie-style accent line under the top bar. */
+.room-topbar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 132px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #2f68de, #257a5a, #c6481c, #7960c9, #a05a33);
+}
 .brand { gap: 12px; }
-.brand-mark { width: 40px; height: 40px; display: grid; place-items: center; background: transparent; transform: none; border-radius: 0; }
-.brand-mark svg { display: block; width: 40px; height: 40px; transition: transform .35s cubic-bezier(.2, .9, .3, 1.3); }
+.brand-mark { width: 42px; height: 42px; display: grid; place-items: center; background: transparent; transform: none; border-radius: 0; }
+.brand-mark svg { display: block; width: 42px; height: 42px; filter: drop-shadow(0 2px 5px rgba(51, 44, 31, .16)); transition: transform .35s cubic-bezier(.2, .9, .3, 1.3); }
 .brand-text strong { font: 700 21px/1.05 var(--display); letter-spacing: -.02em; }
-.brand-text small { margin-top: 3px; color: var(--muted); font-size: 12.5px; letter-spacing: 0; }
+.brand-text small { margin-top: 3px; color: var(--muted); font-size: 10.5px; font-weight: 500; letter-spacing: .17em; text-transform: uppercase; }
 .brand[aria-disabled="true"] { cursor: default; }
 .brand:hover .brand-mark svg { transform: rotate(-6deg); }
 
@@ -850,6 +863,158 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 .composer-tip { color: var(--muted); font-size: 13px; }
 @media (pointer: coarse) { .composer-tip { display: none; } }
 
+/* ---------- the board: one column per seat, cards are conversations ---------- */
+
+.board-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.board-hint { color: var(--muted); font-size: 14px; }
+.board {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0 -8px;
+  padding: 2px 8px 16px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+.board-column {
+  flex: 0 0 246px;
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  min-height: 130px;
+  padding: 10px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-card);
+  background: var(--card-deep);
+  scroll-snap-align: start;
+}
+.board-column[data-column="done"] { background: var(--done-slab); border-color: var(--done-line); }
+.board-column[data-column="kelly"][data-has-cards="true"] { background: var(--needs-slab); border-color: var(--needs-line); }
+.board-column-head { display: flex; align-items: center; gap: 8px; padding: 2px 2px 2px 0; }
+.board-column-name { margin: 0; font: 700 14.5px/1.3 var(--sans); letter-spacing: 0; }
+.board-count { margin-left: auto; color: var(--muted); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.board-empty { padding: 4px 4px 8px; color: var(--muted); font-size: 13px; }
+.board-card {
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px 8px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-control);
+  background: var(--card);
+}
+.board-card[data-needs-viewer="true"] { border-color: var(--needs-line); box-shadow: inset 3px 0 0 var(--needs-strong); }
+.board-card[data-done="true"] { background: transparent; }
+.board-card-title {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: 700 15px/1.3 var(--sans);
+  text-align: left;
+  cursor: pointer;
+}
+.board-card-title:hover { text-decoration: underline; }
+.board-card-excerpt { color: var(--ink-soft); font-size: 13.5px; line-height: 1.4; overflow-wrap: anywhere; }
+.board-card-meta { color: var(--muted); font-size: 12.5px; }
+.board-card-foot { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; }
+.board-card-foot .status-pill { margin-left: auto; }
+.board-pass summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 3px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink-soft);
+  background: var(--card);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  list-style: none;
+}
+.board-pass summary::-webkit-details-marker { display: none; }
+.board-pass summary:hover { background: var(--hover); }
+.board-pass[open] summary { background: var(--hover); border-color: var(--ink-soft); }
+.board-pass-menu { display: grid; gap: 2px; padding-top: 6px; }
+.board-pass-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 3px 8px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: none;
+  color: var(--ink);
+  font-size: 13.5px;
+  text-align: left;
+  cursor: pointer;
+}
+.board-pass-option:hover { background: var(--hover); }
+.board-done-more { justify-self: start; }
+
+/* ---------- the feed: the day's activity with reactions ---------- */
+
+.feed-day {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 26px 0 4px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.feed-day:first-child { margin-top: 0; }
+.feed-day::after { content: ""; flex: 1; height: 1px; background: var(--line-soft); }
+.react-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.react-chip {
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink-soft);
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.react-chip.mine { border-color: var(--accent); background: #fbeae2; }
+.react-chip:disabled { cursor: default; }
+.react-add { position: relative; }
+.react-add summary {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 15px;
+  cursor: pointer;
+  list-style: none;
+}
+.react-add summary::-webkit-details-marker { display: none; }
+.react-add summary:hover, .react-add[open] summary { border-style: solid; background: var(--hover); color: var(--ink); }
+.react-add-menu {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 6px);
+  z-index: 5;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+.react-option { padding: 4px 7px; border: 0; border-radius: 999px; background: none; font-size: 17px; line-height: 1; cursor: pointer; }
+.react-option:hover { background: var(--hover); }
+.feed-fold summary { color: var(--ink-soft); }
+
 /* ---------- toast and confetti ---------- */
 
 .toast {
@@ -1046,6 +1211,18 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
   .room-composer { padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); }
   .composer-expander { min-height: 48px; }
   .toast { bottom: 88px; }
+}
+
+@media (max-width: 900px) {
+  .board { margin: 0 -20px; padding: 2px 20px 16px; }
+}
+
+@media (max-width: 620px) {
+  .board { margin: 0 -14px; padding: 2px 14px 16px; scroll-snap-type: x mandatory; }
+  .board-column { flex: 0 0 min(82vw, 300px); }
+  .board-bar { align-items: stretch; flex-direction: column; }
+  .board-bar .primary-button { min-height: 46px; }
+  .react-chip, .react-add summary { min-height: 34px; min-width: 34px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
