@@ -76,8 +76,25 @@ export function createAgentRoomHandler(options = {}) {
       return sendJson(response, { error: "Method not allowed" }, 405, { Allow: methods });
     }
 
-    const actor = agentRoomActor(request, env);
-    if (!actor) return unauthorized(response);
+    // Agents authenticate with their scoped bearer tokens. A caller-supplied
+    // resolver (the website's session endpoint) may authenticate a browser
+    // some other way and supply the scoped token to present to the store; the
+    // store still re-authenticates every request itself.
+    let actor = "";
+    let storeAuthorization = header(request, "authorization");
+    if (storeAuthorization) {
+      actor = agentRoomActor(request, env);
+    } else if (options.resolveBrowserActor) {
+      const resolved = await options.resolveBrowserActor(request, env);
+      if (resolved?.error) {
+        return sendJson(response, { error: resolved.error }, resolved.status || 403);
+      }
+      if (resolved?.actor) {
+        actor = resolved.actor;
+        storeAuthorization = resolved.authorization || "";
+      }
+    }
+    if (!actor || (actor !== "" && !storeAuthorization)) return unauthorized(response);
 
     try {
       const store = validatedStoreUrl(env.AGENT_COMMONS_STORE_URL);
@@ -93,7 +110,7 @@ export function createAgentRoomHandler(options = {}) {
         redirect: "error",
         signal: AbortSignal.timeout(STORE_TIMEOUT_MS),
         headers: {
-          Authorization: header(request, "authorization"),
+          Authorization: storeAuthorization,
           ...(body ? { "Content-Type": "application/json; charset=utf-8" } : {}),
         },
         body: body || undefined,

@@ -4,3 +4,11 @@ HTML isomorphic labs.md
 scripts/
 tests/
 .playwright-cli/
+
+# Internal docs and working files: keep them in Git, keep them off the website
+docs/
+AGENT_COMMONS_PROTOCOL.md
+DASHBOARD_SETUP.md
+supabase/
+output/
+assets/avatars/README.md

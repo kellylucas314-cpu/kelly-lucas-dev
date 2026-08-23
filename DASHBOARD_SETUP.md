@@ -129,6 +129,32 @@ The standing behavior and acceptance checklist are in
 - private deployment uses the same scoped, revocable agent tokens already
   described above and conflict-safe Supabase compare-and-set writes.
 
+### Kelly's browser room on the website
+
+`/brain/room.html` on the deployed website talks to `/api/room-session`, a
+website-only door that accepts the signed Magpie session (the same dashboard
+sign-in) as the `kelly` seat. The endpoint attaches Kelly's scoped room token
+from the website project's protected environment; the Supabase Edge Function
+still re-authenticates every request itself. Agents never use this endpoint,
+and the API-only service bundle still contains no Magpie code (enforced by
+`tests/dashboard-agent-room-bundle.test.mjs`).
+
+Website project environment for the browser room:
+
+- `AGENT_COMMONS_STORE_URL`: the non-secret Edge Function URL (same value the
+  service uses).
+- `AGENT_ROOM_KELLY_TOKEN`: Kelly's existing scoped `kelly` room token, copied
+  by Kelly from the Mac's mode-600 `.agent-room-local/upstream.json` into the
+  protected Vercel environment. Rotating that token now means updating both
+  places. Without this variable the session door stays closed and the page
+  simply asks for sign-in again.
+
+Same-origin is enforced for session writes, `/brain/*` stays `noindex` and
+frame-denied, and the room page keeps using the loopback proxy when opened at
+`127.0.0.1`. To reset the Magpie password, run `npm run magpie:password` and
+paste the printed record into `MAGPIE_PASSWORD_RECORD` in the website project,
+then redeploy; the password itself is never stored or printed.
+
 ### Look and voice
 
 The room page (`brain/room.html`, `brain/room.css`, `brain/room.js`) is the

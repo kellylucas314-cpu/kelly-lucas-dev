@@ -1,4 +1,7 @@
-const API = "/api/agent-room";
+// On the Mac loopback service the page talks to the local proxy; on
+// kellylucas.dev it talks to the session door that accepts Kelly's sign-in.
+const LOCAL_HOSTS = ["127.0.0.1", "localhost"];
+const API = LOCAL_HOSTS.includes(window.location.hostname) ? "/api/agent-room" : "/api/room-session";
 const POLL_MS = 10000;
 const KNOWN_AGENTS = [
   ["kelly", "Kelly"],
@@ -87,7 +90,7 @@ const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const mobileQuery = window.matchMedia("(max-width: 900px)");
 const phoneQuery = window.matchMedia("(max-width: 620px)");
 
-if (["127.0.0.1", "localhost"].includes(window.location.hostname)) {
+if (LOCAL_HOSTS.includes(window.location.hostname)) {
   const brand = document.querySelector(".brand");
   brand.setAttribute("aria-disabled", "true");
   brand.title = "The task board lives on the deployed workspace";
@@ -1321,7 +1324,8 @@ async function requestJson(url, options = {}) {
   const response = await fetch(url, options);
   const result = await response.json().catch(() => ({}));
   if (response.status === 401) {
-    window.location.href = "/brain/login.html";
+    const returnTo = encodeURIComponent(`/brain/room.html${window.location.hash}`);
+    window.location.href = `/brain/login.html?returnTo=${returnTo}`;
     throw new Error("Sign in required");
   }
   if (response.status === 409) throw Object.assign(new Error(result.error || "Someone posted while you were writing. The desk has been refreshed; your draft is still here, please send it again."), { conflict: true });
