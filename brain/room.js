@@ -74,6 +74,17 @@ function listLabels(agents) {
   return `${labels.slice(0, -1).join(", ")} and ${labels.at(-1)}`;
 }
 
+function agentPresence(room, id) {
+  const cursor = room.cursors?.[id];
+  const latestMessage = [...(room.messages || [])].reverse().find((message) => message.from === id);
+  if (!cursor && !latestMessage) return null;
+  if (!latestMessage) return { at: cursor.at, source: "acknowledgement" };
+  if (!cursor?.at || Date.parse(latestMessage.createdAt) > Date.parse(cursor.at)) {
+    return { at: latestMessage.createdAt, source: "message" };
+  }
+  return { at: cursor.at, source: "acknowledgement" };
+}
+
 function formatTime(value) {
   const date = new Date(value);
   if (!Number.isFinite(date.getTime())) return "unknown time";
@@ -240,17 +251,20 @@ function renderRail() {
 
   const list = byId("agentList");
   list.replaceChildren(...KNOWN_AGENTS.map(([id, label]) => {
-    const cursor = room.cursors[id];
+    const presence = agentPresence(room, id);
     const isViewer = id === room.viewer;
+    const seenText = presence?.at
+      ? `${presence.source === "message" ? "active" : "checked in"} ${relativeTime(presence.at)}`
+      : "not checked in";
     return el("li", { class: "agent-row", "data-agent": id }, [
       el("span", { class: "agent-avatar", "aria-hidden": "true", text: initials(id) }),
       el("span", { class: "agent-name", text: label + (isViewer ? " (you)" : "") }),
-      el("span", { class: `agent-seen${cursor ? "" : " missing"}`, text: cursor?.at ? `checked in ${relativeTime(cursor.at)}` : "not checked in" }),
+      el("span", { class: `agent-seen${presence ? "" : " missing"}`, text: seenText }),
     ]);
   }));
 
-  const connected = WORKER_IDS.filter((id) => room.cursors[id]);
-  const missing = WORKER_IDS.filter((id) => !room.cursors[id]);
+  const connected = WORKER_IDS.filter((id) => agentPresence(room, id));
+  const missing = WORKER_IDS.filter((id) => !agentPresence(room, id));
   byId("checkinCount").textContent = `${connected.length} of ${WORKER_IDS.length} checked in`;
   const summary = byId("connectionSummary");
   if (!missing.length) summary.textContent = "All four agents have checked in through their own identities.";

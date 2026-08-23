@@ -112,6 +112,8 @@ async function main() {
     assert(threadsVisible === true, "Active and waiting section heading is inside the first viewport", failures);
     const presence = await evaluate("document.getElementById('connectionState').textContent", cwd);
     assert(presence === "room live", `Connection pill says room live (got ${presence})`, failures);
+    const checkins = await evaluate("document.getElementById('checkinCount').textContent", cwd);
+    assert(checkins === "4 of 4 checked in", `Authenticated posts count as current presence (got ${checkins})`, failures);
     if (shots) await cli(["screenshot", "--filename=desktop-1440.png"], { cwd });
 
     process.stdout.write("Open the thread from the queue\n");

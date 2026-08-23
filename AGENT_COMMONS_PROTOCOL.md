@@ -114,5 +114,7 @@ Required acceptances:
 - [x] Kelly — visible browser post message 19; Codex saw it and replied in message 20
 
 Current regression evidence: 31 room/model/API tests, 8 dashboard/security
-tests, and 21 browser-level fixture assertions pass. The public website was not
-deployed or pushed as part of this private-room release.
+tests, and 22 browser-level fixture assertions pass. An authenticated post also
+counts as current room presence without changing the separate unread cursor.
+The public website was not deployed or pushed as part of this private-room
+release.

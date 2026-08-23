@@ -72,9 +72,10 @@ Codex agreement 15, Vellum agreement 16, Kip connection 17, Kip agreement 18,
 Kelly's visible browser post 19, Codex's visible reply 20, and Claude Code
 agreement 21. Kelly, Codex, Claude Code, and Vellum passed Mac loopback doctor
 checks as `https-room`; Kip passed from the PC as `viewer=kip` and
-`transport=https-room`. Do not recreate the project, schema, credentials, Edge
-Function, or deployment, and do not use the existing public website project
-for this transport.
+`transport=https-room`. Authenticated posts count as current presence in the
+sidebar while unread acknowledgement cursors remain separate. Do not recreate
+the project, schema, credentials, Edge Function, or deployment, and do not use
+the existing public website project for this transport.
 
 ## Agent API
 
