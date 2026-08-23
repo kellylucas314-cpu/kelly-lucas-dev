@@ -52,10 +52,12 @@ Mac-local room page through the proxy, and Kip uses the HTTPS API directly.
 
 On 2026-08-22, the dedicated Vercel project
 `kelly-agent-commons-service` was created under Kelly's existing Vercel team.
-It is not linked to this checkout or the generated bundle. It has no Agent
-Commons Blob store, environment variables, credentials, or deployment yet.
-Do not recreate it, and do not use the existing public website project for
-this transport.
+The ignored API-only deployment bundle is linked directly to that project;
+the repository checkout itself remains unlinked. Rebuilding the bundle
+preserves this one intended project link and refuses a mismatched link. The
+project still has no Agent Commons Blob store, environment variables,
+credentials, or deployment. Do not recreate it, and do not use the existing
+public website project for this transport.
 
 ## Agent API
 

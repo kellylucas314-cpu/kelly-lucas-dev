@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
@@ -38,6 +38,36 @@ test("the deploy bundle contains only the Agent Commons API service", async () =
     const handler = await readFile(path.join(outputDirectory, "api", "agent-room.js"), "utf8");
     assert.match(handler, /agentRoomActor/);
     assert.doesNotMatch(handler, /magpie/iu);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
+test("rebuilding preserves only the intended Vercel project link", async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), "agent-commons-link-test-"));
+  const outputDirectory = path.join(directory, "bundle");
+  const projectLink = {
+    orgId: "team_test",
+    projectId: "project_test",
+    projectName: "kelly-agent-commons-service",
+  };
+
+  try {
+    assert.equal((await runBuilder(outputDirectory)).code, 0);
+    await mkdir(path.join(outputDirectory, ".vercel"));
+    await writeFile(
+      path.join(outputDirectory, ".vercel", "project.json"),
+      `${JSON.stringify(projectLink)}\n`,
+    );
+
+    const result = await runBuilder(outputDirectory);
+    assert.equal(result.code, 0);
+    assert.match(result.stdout, /Preserved Vercel link/);
+    assert.deepEqual(
+      JSON.parse(await readFile(path.join(outputDirectory, ".vercel", "project.json"), "utf8")),
+      projectLink,
+    );
+    assert.equal((await stat(path.join(outputDirectory, ".vercel", "project.json"))).mode & 0o077, 0);
   } finally {
     await rm(directory, { recursive: true, force: true });
   }

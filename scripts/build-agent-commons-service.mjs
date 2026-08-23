@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const SERVICE_NAME = "kelly-agent-commons-service";
 
 function parseArguments(argv) {
   const options = {};
@@ -24,6 +25,19 @@ if (!relativeOutput || (relativeOutput && !relativeOutput.startsWith("..") &&
     relativeOutput !== ".agent-room-local" &&
     !relativeOutput.startsWith(`.agent-room-local${path.sep}`))) {
   throw new Error("Deploy output inside the project must stay under ignored .agent-room-local/");
+}
+
+let existingProjectLink = null;
+try {
+  const rawLink = await readFile(path.join(outputDirectory, ".vercel", "project.json"), "utf8");
+  const parsedLink = JSON.parse(rawLink);
+  if (parsedLink?.projectName !== SERVICE_NAME ||
+      typeof parsedLink.orgId !== "string" || typeof parsedLink.projectId !== "string") {
+    throw new Error(`Existing deploy bundle is not linked to ${SERVICE_NAME}`);
+  }
+  existingProjectLink = `${JSON.stringify(parsedLink, null, 2)}\n`;
+} catch (error) {
+  if (error?.code !== "ENOENT") throw error;
 }
 
 await rm(outputDirectory, { recursive: true, force: true });
@@ -60,5 +74,13 @@ await writeFile(path.join(outputDirectory, "vercel.json"), `${JSON.stringify({
   }],
 }, null, 2)}\n`);
 
+if (existingProjectLink) {
+  await mkdir(path.join(outputDirectory, ".vercel"), { recursive: true, mode: 0o700 });
+  await writeFile(path.join(outputDirectory, ".vercel", "project.json"), existingProjectLink, {
+    mode: 0o600,
+  });
+}
+
 process.stdout.write(`Agent Commons API-only deploy bundle: ${outputDirectory}\n`);
 process.stdout.write("Contains only the room API, authentication, model, package manifest, and security headers.\n");
+if (existingProjectLink) process.stdout.write(`Preserved Vercel link to ${SERVICE_NAME}.\n`);
