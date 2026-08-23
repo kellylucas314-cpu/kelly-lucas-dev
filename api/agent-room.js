@@ -30,12 +30,22 @@ async function streamText(stream) {
   return Buffer.concat(chunks).toString("utf8");
 }
 
+export function blobEtag(result) {
+  const nestedEtag = result?.blob?.etag;
+  if (typeof nestedEtag === "string" && nestedEtag) return nestedEtag;
+
+  const headerEtag = typeof result?.headers?.get === "function"
+    ? result.headers.get("etag")
+    : "";
+  return typeof headerEtag === "string" ? headerEtag : "";
+}
+
 async function readRoom() {
   const result = await get(ROOM_PATH, { access: "private", useCache: false });
   if (!result || result.statusCode !== 200) return { room: emptyRoom(), etag: null };
   return {
     room: sanitizeRoom(JSON.parse(await streamText(result.stream))),
-    etag: result.etag || null,
+    etag: blobEtag(result) || null,
   };
 }
 
