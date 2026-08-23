@@ -72,6 +72,10 @@
 /* ---------- top bar ---------- */
 
 .room-topbar { gap: 12px; }
+.room-topbar .brand small { color: #625f57; }
+.presence { color: #1e6c50; }
+.presence.saving { color: #7a4e12; }
+.workspace .eyebrow { color: #c6481c; }
 .brand[aria-disabled="true"] { cursor: default; }
 .viewer-chip {
   display: inline-flex;
@@ -144,6 +148,7 @@
 .rail-hint { margin: 8px 0 0; color: var(--room-rail-muted); font-size: 12px; line-height: 1.45; }
 
 .view-switch {
+  min-width: 0;
   margin: 0;
   padding: 14px 0 0;
   border: 0;
@@ -188,7 +193,7 @@
   padding: 2px 7px;
   border-radius: 99px;
   background: rgba(255, 255, 255, .1);
-  color: var(--room-rail-muted);
+  color: #d9d9d6;
   font-size: 11px;
   font-weight: 700;
   text-align: center;
@@ -376,9 +381,9 @@
 .thread-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .thread-open {
   display: grid;
-  gap: 6px;
+  gap: 5px;
   width: 100%;
-  padding: 11px 14px;
+  padding: 10px 14px;
   border: 1px solid var(--line);
   border-radius: 12px 12px 12px 4px;
   background: var(--room-paper);
@@ -392,7 +397,7 @@
 .unread-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--needs); }
 .thread-title { font: 600 14.5px/1.2 var(--display); }
 .thread-row-meta { color: var(--room-muted); font-size: 12px; line-height: 1.4; }
-.thread-participants { display: flex; gap: 4px; }
+.thread-participants { display: flex; gap: 4px; margin-left: auto; }
 .thread-participants .mini-avatar { width: 20px; height: 20px; font-size: 8.5px; border-radius: 6px 6px 6px 2px; }
 
 /* thread view head */
@@ -466,6 +471,7 @@
 .output-path { font: 12.5px/1.45 var(--mono); color: #2f2d28; background: #f1ede3; padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
 .message-footer { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 8px; color: var(--room-muted); font-size: 11.5px; }
 .thread-chip {
+  min-height: 26px;
   padding: 4px 8px;
   border: 1px solid var(--line);
   border-radius: 7px 7px 7px 3px;
@@ -618,10 +624,9 @@
   .kelly-queue strong { font-size: 22px; }
   .kelly-queue span { font-size: 12px; }
   .rail-hint { margin: 0; flex: 1; min-width: 0; }
-  .view-switch { display: flex; gap: 4px; padding: 0; border: 0; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-  .view-switch::-webkit-scrollbar { display: none; }
+  .view-switch { display: flex; flex-wrap: wrap; gap: 4px; padding: 0; border: 0; }
   .view-switch legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-  .view-option { flex: 0 0 auto; min-height: 36px; padding: 6px 11px; border-color: var(--room-rail-line); white-space: nowrap; }
+  .view-option { flex: 0 0 auto; min-height: 32px; padding: 5px 10px; border-color: var(--room-rail-line); white-space: nowrap; font-size: 12.5px; }
   .view-option + .view-option { margin-top: 0; }
   .rail-section { padding-top: 0; border-top: 0; }
   .agent-details summary { min-height: 32px; }
@@ -642,6 +647,7 @@
   .workspace-header { flex-direction: column; align-items: stretch; gap: 8px; }
   .workspace-title h1 { font-size: 22px; }
   .workspace-meta { justify-content: flex-start; }
+  #revisionLabel { display: none; }
   .desk-section-head { flex-wrap: wrap; }
   .queue-item,
   .receipt-row { grid-template-columns: 26px minmax(0, 1fr); }

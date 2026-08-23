@@ -425,13 +425,13 @@ function threadRow(thread) {
   return el("li", { class: "thread-row", "data-status": thread.status, "data-unread": thread.unread ? "true" : undefined }, [
     el("button", { class: "thread-open", type: "button", "data-open-thread": thread.id }, [
       el("span", { class: "thread-row-top" }, [
-        thread.unread ? el("span", { class: "unread-dot", "aria-label": `${thread.unread} unread` }) : null,
+        thread.unread ? el("span", { class: "unread-dot", role: "img", "aria-label": `${thread.unread} unread` }) : null,
         el("span", { class: "thread-title", text: thread.title }),
         statusPill(thread),
+        el("span", { class: "thread-participants", role: "img", "aria-label": `participants ${listLabels(thread.participants)}` },
+          thread.participants.map((agent) => el("span", { class: "mini-avatar", "data-agent": agent, "aria-hidden": "true", text: initials(agent) }))),
       ]),
       el("span", { class: "thread-row-meta", text: meta.join(" · ") }),
-      el("span", { class: "thread-participants", "aria-label": `participants ${listLabels(thread.participants)}` },
-        thread.participants.map((agent) => el("span", { class: "mini-avatar", "data-agent": agent, "aria-hidden": "true", text: initials(agent) }))),
     ]),
   ]);
 }
@@ -727,12 +727,16 @@ function cancelReply() {
   byId("replyContext").hidden = true;
 }
 
-function composerError(text) {
+function composerError(text, fieldId = "") {
   const node = byId("composerError");
   node.textContent = text;
   node.hidden = !text;
-  if (text) byId("messageInput").setAttribute("aria-invalid", "true");
-  else byId("messageInput").removeAttribute("aria-invalid");
+  byId("messageForm").querySelectorAll("[aria-invalid]").forEach((field) => field.removeAttribute("aria-invalid"));
+  if (text && fieldId) {
+    const field = byId(fieldId);
+    field.setAttribute("aria-invalid", "true");
+    field.setAttribute("aria-describedby", "composerError");
+  }
 }
 
 function composerPayload() {
@@ -937,7 +941,7 @@ async function sendMessage(event) {
   event.preventDefault();
   const { payload, error, focus } = composerPayload();
   if (error) {
-    composerError(error);
+    composerError(error, focus);
     byId(focus).focus();
     return;
   }
