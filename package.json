@@ -15,6 +15,7 @@
     "sync:magpie": "node --env-file=.env.local scripts/sync-magpie.mjs",
     "test:dashboard": "node --test tests/dashboard-*.test.mjs",
     "test:room": "node --test tests/agent-room-*.test.mjs",
+    "test:room:browser": "node scripts/agent-room-browser-qa.mjs",
     "test:magpie": "node --test tests/magpie-auth.test.mjs",
     "eval:army": "node scripts/eval-army.mjs"
   },

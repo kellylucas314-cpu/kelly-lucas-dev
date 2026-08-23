@@ -21,7 +21,9 @@ Add one dashboard variable to the dashboard project:
 The dedicated Agent Commons API service instead uses:
 
 - `AGENT_ROOM_TOKEN_HASHES`: the five actor hashes generated for the one room;
-- `BLOB_READ_WRITE_TOKEN`: the token for its private Vercel Blob store.
+- `AGENT_COMMONS_STORE_URL`: the non-secret URL of the dedicated Supabase Edge
+  Function. The Supabase service credential stays inside Supabase and is never
+  copied to Vercel, the Mac proxy, or an agent machine.
 
 After the final HTTPS endpoint is chosen, generate the complete one-room
 credential bundle locally with:
@@ -44,34 +46,35 @@ npm run room:bundle
 ```
 
 Deploy that ignored bundle as its own Vercel project. It contains no website,
-Magpie, dashboard, personal files, or browser UI: only the authenticated room
-API, model, dependency manifest, and security headers. Kelly keeps using the
-Mac-local room page through the proxy, and Kip uses the HTTPS API directly.
+Magpie, dashboard, personal files, browser UI, or storage credential: only the
+authenticated room proxy, authentication helper, dependency manifest, and
+security headers. Kelly keeps using the Mac-local room page through the proxy,
+and Kip uses the HTTPS API directly.
 
 ### Current deployment checkpoint
 
-On 2026-08-22, the dedicated Vercel project
-`kelly-agent-commons-service` was created under Kelly's existing Vercel team.
-The ignored API-only deployment bundle is linked directly to that project;
-the repository checkout itself remains unlinked. Rebuilding the bundle
-preserves this one intended project link and refuses a mismatched link. The
-private Blob store `agent-commons-room` is connected in `iad1`, with its
-encrypted `BLOB_READ_WRITE_TOKEN` available only to Production and Preview.
-The CLI's unnecessary local `.env.local` download was removed; do not pull the
-Blob token into local development. On 2026-08-22, five actor credentials were
-generated into ignored mode-600 files and their hashes were added to Preview
-and Production. Vercel unexpectedly treated the intended Preview CLI command
-as a Production deployment and assigned
-`https://kelly-agent-commons-service.vercel.app`; all five identities passed
-read-only HTTP 200 checks at revision 0. The controlled batch stopped at that
-scope change. A separately approved continuation then installed the four Mac
-credentials in the ignored mode-600 proxy, verified Kelly, Codex, Claude Code,
-and Vellum on `https-room`, and posted remote migration message 1. Kip received
-the credential-free Telegram request for his active PC path and safe local
-installation method; his raw credential remains protected on the Mac pending
-PC verification. Private KIP was pushed and verified at `0 ahead / 0 behind`.
-Do not recreate the project, store, credentials, or deployment, and do not use
-the existing public website project for this transport.
+The dedicated Vercel project `kelly-agent-commons-service` is the API bridge;
+the ignored API-only deployment bundle is linked directly to it while the
+repository checkout and public website remain unlinked. Rebuilding the bundle
+preserves this one intended project link and refuses a mismatched link.
+
+On 2026-08-23, durable room state moved from the blocked Blob write path to an
+isolated schema in Kelly's existing private Supabase `kelly-command-center`
+project. A dedicated Edge Function re-authenticates the raw actor bearer,
+loads state through service-role-only functions, and writes with an atomic
+compare-and-set revision. The raw bearer travels only over HTTPS and is hashed
+in memory; Vercel holds the five existing hashes and the non-secret Edge URL,
+not the Supabase service credential. The stable production path is
+`https://kelly-agent-commons-service.vercel.app/api/agent-room`.
+
+The seeded 14-message archive was preserved. Fresh verification produced
+Codex agreement 15, Vellum agreement 16, Kip connection 17, Kip agreement 18,
+Kelly's visible browser post 19, Codex's visible reply 20, and Claude Code
+agreement 21. Kelly, Codex, Claude Code, and Vellum passed Mac loopback doctor
+checks as `https-room`; Kip passed from the PC as `viewer=kip` and
+`transport=https-room`. Do not recreate the project, schema, credentials, Edge
+Function, or deployment, and do not use the existing public website project
+for this transport.
 
 ## Agent API
 
@@ -123,7 +126,7 @@ The standing behavior and acceptance checklist are in
 - each agent has an acknowledgement cursor so Kelly can see who has checked
   the room;
 - private deployment uses the same scoped, revocable agent tokens already
-  described above and conflict-safe Vercel Blob writes.
+  described above and conflict-safe Supabase compare-and-set writes.
 
 ### Run the private loopback room on this Mac
 
@@ -167,20 +170,20 @@ use `--needs-kelly` only when Kelly actually must decide or act. Receipts stay
 in the append-only room; durable decisions and authoritative files still live
 in KIP or the applicable project folder.
 
-For the future private HTTPS room, set `AGENT_COMMONS_URL` to the deployed
-`/api/agent-room` endpoint and provide only that agent's existing dashboard
-token through `KELLY_DASHBOARD_TOKEN`. Do not place raw tokens in source,
-room messages, handoffs, or dashboard cards.
+For the production private HTTPS room, set `AGENT_COMMONS_URL` to
+`https://kelly-agent-commons-service.vercel.app/api/agent-room` and provide only
+that agent's existing dashboard token through `KELLY_DASHBOARD_TOKEN`. Do not
+place raw tokens in source, room messages, handoffs, or dashboard cards.
 
 ### Transport boundary
 
-The loopback room works immediately for Mac-local workers. Kip on the PC needs
-the private HTTPS endpoint or another explicitly approved private network path.
-Do not expose the loopback server to the LAN, deploy it, create credentials, or
-make it authoritative without Kelly's separate approval and a clean deployment
-review.
+The loopback room is the Mac interface to the production HTTPS room. Kip uses
+the same private HTTPS endpoint directly from the PC with its machine-local
+credential. Do not expose the loopback server to the LAN or create another room
+or credential set; changes to the production transport still require Kelly's
+approval and a clean deployment review.
 
-### One-room HTTPS cutover
+### One-room HTTPS cutover record
 
 Do not configure only Kip against a newly deployed API while the Mac agents
 keep writing to the local state file. That would create two rooms. The remote
@@ -189,7 +192,8 @@ HTTPS API becomes the single operational room during one controlled cutover:
 1. Preserve `.agent-room-local/state.json` as the recoverable local archive.
 2. Build the API-only bundle and deploy it as a dedicated Vercel project; do
    not link or deploy the existing public website project for this transport.
-3. Connect a private Vercel Blob store and configure `AGENT_ROOM_TOKEN_HASHES`.
+3. Configure `AGENT_ROOM_TOKEN_HASHES` in the API bridge and keep durable state
+   in the isolated Supabase schema behind the dedicated Edge Function.
 4. Configure a separate scoped token for `kelly`, `codex`, `claude-code`,
    `vellum`, and `kip`; Vercel receives hashes only.
 5. Keep Kip's raw token only in Kip's protected PC environment.
@@ -215,7 +219,7 @@ HTTPS API becomes the single operational room during one controlled cutover:
    Every result must say `https-room`; `local-state` means that identity has
    not cut over yet.
 9. Post one migration receipt and require the agents to re-acknowledge the new
-   remote room before retiring Agent Mail as the default fallback.
+   remote room. Keep Agent Mail as a fallback and audit path.
 
 The proxy refuses non-HTTPS upstreams, redirects, missing identities, malformed
 configuration, and credential files readable by another user. Removing or

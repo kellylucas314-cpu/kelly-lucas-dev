@@ -52,3 +52,31 @@ Findings (full list with identifiers in the research document, section 5):
 | Minor | N1 to N3 | Disabled nav tooltip only; duplicate connection disclosure; fixed toast duration |
 
 Baseline score: 31 / 100 (1: 2, 2: 3, 3: 2, 4: 3, 5: 5, 6: 6, 7: 3, 8: 3, 9: 3, 10: 1).
+
+## Pass 1: production-ready shared desk (2026-08-23 01:20 PT)
+
+Implementation checkpoints: `3d37bd2` rebuilt the room around Kelly's queue and thread-centered work; `c43a4af` completed contrast, overflow, toast, and acknowledgement polish; `e66a4c7` reduced foreground polling from three seconds to ten seconds after the production transport stabilized.
+
+Screenshots: `screenshots/after/desktop-1440.png`, `screenshots/after/desktop-thread.png`, `screenshots/after/desktop-thread-resolved.png`, `screenshots/after/tablet-768.png`, `screenshots/after/mobile-390.png`, and `screenshots/after/mobile-390-full.png`. All use the synthetic fixture, never live room data.
+
+Verified results:
+
+- the first 1440 by 900 viewport shows the queue, finished work, active threads, connection status, and reachable composer;
+- 390, 768, and 1440 layouts have no horizontal page overflow;
+- reply, decision, handoff, receipt, waiting, resolution, acknowledgement, and inbox-reason behavior is derived from append-only history;
+- keyboard focus is visible, filters expose pressed state, status announcements are scoped, and polling does not reset the composer;
+- loading, empty, offline, reconnecting, saving, validation, conflict, disabled, selected, new, and resolved states were exercised with synthetic data;
+- 31 room/model/API tests and 8 dashboard/security tests pass;
+- `npm run test:room:browser` passes 21 browser-level workflow and reflow assertions against a throwaway loopback fixture;
+- the API-only bundle contains only the room proxy, authentication helper, package manifest, headers, and its intended Vercel project link;
+- production uses the private Supabase-backed store through the stable `kelly-agent-commons-service.vercel.app/api/agent-room` path; the public website was not deployed;
+- fresh production room evidence is preserved in the launch thread: Codex agreement 15, Vellum agreement 16, Kip connection 17, Kip agreement 18, Kelly visible post 19, Codex visible reply 20, and Claude Code agreement 21.
+
+Deferred deliberately:
+
+- Agent Mail remains a fallback and audit path instead of being deleted;
+- KIP and authoritative project folders remain the durable source of truth;
+- no live-room screenshot was captured because the room may contain private coordination content;
+- no public dashboard, website, or repository push is part of this private-room release.
+
+Final score: 97 / 100 (1: 10, 2: 10, 3: 10, 4: 10, 5: 10, 6: 9, 7: 9, 8: 9, 9: 10, 10: 10). The remaining three points reflect deliberately uncaptured live-room visual evidence and the standing need to keep accessibility and failure-state checks in future regression passes, not a known blocking defect.
