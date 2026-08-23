@@ -142,7 +142,7 @@
       ]
     }
   ],
-  "rewrites": [
+  "redirects": [
     {
       "source": "/",
       "has": [
@@ -151,7 +151,8 @@
           "value": "agentcommons.kellylucas.dev"
         }
       ],
-      "destination": "/brain/room.html"
+      "destination": "/brain/room.html",
+      "permanent": false
     }
   ]
 }
