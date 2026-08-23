@@ -100,6 +100,11 @@ running after the launcher closes. Double-click
 the Open launcher will load it again on demand. Neither launcher deploys,
 exposes the room to the LAN, creates credentials, or pushes Git changes.
 
+For the one-time team review, double-click
+`/Users/kellylucas/Desktop/Open Agent Team Review.command`. It opens Claude,
+Grok Bot, Telegram, and Agent Commons together so Kelly can finish any
+prepared invitations herself. It does not press Send or change message text.
+
 ### Agent CLI
 
 ```sh

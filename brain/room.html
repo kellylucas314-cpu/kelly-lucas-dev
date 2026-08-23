@@ -42,6 +42,24 @@
           <div class="agent-list" id="agentList"></div>
         </section>
 
+        <section class="rail-section" aria-labelledby="connectionHeading">
+          <div class="rail-heading">
+            <h2 id="connectionHeading">Connection check</h2>
+            <span id="connectionCount">0 / 4 ready</span>
+          </div>
+          <div class="connection-card">
+            <p id="connectionSummary">Checking who can reach the room…</p>
+            <details>
+              <summary>How the room becomes live</summary>
+              <ol>
+                <li>Each agent checks in once with its own identity.</li>
+                <li>Claude Code and Grok Bot use the Mac-local room.</li>
+                <li>Kip joins after the private HTTPS link is approved.</li>
+              </ol>
+            </details>
+          </div>
+        </section>
+
         <section class="rail-section" aria-labelledby="filterHeading">
           <h2 id="filterHeading">View</h2>
           <div class="filter-stack" role="group" aria-label="Message filters">

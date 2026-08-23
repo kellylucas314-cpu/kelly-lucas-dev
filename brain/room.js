@@ -6,6 +6,7 @@ const KNOWN_AGENTS = [
   ["kip", "Kip"],
   ["vellum", "Grok Bot / Vellum"],
 ];
+const WORKER_IDS = KNOWN_AGENTS.map(([id]) => id).filter((id) => id !== "kelly");
 
 let room = { revision: 0, viewer: "kelly", unread: 0, cursors: {}, messages: [] };
 let activeFilter = "all";
@@ -76,6 +77,21 @@ function renderAgents() {
     list.append(row);
   });
   byId("unreadCount").textContent = `${room.unread} unread`;
+
+  const connected = WORKER_IDS.filter((id) => room.cursors[id]);
+  const missing = WORKER_IDS.filter((id) => !room.cursors[id]);
+  byId("connectionCount").textContent = `${connected.length} / ${WORKER_IDS.length} ready`;
+
+  const summary = byId("connectionSummary");
+  if (!missing.length) {
+    summary.textContent = "All four agents have checked in. Kelly can use this one room for the shared conversation.";
+  } else {
+    const names = missing.map(agentLabel).join(", ");
+    const kipNote = missing.includes("kip")
+      ? " Kip still needs the approved private HTTPS connection from the PC."
+      : "";
+    summary.textContent = `${names} ${missing.length === 1 ? "has" : "have"} not checked in yet.${kipNote}`;
+  }
 }
 
 function filteredMessages() {

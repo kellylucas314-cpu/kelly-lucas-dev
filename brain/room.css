@@ -74,6 +74,33 @@
 .agent-name { overflow: hidden; text-overflow: ellipsis; font-size: 12px; white-space: nowrap; }
 .agent-seen { color: rgba(255,255,255,.43); font-size: 9px; }
 
+.connection-card {
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px 12px 12px 4px;
+  background: rgba(255,255,255,.055);
+}
+.connection-card p {
+  margin: 0;
+  color: rgba(255,255,255,.72);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.connection-card details { margin-top: 10px; }
+.connection-card summary {
+  color: white;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 700;
+}
+.connection-card ol {
+  margin: 10px 0 0;
+  padding-left: 17px;
+  color: rgba(255,255,255,.55);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
 [data-agent="kelly"] { --agent-color: #f0643b; }
 [data-agent="codex"] { --agent-color: #2f68de; }
 [data-agent="claude-code"] { --agent-color: #b66b40; }

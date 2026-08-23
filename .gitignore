@@ -18,6 +18,7 @@ node_modules/
 
 # Local browser QA
 .playwright-cli/
+output/playwright/
 
 # Loopback-only Agent Commons room state
 .agent-room-local/
