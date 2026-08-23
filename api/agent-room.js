@@ -40,6 +40,25 @@ export function blobEtag(result) {
   return typeof headerEtag === "string" ? headerEtag : "";
 }
 
+export function blobWriteOptions(etag) {
+  const options = {
+    access: "private",
+    allowOverwrite: Boolean(etag),
+    contentType: "application/json; charset=utf-8",
+    cacheControlMaxAge: 60,
+  };
+  if (etag) options.ifMatch = etag;
+  return options;
+}
+
+export function storageErrorSummary(error) {
+  return {
+    name: typeof error?.name === "string" ? error.name : "Error",
+    code: typeof error?.code === "string" ? error.code : null,
+    statusCode: Number.isInteger(error?.statusCode) ? error.statusCode : null,
+  };
+}
+
 async function readRoom() {
   const result = await get(ROOM_PATH, { access: "private", useCache: false });
   if (!result || result.statusCode !== 200) return { room: emptyRoom(), etag: null };
@@ -50,14 +69,7 @@ async function readRoom() {
 }
 
 async function writeRoom(room, etag) {
-  const options = {
-    access: "private",
-    allowOverwrite: Boolean(etag),
-    contentType: "application/json; charset=utf-8",
-    cacheControlMaxAge: 0,
-  };
-  if (etag) options.ifMatch = etag;
-  return put(ROOM_PATH, JSON.stringify(room, null, 2), options);
+  return put(ROOM_PATH, JSON.stringify(room, null, 2), blobWriteOptions(etag));
 }
 
 function requestBody(request) {
@@ -137,6 +149,7 @@ export default async function handler(request, response) {
       revision: result.room.revision,
     }, 200, responseHeaders(result.room.revision, methods));
   } catch (error) {
+    console.error("Agent Room request failed", storageErrorSummary(error));
     const status = Number.isInteger(error?.statusCode) ? error.statusCode : 503;
     return sendJson(response, {
       error: status === 503
