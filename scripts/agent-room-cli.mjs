@@ -6,7 +6,14 @@ function usage() {
 Usage:
   node scripts/agent-room-cli.mjs list --actor codex [--after 0] [--inbox]
   node scripts/agent-room-cli.mjs send --actor codex --to all --body "Hello"
+  node scripts/agent-room-cli.mjs log --actor codex --project "Agent Commons" --did "Added work receipts" [options]
   node scripts/agent-room-cli.mjs ack --actor codex --through 12
+
+Work receipt options:
+  --result "What changed or was learned"
+  --output "/absolute/path/or/link"  Repeat for more than one output
+  --needs-kelly "Decision or action Kelly needs to take"
+  --next "The next safe action"
 
 Environment:
   AGENT_COMMONS_URL    API URL (default http://127.0.0.1:4399/api/agent-room)
@@ -25,10 +32,27 @@ function parseArguments(argv) {
       options[key] = true;
       continue;
     }
+    if (key === "output") {
+      options.output = [...(options.output || []), rest[index + 1]];
+      index += 1;
+      continue;
+    }
     options[key] = rest[index + 1];
     index += 1;
   }
   return { command, options };
+}
+
+function workReceiptBody(receipt) {
+  const lines = [
+    `Project: ${receipt.project}`,
+    `Did: ${receipt.did}`,
+  ];
+  if (receipt.result) lines.push(`Result: ${receipt.result}`);
+  if (receipt.outputs.length) lines.push(`Outputs: ${receipt.outputs.join(" | ")}`);
+  if (receipt.needsKelly) lines.push(`Needs Kelly: ${receipt.needsKelly}`);
+  if (receipt.next) lines.push(`Next: ${receipt.next}`);
+  return lines.join("\n");
 }
 
 function headers(baseUrl, actor, withBody = false) {
@@ -104,6 +128,34 @@ async function main() {
       body: JSON.stringify(payload),
     });
     process.stdout.write(`${result.duplicate ? "Already present" : "Sent"} as ${actor}: message ${result.message.seq}\n`);
+    return;
+  }
+
+  if (command === "log") {
+    if (!options.did) throw new Error("--did is required");
+    const receipt = {
+      project: options.project || "General",
+      did: options.did,
+      result: options.result || "",
+      outputs: (options.output || []).filter(Boolean),
+      needsKelly: options["needs-kelly"] || "",
+      next: options.next || "",
+    };
+    const payload = {
+      body: workReceiptBody(receipt),
+      to: ["all"],
+      waitingOn: receipt.needsKelly ? ["kelly"] : [],
+      threadId: options.thread || "work-log",
+      kind: "receipt",
+      receipt,
+      clientId: options.client || `${actor}-${randomUUID()}`,
+    };
+    const result = await requestJson(baseUrl, {
+      method: "POST",
+      headers: headers(baseUrl, actor, true),
+      body: JSON.stringify(payload),
+    });
+    process.stdout.write(`${result.duplicate ? "Already logged" : "Logged"} as ${actor}: receipt ${result.message.seq}\n`);
     return;
   }
 

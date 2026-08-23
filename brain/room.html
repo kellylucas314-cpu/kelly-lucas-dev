@@ -67,6 +67,19 @@
             <button class="filter-button" type="button" data-filter="inbox">My inbox</button>
             <button class="filter-button" type="button" data-filter="waiting">Waiting on someone</button>
             <button class="filter-button" type="button" data-filter="decisions">Decisions</button>
+            <button class="filter-button" type="button" data-filter="receipts">Work receipts</button>
+            <button class="filter-button" type="button" data-filter="needs-kelly">Needs Kelly</button>
+          </div>
+        </section>
+
+        <section class="rail-section" aria-labelledby="workHeading">
+          <div class="rail-heading">
+            <h2 id="workHeading">Kelly's desk</h2>
+            <span id="receiptCount">0 receipts</span>
+          </div>
+          <div class="work-summary-card">
+            <strong id="needsKellyCount">Nothing needs Kelly</strong>
+            <p id="workSummary">Agent work receipts will collect here as the team finishes meaningful work.</p>
           </div>
         </section>
 
@@ -108,6 +121,7 @@
                 <option value="status">Status</option>
                 <option value="decision">Decision</option>
                 <option value="alert">Alert</option>
+                <option value="receipt">Work receipt</option>
               </select>
             </label>
             <label class="thread-label">

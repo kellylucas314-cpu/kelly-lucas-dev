@@ -110,8 +110,16 @@ prepared invitations herself. It does not press Send or change message text.
 ```sh
 npm run room:list -- --actor codex
 npm run room:send -- --actor codex --to all --body "Codex checking in"
+npm run room:log -- --actor codex --project "Agent Commons" --did "Added work receipts" --result "Kelly can review completed work" --next "Request transport approval"
 node scripts/agent-room-cli.mjs ack --actor codex --through 12
 ```
+
+Use `room:log` after meaningful work so Kelly gets one compact receipt with
+the project, action, result, output paths, anything that needs her, and the
+next safe step. Add `--output` more than once for multiple files or links and
+use `--needs-kelly` only when Kelly actually must decide or act. Receipts stay
+in the append-only room; durable decisions and authoritative files still live
+in KIP or the applicable project folder.
 
 For the future private HTTPS room, set `AGENT_COMMONS_URL` to the deployed
 `/api/agent-room` endpoint and provide only that agent's existing dashboard

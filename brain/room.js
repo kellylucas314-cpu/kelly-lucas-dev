@@ -94,6 +94,24 @@ function renderAgents() {
   }
 }
 
+function needsKelly(message) {
+  return message.waitingOn.includes("kelly") || Boolean(message.receipt?.needsKelly);
+}
+
+function renderWorkSummary() {
+  const receipts = room.messages.filter((message) => message.kind === "receipt");
+  const waiting = receipts.filter(needsKelly);
+  byId("receiptCount").textContent = `${receipts.length} ${receipts.length === 1 ? "receipt" : "receipts"}`;
+  byId("needsKellyCount").textContent = waiting.length
+    ? `${waiting.length} ${waiting.length === 1 ? "item needs" : "items need"} Kelly`
+    : "Nothing needs Kelly";
+
+  const latest = receipts.at(-1);
+  byId("workSummary").textContent = latest
+    ? `Latest: ${agentLabel(latest.from)} · ${latest.receipt?.project || "General"} · ${latest.receipt?.did || latest.body}`
+    : "Agent work receipts will collect here as the team finishes meaningful work.";
+}
+
 function filteredMessages() {
   if (activeFilter === "inbox") {
     return room.messages.filter((message) => (
@@ -102,7 +120,29 @@ function filteredMessages() {
   }
   if (activeFilter === "waiting") return room.messages.filter((message) => message.waitingOn.length);
   if (activeFilter === "decisions") return room.messages.filter((message) => message.kind === "decision");
+  if (activeFilter === "receipts") return room.messages.filter((message) => message.kind === "receipt");
+  if (activeFilter === "needs-kelly") return room.messages.filter(needsKelly);
   return room.messages;
+}
+
+function appendReceiptField(container, label, value, className = "") {
+  if (!value || (Array.isArray(value) && !value.length)) return;
+  const term = document.createElement("dt");
+  term.textContent = label;
+  const detail = document.createElement("dd");
+  if (className) detail.className = className;
+  if (Array.isArray(value)) {
+    const list = document.createElement("ul");
+    value.forEach((item) => {
+      const row = document.createElement("li");
+      row.textContent = item;
+      list.append(row);
+    });
+    detail.append(list);
+  } else {
+    detail.textContent = value;
+  }
+  container.append(term, detail);
 }
 
 function renderMessages({ scroll = false } = {}) {
@@ -124,6 +164,8 @@ function renderMessages({ scroll = false } = {}) {
     const item = document.createElement("li");
     item.className = "message-item";
     item.dataset.agent = message.from;
+    if (message.kind === "receipt") item.classList.add("receipt-item");
+    if (needsKelly(message)) item.classList.add("needs-kelly");
 
     const avatar = document.createElement("span");
     avatar.className = "message-avatar";
@@ -141,16 +183,29 @@ function renderMessages({ scroll = false } = {}) {
     const kind = document.createElement("span");
     kind.className = "message-kind";
     kind.dataset.kind = message.kind;
-    kind.textContent = message.kind;
+    kind.textContent = message.kind === "receipt" ? "work receipt" : message.kind;
     const time = document.createElement("time");
     time.className = "message-time";
     time.dateTime = message.createdAt;
     time.textContent = formatTime(message.createdAt);
     header.append(sender, route, kind, time);
 
-    const body = document.createElement("p");
-    body.className = "message-body";
-    body.textContent = message.body;
+    let body;
+    if (message.kind === "receipt") {
+      const receipt = message.receipt || { project: "General", did: message.body };
+      body = document.createElement("dl");
+      body.className = "receipt-grid";
+      appendReceiptField(body, "Project", receipt.project);
+      appendReceiptField(body, "Did", receipt.did);
+      appendReceiptField(body, "Result", receipt.result);
+      appendReceiptField(body, "Outputs", receipt.outputs, "receipt-outputs");
+      appendReceiptField(body, "Needs Kelly", receipt.needsKelly, "receipt-needs");
+      appendReceiptField(body, "Next", receipt.next);
+    } else {
+      body = document.createElement("p");
+      body.className = "message-body";
+      body.textContent = message.body;
+    }
 
     const footer = document.createElement("footer");
     footer.className = "message-footer";
@@ -206,6 +261,7 @@ async function loadRoom({ quiet = false, scroll = false } = {}) {
     byId("viewerLabel").textContent = `viewer ${agentLabel(room.viewer)}`;
     byId("revisionLabel").textContent = `revision ${room.revision}`;
     renderAgents();
+    renderWorkSummary();
     if (changed || !quiet) renderMessages({ scroll: scroll || changed });
     setConnection("", "room live");
     await acknowledgeLatest();

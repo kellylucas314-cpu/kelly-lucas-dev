@@ -72,3 +72,31 @@ test("stored room data is sanitized without executing or trusting message conten
   assert.equal(room.cursors.codex.seq, 1);
   assert.equal(room.nextSeq, 2);
 });
+
+test("work receipts preserve Kelly-focused fields without trusting the claimed sender", () => {
+  const logged = appendMessage(emptyRoom(), {
+    from: "kip",
+    kind: "receipt",
+    body: "Added the work log",
+    waitingOn: ["kelly"],
+    receipt: {
+      project: "Agent Commons",
+      did: "Added structured receipts",
+      result: "Kelly can filter completed work",
+      outputs: ["/tmp/one", "/tmp/one", "/tmp/two"],
+      needsKelly: "Review the private transport decision",
+      next: "Connect Kip after approval",
+    },
+  }, "codex", {
+    now: "2026-08-23T05:00:00.000Z",
+    idFactory: () => "receipt-one",
+  });
+
+  assert.equal(logged.message.from, "codex");
+  assert.equal(logged.message.kind, "receipt");
+  assert.equal(logged.message.receipt.project, "Agent Commons");
+  assert.deepEqual(logged.message.receipt.outputs, ["/tmp/one", "/tmp/two"]);
+  assert.equal(logged.message.receipt.needsKelly, "Review the private transport decision");
+  assert.deepEqual(logged.message.waitingOn, ["kelly"]);
+  assert.equal(sanitizeRoom(logged.room).messages[0].receipt.did, "Added structured receipts");
+});
