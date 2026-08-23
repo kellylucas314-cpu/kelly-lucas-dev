@@ -47,19 +47,14 @@ await mkdir(path.join(outputDirectory, "lib"), { recursive: true, mode: 0o700 })
 for (const relativePath of [
   "api/agent-room.js",
   "lib/agent-room-auth.js",
-  "lib/agent-room-model.js",
 ]) {
   await copyFile(path.join(PROJECT_ROOT, relativePath), path.join(outputDirectory, relativePath));
 }
 
-const rootPackage = JSON.parse(await readFile(path.join(PROJECT_ROOT, "package.json"), "utf8"));
 await writeFile(path.join(outputDirectory, "package.json"), `${JSON.stringify({
   name: "kelly-agent-commons-service",
   private: true,
   type: "module",
-  dependencies: {
-    "@vercel/blob": rootPackage.dependencies["@vercel/blob"],
-  },
 }, null, 2)}\n`);
 await writeFile(path.join(outputDirectory, "vercel.json"), `${JSON.stringify({
   $schema: "https://openapi.vercel.sh/vercel.json",
@@ -82,5 +77,5 @@ if (existingProjectLink) {
 }
 
 process.stdout.write(`Agent Commons API-only deploy bundle: ${outputDirectory}\n`);
-process.stdout.write("Contains only the room API, authentication, model, package manifest, and security headers.\n");
+process.stdout.write("Contains only the room proxy API, authentication, package manifest, and security headers.\n");
 if (existingProjectLink) process.stdout.write(`Preserved Vercel link to ${SERVICE_NAME}.\n`);

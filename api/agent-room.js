@@ -1,66 +1,56 @@
 import {
-  BlobPreconditionFailedError,
-  get,
-  put,
-} from "@vercel/blob";
-import { Readable } from "node:stream";
-import {
-  acknowledgeRoom,
-  appendMessage,
-  emptyRoom,
-  roomView,
-  sanitizeRoom,
-} from "../lib/agent-room-model.js";
-import {
   agentRoomActor,
   requestUrl,
   sendJson,
   unauthorized,
 } from "../lib/agent-room-auth.js";
 
-const ROOM_PATH = "agent-commons/room-v1.json";
 const MAX_BODY_BYTES = 16 * 1024;
-const MAX_WRITE_ATTEMPTS = 5;
+const STORE_TIMEOUT_MS = 10_000;
+const STORE_HOST = "zrxjhwnqekgovqxotbnl.supabase.co";
+const STORE_PATH = "/functions/v1/agent-commons-store";
 
-async function streamText(stream) {
-  const chunks = [];
-  for await (const chunk of Readable.fromWeb(stream)) {
-    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+function header(request, name) {
+  if (typeof request.headers?.get === "function") {
+    return request.headers.get(name) || "";
   }
-  return Buffer.concat(chunks).toString("utf8");
+  const value = request.headers?.[name.toLowerCase()];
+  return Array.isArray(value) ? value[0] || "" : value || "";
 }
 
-export function blobEtag(result) {
-  const nestedEtag = result?.blob?.etag;
-  if (typeof nestedEtag === "string" && nestedEtag) return nestedEtag;
-
-  const headerEtag = typeof result?.headers?.get === "function"
-    ? result.headers.get("etag")
-    : "";
-  return typeof headerEtag === "string" ? headerEtag : "";
+export function validatedStoreUrl(rawValue) {
+  let url;
+  try {
+    url = new URL(rawValue || "");
+  } catch {
+    return null;
+  }
+  if (url.protocol !== "https:" || url.hostname !== STORE_HOST ||
+      url.pathname !== STORE_PATH || url.username || url.password ||
+      url.search || url.hash) {
+    return null;
+  }
+  return url;
 }
 
-export function blobWriteOptions(etag) {
-  const options = {
-    access: "private",
-    allowOverwrite: Boolean(etag),
-    contentType: "application/json; charset=utf-8",
-    cacheControlMaxAge: 60,
-  };
-  if (etag) options.ifMatch = etag;
-  return options;
+function requestBody(request) {
+  if (request.body === undefined || request.body === null) return "";
+  const raw = typeof request.body === "string"
+    ? request.body
+    : Buffer.isBuffer(request.body)
+      ? request.body.toString("utf8")
+      : JSON.stringify(request.body);
+  if (Buffer.byteLength(raw) > MAX_BODY_BYTES) {
+    throw Object.assign(new Error("Agent Room request is too large"), { statusCode: 413 });
+  }
+  return raw;
 }
 
-export function storageErrorSummary(error) {
-  const message = typeof error?.message === "string" ? error.message : "";
-  const fetchStatus = message.match(/^Vercel Blob: Failed to fetch blob: (\d{3})\b/);
+export function proxyErrorSummary(error) {
   let reason = "unknown";
-  if (fetchStatus) reason = `blob_fetch_${fetchStatus[1]}`;
-  else if (message.startsWith("Vercel Blob: No blob credentials found")) reason = "credentials_missing";
-  else if (message.startsWith("Vercel Blob: Invalid token")) reason = "credentials_invalid";
-  else if (message === "Vercel Blob: Response body is null") reason = "blob_body_missing";
-  else if (error instanceof SyntaxError) reason = "stored_json_invalid";
-
+  if (error?.name === "TimeoutError" || error?.name === "AbortError") reason = "store_timeout";
+  else if (error?.code === "store_url_invalid") reason = "store_url_invalid";
+  else if (error?.code === "store_response_invalid") reason = "store_response_invalid";
   return {
     name: typeof error?.name === "string" ? error.name : "Error",
     code: typeof error?.code === "string" ? error.code : null,
@@ -69,102 +59,74 @@ export function storageErrorSummary(error) {
   };
 }
 
-async function readRoom() {
-  const result = await get(ROOM_PATH, { access: "private", useCache: false });
-  if (!result || result.statusCode !== 200) return { room: emptyRoom(), etag: null };
-  return {
-    room: sanitizeRoom(JSON.parse(await streamText(result.stream))),
-    etag: blobEtag(result) || null,
-  };
+function responseHeaders(upstream, methods) {
+  const headers = { Allow: upstream.headers.get("allow") || methods };
+  const etag = upstream.headers.get("etag");
+  if (etag) headers.ETag = etag;
+  return headers;
 }
 
-async function writeRoom(room, etag) {
-  return put(ROOM_PATH, JSON.stringify(room, null, 2), blobWriteOptions(etag));
-}
+export function createAgentRoomHandler(options = {}) {
+  const fetchImpl = options.fetchImpl || globalThis.fetch;
+  const env = options.env || process.env;
 
-function requestBody(request) {
-  const raw = typeof request.body === "string"
-    ? request.body
-    : JSON.stringify(request.body || {});
-  if (Buffer.byteLength(raw) > MAX_BODY_BYTES) {
-    throw Object.assign(new Error("Agent Room request is too large"), { statusCode: 413 });
-  }
-  try {
-    return JSON.parse(raw);
-  } catch {
-    throw Object.assign(new Error("Request body must be valid JSON"), { statusCode: 400 });
-  }
-}
+  return async function handler(request, response) {
+    const methods = "GET, POST, PATCH";
+    if (!["GET", "POST", "PATCH"].includes(request.method)) {
+      return sendJson(response, { error: "Method not allowed" }, 405, { Allow: methods });
+    }
 
-function isWriteConflict(error) {
-  return error instanceof BlobPreconditionFailedError || error?.statusCode === 412;
-}
+    const actor = agentRoomActor(request, env);
+    if (!actor) return unauthorized(response);
 
-async function mutateRoom(mutator) {
-  for (let attempt = 1; attempt <= MAX_WRITE_ATTEMPTS; attempt += 1) {
-    const { room, etag } = await readRoom();
-    const result = mutator(room);
-    if (!result.changed) return result;
     try {
-      await writeRoom(result.room, etag);
-      return result;
-    } catch (error) {
-      if (!isWriteConflict(error) || attempt === MAX_WRITE_ATTEMPTS) throw error;
-    }
-  }
-  throw Object.assign(new Error("Agent Room is busy; retry shortly"), { statusCode: 409 });
-}
+      const store = validatedStoreUrl(env.AGENT_COMMONS_STORE_URL);
+      if (!store) throw Object.assign(new Error("Invalid Agent Commons store URL"), {
+        code: "store_url_invalid",
+      });
 
-function responseHeaders(revision, methods) {
-  return {
-    Allow: methods,
-    ETag: `W/\"room-${revision}\"`,
+      const incomingUrl = requestUrl(request);
+      store.search = incomingUrl.search;
+      const body = request.method === "GET" ? "" : requestBody(request);
+      const upstream = await fetchImpl(store, {
+        method: request.method,
+        redirect: "error",
+        signal: AbortSignal.timeout(STORE_TIMEOUT_MS),
+        headers: {
+          Authorization: header(request, "authorization"),
+          ...(body ? { "Content-Type": "application/json; charset=utf-8" } : {}),
+        },
+        body: body || undefined,
+      });
+
+      const contentType = upstream.headers.get("content-type") || "";
+      if (!contentType.toLowerCase().startsWith("application/json")) {
+        throw Object.assign(new Error("Agent Commons store returned an invalid response"), {
+          code: "store_response_invalid",
+        });
+      }
+
+      const payload = await upstream.json().catch(() => {
+        throw Object.assign(new Error("Agent Commons store returned invalid JSON"), {
+          code: "store_response_invalid",
+        });
+      });
+      return sendJson(
+        response,
+        payload,
+        upstream.status,
+        responseHeaders(upstream, methods),
+      );
+    } catch (error) {
+      console.error("Agent Room proxy request failed", proxyErrorSummary(error));
+      const status = Number.isInteger(error?.statusCode) ? error.statusCode : 503;
+      return sendJson(response, {
+        error: status === 503
+          ? "The private Agent Room is temporarily unavailable"
+          : error.message,
+      }, status);
+    }
   };
 }
 
-export default async function handler(request, response) {
-  const methods = "GET, POST, PATCH";
-  if (!["GET", "POST", "PATCH"].includes(request.method)) {
-    return sendJson(response, { error: "Method not allowed" }, 405, { Allow: methods });
-  }
-
-  const actor = agentRoomActor(request);
-  if (!actor) return unauthorized(response);
-
-  try {
-    if (request.method === "GET") {
-      const { room } = await readRoom();
-      const url = requestUrl(request);
-      const view = roomView(room, actor, {
-        after: url.searchParams.get("after"),
-        limit: url.searchParams.get("limit"),
-        inboxOnly: url.searchParams.get("inbox") === "1",
-      });
-      return sendJson(response, { ...view, transport: "https-room" }, 200, responseHeaders(view.revision, methods));
-    }
-
-    const body = requestBody(request);
-    if (request.method === "POST") {
-      const result = await mutateRoom((room) => appendMessage(room, body, actor));
-      return sendJson(response, {
-        message: result.message,
-        revision: result.room.revision,
-        duplicate: !result.changed,
-      }, result.changed ? 201 : 200, responseHeaders(result.room.revision, methods));
-    }
-
-    const result = await mutateRoom((room) => acknowledgeRoom(room, actor, body.through));
-    return sendJson(response, {
-      cursor: result.cursor,
-      revision: result.room.revision,
-    }, 200, responseHeaders(result.room.revision, methods));
-  } catch (error) {
-    console.error("Agent Room request failed", storageErrorSummary(error));
-    const status = Number.isInteger(error?.statusCode) ? error.statusCode : 503;
-    return sendJson(response, {
-      error: status === 503
-        ? "The private Agent Room is temporarily unavailable"
-        : error.message,
-    }, status);
-  }
-}
+export default createAgentRoomHandler();

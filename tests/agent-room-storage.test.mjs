@@ -1,72 +1,99 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import test from "node:test";
 import {
-  blobEtag,
-  blobWriteOptions,
-  storageErrorSummary,
+  createAgentRoomHandler,
+  proxyErrorSummary,
+  validatedStoreUrl,
 } from "../api/agent-room.js";
 
-test("the room reads the ETag from the current Vercel Blob result shape", () => {
-  assert.equal(blobEtag({
-    blob: { etag: '"nested-etag"' },
-    headers: new Headers({ etag: '"header-etag"' }),
-  }), '"nested-etag"');
+const STORE_URL = "https://zrxjhwnqekgovqxotbnl.supabase.co/functions/v1/agent-commons-store";
+
+function responseCapture() {
+  return {
+    headers: {},
+    setHeader(name, value) { this.headers[name] = value; },
+    end(value) { this.value = value; },
+  };
+}
+
+function request(method, token, body, query = "") {
+  return {
+    method,
+    url: `https://service.example/api/agent-room${query}`,
+    headers: { authorization: `Bearer ${token}`, host: "service.example" },
+    body,
+  };
+}
+
+test("the proxy accepts only the approved Supabase Edge Function URL", () => {
+  assert.equal(validatedStoreUrl(STORE_URL)?.toString(), STORE_URL);
+  for (const invalid of [
+    "http://zrxjhwnqekgovqxotbnl.supabase.co/functions/v1/agent-commons-store",
+    "https://other.supabase.co/functions/v1/agent-commons-store",
+    "https://zrxjhwnqekgovqxotbnl.supabase.co/functions/v1/other",
+    `${STORE_URL}?token=nope`,
+    "not-a-url",
+  ]) {
+    assert.equal(validatedStoreUrl(invalid), null);
+  }
 });
 
-test("the room falls back to the response ETag header", () => {
-  assert.equal(blobEtag({
-    headers: new Headers({ etag: '"header-etag"' }),
-  }), '"header-etag"');
-  assert.equal(blobEtag({}), "");
-});
-
-test("Blob writes use the supported minimum cache duration", () => {
-  assert.deepEqual(blobWriteOptions(null), {
-    access: "private",
-    allowOverwrite: false,
-    contentType: "application/json; charset=utf-8",
-    cacheControlMaxAge: 60,
+test("the Vercel API re-authenticates then forwards the scoped token and request", async () => {
+  const token = "codex-test-token-000000000000000000";
+  const calls = [];
+  const handler = createAgentRoomHandler({
+    env: {
+      AGENT_COMMONS_STORE_URL: STORE_URL,
+      AGENT_ROOM_TOKEN_HASHES: JSON.stringify({
+        codex: createHash("sha256").update(token).digest("hex"),
+      }),
+    },
+    fetchImpl: async (url, options) => {
+      calls.push({ url: url.toString(), options });
+      return new Response(JSON.stringify({ viewer: "codex", revision: 33 }), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          ETag: 'W/"room-33"',
+        },
+      });
+    },
   });
-  assert.deepEqual(blobWriteOptions('"room-etag"'), {
-    access: "private",
-    allowOverwrite: true,
-    contentType: "application/json; charset=utf-8",
-    cacheControlMaxAge: 60,
-    ifMatch: '"room-etag"',
-  });
+  const output = responseCapture();
+  await handler(request("POST", token, { body: "hello" }, "?after=4"), output);
+
+  assert.equal(output.statusCode, 200);
+  assert.equal(JSON.parse(output.value).viewer, "codex");
+  assert.equal(output.headers.ETag, 'W/"room-33"');
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].url, `${STORE_URL}?after=4`);
+  assert.equal(calls[0].options.headers.Authorization, `Bearer ${token}`);
+  assert.deepEqual(JSON.parse(calls[0].options.body), { body: "hello" });
 });
 
-test("storage diagnostics expose only safe error metadata", () => {
-  const error = Object.assign(new Error("contains private provider detail"), {
-    code: "store_suspended",
+test("the Vercel API rejects a bad token before contacting Supabase", async () => {
+  let called = false;
+  const handler = createAgentRoomHandler({
+    env: { AGENT_COMMONS_STORE_URL: STORE_URL, AGENT_ROOM_TOKEN_HASHES: "{}" },
+    fetchImpl: async () => { called = true; },
+  });
+  const output = responseCapture();
+  await handler(request("GET", "unknown-token-000000000000000000"), output);
+  assert.equal(output.statusCode, 401);
+  assert.equal(called, false);
+});
+
+test("proxy diagnostics never expose provider messages or tokens", () => {
+  const error = Object.assign(new Error("private provider message and token"), {
+    code: "store_response_invalid",
     statusCode: 503,
     token: "never-log-this",
   });
-  assert.deepEqual(storageErrorSummary(error), {
+  assert.deepEqual(proxyErrorSummary(error), {
     name: "Error",
-    code: "store_suspended",
+    code: "store_response_invalid",
     statusCode: 503,
-    reason: "unknown",
-  });
-});
-
-test("storage diagnostics classify provider failures without logging messages", () => {
-  assert.deepEqual(storageErrorSummary(new Error("Vercel Blob: Failed to fetch blob: 403 Forbidden")), {
-    name: "Error",
-    code: null,
-    statusCode: null,
-    reason: "blob_fetch_403",
-  });
-  assert.deepEqual(storageErrorSummary(new Error("Vercel Blob: No blob credentials found. secret detail")), {
-    name: "Error",
-    code: null,
-    statusCode: null,
-    reason: "credentials_missing",
-  });
-  assert.deepEqual(storageErrorSummary(new SyntaxError("unexpected private content")), {
-    name: "SyntaxError",
-    code: null,
-    statusCode: null,
-    reason: "stored_json_invalid",
+    reason: "store_response_invalid",
   });
 });

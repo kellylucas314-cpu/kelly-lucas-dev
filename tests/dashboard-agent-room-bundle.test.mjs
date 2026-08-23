@@ -30,13 +30,15 @@ test("the deploy bundle contains only the Agent Commons API service", async () =
     assert.equal(result.stderr, "");
     assert.deepEqual((await readdir(outputDirectory)).sort(), ["api", "lib", "package.json", "vercel.json"]);
     assert.deepEqual(await readdir(path.join(outputDirectory, "api")), ["agent-room.js"]);
-    assert.deepEqual((await readdir(path.join(outputDirectory, "lib"))).sort(), ["agent-room-auth.js", "agent-room-model.js"]);
+    assert.deepEqual(await readdir(path.join(outputDirectory, "lib")), ["agent-room-auth.js"]);
 
     const packageFile = JSON.parse(await readFile(path.join(outputDirectory, "package.json"), "utf8"));
     assert.equal(packageFile.name, "kelly-agent-commons-service");
-    assert.ok(packageFile.dependencies["@vercel/blob"]);
+    assert.equal(packageFile.dependencies, undefined);
     const handler = await readFile(path.join(outputDirectory, "api", "agent-room.js"), "utf8");
     assert.match(handler, /agentRoomActor/);
+    assert.match(handler, /AGENT_COMMONS_STORE_URL/);
+    assert.doesNotMatch(handler, /@vercel\/blob/iu);
     assert.doesNotMatch(handler, /magpie/iu);
   } finally {
     await rm(directory, { recursive: true, force: true });
