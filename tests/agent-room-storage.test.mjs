@@ -46,5 +46,27 @@ test("storage diagnostics expose only safe error metadata", () => {
     name: "Error",
     code: "store_suspended",
     statusCode: 503,
+    reason: "unknown",
+  });
+});
+
+test("storage diagnostics classify provider failures without logging messages", () => {
+  assert.deepEqual(storageErrorSummary(new Error("Vercel Blob: Failed to fetch blob: 403 Forbidden")), {
+    name: "Error",
+    code: null,
+    statusCode: null,
+    reason: "blob_fetch_403",
+  });
+  assert.deepEqual(storageErrorSummary(new Error("Vercel Blob: No blob credentials found. secret detail")), {
+    name: "Error",
+    code: null,
+    statusCode: null,
+    reason: "credentials_missing",
+  });
+  assert.deepEqual(storageErrorSummary(new SyntaxError("unexpected private content")), {
+    name: "SyntaxError",
+    code: null,
+    statusCode: null,
+    reason: "stored_json_invalid",
   });
 });

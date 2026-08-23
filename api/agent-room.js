@@ -52,10 +52,20 @@ export function blobWriteOptions(etag) {
 }
 
 export function storageErrorSummary(error) {
+  const message = typeof error?.message === "string" ? error.message : "";
+  const fetchStatus = message.match(/^Vercel Blob: Failed to fetch blob: (\d{3})\b/);
+  let reason = "unknown";
+  if (fetchStatus) reason = `blob_fetch_${fetchStatus[1]}`;
+  else if (message.startsWith("Vercel Blob: No blob credentials found")) reason = "credentials_missing";
+  else if (message.startsWith("Vercel Blob: Invalid token")) reason = "credentials_invalid";
+  else if (message === "Vercel Blob: Response body is null") reason = "blob_body_missing";
+  else if (error instanceof SyntaxError) reason = "stored_json_invalid";
+
   return {
     name: typeof error?.name === "string" ? error.name : "Error",
     code: typeof error?.code === "string" ? error.code : null,
     statusCode: Number.isInteger(error?.statusCode) ? error.statusCode : null,
+    reason,
   };
 }
 
