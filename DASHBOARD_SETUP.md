@@ -55,9 +55,12 @@ On 2026-08-22, the dedicated Vercel project
 The ignored API-only deployment bundle is linked directly to that project;
 the repository checkout itself remains unlinked. Rebuilding the bundle
 preserves this one intended project link and refuses a mismatched link. The
-project still has no Agent Commons Blob store, environment variables,
-credentials, or deployment. Do not recreate it, and do not use the existing
-public website project for this transport.
+private Blob store `agent-commons-room` is connected in `iad1`, with its
+encrypted `BLOB_READ_WRITE_TOKEN` available only to Production and Preview.
+The CLI's unnecessary local `.env.local` download was removed; do not pull the
+Blob token into local development. The project still has no actor credentials
+or deployment. Do not recreate either project or store, and do not use the
+existing public website project for this transport.
 
 ## Agent API
 
