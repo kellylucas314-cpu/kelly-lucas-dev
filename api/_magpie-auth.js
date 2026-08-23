@@ -1,4 +1,5 @@
 import {
+  createHash,
   createHmac,
   scryptSync,
   timingSafeEqual,
@@ -87,6 +88,33 @@ export function isAuthenticated(request) {
   } catch {
     return false;
   }
+}
+
+function dashboardTokenHashes() {
+  try {
+    const parsed = JSON.parse(process.env.DASHBOARD_AGENT_TOKEN_HASHES || "{}");
+    if (!parsed || Array.isArray(parsed) || typeof parsed !== "object") return {};
+    return parsed;
+  } catch {
+    return {};
+  }
+}
+
+export function dashboardActor(request) {
+  if (isAuthenticated(request)) return "kelly";
+
+  const authorization = header(request, "authorization");
+  if (!authorization.startsWith("Bearer ")) return "";
+  const token = authorization.slice(7).trim();
+  if (token.length < 24 || token.length > 512) return "";
+
+  const actual = createHash("sha256").update(token).digest("hex");
+  for (const [actor, expected] of Object.entries(dashboardTokenHashes())) {
+    if (!/^[a-z][a-z0-9_-]{1,31}$/i.test(actor)) continue;
+    if (typeof expected !== "string" || !/^[a-f0-9]{64}$/i.test(expected)) continue;
+    if (safeEqual(actual.toLowerCase(), expected.toLowerCase())) return actor.toLowerCase();
+  }
+  return "";
 }
 
 export function verifyPassword(password) {

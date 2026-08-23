@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Kelly's Shared Desk</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='7' fill='%23272621'/%3E%3Cpath d='M8 6v12M8 13l7-7M10.5 11l5.5 7' fill='none' stroke='%23fffdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/brain/dashboard.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="/brain/dashboard.html" aria-label="Kelly's shared desk home">
+        <span class="brand-mark" aria-hidden="true">K</span>
+        <span>
+          <strong>Kelly's shared desk</strong>
+          <small>one live list · humans + agents</small>
+        </span>
+      </a>
+      <nav class="top-actions" aria-label="Private workspace navigation">
+        <a href="/brain/room.html">Agent room</a>
+        <a href="/brain/gallery.html">Magpie</a>
+        <span class="presence" id="presence">connecting</span>
+        <button class="quiet-button" id="lockButton" type="button">Lock</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="focus-panel" aria-labelledby="focusHeading">
+        <div class="focus-label">
+          <span class="eyebrow">Right now</span>
+          <h1 id="focusHeading">What moves the day forward?</h1>
+        </div>
+        <div class="focus-editor">
+          <textarea id="focusInput" rows="2" maxlength="500" placeholder="Write the one thing that deserves the front of your brain."></textarea>
+          <button class="primary-button" id="saveFocus" type="button">Set focus</button>
+        </div>
+        <div class="focus-meta" id="focusMeta">Private · loading the shared view</div>
+      </section>
+
+      <section class="dashboard-summary" aria-label="Task summary">
+        <div><strong id="openCount">0</strong><span>open</span></div>
+        <div><strong id="urgentCount">0</strong><span>urgent</span></div>
+        <div><strong id="doneCount">0</strong><span>finished</span></div>
+        <button class="add-task-button" id="newTaskButton" type="button"><span>＋</span> Add a task</button>
+      </section>
+
+      <section class="board" aria-label="Shared task board">
+        <article class="lane lane-now" data-status="now">
+          <header>
+            <div><span class="lane-dot"></span><h2>Do next</h2></div>
+            <span class="lane-count">0</span>
+          </header>
+          <p class="lane-note">The short list. If everything is here, nothing is here.</p>
+          <div class="task-list" id="tasks-now"></div>
+        </article>
+
+        <article class="lane lane-progress" data-status="in-progress">
+          <header>
+            <div><span class="lane-dot"></span><h2>In motion</h2></div>
+            <span class="lane-count">0</span>
+          </header>
+          <p class="lane-note">Work already started, with the next edge made visible.</p>
+          <div class="task-list" id="tasks-in-progress"></div>
+        </article>
+
+        <article class="lane lane-waiting" data-status="waiting">
+          <header>
+            <div><span class="lane-dot"></span><h2>Waiting</h2></div>
+            <span class="lane-count">0</span>
+          </header>
+          <p class="lane-note">Blocked, delegated, or waiting for a decision.</p>
+          <div class="task-list" id="tasks-waiting"></div>
+        </article>
+
+        <article class="lane lane-later" data-status="later">
+          <header>
+            <div><span class="lane-dot"></span><h2>Parked safely</h2></div>
+            <span class="lane-count">0</span>
+          </header>
+          <p class="lane-note">Still real. Just not allowed to shout today.</p>
+          <div class="task-list" id="tasks-later"></div>
+        </article>
+      </section>
+
+      <details class="done-drawer">
+        <summary><span>Finished</span><span id="doneDrawerCount">0 items</span></summary>
+        <div class="done-list" id="tasks-done"></div>
+      </details>
+
+      <section class="lower-grid">
+        <article class="desk-card links-card">
+          <header class="card-heading">
+            <div><span class="eyebrow">Reference shelf</span><h2>Links</h2></div>
+            <button class="mini-button" id="showLinkForm" type="button">Add</button>
+          </header>
+          <form class="inline-form" id="linkForm" hidden>
+            <label>Label <input name="title" maxlength="160" required></label>
+            <label>URL <input name="url" type="url" maxlength="2048" placeholder="https://" required></label>
+            <label>Note <input name="note" maxlength="600"></label>
+            <div><button class="primary-button" type="submit">Save link</button><button class="text-button cancel-inline" type="button">Cancel</button></div>
+          </form>
+          <div class="link-list" id="linkList"></div>
+        </article>
+
+        <article class="desk-card context-card">
+          <header class="card-heading">
+            <div><span class="eyebrow">Shared context</span><h2>What collaborators should know</h2></div>
+            <button class="mini-button" id="showContextForm" type="button">Add</button>
+          </header>
+          <form class="inline-form" id="contextForm" hidden>
+            <label>Heading <input name="title" maxlength="160" required></label>
+            <label>Context <textarea name="body" rows="4" maxlength="6000" required></textarea></label>
+            <div><button class="primary-button" type="submit">Share context</button><button class="text-button cancel-inline" type="button">Cancel</button></div>
+          </form>
+          <div class="context-list" id="contextList"></div>
+        </article>
+
+        <article class="desk-card activity-card">
+          <header class="card-heading">
+            <div><span class="eyebrow">Quiet accountability</span><h2>Recent changes</h2></div>
+          </header>
+          <ol class="activity-list" id="activityList"></ol>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <span>Private workspace on kellylucas.dev</span>
+      <span id="revisionLabel">revision —</span>
+    </footer>
+  </div>
+
+  <dialog class="task-dialog" id="taskDialog" aria-labelledby="taskDialogTitle">
+    <form method="dialog" id="taskForm">
+      <header>
+        <div><span class="eyebrow">Task card</span><h2 id="taskDialogTitle">Add a task</h2></div>
+        <button class="dialog-close" value="cancel" aria-label="Close">×</button>
+      </header>
+      <input type="hidden" name="id">
+      <label>What needs doing? <input name="title" maxlength="240" required autofocus></label>
+      <label>Useful context <textarea name="details" rows="4" maxlength="2400" placeholder="What is the next concrete edge? What should an agent know?"></textarea></label>
+      <div class="form-row">
+        <label>Project <input name="project" maxlength="80" placeholder="Personal, work, side project…"></label>
+        <label>Due <input name="due" maxlength="40" placeholder="Tonight, Aug 22…"></label>
+      </div>
+      <div class="form-row">
+        <label>Status
+          <select name="status">
+            <option value="now">Do next</option>
+            <option value="in-progress">In motion</option>
+            <option value="waiting">Waiting</option>
+            <option value="later">Parked safely</option>
+            <option value="done">Finished</option>
+          </select>
+        </label>
+        <label>Priority
+          <select name="priority">
+            <option value="normal">Normal</option>
+            <option value="urgent">Urgent</option>
+            <option value="high">High</option>
+            <option value="low">Low</option>
+          </select>
+        </label>
+      </div>
+      <div class="dialog-actions">
+        <button class="danger-button" id="deleteTask" type="button" hidden>Delete</button>
+        <span></span>
+        <button class="text-button" value="cancel">Cancel</button>
+        <button class="primary-button" id="saveTask" value="default">Save task</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="/brain/dashboard.js"></script>
+</body>
+</html>
