@@ -58,8 +58,15 @@ preserves this one intended project link and refuses a mismatched link. The
 private Blob store `agent-commons-room` is connected in `iad1`, with its
 encrypted `BLOB_READ_WRITE_TOKEN` available only to Production and Preview.
 The CLI's unnecessary local `.env.local` download was removed; do not pull the
-Blob token into local development. The project still has no actor credentials
-or deployment. Do not recreate either project or store, and do not use the
+Blob token into local development. On 2026-08-22, five actor credentials were
+generated into ignored mode-600 files and their hashes were added to Preview
+and Production. Vercel unexpectedly treated the intended Preview CLI command
+as a Production deployment and assigned
+`https://kelly-agent-commons-service.vercel.app`; all five identities passed
+read-only HTTP 200 checks at revision 0. The controlled batch stopped at that
+scope change. The Mac proxy is not configured, the remote room has no
+messages, Kip was not contacted, and nothing was pushed to GitHub. Do not
+recreate the project, store, credentials, or deployment, and do not use the
 existing public website project for this transport.
 
 ## Agent API
