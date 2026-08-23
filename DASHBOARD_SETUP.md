@@ -91,6 +91,15 @@ local test state under ignored `.agent-room-local/`. This immediate mode lets
 Codex, Claude Code, and Vellum's Mac local-exec gateway use one room without a
 Git commit or GitHub round trip.
 
+On Kelly's Mac, double-click
+`/Users/kellylucas/Desktop/Open Agent Commons.command`. It starts the same
+loopback-only server as the per-user macOS service
+`com.kellylucas.agent-commons` and opens the room in Chrome. The service keeps
+running after the launcher closes. Double-click
+`/Users/kellylucas/Desktop/Stop Agent Commons.command` to stop and unload it;
+the Open launcher will load it again on demand. Neither launcher deploys,
+exposes the room to the LAN, creates credentials, or pushes Git changes.
+
 ### Agent CLI
 
 ```sh
