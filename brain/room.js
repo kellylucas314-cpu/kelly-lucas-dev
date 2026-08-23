@@ -1,5 +1,5 @@
 const API = "/api/agent-room";
-const POLL_MS = 3000;
+const POLL_MS = 10000;
 const KNOWN_AGENTS = [
   ["kelly", "Kelly"],
   ["codex", "Codex"],
