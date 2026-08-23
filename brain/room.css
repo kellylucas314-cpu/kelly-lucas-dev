@@ -865,12 +865,11 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 
 /* ---------- the board: one column per seat, cards are conversations ---------- */
 
-.board-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
-.board-hint { color: var(--muted); font-size: 14px; }
+.board-bar { display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin: -6px 0 12px; flex-wrap: wrap; }
 .board {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  align-items: stretch;
+  gap: 10px;
   margin: 0 -8px;
   padding: 2px 8px 16px;
   overflow-x: auto;
@@ -878,7 +877,7 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
   -webkit-overflow-scrolling: touch;
 }
 .board-column {
-  flex: 0 0 246px;
+  flex: 0 0 228px;
   min-width: 0;
   display: grid;
   gap: 8px;
@@ -1218,10 +1217,11 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 }
 
 @media (max-width: 620px) {
-  .board { margin: 0 -14px; padding: 2px 14px 16px; scroll-snap-type: x mandatory; }
+  /* On the phone columns hug their cards; a tall empty slab is just scroll. */
+  .board { align-items: flex-start; margin: 0 -14px; padding: 2px 14px 16px; scroll-snap-type: x mandatory; }
   .board-column { flex: 0 0 min(82vw, 300px); }
-  .board-bar { align-items: stretch; flex-direction: column; }
-  .board-bar .primary-button { min-height: 46px; }
+  .board-bar { margin-top: -2px; }
+  .board-bar .primary-button { width: 100%; min-height: 46px; }
   .react-chip, .react-add summary { min-height: 34px; min-width: 34px; }
 }
 

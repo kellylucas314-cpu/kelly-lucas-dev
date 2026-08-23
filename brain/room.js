@@ -616,9 +616,11 @@ function receiptBody(message, { calm = false } = {}) {
   ]);
 }
 
-function noteBody(message) {
+function noteBody(message, { calm = false } = {}) {
   const note = message.note || { project: "General", summary: message.body, outputs: [] };
-  const nextOwnerLine = note.nextOwner ? `${youOr(note.nextOwner, { capital: true })} ${viewerIs(note.nextOwner) ? "are" : "is"} up next` : "";
+  // In the calm feed the sender line and waiting pill already name the next
+  // owner, so the body skips the third mention.
+  const nextOwnerLine = note.nextOwner && !calm ? `${youOr(note.nextOwner, { capital: true })} ${viewerIs(note.nextOwner) ? "are" : "is"} up next` : "";
   const nextText = [note.next, nextOwnerLine].filter(Boolean).join(" · ");
   const forViewer = note.nextOwner && viewerIs(note.nextOwner);
   return el("div", {}, [
@@ -638,7 +640,7 @@ function noteBody(message) {
 
 function messageBody(message, { calm = false } = {}) {
   if (message.kind === "receipt") return receiptBody(message, { calm });
-  if (message.kind === "note" || message.kind === "handoff") return noteBody(message);
+  if (message.kind === "note" || message.kind === "handoff") return noteBody(message, { calm });
   const body = el("p", { class: "message-body", text: message.body });
   if (message.kind === "decision" && message.note?.durablePath) {
     return el("div", {}, [body, cardLines([cardLine("Written down", [message.note.durablePath], { files: true })])]);
@@ -947,10 +949,13 @@ function boardCard(thread, lastByThread) {
   if (done) metaParts.push(`wrapped up ${relativeTime(thread.resolvedAt)}`);
   else metaParts.push(`last from ${youOr(thread.lastFrom)} ${relativeTime(thread.lastAt)}`);
   if (thread.project && !thread.title.toLowerCase().includes(thread.project.toLowerCase())) metaParts.push(thread.project);
+  // The column already says whose plate this is; a pill repeats it only
+  // when the wait points somewhere else.
+  const ownColumn = boardOwner(thread) === state.room.viewer;
   const foot = done ? null : el("div", { class: "board-card-foot" }, [
     passMenu(thread),
     thread.unread ? el("span", { class: "new-pill", text: `${thread.unread} new` }) : null,
-    thread.status === "waiting" ? statusPill(thread) : null,
+    thread.status === "waiting" && !(ownColumn && needsViewer(thread)) ? statusPill(thread) : null,
   ]);
   return el("article", {
     class: "board-card",
@@ -988,7 +993,6 @@ function renderBoard() {
     if (!isReactionMessage(message)) lastByThread.set(message.threadId, message);
   }
   const bar = el("div", { class: "board-bar" }, [
-    el("p", { class: "board-hint", text: "Cards are conversations. Pass one to put it on someone's plate." }),
     el("button", { class: "primary-button", type: "button", "data-new-task": "true", text: "Give someone a task" }),
   ]);
   const columns = board.columns.map((column) => boardColumn(
@@ -1082,7 +1086,7 @@ function renderFeed() {
       nodes.push(el("li", { class: "feed-day", text: day }));
       lastDay = day;
     }
-    nodes.push(renderMessage(message, { reactions, feed: true }));
+    nodes.push(renderMessage(message, { reactions, feed: true, calm: true }));
   }
   return [el("ol", { class: "message-feed feed-list", "aria-label": "Team feed" }, nodes)];
 }
@@ -1747,6 +1751,7 @@ byId("needsKellyButton").addEventListener("click", () => {
 byId("viewContent").addEventListener("click", (event) => {
   const react = event.target.closest("[data-react]");
   if (react) {
+    react.disabled = true;
     react.closest("details")?.removeAttribute("open");
     sendReaction(react.dataset.reactTo, react.dataset.react);
     return;

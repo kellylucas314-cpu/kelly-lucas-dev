@@ -272,5 +272,24 @@ reactions parameters had to join the destructuring (first run threw
 Deliberately not done: drag-and-drop on the board (Pass menu is accessible,
 works on touch, and cannot mis-drop; drag can come later if Kelly wants),
 new easter eggs (budget respected), renaming the legacy "Work log" thread,
-and the deferred pass-7 items that need Kelly's decisions. Nothing pushed
-or deployed.
+and the deferred pass-7 items that need Kelly's decisions.
+
+Kelly said "Push it!" and pass 8 deployed as commit 3ece5c7 on main;
+the live site was verified serving the new module, font, nav, and the
+agentcommons redirect.
+
+### Pass 8 refinement loop (post-deploy, local candidates)
+
+Three screenshot-and-critique iterations at 1440, 768, and 390 against the
+fixture. Fixed, in order of impact: the board's duplicated hint line
+(subtitle said it already); triple-gold on cards in Kelly's own column
+(column tint stays, the redundant "needs you" pill goes); columns slimmed
+228px so five seats fit a 1440 view; columns stretch to equal height on
+desktop for a real board surface but hug their cards on the phone; the feed
+went calm (receipts stop shouting, a handoff names its new owner once
+instead of three times); the task button aligned with the column edge; and
+a fast double-tap on a reaction can no longer post twice. Hardening added
+to browser QA: an empty-desk pass (all seats show friendly empty lines, the
+feed shows its calm empty state) and a console-hygiene assertion (no page
+script errors across the whole run). Final: 46 room/model/board tests,
+8 dashboard tests, 40 browser assertions, `git diff --check` clean.

@@ -212,6 +212,37 @@ async function main() {
         if (shots) await cli(["screenshot", `--filename=${name}-${view}.png`], { cwd });
       }
     }
+
+    process.stdout.write("Empty desk\n");
+    const emptyState = path.join(directory, "empty.json");
+    await writeFile(emptyState, `${JSON.stringify(buildFixture("empty"), null, 2)}\n`, { mode: 0o600 });
+    const emptyServer = createLocalRoomServer({ stateFile: emptyState, upstreamConfigFile: path.join(directory, "no-upstream.json") });
+    await new Promise((resolve, reject) => {
+      emptyServer.once("error", reject);
+      emptyServer.listen(0, "127.0.0.1", resolve);
+    });
+    try {
+      const emptyOrigin = `http://127.0.0.1:${emptyServer.address().port}`;
+      await cli(["resize", "1440", "900"], { cwd });
+      await cli(["goto", `${emptyOrigin}/brain/room.html#view=board`], { cwd });
+      await wait(1500);
+      const emptyBoard = await evaluate("(() => ({ columns: document.querySelectorAll('.board-column').length, mine: [...document.querySelectorAll('.board-empty')].some((node) => node.textContent === 'Nothing on your plate.') }))()", cwd);
+      assert(emptyBoard && emptyBoard.columns >= 6 && emptyBoard.mine === true, `Empty board still shows every seat with a friendly empty line (${JSON.stringify(emptyBoard)})`, failures);
+      await cli(["goto", `${emptyOrigin}/brain/room.html#view=feed`], { cwd });
+      await wait(900);
+      const emptyFeed = await evaluate("document.querySelector('.empty-state p')?.textContent || ''", cwd);
+      assert(emptyFeed === "The desk is quiet.", `Empty feed shows its calm empty state (got ${emptyFeed})`, failures);
+    } finally {
+      await new Promise((resolve) => emptyServer.close(resolve));
+    }
+
+    process.stdout.write("Console hygiene\n");
+    const consoleOutput = await cli(["console"], { cwd });
+    const pageErrors = consoleOutput.split("\n")
+      .map((line) => line.trim())
+      .filter((line) => /^(\[ERROR\]|[A-Za-z]*Error[:\b])/.test(line))
+      .filter((line) => !/Failed to load resource/.test(line));
+    assert(pageErrors.length === 0, `No page script errors in the console (${JSON.stringify(pageErrors.slice(0, 3))})`, failures);
   } finally {
     await cli(["close"], { cwd });
     await new Promise((resolve) => server.close(resolve));
