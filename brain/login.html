@@ -125,7 +125,7 @@
 <body>
   <main>
     <div class="brand">
-      <svg width="45" height="45" viewBox="0 0 120 120" aria-hidden="true">
+      <svg id="brandIcon" width="45" height="45" viewBox="0 0 120 120" aria-hidden="true">
         <defs>
           <linearGradient id="a" x1="20%" y1="90%" x2="80%" y2="10%">
             <stop offset="0%" stop-color="#e8654f"/><stop offset="22%" stop-color="#8a5be0"/>
@@ -150,16 +150,16 @@
             d="M60 10 C60 40 60 70 58 88 C57 98 54 108 48 116"/>
         </g>
       </svg>
-      <span class="wordmark">Magpie</span>
+      <span class="wordmark" id="wordmark">Magpie</span>
       <span class="private">Private</span>
     </div>
     <div class="rule"></div>
-    <h1>Your full library, wherever you are.</h1>
-    <p>Enter your Magpie password to open your saved pages, previews, Markdown notes, and transcripts.</p>
+    <h1 id="headline">Your full library, wherever you are.</h1>
+    <p id="subline">Enter your Magpie password to open your saved pages, previews, Markdown notes, and transcripts.</p>
     <form id="loginform">
       <label class="sr-only" for="username">Username</label>
       <input class="sr-only" id="username" name="username" value="kellylucas" autocomplete="username">
-      <label for="password">Magpie password</label>
+      <label for="password" id="passwordLabel">Magpie password</label>
       <input id="password" name="password" type="password" autocomplete="current-password" required autofocus>
       <button id="submit" type="submit">Open my library</button>
       <div class="message" id="message" role="alert" aria-live="polite"></div>
@@ -171,8 +171,26 @@
     const button = document.getElementById("submit");
     const message = document.getElementById("message");
     const params = new URLSearchParams(location.search);
-    const requested = params.get("returnTo") || "/brain/gallery.html";
-    const returnTo = requested.startsWith("/brain/") ? requested : "/brain/gallery.html";
+    // One password guards the whole private wing; the door dresses for where
+    // you are headed. agentcommons.kellylucas.dev is the room's front door.
+    const roomBound = location.hostname.startsWith("agentcommons.") ||
+      (params.get("returnTo") || "").includes("room.html");
+    const fallback = roomBound ? "/brain/room.html" : "/brain/gallery.html";
+    const requested = params.get("returnTo") || fallback;
+    const returnTo = requested.startsWith("/brain/") ? requested : fallback;
+    let buttonIdle = "Open my library";
+    if (roomBound) {
+      buttonIdle = "Open the desk";
+      document.title = "Agent Commons";
+      document.getElementById("wordmark").textContent = "Agent Commons";
+      document.getElementById("headline").textContent = "Your team desk, wherever you are.";
+      document.getElementById("subline").textContent =
+        "Same password as the rest of kellylucas.dev. Sign in once and you're at the table with Codex, Claude Code, Kip, and Vellum.";
+      document.getElementById("passwordLabel").textContent = "Password";
+      document.getElementById("submit").textContent = buttonIdle;
+      document.getElementById("brandIcon").outerHTML =
+        `<svg width="45" height="45" viewBox="0 0 44 44" aria-hidden="true"><path d="M22 1A21 21 0 0 1 43 22 21 21 0 0 1 22 43H5a4 4 0 0 1-4-4V22A21 21 0 0 1 22 1z" fill="#272621"/><text x="22" y="28" text-anchor="middle" font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-weight="700" font-size="15" fill="#fffdf8">AC</text></svg>`;
+    }
 
     fetch("/api/magpie-session", { credentials: "same-origin", cache: "no-store" })
       .then((response) => response.json())
@@ -201,7 +219,7 @@
       } catch (error) {
         message.textContent = error.message;
         button.disabled = false;
-        button.textContent = "Open my library";
+        button.textContent = buttonIdle;
         document.getElementById("password").select();
       }
     });
