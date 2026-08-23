@@ -8,30 +8,64 @@ const KNOWN_AGENTS = [
   ["vellum", "Vellum"],
 ];
 const WORKER_IDS = KNOWN_AGENTS.map(([id]) => id).filter((id) => id !== "kelly");
+// Two-letter marks that never collide, used until a picture is dropped into assets/avatars/.
+const MONOGRAMS = { kelly: "Ke", codex: "Co", "claude-code": "CC", kip: "Ki", vellum: "Ve" };
+// Short nameplates. Roles and homes, not activity.
+const AGENT_BIOS = {
+  kelly: "runs the place",
+  codex: "builds things",
+  "claude-code": "thinks it through",
+  kip: "runs things on the PC",
+  vellum: "Grok's chief of staff",
+};
+const AVATAR_IMAGES = {};
 const KIND_LABELS = {
   message: "message",
   question: "question",
-  status: "status",
+  status: "update",
   decision: "decision",
-  alert: "alert",
-  receipt: "work receipt",
+  alert: "heads up",
+  receipt: "finished work",
   note: "note",
   handoff: "handoff",
 };
-const STATUS_LABELS = { open: "open", waiting: "waiting", resolved: "resolved" };
 const HEALTH_LABELS = { "on-track": "on track", "at-risk": "at risk", "off-track": "off track" };
 const VIEWS = {
-  overview: { eyebrow: "Overview", title: "The desk at a glance", meaning: "What needs attention, what just finished, and which conversations are still moving." },
-  inbox: { eyebrow: "My inbox", title: "What needs you", meaning: "Only items addressed to you, waiting on you, handed to you, or replying to you, each with the reason." },
-  threads: { eyebrow: "Threads", title: "Active conversations", meaning: "Every open or waiting thread. Open one to read it in order and reply in place." },
-  room: { eyebrow: "Whole room", title: "Everything, in order", meaning: "The full append-only history. Nothing is hidden in threads." },
-  receipts: { eyebrow: "Work log", title: "What the agents finished", meaning: "One structured receipt per piece of meaningful work, newest first." },
-  notes: { eyebrow: "Notes and handoffs", title: "Targeted context", meaning: "Notes and handoffs with outputs, the action requested, and the next owner." },
-  decisions: { eyebrow: "Decisions", title: "What was decided", meaning: "Decisions recorded in the room. Durable ones name the KIP or project file that holds them." },
-  resolved: { eyebrow: "Resolved", title: "Done and closed", meaning: "Threads whose current state is resolved. History stays readable." },
-  thread: { eyebrow: "Thread", title: "", meaning: "" },
+  overview: { eyebrow: "Today", title: "Today", meaning: "" },
+  inbox: { eyebrow: "Needs you", title: "What needs you", meaning: "Everything addressed to you, waiting on you, or handed to you, with the reason it is here." },
+  threads: { eyebrow: "Conversations", title: "Active conversations", meaning: "Every conversation that is still going. Open one to read it in order and reply right there." },
+  room: { eyebrow: "Everything", title: "Everything, in order", meaning: "Every message on the desk, oldest to newest. Nothing is hidden." },
+  receipts: { eyebrow: "Finished work", title: "What got finished", meaning: "One short write-up per piece of finished work, newest first." },
+  notes: { eyebrow: "Notes and handoffs", title: "Notes and handoffs", meaning: "Context someone left for someone else, with the files, why it matters, and who picks it up." },
+  decisions: { eyebrow: "Decisions", title: "What was decided", meaning: "Decisions made in the room. The big ones also say where they are written down." },
+  resolved: { eyebrow: "Wrapped up", title: "Wrapped up", meaning: "Conversations that are finished. You can still read them, and reopen one if it comes back." },
+  thread: { eyebrow: "Conversation", title: "", meaning: "" },
 };
 const VIEW_ORDER = ["overview", "inbox", "threads", "room", "receipts", "notes", "decisions", "resolved"];
+const ALL_CLEAR_LINES = [
+  "Nothing needs you. The team has it.",
+  "All clear. Go touch some grass.",
+  "Inbox zero. Enjoy it while it lasts.",
+  "Nothing is waiting on you. Rare and beautiful.",
+  "Desk is clear. The agents have the wheel.",
+];
+const SHORTCUTS = {
+  "/shrug": "¯\\_(ツ)_/¯",
+  "/tableflip": "(╯°□°)╯︵ ┻━┻",
+  "/unflip": "┬─┬ノ( º _ ºノ)",
+  "/party": "🎉",
+  "/sparkle": "✨",
+};
+const QUICK_REPLIES = [
+  ["Got it", "Got it, thank you."],
+  ["Love it", "Love it, nice work."],
+  ["Say more", "Can you say a bit more about this?"],
+];
+const DECISION_REPLIES = [
+  ["Yes, go ahead", "Yes, go ahead."],
+  ["Not yet", "Not yet. Let's talk about it first."],
+  ["Tell me more", "Tell me a bit more before I decide."],
+];
 
 const state = {
   room: { revision: 0, viewer: "kelly", unread: 0, cursors: {}, messages: [], threads: [], inbox: [] },
@@ -43,35 +77,69 @@ const state = {
   loaded: false,
   offline: false,
   pollTimer: 0,
-  lastRenderedRevision: -1,
   lastRenderKey: "",
+  lastLoadedAt: null,
+  composerRowOpen: false,
 };
 
 const byId = (id) => document.getElementById(id);
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const mobileQuery = window.matchMedia("(max-width: 900px)");
+const phoneQuery = window.matchMedia("(max-width: 620px)");
 
 if (["127.0.0.1", "localhost"].includes(window.location.hostname)) {
   const brand = document.querySelector(".brand");
   brand.setAttribute("aria-disabled", "true");
-  brand.title = "The shared desk is only available on the deployed workspace";
+  brand.title = "The task board lives on the deployed workspace";
   brand.addEventListener("click", (event) => event.preventDefault());
 }
 
 /* ---------- helpers ---------- */
 
 function agentLabel(agent) {
+  if (agent === "all") return "everyone";
   return KNOWN_AGENTS.find(([id]) => id === agent)?.[1] || agent || "unknown";
 }
 
-function initials(agent) {
-  return agentLabel(agent).split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase();
+function viewerIs(agent) {
+  return state.room.viewer === agent;
 }
 
-function listLabels(agents) {
-  const labels = (agents || []).map(agentLabel);
+function youOr(agent, { capital = false } = {}) {
+  if (viewerIs(agent)) return capital ? "You" : "you";
+  return agentLabel(agent);
+}
+
+function monogram(agent) {
+  if (agent === "all") return "∗";
+  return MONOGRAMS[agent] || agentLabel(agent).slice(0, 2);
+}
+
+function avatarNode(agent, size = "") {
+  const node = el("span", { class: `avatar${size ? ` avatar-${size}` : ""}`, "data-agent": agent, "aria-hidden": "true", text: monogram(agent) });
+  if (AVATAR_IMAGES[agent]) node.append(el("img", { src: AVATAR_IMAGES[agent], alt: "" }));
+  return node;
+}
+
+function preloadAvatars() {
+  for (const [id] of KNOWN_AGENTS) {
+    const image = new Image();
+    image.onload = () => {
+      AVATAR_IMAGES[id] = image.src;
+      if (state.loaded) render({ force: true });
+    };
+    image.src = `/assets/avatars/${id}.png`;
+  }
+}
+
+function listLabels(agents, options = {}) {
+  const labels = (agents || []).map((agent) => (options.you ? youOr(agent) : agentLabel(agent)));
   if (labels.length <= 1) return labels.join("");
   return `${labels.slice(0, -1).join(", ")} and ${labels.at(-1)}`;
+}
+
+function plural(count, singular, pluralForm = `${singular}s`) {
+  return `${count} ${count === 1 ? singular : pluralForm}`;
 }
 
 function agentPresence(room, id) {
@@ -85,10 +153,52 @@ function agentPresence(room, id) {
   return { at: cursor.at, source: "acknowledgement" };
 }
 
+function presenceState(presence) {
+  if (!presence?.at) return "none";
+  const minutes = (Date.now() - Date.parse(presence.at)) / 60000;
+  if (minutes < 60) return "now";
+  if (minutes < 24 * 60) return "today";
+  return "older";
+}
+
+function presenceText(presence) {
+  const bucket = presenceState(presence);
+  if (bucket === "none") return "not here yet";
+  if (bucket === "now") return presence.source === "message" ? "posting now" : "looking in now";
+  const verb = presence.source === "message" ? "posted" : "looked in";
+  if (bucket === "today") return `${verb} today`;
+  return `${verb} ${relativeTime(presence.at)}`;
+}
+
+function presenceSummary(room) {
+  const buckets = { now: [], today: [], older: [], none: [] };
+  for (const id of WORKER_IDS) buckets[presenceState(agentPresence(room, id))].push(id);
+  const parts = [];
+  if (buckets.now.length) parts.push(`${listLabels(buckets.now)} ${buckets.now.length === 1 ? "is" : "are"} active right now.`);
+  else if (buckets.today.length) parts.push(`${listLabels(buckets.today)} ${buckets.today.length === 1 ? "was" : "were"} here today.`);
+  else if (buckets.older.length) {
+    const latest = buckets.older.map((id) => agentPresence(room, id)?.at).filter(Boolean).sort().at(-1);
+    parts.push(`Nobody has been around since ${relativeTime(latest)}.`);
+  }
+  if (buckets.none.length) parts.push(`${listLabels(buckets.none)} ${buckets.none.length === 1 ? "hasn't" : "haven't"} checked in yet.${buckets.none.includes("kip") ? " Kip joins from the PC." : ""}`);
+  return parts.join(" ");
+}
+
 function formatTime(value) {
   const date = new Date(value);
   if (!Number.isFinite(date.getTime())) return "unknown time";
+  const days = (Date.now() - date.getTime()) / 86400000;
+  if (days >= 0 && days < 7) {
+    const day = days < 1 && date.getDate() === new Date().getDate() ? "Today" : new Intl.DateTimeFormat(undefined, { weekday: "long" }).format(date);
+    return `${day} ${new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" }).format(date)}`;
+  }
   return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }).format(date);
+}
+
+function formatClock(value) {
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "";
+  return new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" }).format(date);
 }
 
 function relativeTime(value) {
@@ -96,12 +206,32 @@ function relativeTime(value) {
   if (!Number.isFinite(date.getTime())) return "";
   const minutes = Math.round((Date.now() - date.getTime()) / 60000);
   if (minutes < 1) return "just now";
-  if (minutes < 60) return `${minutes} min ago`;
+  if (minutes < 60) return `${plural(minutes, "minute")} ago`;
   const hours = Math.round(minutes / 60);
-  if (hours < 24) return `${hours} h ago`;
+  if (hours < 24) return `${plural(hours, "hour")} ago`;
   const days = Math.round(hours / 24);
-  if (days < 14) return `${days} d ago`;
+  if (days < 7) return new Intl.DateTimeFormat(undefined, { weekday: "long" }).format(date);
+  if (days < 14) return `${days} days ago`;
   return formatTime(value);
+}
+
+function todayLabel() {
+  return new Intl.DateTimeFormat(undefined, { weekday: "long", month: "long", day: "numeric" }).format(new Date());
+}
+
+function greeting(name) {
+  const hour = new Date().getHours();
+  if (hour < 5) return `Still up, ${name}?`;
+  if (hour < 12) return `Good morning, ${name}.`;
+  if (hour < 17) return `Good afternoon, ${name}.`;
+  if (hour < 22) return `Good evening, ${name}.`;
+  return `Late one, ${name}.`;
+}
+
+function allClearLine() {
+  const start = new Date(new Date().getFullYear(), 0, 0);
+  const dayOfYear = Math.floor((Date.now() - start) / 86400000);
+  return ALL_CLEAR_LINES[dayOfYear % ALL_CLEAR_LINES.length];
 }
 
 function messageExcerpt(message, max = 160) {
@@ -115,13 +245,31 @@ function firstLine(text, max = 160) {
   return line.length > max ? `${line.slice(0, max - 1)}…` : line;
 }
 
+function friendlyFileLabel(value) {
+  const raw = String(value || "").trim();
+  try {
+    if (/^[a-z]+:\/\//i.test(raw)) {
+      const url = new URL(raw);
+      const last = url.pathname.split("/").filter(Boolean).at(-1);
+      return last ? `${url.hostname} · ${last}` : url.hostname;
+    }
+  } catch {
+    // not a URL; fall through to path handling
+  }
+  const parts = raw.replace(/\\/g, "/").split("/").filter(Boolean);
+  if (!parts.length) return raw;
+  const last = parts.at(-1);
+  const trailingSlash = /[\\/]$/.test(raw);
+  if (parts.length === 1) return trailingSlash ? `${last}/` : last;
+  return `${parts.at(-2)}/${last}${trailingSlash ? "/" : ""}`;
+}
+
 function el(tag, attrs = {}, children = []) {
   const node = document.createElement(tag);
   for (const [key, value] of Object.entries(attrs)) {
     if (value === undefined || value === null || value === false) continue;
     if (key === "class") node.className = value;
     else if (key === "text") node.textContent = value;
-    else if (key === "html") node.innerHTML = value;
     else if (key.startsWith("data-")) node.setAttribute(key, value);
     else if (key in node && typeof value !== "string") node[key] = value;
     else node.setAttribute(key, value);
@@ -175,6 +323,19 @@ function needsViewer(thread) {
   return thread.status !== "resolved" && thread.waitingOn.includes(state.room.viewer);
 }
 
+function askMessage(thread) {
+  // The latest message in the thread that is still waiting on the viewer.
+  if (!needsViewer(thread)) return null;
+  return [...state.room.messages].reverse().find((message) => message.threadId === thread.id && message.waitingOn.includes(state.room.viewer)) || null;
+}
+
+function askText(message) {
+  if (!message) return "";
+  if (message.kind === "receipt" && message.receipt?.needsKelly) return message.receipt.needsKelly;
+  if (message.note?.action) return message.note.action;
+  return messageExcerpt(message, 200);
+}
+
 function sortThreads(threads) {
   return [...threads].sort((left, right) => {
     const leftScore = (needsViewer(left) ? 4 : 0) + (left.unread ? 2 : 0) + (left.status === "waiting" ? 1 : 0);
@@ -184,6 +345,69 @@ function sortThreads(threads) {
   });
 }
 
+/* ---------- small delights ---------- */
+
+function confettiBurst({ x, y } = {}) {
+  if (reducedMotion.matches) return;
+  const canvas = byId("confetti");
+  const context = canvas.getContext("2d");
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = window.innerWidth * ratio;
+  canvas.height = window.innerHeight * ratio;
+  context.scale(ratio, ratio);
+  canvas.classList.add("active");
+  const colors = ["#c6481c", "#2f68de", "#a05a33", "#257a5a", "#7960c9", "#ffd36b"];
+  const originX = x ?? window.innerWidth / 2;
+  const originY = y ?? window.innerHeight / 3;
+  const pieces = Array.from({ length: 70 }, (_, index) => ({
+    x: originX,
+    y: originY,
+    vx: (Math.random() - 0.5) * 14,
+    vy: -Math.random() * 11 - 4,
+    size: 5 + Math.random() * 5,
+    color: colors[index % colors.length],
+    spin: Math.random() * Math.PI,
+    spinSpeed: (Math.random() - 0.5) * 0.3,
+  }));
+  let frame = 0;
+  const draw = () => {
+    context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    for (const piece of pieces) {
+      piece.vy += 0.35;
+      piece.x += piece.vx;
+      piece.y += piece.vy;
+      piece.vx *= 0.985;
+      piece.spin += piece.spinSpeed;
+      context.save();
+      context.translate(piece.x, piece.y);
+      context.rotate(piece.spin);
+      context.fillStyle = piece.color;
+      context.fillRect(-piece.size / 2, -piece.size / 2, piece.size, piece.size * 0.6);
+      context.restore();
+    }
+    frame += 1;
+    if (frame < 110) window.requestAnimationFrame(draw);
+    else {
+      context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      canvas.classList.remove("active");
+    }
+  };
+  window.requestAnimationFrame(draw);
+}
+
+let partyTimer = 0;
+function partyMode() {
+  document.body.classList.add("party");
+  confettiBurst();
+  showToast("Party mode. Hats on for a minute.");
+  window.clearTimeout(partyTimer);
+  partyTimer = window.setTimeout(() => document.body.classList.remove("party"), 60000);
+}
+
+function expandShortcuts(text) {
+  return text.replace(/(^|\s)(\/[a-z]+)(?=\s|$)/g, (match, lead, token) => (SHORTCUTS[token] ? `${lead}${SHORTCUTS[token]}` : match));
+}
+
 /* ---------- navigation ---------- */
 
 function setView(view, { threadId = "", push = true } = {}) {
@@ -191,25 +415,41 @@ function setView(view, { threadId = "", push = true } = {}) {
   state.view = view;
   state.threadId = view === "thread" ? threadId : "";
   const radio = document.querySelector(`input[name="view"][value="${view === "thread" ? state.previousView : view}"]`);
-  if (radio) radio.checked = true;
+  document.querySelectorAll('input[name="view"]').forEach((input) => { input.checked = false; });
+  if (radio && view !== "thread") radio.checked = true;
   if (push) {
     const hash = view === "thread" ? `#thread=${encodeURIComponent(threadId)}` : `#view=${view}`;
     if (window.location.hash !== hash) history.replaceState(null, "", hash);
   }
+  document.body.classList.toggle("is-subview", view === "thread");
+  document.body.classList.toggle("is-inbox", view === "inbox");
   render({ force: true });
   syncComposerThread();
-  if (view === "room") {
-    const body = byId("workspaceBody");
-    window.requestAnimationFrame(() => { body.scrollTop = body.scrollHeight; });
-  }
-  if (view === "thread") setComposerOpen(true);
-  else if (composerIsOpen() && !byId("messageInput").value.trim() && !state.replyTo) setComposerOpen(false);
+  if (view === "room") scrollToNewOrEnd();
+  if (view !== "thread" && composerIsOpen() && !byId("messageInput").value.trim() && !state.replyTo) setComposerOpen(false);
   byId("workspaceBody").scrollTop = 0;
+  if (mobileQuery.matches) {
+    window.scrollTo({ top: 0, behavior: "auto" });
+    radio?.closest(".view-option")?.scrollIntoView({ inline: "center", block: "nearest", behavior: "auto" });
+  }
 }
 
 function openThread(threadId, { focusHeading = true } = {}) {
   setView("thread", { threadId });
   if (focusHeading) byId("viewHeading").focus();
+}
+
+function scrollToNewOrEnd() {
+  const body = byId("workspaceBody");
+  window.requestAnimationFrame(() => {
+    const divider = document.querySelector(".new-divider");
+    if (divider) {
+      if (mobileQuery.matches) divider.scrollIntoView({ block: "start", behavior: "auto" });
+      else body.scrollTop = Math.max(0, divider.offsetTop - body.offsetTop - 12);
+    } else if (!mobileQuery.matches) {
+      body.scrollTop = body.scrollHeight;
+    }
+  });
 }
 
 function readHash() {
@@ -224,14 +464,19 @@ function readHash() {
 
 function renderRail() {
   const { room } = state;
+  const viewerIsKelly = room.viewer === "kelly";
   const needsKelly = room.threads.filter((thread) => thread.needsKelly);
   const count = needsKelly.length;
   byId("needsKellyCount").textContent = String(count);
-  byId("needsKellyLabel").textContent = count === 1 ? "item needs Kelly" : "items need Kelly";
-  byId("needsKellyButton").classList.toggle("has-items", count > 0);
+  byId("needsKellyLabel").textContent = viewerIsKelly
+    ? (count === 1 ? "thing needs you" : "things need you")
+    : (count === 1 ? "thing needs Kelly" : "things need Kelly");
+  const queueButton = byId("needsKellyButton");
+  queueButton.classList.toggle("has-items", count > 0);
+  queueButton.classList.toggle("is-clear", state.loaded && count === 0);
   byId("needsKellyHint").textContent = count
-    ? `${listLabels([...new Set(needsKelly.map((thread) => thread.lastFrom))])} ${count === 1 ? "is" : "are"} waiting. Open the overview to see why.`
-    : "Nothing is waiting on Kelly right now.";
+    ? `Open the first one`
+    : (state.loaded ? "All clear right now." : "Checking the desk.");
 
   const actionable = room.inbox.filter((item) => item.actionable).length;
   const unreadInbox = room.inbox.filter((item) => item.unread).length;
@@ -250,31 +495,48 @@ function renderRail() {
   byId("countInbox").classList.toggle("attention", actionable > 0);
 
   const list = byId("agentList");
-  list.replaceChildren(...KNOWN_AGENTS.map(([id, label]) => {
+  // Kelly's own presence is the viewer chip; the list is the four agents she is waiting on.
+  const listed = room.viewer === "kelly" ? KNOWN_AGENTS.filter(([id]) => id !== "kelly") : KNOWN_AGENTS;
+  list.replaceChildren(...listed.map(([id, label]) => {
     const presence = agentPresence(room, id);
     const isViewer = id === room.viewer;
-    const seenText = presence?.at
-      ? `${presence.source === "message" ? "active" : "checked in"} ${relativeTime(presence.at)}`
-      : "not checked in";
-    return el("li", { class: "agent-row", "data-agent": id }, [
-      el("span", { class: "agent-avatar", "aria-hidden": "true", text: initials(id) }),
-      el("span", { class: "agent-name", text: label + (isViewer ? " (you)" : "") }),
-      el("span", { class: `agent-seen${presence ? "" : " missing"}`, text: seenText }),
+    return el("li", { class: "agent-row", "data-agent": id, "data-presence": presenceState(presence) }, [
+      avatarNode(id),
+      el("span", { class: "agent-text" }, [
+        el("span", { class: "agent-name" }, [label, isViewer ? el("small", { text: " (you)" }) : el("small", { text: ` · ${AGENT_BIOS[id] || ""}` })]),
+        el("span", { class: "agent-seen", text: presenceText(presence) }),
+      ]),
     ]);
   }));
+  byId("agentStack").replaceChildren(...WORKER_IDS.map((id) => avatarNode(id, "xs")));
 
   const connected = WORKER_IDS.filter((id) => agentPresence(room, id));
-  const missing = WORKER_IDS.filter((id) => !agentPresence(room, id));
   byId("checkinCount").textContent = `${connected.length} of ${WORKER_IDS.length} checked in`;
-  const summary = byId("connectionSummary");
-  if (!missing.length) summary.textContent = "All four agents have checked in through their own identities.";
-  else {
-    const kipNote = missing.includes("kip") ? " Kip joins from the PC once its private credential is installed there." : "";
-    summary.textContent = `${listLabels(missing)} ${missing.length === 1 ? "has" : "have"} not checked in yet.${kipNote}`;
-  }
+  const activeNow = WORKER_IDS.filter((id) => presenceState(agentPresence(room, id)) === "now");
+  byId("checkinCount").classList.toggle("is-active", activeNow.length > 0);
+  const summaryText = state.loaded ? presenceSummary(room) : "Checking who has reached the room.";
+  // The roster rows already say who is quiet; the note only adds who is missing.
+  const missing = WORKER_IDS.filter((id) => !agentPresence(room, id));
+  const anyActive = WORKER_IDS.some((id) => ["now", "today"].includes(presenceState(agentPresence(room, id))));
+  byId("connectionSummary").textContent = !state.loaded || missing.length || !anyActive ? summaryText : "";
+  byId("presenceLine").textContent = summaryText;
 }
 
 /* ---------- message rendering ---------- */
+
+function messageVerb(message) {
+  const people = listLabels(message.to, { you: true });
+  switch (message.kind) {
+    case "question": return `asked ${people}`;
+    case "status": return `posted an update for ${people}`;
+    case "decision": return "decided";
+    case "alert": return `flagged something for ${people}`;
+    case "receipt": return "finished some work";
+    case "note": return `left a note for ${people}`;
+    case "handoff": return `handed off to ${message.note?.nextOwner ? youOr(message.note.nextOwner) : people}`;
+    default: return `to ${people}`;
+  }
+}
 
 function kindTag(kind) {
   return el("span", { class: "kind-tag", "data-kind": kind, text: KIND_LABELS[kind] || kind });
@@ -282,101 +544,130 @@ function kindTag(kind) {
 
 function statusPill(thread) {
   const label = thread.status === "waiting"
-    ? `waiting on ${listLabels(thread.waitingOn)}`
+    ? (needsViewer(thread) ? "needs you" : `waiting on ${listLabels(thread.waitingOn)}`)
     : thread.status === "resolved"
-      ? `resolved by ${agentLabel(thread.resolvedBy)}`
+      ? "wrapped up"
       : thread.reopened ? "reopened" : "open";
   return el("span", { class: "status-pill", "data-status": thread.status, "data-needs-viewer": needsViewer(thread) ? "true" : undefined, text: label });
 }
 
-function pathNode(value) {
-  const looksLikePath = /^(\/|~\/|[a-z]+:\/\/|[A-Za-z]:\\)/.test(value);
-  return el("span", { class: looksLikePath ? "output-path" : "", text: value });
+function fileChips(values) {
+  return el("span", { class: "file-chips" }, [].concat(values || []).map((value) => el("span", { class: "file-chip", title: value, text: friendlyFileLabel(value) })));
 }
 
-function fieldRow(container, label, value, { className = "", list = false, path = false } = {}) {
-  if (!value || (Array.isArray(value) && !value.length)) return;
-  container.append(el("dt", { text: label }));
-  const detail = el("dd", { class: className });
-  if (list || Array.isArray(value)) {
-    detail.append(el("ul", {}, [].concat(value).map((item) => el("li", {}, [path ? pathNode(item) : item]))));
-  } else if (path) {
-    detail.append(pathNode(value));
-  } else {
-    detail.textContent = value;
-  }
-  container.append(detail);
+function cardLine(label, value, { className = "", files = false } = {}) {
+  if (!value || (Array.isArray(value) && !value.length)) return null;
+  return el("div", { class: `card-line${className ? ` ${className}` : ""}` }, [
+    el("dt", { text: label }),
+    el("dd", {}, files ? [fileChips(value)] : [value]),
+  ]);
 }
 
-function receiptBody(message) {
+function cardLines(lines) {
+  const present = lines.filter(Boolean);
+  return present.length ? el("dl", { class: "card-lines" }, present) : null;
+}
+
+function cardMore(lines, label = "Details") {
+  const present = lines.filter(Boolean);
+  if (!present.length) return null;
+  return el("details", { class: "card-more" }, [el("summary", { text: label }), el("dl", { class: "card-lines" }, present)]);
+}
+
+function needsLabel() {
+  return viewerIs("kelly") ? "Needs you" : "Needs Kelly";
+}
+
+function receiptBody(message, { calm = false } = {}) {
   const receipt = message.receipt || { project: "General", did: message.body };
-  const grid = el("dl", { class: "structured-grid receipt-grid" });
-  fieldRow(grid, "Project", receipt.project);
-  fieldRow(grid, "Did", receipt.did);
-  fieldRow(grid, "Result", receipt.result);
-  fieldRow(grid, "Outputs", receipt.outputs, { path: true });
-  fieldRow(grid, "Blockers", receipt.blockers, { className: "field-warn" });
-  fieldRow(grid, "Needs Kelly", receipt.needsKelly, { className: "field-needs" });
-  fieldRow(grid, "Next owner", receipt.nextOwner ? agentLabel(receipt.nextOwner) : "");
-  fieldRow(grid, "Next", receipt.next);
-  fieldRow(grid, "Health", receipt.health ? HEALTH_LABELS[receipt.health] : "", { className: `field-health health-${receipt.health}` });
-  return grid;
+  const nextOwnerLine = receipt.nextOwner ? `${youOr(receipt.nextOwner, { capital: true })} ${viewerIs(receipt.nextOwner) ? "are" : "is"} up next` : "";
+  const nextText = [receipt.next, nextOwnerLine].filter(Boolean).join(" · ");
+  return el("div", {}, [
+    el("p", { class: "card-lead", text: receipt.did }),
+    cardLines([
+      cardLine(needsLabel(), receipt.needsKelly, { className: calm ? "needs quiet" : "needs" }),
+      cardLine("What happened", receipt.result),
+      cardLine("In the way", receipt.blockers, { className: "warn" }),
+      cardLine("Next", nextText),
+    ]),
+    cardMore([
+      cardLine("Project", receipt.project),
+      cardLine("Files", receipt.outputs, { files: true }),
+      cardLine("How it's going", receipt.health ? HEALTH_LABELS[receipt.health] : "", { className: `health-${receipt.health}` }),
+    ]),
+  ]);
 }
 
 function noteBody(message) {
   const note = message.note || { project: "General", summary: message.body, outputs: [] };
-  const grid = el("dl", { class: "structured-grid note-grid" });
-  fieldRow(grid, "Project", note.project);
-  fieldRow(grid, "Summary", note.summary);
-  fieldRow(grid, "Outputs", note.outputs, { path: true });
-  fieldRow(grid, "Why it matters", note.why);
-  fieldRow(grid, "Action requested", note.action, { className: "field-needs" });
-  fieldRow(grid, "Next owner", note.nextOwner ? agentLabel(note.nextOwner) : "");
-  fieldRow(grid, "Next", note.next);
-  fieldRow(grid, "Durable record", note.durablePath, { path: true });
-  return grid;
+  const nextOwnerLine = note.nextOwner ? `${youOr(note.nextOwner, { capital: true })} ${viewerIs(note.nextOwner) ? "are" : "is"} up next` : "";
+  const nextText = [note.next, nextOwnerLine].filter(Boolean).join(" · ");
+  const forViewer = note.nextOwner && viewerIs(note.nextOwner);
+  return el("div", {}, [
+    el("p", { class: "card-lead", text: note.summary }),
+    cardLines([
+      cardLine(note.nextOwner && !forViewer ? `For ${agentLabel(note.nextOwner)}` : (forViewer ? "For you" : "To do"), note.action, { className: forViewer ? "needs" : "" }),
+      cardLine("Next", nextText),
+    ]),
+    cardMore([
+      cardLine("Project", note.project),
+      cardLine("Files", note.outputs, { files: true }),
+      cardLine("Why it matters", note.why),
+      cardLine("Written down", note.durablePath ? [note.durablePath] : "", { files: true }),
+    ]),
+  ]);
 }
 
-function messageBody(message) {
-  if (message.kind === "receipt") return receiptBody(message);
+function messageBody(message, { calm = false } = {}) {
+  if (message.kind === "receipt") return receiptBody(message, { calm });
   if (message.kind === "note" || message.kind === "handoff") return noteBody(message);
   const body = el("p", { class: "message-body", text: message.body });
   if (message.kind === "decision" && message.note?.durablePath) {
-    const grid = el("dl", { class: "structured-grid decision-grid" });
-    fieldRow(grid, "Durable record", message.note.durablePath, { path: true });
-    return el("div", {}, [body, grid]);
+    return el("div", {}, [body, cardLines([cardLine("Written down", [message.note.durablePath], { files: true })])]);
   }
   return body;
 }
 
-function renderMessage(message, { inThread = false } = {}) {
+function renderMessage(message, { inThread = false, previousId = "", calm = false, pinnedId = "" } = {}) {
   const thread = threadById(message.threadId);
   const labelId = `message-${message.seq}-label`;
+  if (pinnedId && message.id === pinnedId) {
+    return el("li", { class: "message-item message-stub", "data-agent": message.from, id: `message-${message.seq}` }, [
+      avatarNode(message.from),
+      el("article", { class: "message-content", "aria-labelledby": labelId }, [
+        el("header", { class: "message-header" }, [
+          el("strong", { id: labelId, class: "message-sender", text: agentLabel(message.from) }),
+          el("span", { class: "message-route", text: `asked you this · pinned at the top` }),
+          el("time", { class: "message-time", datetime: message.createdAt, text: formatTime(message.createdAt) }),
+        ]),
+        el("details", { class: "card-more" }, [el("summary", { text: "Show the full message" }), messageBody(message)]),
+        el("footer", { class: "message-footer" }, [el("button", { class: "reply-button", type: "button", "data-reply": message.id, text: "Reply", "aria-label": `Reply to ${agentLabel(message.from)}` })]),
+      ]),
+    ]);
+  }
   const item = el("li", {
     class: "message-item",
     "data-agent": message.from,
     "data-kind": message.kind,
     "data-new": isNew(message) ? "true" : undefined,
-    "data-needs-kelly": message.kind === "receipt" && message.receipt?.needsKelly && thread?.needsKelly ? "true" : undefined,
+    "data-needs-kelly": !calm && message.kind === "receipt" && message.receipt?.needsKelly && thread?.needsKelly ? "true" : undefined,
     id: `message-${message.seq}`,
   });
 
   const header = el("header", { class: "message-header" }, [
     el("strong", { id: labelId, class: "message-sender", text: agentLabel(message.from) }),
-    el("span", { class: "message-route", text: `to ${listLabels(message.to)}` }),
-    kindTag(message.kind),
+    el("span", { class: "message-route", text: messageVerb(message) }),
     el("time", { class: "message-time", datetime: message.createdAt, text: formatTime(message.createdAt) }),
-    isNew(message) ? el("span", { class: "new-pill", text: "new" }) : null,
   ]);
 
   const parts = [header];
-  if (message.replyTo) {
+  if (message.replyTo && message.replyTo !== previousId) {
     const parent = messageById(message.replyTo);
     parts.push(el("p", { class: "reply-ref", text: parent
-      ? `Replying to ${agentLabel(parent.from)}: "${messageExcerpt(parent, 90)}"`
+      ? `Replying to ${youOr(parent.from)}: "${messageExcerpt(parent, 90)}"`
       : "Replying to an earlier message" }));
   }
-  parts.push(messageBody(message));
+  parts.push(messageBody(message, { calm }));
 
   const footer = el("footer", { class: "message-footer" });
   if (!inThread) {
@@ -385,10 +676,9 @@ function renderMessage(message, { inThread = false } = {}) {
       type: "button",
       "data-open-thread": message.threadId,
       text: threadTitle(message.threadId),
-      "aria-label": `Open thread ${threadTitle(message.threadId)}`,
+      "aria-label": `Open the conversation ${threadTitle(message.threadId)}`,
     }));
   }
-  footer.append(el("span", { class: "message-seq", text: `message ${message.seq}` }));
 
   if (message.waitingOn.length) {
     const later = state.room.messages.filter((candidate) => candidate.threadId === message.threadId && candidate.seq > message.seq);
@@ -396,117 +686,150 @@ function renderMessage(message, { inThread = false } = {}) {
     const pending = message.waitingOn.filter((agent) => !answered.includes(agent));
     const stillWaiting = thread && thread.status !== "resolved" ? pending.filter((agent) => thread.waitingOn.includes(agent)) : [];
     const cleared = pending.filter((agent) => !stillWaiting.includes(agent));
-    if (answered.length) footer.append(el("span", { class: "waiting-pill answered", text: `${listLabels(answered)} answered` }));
-    if (stillWaiting.length) footer.append(el("span", { class: "waiting-pill", text: `waiting on ${listLabels(stillWaiting)}` }));
-    if (cleared.length) footer.append(el("span", { class: "waiting-pill cleared", text: `asked ${listLabels(cleared)}, ${thread?.status === "resolved" ? "resolved" : "superseded"}` }));
+    if (answered.length) footer.append(el("span", { class: "waiting-pill answered", text: `${listLabels(answered, { you: true })} answered` }));
+    if (stillWaiting.length && !(calm && stillWaiting.includes(state.room.viewer))) footer.append(el("span", { class: `waiting-pill${stillWaiting.includes(state.room.viewer) ? " mine" : ""}`, text: stillWaiting.includes(state.room.viewer) ? "needs you" : `waiting on ${listLabels(stillWaiting)}` }));
+    if (cleared.length) footer.append(el("span", { class: "waiting-pill cleared", text: `asked ${listLabels(cleared)}, ${thread?.status === "resolved" ? "wrapped up" : "moved on"}` }));
   }
-  if (message.thread?.status === "resolved") footer.append(el("span", { class: "state-pill resolved", text: "resolved the thread" }));
-  if (message.thread?.status === "reopened") footer.append(el("span", { class: "state-pill", text: "reopened the thread" }));
-  if (message.thread?.nextOwner) footer.append(el("span", { class: "state-pill", text: `next owner ${agentLabel(message.thread.nextOwner)}` }));
+  if (message.thread?.status === "resolved") footer.append(el("span", { class: "state-pill resolved", text: "wrapped up" }));
+  if (message.thread?.status === "reopened") footer.append(el("span", { class: "state-pill", text: "reopened" }));
+  const owesViewer = thread && needsViewer(thread) && message.waitingOn.includes(state.room.viewer) && askMessage(thread)?.id === message.id;
   footer.append(el("button", {
-    class: "reply-button",
+    class: `reply-button${owesViewer && !inThread ? (calm ? " outlined" : " primary") : ""}`,
     type: "button",
     "data-reply": message.id,
-    text: "Reply",
-    "aria-label": `Reply to ${agentLabel(message.from)}, message ${message.seq}`,
+    text: owesViewer && !inThread ? "Answer" : "Reply",
+    "aria-label": `Reply to ${agentLabel(message.from)}`,
   }));
   parts.push(footer);
 
-  item.append(
-    el("span", { class: "message-avatar", "aria-hidden": "true", text: initials(message.from) }),
-    el("article", { class: "message-content", "aria-labelledby": labelId }, parts),
-  );
+  item.append(avatarNode(message.from), el("article", { class: "message-content", "aria-labelledby": labelId }, parts));
   return item;
 }
 
 function messageList(messages, options = {}) {
   if (!messages.length) return emptyState(options.empty || "Nothing here yet.");
-  return el("ol", { class: "message-feed", "aria-label": options.label || "Messages" }, messages.map((message) => renderMessage(message, options)));
+  const nodes = [];
+  let dividerPlaced = false;
+  let previous = null;
+  for (const message of messages) {
+    if (options.newDivider && !dividerPlaced && isNew(message)) {
+      nodes.push(el("li", { class: "new-divider", text: "New since you last looked" }));
+      dividerPlaced = true;
+    }
+    nodes.push(renderMessage(message, { ...options, previousId: previous?.id }));
+    previous = message;
+  }
+  return el("ol", { class: "message-feed", "aria-label": options.label || "Messages" }, nodes);
 }
 
-function emptyState(text, hint = "") {
-  return el("div", { class: "empty-state" }, [el("p", { text }), hint ? el("p", { class: "empty-hint", text: hint }) : null]);
+function emptyState(text, hint = "", { tone = "" } = {}) {
+  return el("div", { class: `empty-state${tone ? ` ${tone}` : ""}` }, [el("p", { text }), hint ? el("p", { class: "empty-hint", text: hint }) : null]);
 }
 
 /* ---------- thread rows ---------- */
 
 function threadRow(thread) {
   const meta = [];
-  meta.push(`${thread.count} ${thread.count === 1 ? "message" : "messages"}`);
-  meta.push(`last ${agentLabel(thread.lastFrom)} ${relativeTime(thread.lastAt)}`);
-  if (thread.nextOwner && thread.status !== "resolved") meta.push(`next owner ${agentLabel(thread.nextOwner)}`);
+  meta.push(plural(thread.count, "message"));
+  if (thread.status === "resolved") meta.push(`wrapped up ${relativeTime(thread.resolvedAt)} by ${youOr(thread.resolvedBy)}`);
+  else meta.push(`last from ${youOr(thread.lastFrom)} ${relativeTime(thread.lastAt)}`);
+  if (thread.nextOwner && thread.status !== "resolved" && !thread.waitingOn.includes(thread.nextOwner)) meta.push(`${youOr(thread.nextOwner, { capital: true })} ${viewerIs(thread.nextOwner) ? "are" : "is"} up next`);
   if (thread.project) meta.push(thread.project);
-  return el("li", { class: "thread-row", "data-status": thread.status, "data-unread": thread.unread ? "true" : undefined }, [
-    el("button", { class: "thread-open", type: "button", "data-open-thread": thread.id }, [
+  const unread = thread.status !== "resolved" ? thread.unread : 0;
+  const people = [thread.lastFrom, ...thread.participants.filter((agent) => agent !== thread.lastFrom)];
+  return el("li", { class: "thread-row", "data-status": thread.status, "data-unread": unread ? "true" : undefined }, [
+    el("button", { class: "thread-open", type: "button", "data-open-thread": thread.id, "aria-label": `Open ${thread.title}${unread ? `, ${plural(unread, "new message")}` : ""}` }, [
       el("span", { class: "thread-row-top" }, [
-        thread.unread ? el("span", { class: "unread-dot", role: "img", "aria-label": `${thread.unread} unread` }) : null,
         el("span", { class: "thread-title", text: thread.title }),
-        statusPill(thread),
-        el("span", { class: "thread-participants", role: "img", "aria-label": `participants ${listLabels(thread.participants)}` },
-          thread.participants.map((agent) => el("span", { class: "mini-avatar", "data-agent": agent, "aria-hidden": "true", text: initials(agent) }))),
+        unread ? el("span", { class: "new-pill", text: `${unread} new` }) : null,
+        (thread.status === "open" && !thread.reopened) || (thread.status === "resolved" && state.view === "resolved") ? null : statusPill(thread),
+      ]),
+      el("span", { class: "thread-participants", "aria-hidden": "true" }, [
+        ...people.map((agent) => avatarNode(agent, "sm")),
+        people.length > 1 ? el("span", { class: "more-count", text: `+${people.length - 1}` }) : null,
       ]),
       el("span", { class: "thread-row-meta", text: meta.join(" · ") }),
     ]),
   ]);
 }
 
-function threadList(threads, empty) {
-  if (!threads.length) return emptyState(empty);
+function threadList(threads, empty, hint = "") {
+  if (!threads.length) return emptyState(empty, hint);
   return el("ul", { class: "thread-list" }, threads.map(threadRow));
 }
 
 /* ---------- views ---------- */
 
 function sectionBlock(title, meta, content, { tone = "" } = {}) {
-  return el("section", { class: `desk-section${tone ? ` ${tone}` : ""}`, "aria-labelledby": `section-${title.replace(/\W+/g, "-").toLowerCase()}` }, [
+  const id = `section-${title.replace(/\W+/g, "-").toLowerCase()}`;
+  return el("section", { class: `desk-section${tone ? ` ${tone}` : ""}`, "aria-labelledby": id }, [
     el("div", { class: "desk-section-head" }, [
-      el("h2", { id: `section-${title.replace(/\W+/g, "-").toLowerCase()}`, text: title }),
+      el("h2", { id, text: title }),
       meta ? el("span", { class: "desk-section-meta", text: meta }) : null,
     ]),
     content,
   ]);
 }
 
-function queueItem(item) {
+function actionLabel(item) {
+  if (item.reason === "waiting-on-you") return "Answer";
+  if (item.reason === "handed-to-you") return "Pick it up";
+  return "Open";
+}
+
+function queueItem(item, index = 0, { quiet = false } = {}) {
   const message = state.room.messages.find((candidate) => candidate.seq === item.seq);
   const excerpt = message?.kind === "receipt" && message.receipt?.needsKelly
     ? message.receipt.needsKelly
     : message?.note?.action || (message ? messageExcerpt(message) : "");
-  return el("li", { class: "queue-item", "data-agent": item.from, "data-unread": item.unread ? "true" : undefined }, [
-    el("span", { class: "mini-avatar", "data-agent": item.from, "aria-hidden": "true", text: initials(item.from) }),
+  const metaParts = [relativeTime(item.createdAt)];
+  const project = message?.receipt?.project || message?.note?.project;
+  if (project && !item.threadTitle.toLowerCase().includes(project.toLowerCase())) metaParts.push(project);
+  const handedElsewhere = message?.kind === "handoff" && message.note?.nextOwner && message.note.nextOwner !== state.room.viewer;
+  const headline = handedElsewhere ? `${agentLabel(item.from)} copied you on a handoff to ${agentLabel(message.note.nextOwner)}` : excerpt;
+  const byline = [agentLabel(item.from), item.threadTitle, ...metaParts];
+  const then = item.actionable && message?.kind === "receipt" && message.receipt?.next ? message.receipt.next : "";
+  return el("li", { class: `queue-item${quiet ? " quiet" : ""}`, "data-agent": item.from, "data-unread": item.unread ? "true" : undefined }, [
+    avatarNode(item.from, quiet ? "sm" : "lg"),
     el("div", { class: "queue-text" }, [
       el("div", { class: "queue-top" }, [
-        el("span", { class: "reason-tag", "data-reason": item.reason, text: item.reasonLabel }),
-        el("strong", { text: item.threadTitle }),
-        kindTag(item.kind),
-        item.unread ? el("span", { class: "new-pill", text: "unread" }) : null,
+        quiet ? null : el("span", { class: "reason-tag", "data-reason": item.reason, text: item.reasonLabel }),
+        el("strong", { text: headline }),
+        ["question", "alert"].includes(item.kind) ? kindTag(item.kind) : null,
       ]),
-      el("p", { class: "queue-excerpt", text: `${agentLabel(item.from)}: ${excerpt}` }),
-      el("span", { class: "queue-meta", text: `${relativeTime(item.createdAt)} · message ${item.seq}${item.nextOwner ? ` · next owner ${agentLabel(item.nextOwner)}` : ""}` }),
+      handedElsewhere && excerpt ? el("p", { class: "queue-excerpt", text: excerpt }) : null,
+      then ? el("p", { class: "queue-next" }, [el("b", { text: "Next" }), then]) : null,
+      el("span", { class: "queue-meta", text: byline.join(" · ") }),
     ]),
-    el("button", { class: "quiet-button open-button", type: "button", "data-open-thread": item.threadId, "data-focus-seq": item.seq, text: "Open" }),
+    el("button", {
+      class: `open-button${item.actionable && index === 0 ? " primary" : ""}`,
+      type: "button",
+      "data-open-thread": item.threadId,
+      "data-focus-seq": item.seq,
+      "data-reply-seq": item.actionable ? item.seq : undefined,
+      text: actionLabel(item),
+      "aria-label": `${actionLabel(item)}: ${item.threadTitle}`,
+    }),
   ]);
 }
 
 function receiptRow(message) {
   const receipt = message.receipt || { project: "General", did: message.body, outputs: [] };
   const thread = threadById(message.threadId);
+  const meta = [relativeTime(message.createdAt)];
+  if (receipt.project && !threadTitle(message.threadId).toLowerCase().includes(receipt.project.toLowerCase())) meta.push(receipt.project);
+  if (receipt.outputs?.length) meta.push(plural(receipt.outputs.length, "attachment"));
   return el("li", { class: "receipt-row", "data-agent": message.from }, [
-    el("span", { class: "mini-avatar", "data-agent": message.from, "aria-hidden": "true", text: initials(message.from) }),
+    avatarNode(message.from, "sm"),
     el("div", { class: "receipt-text" }, [
-      el("div", { class: "receipt-top" }, [
-        el("strong", { text: receipt.project }),
-        receipt.health ? el("span", { class: `health-pill health-${receipt.health}`, text: HEALTH_LABELS[receipt.health] }) : null,
-        receipt.needsKelly && thread?.needsKelly ? el("span", { class: "needs-pill", text: "needs Kelly" }) : null,
+      el("p", { class: "receipt-line" }, [el("b", { text: agentLabel(message.from) }), ` ${firstLine(receipt.did, 140).replace(/^[A-Z]/, (letter) => letter.toLowerCase())}`]),
+      el("span", { class: "receipt-meta" }, [
+        meta.join(" · "),
+        receipt.health && !thread?.needsKelly ? el("span", { class: `health-pill health-${receipt.health}`, text: HEALTH_LABELS[receipt.health] }) : null,
+
       ]),
-      el("p", { class: "receipt-did", text: `${agentLabel(message.from)}: ${firstLine(receipt.did, 140)}` }),
-      el("span", { class: "queue-meta", text: [
-        relativeTime(message.createdAt),
-        receipt.outputs?.length ? `${receipt.outputs.length} ${receipt.outputs.length === 1 ? "output" : "outputs"}` : "",
-        receipt.nextOwner ? `next owner ${agentLabel(receipt.nextOwner)}` : "",
-      ].filter(Boolean).join(" · ") }),
     ]),
-    el("button", { class: "quiet-button open-button", type: "button", "data-open-thread": message.threadId, "data-focus-seq": message.seq, text: "Open" }),
+    el("button", { class: "open-button", type: "button", "data-open-thread": message.threadId, "data-focus-seq": message.seq, text: "Open", "aria-label": `Open ${receipt.project}` }),
   ]);
 }
 
@@ -514,98 +837,196 @@ function renderOverview() {
   const { room } = state;
   const viewerIsKelly = room.viewer === "kelly";
   const queue = room.inbox.filter((item) => item.actionable);
-  const receipts = room.messages.filter((message) => message.kind === "receipt").slice(-3).reverse();
+  const allReceipts = room.messages.filter((message) => message.kind === "receipt");
+  const receipts = allReceipts.slice(-4).reverse();
   const active = sortThreads(room.threads.filter((thread) => thread.status !== "resolved"));
-  const waitingCount = active.filter((thread) => thread.status === "waiting").length;
+  const waitingViewer = active.filter((thread) => needsViewer(thread)).length;
+  const waitingOthers = active.filter((thread) => thread.status === "waiting" && !needsViewer(thread)).length;
+  const quiet = active.length - waitingViewer - waitingOthers;
+  const conversationMeta = [
+    waitingViewer ? `${waitingViewer} need${waitingViewer === 1 ? "s" : ""} ${viewerIsKelly ? "you" : "Kelly"}` : "",
+    waitingOthers ? `${waitingOthers} waiting on the agents` : "",
+    quiet ? `${quiet} quiet` : "",
+  ].filter(Boolean).join(" · ");
 
-  return [
-    sectionBlock(
-      viewerIsKelly ? "Needs Kelly now" : `Needs ${agentLabel(room.viewer)} now`,
-      queue.length ? `${queue.length} ${queue.length === 1 ? "item" : "items"}` : "clear",
+  const strip = el("div", { class: "mobile-presence", "aria-label": "Who is here" }, [
+    el("span", { class: "mobile-presence-avatars" }, WORKER_IDS.map((id) => el("span", { class: "mobile-presence-seat", "data-presence": presenceState(agentPresence(room, id)) }, [avatarNode(id, "sm")]))),
+    el("span", { class: "mobile-presence-text", text: presenceSummary(room) }),
+  ]);
+
+  const needsBlock = sectionBlock(
+      viewerIsKelly ? "Needs you" : `Needs ${agentLabel(room.viewer)}`,
+      "",
       queue.length
-        ? el("ul", { class: "queue-list" }, queue.map(queueItem))
-        : emptyState(viewerIsKelly ? "Nothing needs Kelly right now." : "Nothing is waiting on you.", "Items appear here when an agent waits on you, hands you work, or logs a receipt that needs a decision."),
+        ? el("ul", { class: "queue-list" }, queue.map((item, index) => queueItem(item, index)))
+        : emptyState(allClearLine(), "When someone needs an answer, a decision, or hands you work, it shows up here first.", { tone: "all-clear" }),
       { tone: queue.length ? "tone-needs" : "" },
-    ),
-    sectionBlock(
+    );
+  const conversationsBlock = sectionBlock(
+      "Conversations",
+      active.length ? conversationMeta : "",
+      threadList(active, "No open conversations.", "Start one from the box below."),
+    );
+  const finishedBlock = sectionBlock(
       "Finished recently",
-      receipts.length ? `${receipts.length} of ${room.messages.filter((message) => message.kind === "receipt").length} receipts` : "none yet",
-      receipts.length ? el("ul", { class: "receipt-list" }, receipts.map(receiptRow)) : emptyState("No work receipts yet.", "Agents log one receipt after each piece of meaningful work."),
-    ),
-    sectionBlock(
-      "Active and waiting",
-      active.length ? `${active.length} ${active.length === 1 ? "thread" : "threads"}${waitingCount ? `, ${waitingCount} waiting` : ""}` : "quiet",
-      threadList(active, "No open threads. Start one from the composer below."),
-    ),
+      receipts.length && allReceipts.length > receipts.length ? `latest ${receipts.length} of ${allReceipts.length}` : "",
+      receipts.length ? el("ul", { class: "receipt-list" }, receipts.map(receiptRow)) : emptyState("Nothing finished yet.", "Each agent leaves a short write-up after finishing a piece of work."),
+    );
+  return [
+    strip,
+    el("div", { class: "overview-grid" }, [
+      el("div", { class: "overview-main" }, [Object.assign(needsBlock, { style: "order:1" }), Object.assign(conversationsBlock, { style: "order:3" })]),
+      el("div", { class: "overview-side" }, [Object.assign(finishedBlock, { style: "order:2" })]),
+    ]),
   ];
 }
 
 function renderInbox() {
   const items = state.room.inbox;
-  if (!items.length) return [emptyState("Nothing needs you right now.", "Items appear here when someone waits on you, hands you work, replies to you, or sends you a message.")];
+  if (!items.length) return [emptyState(allClearLine(), "Items show up here when someone waits on you, hands you work, replies to you, or writes to you directly.", { tone: "all-clear" })];
   const actionable = items.filter((item) => item.actionable);
   const rest = items.filter((item) => !item.actionable);
   const blocks = [];
-  if (actionable.length) blocks.push(sectionBlock("Needs an answer or action", `${actionable.length}`, el("ul", { class: "queue-list" }, actionable.map(queueItem)), { tone: "tone-needs" }));
-  if (rest.length) blocks.push(sectionBlock("For you to read", `${rest.length}`, el("ul", { class: "queue-list" }, rest.map(queueItem))));
+  if (actionable.length) blocks.push(sectionBlock("Answer these", "", el("ul", { class: "queue-list" }, actionable.map((item, index) => queueItem(item, index))), { tone: "tone-needs" }));
+  if (rest.length) blocks.push(sectionBlock("For your information", "", el("ul", { class: "queue-list quiet-list" }, rest.map((item) => queueItem(item, 1, { quiet: true })))));
   return blocks;
 }
 
 function renderThreads() {
   const active = sortThreads(state.room.threads.filter((thread) => thread.status !== "resolved"));
-  return [threadList(active, "No open threads. Resolved threads live under Resolved.")];
+  return [threadList(active, "No open conversations.", "Finished ones live under Wrapped up.")];
 }
 
 function renderResolved() {
   const resolved = [...state.room.threads.filter((thread) => thread.status === "resolved")].sort((left, right) => right.resolvedSeq - left.resolvedSeq);
-  return [threadList(resolved, "Nothing has been resolved yet. Resolving a thread keeps its history and clears it from the active lists.")];
+  return [threadList(resolved, "Nothing is wrapped up yet.", "Wrapping up a conversation keeps its history and clears it from the active lists.")];
 }
 
-function renderFiltered(predicate, empty, label) {
+function renderFiltered(predicate, empty, label, hint = "", options = {}) {
   const messages = state.room.messages.filter(predicate);
-  return [messageList(messages, { empty, label })];
+  return [messages.length ? messageList(messages, { label, ...options }) : emptyState(empty, hint)];
 }
 
 function renderThreadView() {
   const thread = threadById(state.threadId);
-  if (!thread) return [emptyState("That thread does not exist yet.", "Start it from the composer and it will appear here.")];
+  if (!thread) return [emptyState("That conversation does not exist yet.", "Start it from the box below and it will appear here.")];
   const messages = state.room.messages.filter((message) => message.threadId === thread.id);
-  const facts = [];
-  if (thread.status === "waiting") facts.push(["Waiting on", listLabels(thread.waitingOn)]);
-  if (thread.nextOwner && thread.status !== "resolved") facts.push(["Next owner", agentLabel(thread.nextOwner)]);
-  if (thread.status === "resolved") facts.push(["Resolved", `by ${agentLabel(thread.resolvedBy)} ${relativeTime(thread.resolvedAt)} (message ${thread.resolvedSeq})`]);
-  if (thread.project) facts.push(["Project", thread.project]);
-  facts.push(["Participants", listLabels(thread.participants)]);
-  facts.push(["Started", `by ${agentLabel(thread.firstFrom)} ${formatTime(thread.firstAt)}`]);
+  const ask = askMessage(thread);
+  const latestWaiting = thread.status === "waiting" && !ask
+    ? [...messages].reverse().find((message) => message.waitingOn.some((agent) => thread.waitingOn.includes(agent)))
+    : null;
 
+  const facts = [];
+  if (thread.status === "resolved") facts.push(["Wrapped up", `by ${youOr(thread.resolvedBy)} ${relativeTime(thread.resolvedAt)}`]);
+  if (thread.nextOwner && thread.status !== "resolved" && !thread.waitingOn.includes(thread.nextOwner)) facts.push(["Up next", youOr(thread.nextOwner)]);
+  if (!ask) {
+    if (thread.project && thread.project !== thread.title) facts.push(["Project", thread.project]);
+    facts.push(["With", listLabels(thread.participants, { you: true })]);
+    facts.push(["Started", `by ${youOr(thread.firstFrom)} ${formatTime(thread.firstAt)}`]);
+  }
+
+  const askLine = ask
+    ? el("div", { class: "thread-ask-row" }, [avatarNode(ask.from), el("p", { class: "thread-ask" }, [el("b", { text: `${agentLabel(ask.from)} needs ${viewerIs("kelly") ? "you" : "Kelly"}` }), el("br"), askText(ask)])])
+    : latestWaiting
+      ? el("p", { class: "thread-ask" }, [el("b", { text: `${youOr(latestWaiting.from, { capital: true })} asked ${listLabels(latestWaiting.waitingOn.filter((agent) => thread.waitingOn.includes(agent)), { you: true })}` }), el("br"), askText(latestWaiting)])
+      : null;
+
+  const target = ask || messages.at(-1);
+  const chips = ask ? DECISION_REPLIES : QUICK_REPLIES;
+  const canQuick = target && target.from !== state.room.viewer && thread.status !== "resolved";
   const actions = el("div", { class: "thread-actions" }, [
-    el("button", { class: "quiet-button", type: "button", "data-back": "true", text: `Back to ${VIEWS[state.previousView].eyebrow.toLowerCase()}` }),
-    thread.status !== "resolved"
-      ? el("button", { class: "quiet-button", type: "button", "data-thread-action": "resolved", text: "Mark resolved" })
-      : el("button", { class: "quiet-button", type: "button", "data-thread-action": "reopened", text: "Reopen" }),
+    ...(canQuick ? chips.map(([label, text], index) => el("button", {
+      class: `quiet-button quick-reply${ask && index === 0 ? " primary" : ""}`,
+      type: "button",
+      "data-quick-reply": target.id,
+      "data-quick-text": text,
+      text: label,
+    })) : []),
+    ask
+      ? el("button", { class: "text-link-button write-reply", type: "button", "data-reply": ask.id, text: "or write your own" })
+      : null,
+    thread.status === "resolved"
+      ? el("button", { class: "quiet-button", type: "button", "data-thread-action": "reopened", text: "Reopen" })
+      : null,
   ]);
+  const actionsHint = canQuick ? el("p", { class: "thread-actions-hint", text: "A quick answer fills in the box below so you can add a line before it goes." }) : null;
+
+  // Everything Kelly needs to decide, pinned: result, what happens next, attachments.
+  const askDetails = ask ? cardLines([
+    ask.receipt?.next ? cardLine("Next", ask.receipt.next) : null,
+    ask.note?.why ? cardLine("Why", ask.note.why) : null,
+    (ask.receipt?.outputs?.length || ask.note?.outputs?.length) ? cardLine("Files", ask.receipt?.outputs || ask.note?.outputs, { files: true }) : null,
+  ]) : null;
+  const askMore = ask ? cardMore([
+    ask.receipt?.did && ask.receipt.did !== askText(ask) ? cardLine("They did", ask.receipt.did) : null,
+    ask.note?.summary && ask.note.summary !== askText(ask) ? cardLine("They wrote", ask.note.summary) : null,
+    ask.receipt?.result ? cardLine("What happened", ask.receipt.result) : null,
+    thread.project && thread.project !== thread.title ? cardLine("Project", thread.project) : null,
+    cardLine("With", listLabels(thread.participants, { you: true })),
+  ]) : null;
 
   const head = el("div", { class: "thread-head", "data-status": thread.status }, [
-    el("div", { class: "thread-head-top" }, [statusPill(thread), el("span", { class: "thread-id", text: `#${thread.id}` })]),
-    el("dl", { class: "thread-facts" }, facts.map(([term, detail]) => el("div", {}, [el("dt", { text: term }), el("dd", { text: detail })]))),
+    el("div", { class: "thread-head-top" }, [statusPill(thread), ask ? el("span", { class: "thread-asked", text: `asked ${formatTime(ask.createdAt)}` }) : null]),
+    askLine,
+    askDetails,
     actions,
+    actionsHint,
+    askMore,
+    facts.length ? el("dl", { class: "thread-facts" }, facts.map(([term, detail]) => el("div", {}, [el("dt", { text: term }), el("dd", { text: detail })]))) : null,
   ]);
-  return [head, messageList(messages, { inThread: true, label: `Messages in ${thread.title}` })];
+  return [head, messageList(messages, { inThread: true, newDivider: true, pinnedId: ask?.id || "", label: `Messages in ${thread.title}` })];
+}
+
+function renderOverviewHeader() {
+  const { room } = state;
+  const viewerIsKelly = room.viewer === "kelly";
+  byId("viewEyebrow").textContent = todayLabel();
+  byId("viewHeading").textContent = state.loaded ? greeting(agentLabel(room.viewer)) : "Opening the desk";
+  const meaning = byId("viewMeaning");
+  meaning.hidden = false;
+  if (!state.loaded) { meaning.replaceChildren(); return; }
+  const queue = room.inbox.filter((item) => item.actionable);
+  const newCount = room.messages.filter(isNew).length;
+  const parts = [];
+  if (!queue.length) parts.push(el("span", { class: "meaning-quiet", text: `Nothing needs ${viewerIsKelly ? "you" : "Kelly"}. ` }));
+  parts.push(el("span", { class: "meaning-presence", text: presenceSummary(room) }));
+  if (newCount) {
+    parts.push(" ");
+    parts.push(el("button", { class: "text-link-button", type: "button", "data-jump-new": "true", text: `${plural(newCount, "new message")} since you last looked.` }));
+  }
+  meaning.replaceChildren(...parts);
 }
 
 function renderWorkspace({ force = false } = {}) {
-  const key = `${state.view}:${state.threadId}:${state.room.revision}:${state.previousCursor}`;
+  const key = `${state.view}:${state.threadId}:${state.room.revision}:${state.previousCursor}:${state.loaded}`;
   if (!force && key === state.lastRenderKey) return;
   state.lastRenderKey = key;
 
   const body = byId("workspaceBody");
   const scrollTop = body.scrollTop;
   const meta = state.view === "thread" ? { ...VIEWS.thread, title: threadTitle(state.threadId) } : VIEWS[state.view];
-  byId("viewEyebrow").textContent = meta.eyebrow;
-  byId("viewHeading").textContent = meta.title;
-  byId("viewMeaning").textContent = state.view === "thread" ? "" : meta.meaning;
-  byId("viewMeaning").hidden = state.view === "thread";
-  document.title = state.view === "thread" ? `${meta.title} · Agent Commons` : `${meta.eyebrow} · Agent Commons`;
+  const back = byId("backButton");
+  back.hidden = state.view !== "thread";
+  back.textContent = `← ${VIEWS[state.previousView].eyebrow}`;
+  const wrap = byId("wrapButton");
+  const current = state.view === "thread" ? threadById(state.threadId) : null;
+  wrap.hidden = !current || current.status === "resolved" || needsViewer(current);
+  if (state.view === "overview") {
+    renderOverviewHeader();
+  } else {
+    byId("viewEyebrow").textContent = meta.eyebrow;
+    byId("viewHeading").textContent = meta.title;
+    byId("viewMeaning").textContent = state.view === "thread" ? "" : meta.meaning;
+    byId("viewMeaning").hidden = state.view === "thread";
+  }
+  const needsCount = state.room.threads.filter((thread) => thread.needsKelly).length;
+  const titlePrefix = needsCount && state.room.viewer === "kelly" ? `(${needsCount}) ` : "";
+  document.title = state.view === "thread" ? `${titlePrefix}${meta.title} · Agent Commons` : `${titlePrefix}${meta.eyebrow} · Agent Commons`;
+
+  const newCount = state.room.messages.filter(isNew).length;
+  const jump = byId("newSinceLabel");
+  jump.hidden = !(state.view === "room" && newCount);
+  jump.textContent = newCount ? `${plural(newCount, "new message")} · jump there` : "";
 
   let blocks;
   switch (state.view) {
@@ -613,11 +1034,11 @@ function renderWorkspace({ force = false } = {}) {
     case "inbox": blocks = renderInbox(); break;
     case "threads": blocks = renderThreads(); break;
     case "resolved": blocks = renderResolved(); break;
-    case "receipts": blocks = renderFiltered((message) => message.kind === "receipt", "No work receipts yet.", "Work receipts").map((node) => reverseFeed(node)); break;
-    case "notes": blocks = renderFiltered((message) => ["note", "handoff"].includes(message.kind), "No notes or handoffs yet.", "Notes and handoffs").map((node) => reverseFeed(node)); break;
-    case "decisions": blocks = renderFiltered((message) => message.kind === "decision", "No decisions recorded yet.", "Decisions").map((node) => reverseFeed(node)); break;
+    case "receipts": blocks = renderFiltered((message) => message.kind === "receipt", "Nothing finished yet.", "Finished work", "Each agent leaves a short write-up after finishing a piece of work.", { calm: true }).map((node) => reverseFeed(node)); break;
+    case "notes": blocks = renderFiltered((message) => ["note", "handoff"].includes(message.kind), "No notes or handoffs yet.", "Notes and handoffs", "They show up here when someone leaves context or passes work along.").map((node) => reverseFeed(node)); break;
+    case "decisions": blocks = renderFiltered((message) => message.kind === "decision", "No decisions recorded yet.", "Decisions", "Post a decision from the box below and it lands here.").map((node) => reverseFeed(node)); break;
     case "thread": blocks = renderThreadView(); break;
-    default: blocks = renderFiltered(() => true, "The room is quiet. Start the conversation below.", "Whole room");
+    default: blocks = renderFiltered(() => true, "The desk is quiet.", "Everything", "Say hello from the box below.", { newDivider: true });
   }
   byId("viewContent").replaceChildren(...blocks);
   byId("loadingState").hidden = state.loaded;
@@ -633,6 +1054,7 @@ function render(options = {}) {
   renderRail();
   renderWorkspace(options);
   renderComposerThreads();
+  updateComposerMode();
 }
 
 /* ---------- composer ---------- */
@@ -644,6 +1066,8 @@ function setComposerOpen(open, { focus = false } = {}) {
   expander.hidden = open;
   expander.setAttribute("aria-expanded", String(open));
   byId("messageForm").classList.toggle("is-open", open);
+  document.body.classList.toggle("composer-open", open && mobileQuery.matches);
+  document.body.classList.toggle("composer-open-desktop", open && !mobileQuery.matches);
   if (open && focus) byId("messageInput").focus();
   if (!open && focus) expander.focus();
 }
@@ -657,8 +1081,8 @@ function renderComposerThreads() {
   const current = select.value;
   const active = [...state.room.threads].sort((left, right) => right.lastSeq - left.lastSeq);
   const options = [
-    ...active.map((thread) => el("option", { value: thread.id, text: `${thread.title}${thread.status === "resolved" ? " (resolved)" : ""}` })),
-    el("option", { value: "__new", text: "New thread" }),
+    ...active.map((thread) => el("option", { value: thread.id, text: `${thread.title}${thread.status === "resolved" ? " (wrapped up)" : ""}` })),
+    el("option", { value: "__new", text: "New conversation" }),
   ];
   if (!active.some((thread) => thread.id === "general")) options.unshift(el("option", { value: "general", text: "General" }));
   select.replaceChildren(...options);
@@ -679,66 +1103,110 @@ function syncComposerThread() {
 
 function updateComposerMode() {
   const kind = byId("kindSelect").value;
+  const recipient = byId("recipientSelect").value;
   const structured = ["note", "handoff", "receipt", "decision", "question"].includes(kind);
   const fields = byId("structuredFields");
   fields.hidden = !structured;
   fields.querySelectorAll("[data-for]").forEach((field) => {
     field.hidden = !field.dataset.for.split(" ").includes(kind);
   });
+  // A receipt from Kelly cannot need Kelly.
+  if (kind === "receipt" && viewerIs("kelly")) byId("needsKellyField").hidden = true;
+  const more = byId("composerMore");
+  more.hidden = ![...more.querySelectorAll("[data-for]")].some((field) => !field.hidden);
   byId("structuredLegend").textContent = {
     note: "Note details",
     handoff: "Handoff details",
-    receipt: "Receipt details",
+    receipt: "About the work",
     decision: "Decision details",
     question: "Question details",
   }[kind] || "Details";
   byId("bodyLabel").textContent = {
     message: "Message",
-    question: "Question",
-    decision: "Decision",
+    question: "Your question",
+    decision: "The decision",
     note: "Summary",
-    handoff: "Summary for the next owner",
+    handoff: "Summary for whoever picks it up",
     receipt: "What you did",
-    status: "Status",
-    alert: "Alert",
+    status: "Quick update",
+    alert: "Heads up",
   }[kind];
-  byId("nextOwnerLabel").textContent = kind === "question" ? "Waiting on" : "Next owner";
-  byId("waitingToggleLabel").hidden = !["message", "status", "alert"].includes(kind);
+  byId("nextOwnerLabel").textContent = kind === "question" ? "Who should answer" : "Who picks it up next";
+  byId("waitingToggleLabel").hidden = !["message", "status", "alert"].includes(kind) || recipient === "all" || Boolean(state.replyTo);
   byId("resolveToggleLabel").hidden = kind !== "decision";
+  const target = recipient === "all" ? "everyone" : agentLabel(recipient);
   byId("sendButton").textContent = {
-    message: "Post to room",
-    question: "Ask",
+    message: `Send to ${target}`,
+    question: `Ask ${target}`,
     decision: "Record decision",
     note: "Leave note",
-    handoff: "Hand off",
-    receipt: "Log receipt",
-    status: "Post status",
-    alert: "Raise alert",
+    handoff: `Hand off to ${target}`,
+    receipt: "Post finished work",
+    status: `Send to ${target}`,
+    alert: `Send heads up to ${target}`,
   }[kind];
-  const recipient = byId("recipientSelect").value;
+  byId("composerTip").textContent = kind === "receipt" ? "⌘ Enter posts" : "⌘ Enter sends";
+  if (["receipt", "note", "handoff"].includes(kind) && !byId("projectInput").value) {
+    const current = threadById(byId("threadSelect").value);
+    if (current?.project) byId("projectInput").value = current.project;
+  }
   if (kind === "question" && !byId("nextOwnerSelect").value && recipient !== "all") byId("nextOwnerSelect").value = recipient;
   if (kind === "handoff" && !byId("nextOwnerSelect").value && recipient !== "all") byId("nextOwnerSelect").value = recipient;
   byId("replyContext").hidden = !state.replyTo;
+  const title = state.replyTo
+    ? `Reply to ${agentLabel(state.replyTo.from)}`
+    : state.view === "thread" && state.threadId
+      ? `Reply in ${threadTitle(state.threadId)}`
+      : "Write to everyone";
+  byId("composerExpanderText").textContent = state.view === "thread" && state.threadId ? "Reply here" : "Write to everyone";
+  byId("composerTitle").textContent = title;
+  const summaryOn = Boolean(state.replyTo) && !state.composerRowOpen;
+  byId("composerSummary").hidden = !summaryOn;
+  byId("composerRow").hidden = summaryOn;
+  if (summaryOn) {
+    const kindLabel = (byId("kindSelect").selectedOptions[0]?.textContent || "Message").replace(" that needs an answer", "");
+    byId("composerSummaryText").textContent = kind === "message"
+      ? `Goes to ${target} in ${threadTitle(byId("threadSelect").value) || "General"}`
+      : `Goes to ${target} in ${threadTitle(byId("threadSelect").value) || "General"} as ${kindLabel.toLowerCase()}`;
+  }
 }
 
-function startReply(messageId) {
+function renderComposerChips(message) {
+  const host = byId("composerChips");
+  const thread = message ? threadById(message.threadId) : null;
+  const isAsk = message && thread && askMessage(thread)?.id === message.id;
+  const chips = message && message.from !== state.room.viewer ? (isAsk ? DECISION_REPLIES : QUICK_REPLIES) : [];
+  host.hidden = !chips.length;
+  host.replaceChildren(...chips.map(([label, text]) => el("button", { class: "quick-reply", type: "button", "data-chip-text": text, text: label })));
+}
+
+function startReply(messageId, { prefill = "" } = {}) {
   const message = messageById(messageId);
   if (!message) return;
   state.replyTo = { id: message.id, seq: message.seq, from: message.from, threadId: message.threadId };
+  state.composerRowOpen = false;
   const select = byId("threadSelect");
   if ([...select.options].some((option) => option.value === message.threadId)) select.value = message.threadId;
   byId("titleField").hidden = true;
-  byId("replyContextText").textContent = `Replying to ${agentLabel(message.from)} (message ${message.seq}) in ${threadTitle(message.threadId)}`;
+  byId("replyContextText").textContent = `Replying to ${agentLabel(message.from)}: "${firstLine(askText(message), 120)}"`;
   byId("replyContext").hidden = false;
   if (message.from !== state.room.viewer) byId("recipientSelect").value = message.from;
+  updateComposerMode();
+  renderComposerChips(message);
   setComposerOpen(true);
-  byId("messageInput").focus();
+  const input = byId("messageInput");
+  if (prefill && !input.value.trim()) input.value = prefill;
+  input.focus();
+  if (prefill) input.setSelectionRange(input.value.length, input.value.length);
   announce(`Replying to ${agentLabel(message.from)} in ${threadTitle(message.threadId)}`);
 }
 
 function cancelReply() {
   state.replyTo = null;
+  state.composerRowOpen = false;
   byId("replyContext").hidden = true;
+  renderComposerChips(null);
+  updateComposerMode();
 }
 
 function composerError(text, fieldId = "") {
@@ -750,12 +1218,14 @@ function composerError(text, fieldId = "") {
     const field = byId(fieldId);
     field.setAttribute("aria-invalid", "true");
     field.setAttribute("aria-describedby", "composerError");
+    const more = field.closest("details");
+    if (more) more.open = true;
   }
 }
 
 function composerPayload() {
   const kind = byId("kindSelect").value;
-  const body = byId("messageInput").value.trim();
+  const body = expandShortcuts(byId("messageInput").value).trim();
   const recipient = byId("recipientSelect").value;
   let threadId = byId("threadSelect").value;
   const title = byId("titleInput").value.trim();
@@ -763,7 +1233,7 @@ function composerPayload() {
   const thread = {};
 
   if (threadId === "__new") {
-    if (!title) return { error: "Give the new thread a short title so everyone can find it.", focus: "titleInput" };
+    if (!title) return { error: "Give the new conversation a short name so everyone can find it.", focus: "titleInput" };
     threadId = slugify(title);
     thread.title = title;
     payload.threadId = threadId;
@@ -787,7 +1257,7 @@ function composerPayload() {
     }
   }
   if (kind === "note" || kind === "handoff") {
-    if (kind === "handoff" && !nextOwner) return { error: "A handoff needs a next owner.", focus: "nextOwnerSelect" };
+    if (kind === "handoff" && !nextOwner) return { error: "Say who picks this up next.", focus: "nextOwnerSelect" };
     payload.note = {
       project: byId("projectInput").value.trim() || "General",
       summary: body,
@@ -796,15 +1266,15 @@ function composerPayload() {
       action: byId("actionInput").value.trim(),
       nextOwner,
       next: byId("nextInput").value.trim(),
-      durablePath: byId("durablePathInput").value.trim(),
+      durablePath: byId("durablePathNoteInput").value.trim(),
     };
     if (kind === "handoff") payload.waitingOn = [nextOwner];
     if (nextOwner) thread.nextOwner = nextOwner;
   }
   if (kind === "receipt") {
     const project = byId("projectInput").value.trim();
-    if (!project) return { error: "Name the project this receipt belongs to.", focus: "projectInput" };
-    const needsKelly = byId("needsKellyInput").value.trim();
+    if (!project) return { error: "Name the project this work belongs to.", focus: "projectInput" };
+    const needsKelly = viewerIs("kelly") ? "" : byId("needsKellyInput").value.trim();
     payload.receipt = {
       project,
       did: body,
@@ -832,12 +1302,14 @@ function slugify(value) {
 
 function resetComposer() {
   byId("messageInput").value = "";
-  for (const id of ["titleInput", "projectInput", "resultInput", "outputsInput", "whyInput", "actionInput", "blockersInput", "needsKellyInput", "nextInput", "durablePathInput"]) byId(id).value = "";
+  for (const id of ["titleInput", "projectInput", "resultInput", "outputsInput", "whyInput", "actionInput", "blockersInput", "needsKellyInput", "nextInput", "durablePathInput", "durablePathNoteInput"]) byId(id).value = "";
   byId("nextOwnerSelect").value = "";
   byId("healthSelect").value = "";
   byId("waitingToggle").checked = false;
   byId("resolveToggle").checked = true;
   byId("kindSelect").value = "message";
+  byId("recipientSelect").value = "all";
+  byId("composerMore").open = false;
   cancelReply();
   composerError("");
   updateComposerMode();
@@ -852,8 +1324,8 @@ async function requestJson(url, options = {}) {
     window.location.href = "/brain/login.html";
     throw new Error("Sign in required");
   }
-  if (response.status === 409) throw Object.assign(new Error(result.error || "The room changed while you were posting. It has been refreshed; please try again."), { conflict: true });
-  if (!response.ok) throw new Error(result.error || `Request failed (${response.status})`);
+  if (response.status === 409) throw Object.assign(new Error(result.error || "Someone posted while you were writing. The desk has been refreshed; your draft is still here, please send it again."), { conflict: true });
+  if (!response.ok) throw new Error(result.error || `That did not go through (${response.status})`);
   return result;
 }
 
@@ -883,6 +1355,21 @@ async function acknowledgeLatest() {
   renderRail();
 }
 
+function setUpdatedLabel() {
+  const label = byId("revisionLabel");
+  label.textContent = state.lastLoadedAt ? `Updated ${formatClock(state.lastLoadedAt)}` : "";
+  label.title = `Copy ${state.room.revision} of the room`;
+}
+
+function setViewerChrome() {
+  const viewer = state.room.viewer;
+  byId("viewerName").textContent = agentLabel(viewer);
+  byId("viewerChip").dataset.agent = viewer;
+  byId("viewerChip").title = `Signed in as ${agentLabel(viewer)}`;
+  byId("viewerAvatar").replaceWith(Object.assign(avatarNode(viewer, "sm"), { id: "viewerAvatar" }));
+  byId("composerAvatar").replaceWith(Object.assign(avatarNode(viewer, "sm"), { id: "composerAvatar" }));
+}
+
 async function loadRoom({ quiet = false, force = false } = {}) {
   if (!quiet) setConnection("saving", state.loaded ? "refreshing" : "opening");
   try {
@@ -891,21 +1378,16 @@ async function loadRoom({ quiet = false, force = false } = {}) {
     if (state.previousCursor === null) state.previousCursor = result.cursors?.[result.viewer]?.seq || 0;
     state.room = { threads: [], inbox: [], ...result };
     state.loaded = true;
-    byId("viewerName").textContent = agentLabel(state.room.viewer);
-    byId("viewerChip").dataset.agent = state.room.viewer;
-    byId("viewerChip").querySelector(".viewer-avatar").textContent = initials(state.room.viewer);
-    byId("revisionLabel").textContent = `revision ${state.room.revision}`;
-    const newCount = state.room.messages.filter(isNew).length;
-    const newLabel = byId("newSinceLabel");
-    newLabel.hidden = !newCount;
-    newLabel.textContent = newCount ? `${newCount} new since you last looked` : "";
+    state.lastLoadedAt = new Date().toISOString();
+    setViewerChrome();
+    setUpdatedLabel();
     if (state.offline) {
       state.offline = false;
       byId("offlineBanner").hidden = true;
-      showToast("Back online. The room is live again.");
+      showToast("Back online. The desk is live again.");
     }
-    setConnection("", "room live");
-    if (changed && quiet && state.loaded) announce(`Room updated, revision ${state.room.revision}`);
+    setConnection("", "connected");
+    if (changed && quiet && state.loaded) announce("Desk updated");
     render({ force });
     await acknowledgeLatest();
   } catch (error) {
@@ -913,11 +1395,11 @@ async function loadRoom({ quiet = false, force = false } = {}) {
       state.offline = true;
       byId("offlineBanner").hidden = false;
       byId("offlineText").textContent = state.loaded
-        ? "The room is offline. Showing the last copy this page received; posting is paused until it returns."
-        : "The room could not be opened. Check that the loopback service is running, then try again.";
-      setConnection("error", "room offline");
+        ? "The desk is offline. Showing the last copy this page received; sending is paused until it is back."
+        : "The desk could not be opened. Check that it is running on this Mac, then try again.";
+      setConnection("error", "not connected");
       if (!quiet) showToast(error.message, { alert: true });
-      else announce("The room went offline", { alert: true });
+      else announce("The desk went offline", { alert: true });
       byId("loadingState").hidden = true;
     }
     byId("sendButton").disabled = true;
@@ -929,7 +1411,7 @@ async function loadRoom({ quiet = false, force = false } = {}) {
 async function postMessage(payload, { successText }) {
   const button = byId("sendButton");
   button.disabled = true;
-  setConnection("saving", "posting");
+  setConnection("saving", "sending");
   try {
     const result = await requestJson(API, {
       method: "POST",
@@ -937,12 +1419,12 @@ async function postMessage(payload, { successText }) {
       body: JSON.stringify(payload),
     });
     await loadRoom({ quiet: true });
-    setConnection("", "saved");
-    window.setTimeout(() => { if (!state.offline) setConnection("", "room live"); }, 1800);
+    setConnection("", "sent");
+    window.setTimeout(() => { if (!state.offline) setConnection("", "connected"); }, 1800);
     showToast(successText);
     return result;
   } catch (error) {
-    setConnection("error", error.conflict ? "conflict" : "post failed");
+    setConnection("error", error.conflict ? "desk changed" : "not sent");
     showToast(error.message, { alert: true });
     if (error.conflict) await loadRoom({ quiet: true });
     throw error;
@@ -961,9 +1443,11 @@ async function sendMessage(event) {
   }
   composerError("");
   try {
-    const result = await postMessage(payload, { successText: `Posted to ${threadTitle(payload.threadId) || payload.threadId}` });
+    const result = await postMessage(payload, { successText: `Sent to ${threadTitle(payload.threadId) || payload.threadId}` });
     const threadId = result.message?.threadId || payload.threadId;
     resetComposer();
+    if (payload.thread?.status === "resolved") confettiBurst();
+    if (mobileQuery.matches) setComposerOpen(false);
     if (state.view === "thread" && state.threadId === threadId) {
       render({ force: true });
       const node = byId(`message-${result.message.seq}`);
@@ -971,17 +1455,17 @@ async function sendMessage(event) {
     } else {
       openThread(threadId, { focusHeading: false });
     }
-    byId("messageInput").focus();
+    if (!mobileQuery.matches) byId("messageInput").focus();
   } catch {
     // the toast already explained; keep the draft
   }
 }
 
-async function threadAction(status) {
+async function threadAction(status, trigger) {
   const thread = threadById(state.threadId);
   if (!thread) return;
   const payload = {
-    body: status === "resolved" ? `Marking "${thread.title}" resolved.` : `Reopening "${thread.title}".`,
+    body: status === "resolved" ? `Wrapping up "${thread.title}".` : `Reopening "${thread.title}".`,
     to: ["all"],
     kind: "status",
     threadId: thread.id,
@@ -989,7 +1473,11 @@ async function threadAction(status) {
     clientId: `${state.room.viewer}-web-${crypto.randomUUID()}`,
   };
   try {
-    await postMessage(payload, { successText: status === "resolved" ? "Thread resolved. History kept." : "Thread reopened." });
+    await postMessage(payload, { successText: status === "resolved" ? "Wrapped up. Nice." : "Reopened." });
+    if (status === "resolved") {
+      const rect = trigger?.getBoundingClientRect();
+      confettiBurst(rect ? { x: rect.left + rect.width / 2, y: rect.top } : {});
+    }
     render({ force: true });
     byId("viewHeading").focus();
   } catch {
@@ -1015,13 +1503,22 @@ byId("needsKellyButton").addEventListener("click", () => {
 byId("viewContent").addEventListener("click", (event) => {
   const open = event.target.closest("[data-open-thread]");
   if (open) {
-    openThread(open.dataset.openThread);
+    openThread(open.dataset.openThread, { focusHeading: !open.dataset.replySeq });
     const seq = open.dataset.focusSeq;
     if (seq) window.requestAnimationFrame(() => {
       const node = byId(`message-${seq}`);
       node?.scrollIntoView({ block: "center", behavior: "auto" });
       node?.classList.add("highlight");
+      if (open.dataset.replySeq) {
+        const message = state.room.messages.find((candidate) => String(candidate.seq) === String(open.dataset.replySeq));
+        if (message) startReply(message.id);
+      }
     });
+    return;
+  }
+  const quick = event.target.closest("[data-quick-reply]");
+  if (quick) {
+    startReply(quick.dataset.quickReply, { prefill: quick.dataset.quickText });
     return;
   }
   const reply = event.target.closest("[data-reply]");
@@ -1036,22 +1533,58 @@ byId("viewContent").addEventListener("click", (event) => {
     return;
   }
   const action = event.target.closest("[data-thread-action]");
-  if (action) threadAction(action.dataset.threadAction);
+  if (action) threadAction(action.dataset.threadAction, action);
 });
 
+byId("newSinceLabel").addEventListener("click", () => scrollToNewOrEnd());
+byId("composerChips").addEventListener("click", (event) => {
+  const chip = event.target.closest("[data-chip-text]");
+  if (!chip) return;
+  const input = byId("messageInput");
+  input.value = input.value.trim() ? `${chip.dataset.chipText} ${input.value}` : chip.dataset.chipText;
+  input.focus();
+  input.setSelectionRange(input.value.length, input.value.length);
+});
+byId("composerChange").addEventListener("click", () => {
+  state.composerRowOpen = true;
+  updateComposerMode();
+  byId("recipientSelect").focus();
+});
+byId("viewMeaning").addEventListener("click", (event) => {
+  if (event.target.closest("[data-jump-new]")) setView("room");
+});
+byId("backButton").addEventListener("click", () => {
+  setView(state.previousView);
+  byId("viewHeading").focus();
+});
+byId("wrapButton").addEventListener("click", (event) => threadAction("resolved", event.currentTarget));
 byId("composerExpander").addEventListener("click", () => setComposerOpen(true, { focus: true }));
 byId("composerCollapse").addEventListener("click", () => setComposerOpen(false, { focus: true }));
+byId("composerClose").addEventListener("click", () => setComposerOpen(false, { focus: true }));
+byId("composerScrim").addEventListener("click", () => setComposerOpen(false, { focus: true }));
 byId("cancelReplyButton").addEventListener("click", () => {
   cancelReply();
   byId("messageInput").focus();
 });
 
 byId("messageInput").addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && state.replyTo) {
-    cancelReply();
-    announce("Reply cancelled");
+  if (event.key === "Escape") {
+    if (state.replyTo) {
+      cancelReply();
+      announce("Reply cancelled");
+    } else if (mobileQuery.matches) {
+      setComposerOpen(false, { focus: true });
+    }
   }
   if ((event.metaKey || event.ctrlKey) && event.key === "Enter") byId("messageForm").requestSubmit();
+});
+byId("messageInput").addEventListener("input", (event) => {
+  const input = event.target;
+  const expanded = expandShortcuts(input.value);
+  if (expanded !== input.value && /\s$/.test(input.value)) {
+    input.value = expanded;
+    input.setSelectionRange(input.value.length, input.value.length);
+  }
 });
 
 byId("kindSelect").addEventListener("change", updateComposerMode);
@@ -1064,6 +1597,32 @@ byId("threadSelect").addEventListener("change", () => {
 byId("messageForm").addEventListener("submit", sendMessage);
 byId("refreshButton").addEventListener("click", () => loadRoom());
 byId("retryButton").addEventListener("click", () => loadRoom());
+
+// The mark: five quick taps throws confetti.
+let markTaps = 0;
+let markTapTimer = 0;
+byId("brandMark").addEventListener("click", () => {
+  markTaps += 1;
+  window.clearTimeout(markTapTimer);
+  markTapTimer = window.setTimeout(() => { markTaps = 0; }, 1200);
+  if (markTaps >= 5) {
+    markTaps = 0;
+    confettiBurst({ x: 60, y: 60 });
+    showToast("Five seats, one table. Hi, Kelly.");
+  }
+});
+
+// Konami code: party hats for a minute.
+const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+let konamiIndex = 0;
+window.addEventListener("keydown", (event) => {
+  if (event.target instanceof Element && event.target.matches("input, textarea, select")) return;
+  konamiIndex = event.key === KONAMI[konamiIndex] ? konamiIndex + 1 : (event.key === KONAMI[0] ? 1 : 0);
+  if (konamiIndex === KONAMI.length) {
+    konamiIndex = 0;
+    partyMode();
+  }
+});
 
 function startPolling() {
   window.clearInterval(state.pollTimer);
@@ -1089,24 +1648,32 @@ window.addEventListener("offline", () => {
   state.offline = true;
   byId("offlineBanner").hidden = false;
   byId("offlineText").textContent = "This device is offline. Showing the last copy this page received.";
-  setConnection("error", "offline");
+  setConnection("error", "not connected");
 });
 
 function syncAgentDetails() {
   byId("agentDetails").open = !mobileQuery.matches;
+  document.body.classList.toggle("composer-open", composerIsOpen() && mobileQuery.matches);
 }
 mobileQuery.addEventListener("change", syncAgentDetails);
+phoneQuery.addEventListener("change", syncAgentDetails);
 syncAgentDetails();
+preloadAvatars();
 
 const initial = readHash();
 state.view = initial.view;
 state.threadId = initial.threadId;
 state.previousView = initial.view === "thread" ? "overview" : initial.view;
+document.body.classList.toggle("is-subview", state.view === "thread");
+document.body.classList.toggle("is-inbox", state.view === "inbox");
 const initialRadio = document.querySelector(`input[name="view"][value="${state.previousView}"]`);
-if (initialRadio) initialRadio.checked = true;
+document.querySelectorAll('input[name="view"]').forEach((input) => { input.checked = false; });
+if (initialRadio && state.view !== "thread") initialRadio.checked = true;
 updateComposerMode();
-setComposerOpen(state.view === "thread");
+setComposerOpen(false);
 await loadRoom();
 render({ force: true });
 syncComposerThread();
+if (state.view === "room") scrollToNewOrEnd();
+if (mobileQuery.matches && initialRadio?.checked) initialRadio.closest(".view-option")?.scrollIntoView({ inline: "center", block: "nearest", behavior: "auto" });
 startPolling();

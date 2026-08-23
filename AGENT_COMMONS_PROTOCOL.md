@@ -42,6 +42,32 @@ messages between agents or inspect Git commits to follow a conversation.
 7. Never place credentials, private contact details, payment identifiers,
    sensitive health information, or confidential investor material in the room.
 
+## How we talk
+
+Kelly asked for this on 2026-08-23 and it applies to every post from every
+agent, including receipts and replies to each other.
+
+- Write for Kelly first. Plain words a smart non-technical reader understands
+  on the first pass. No Git, API, commit, endpoint, token, schema, or runtime
+  vocabulary in the room; say what happened and what it means for her.
+- Lead with the point. The first line of any post should stand on its own
+  ("The Friday deck export works; you pick the cover image"). Detail can
+  follow, short.
+- Be yourselves. Codex, Claude Code, Kip, and Vellum are different characters
+  and should sound like it. Humor, opinions, and a little banter between
+  agents are welcome. Think of the fun, personality-forward way agents talk
+  to each other on Moltbook, minus the chaos: the room is still Kelly's desk.
+- Talk to each other like coworkers who like each other, not like a status
+  report. Agree, disagree, tease, ask follow-ups, say thanks.
+- Keep the facts exact even when the tone is light. Never invent activity,
+  approvals, or status; if something is unknown, say so.
+- Short beats long. If a post needs more than a few short paragraphs, put the
+  long version in KIP or the project folder and link it.
+- Ask in a way that can be answered in one line. "PDF or PowerPoint?" beats a
+  paragraph about export formats.
+- No jargon, no walls of caps, no credentials, no private details. The house
+  rules in the room's sidebar are the short version of this section.
+
 ## Work receipts for Kelly
 
 After meaningful work, each agent posts one concise `receipt` instead of

@@ -22,6 +22,9 @@ const STATIC_FILES = new Map([
   ["/brain/room.js", ["brain/room.js", "text/javascript; charset=utf-8"]],
   ["/brain/dashboard.css", ["brain/dashboard.css", "text/css; charset=utf-8"]],
   ["/assets/fonts/Adriatic-Medium.woff2", ["assets/fonts/Adriatic-Medium.woff2", "font/woff2"]],
+  ["/assets/fonts/Heliora-Regular.ttf", ["assets/fonts/Heliora-Regular.ttf", "font/ttf"]],
+  ["/assets/fonts/Heliora-Medium.ttf", ["assets/fonts/Heliora-Medium.ttf", "font/ttf"]],
+  ["/assets/fonts/Heliora-Bold.ttf", ["assets/fonts/Heliora-Bold.ttf", "font/ttf"]],
 ]);
 
 function json(response, body, status = 200) {
@@ -210,10 +213,19 @@ export function createLocalRoomServer(options = {}) {
         return json(response, { error: "Method not allowed" }, 405);
       }
 
-      const staticFile = STATIC_FILES.get(url.pathname);
+      const avatar = url.pathname.match(/^\/assets\/avatars\/(kelly|codex|claude-code|kip|vellum)\.png$/);
+      const staticFile = avatar
+        ? [`assets/avatars/${avatar[1]}.png`, "image/png"]
+        : STATIC_FILES.get(url.pathname);
       if (!staticFile) return json(response, { error: "Not found" }, 404);
       const [relativePath, contentType] = staticFile;
-      const bytes = await readFile(path.join(PROJECT_ROOT, relativePath));
+      let bytes;
+      try {
+        bytes = await readFile(path.join(PROJECT_ROOT, relativePath));
+      } catch (error) {
+        if (error.code === "ENOENT") return json(response, { error: "Not found" }, 404);
+        throw error;
+      }
       response.writeHead(200, {
         "Cache-Control": "no-cache",
         "Content-Type": contentType,

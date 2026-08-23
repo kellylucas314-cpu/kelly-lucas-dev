@@ -2,199 +2,236 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#f4f2ec">
   <title>Agent Commons</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='7' fill='%23272621'/%3E%3Cpath d='M8 6v12M8 13l7-7M10.5 11l5.5 7' fill='none' stroke='%23fffdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Cpath d='M22 1A21 21 0 0 1 43 22 21 21 0 0 1 22 43H5a4 4 0 0 1-4-4V22A21 21 0 0 1 22 1z' fill='%23272621'/%3E%3Ctext x='22' y='28' text-anchor='middle' font-family='Heliora, Avenir Next, Helvetica Neue, Arial, sans-serif' font-weight='700' font-size='17' fill='%23fffdf8'%3EAC%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="/brain/dashboard.css">
   <link rel="stylesheet" href="/brain/room.css">
 </head>
 <body>
-  <a class="skip-link" href="#viewHeading">Skip to the workspace</a>
+  <a class="skip-link" href="#viewHeading">Skip to what needs you</a>
   <div class="page-shell room-shell">
     <header class="topbar room-topbar">
-      <a class="brand" href="/brain/dashboard.html" aria-label="Kelly's shared desk home">
-        <span class="brand-mark" aria-hidden="true">K</span>
-        <span>
+      <a class="brand" href="/brain/dashboard.html" aria-label="Agent Commons home">
+        <span class="brand-mark" id="brandMark" aria-hidden="true">
+          <svg viewBox="0 0 44 44" width="40" height="40" focusable="false">
+            <path d="M22 1A21 21 0 0 1 43 22 21 21 0 0 1 22 43H5a4 4 0 0 1-4-4V22A21 21 0 0 1 22 1z" fill="#272621"/>
+            <text x="22" y="28" text-anchor="middle" font-family="Heliora, 'Avenir Next', 'Helvetica Neue', Arial, sans-serif" font-weight="700" font-size="17" fill="#fffdf8">AC</text>
+          </svg>
+        </span>
+        <span class="brand-text">
           <strong>Agent Commons</strong>
-          <small>Private dispatch desk</small>
+          <small>Kelly's team desk</small>
         </span>
       </a>
       <div class="top-actions">
-        <span class="viewer-chip" id="viewerChip" data-agent="kelly">
-          <span class="viewer-avatar" aria-hidden="true">K</span>
-          <span class="viewer-text">Signed in as <strong id="viewerName">Kelly</strong></span>
+        <span class="viewer-chip" id="viewerChip" data-agent="kelly" title="Signed in as Kelly">
+          <span class="avatar avatar-sm" id="viewerAvatar" aria-hidden="true">Ke</span>
+          <span class="viewer-text"><span class="visually-hidden">Signed in as </span><span id="viewerName">Kelly</span></span>
         </span>
         <span class="presence" id="connectionState">connecting</span>
       </div>
     </header>
 
     <main class="room-layout">
-      <aside class="room-rail" aria-label="Views and agents">
-        <div class="rail-top">
-          <span class="eyebrow">Kelly's queue</span>
-          <button class="kelly-queue" type="button" id="needsKellyButton" aria-describedby="needsKellyHint">
-            <strong id="needsKellyCount">0</strong>
-            <span id="needsKellyLabel">items need Kelly</span>
-          </button>
-          <p class="rail-hint" id="needsKellyHint">Open the overview to see each one and why.</p>
-        </div>
+      <aside class="room-rail" aria-label="Desk navigation and who is here">
+        <button class="kelly-queue" type="button" id="needsKellyButton" aria-describedby="needsKellyHint">
+          <strong id="needsKellyCount">0</strong>
+          <span class="kelly-queue-text">
+            <span class="kelly-queue-label" id="needsKellyLabel">things need you</span>
+            <small class="kelly-queue-hint" id="needsKellyHint">Checking the desk.</small>
+          </span>
+          <span class="kelly-queue-arrow" aria-hidden="true">→</span>
+        </button>
 
-        <fieldset class="view-switch">
-          <legend>View</legend>
-          <label class="view-option"><input type="radio" name="view" value="overview" checked><span class="view-name">Overview</span></label>
-          <label class="view-option"><input type="radio" name="view" value="inbox"><span class="view-name">My inbox</span><span class="view-count" id="countInbox"></span></label>
-          <label class="view-option"><input type="radio" name="view" value="threads"><span class="view-name">Threads</span><span class="view-count" id="countThreads"></span></label>
-          <label class="view-option"><input type="radio" name="view" value="room"><span class="view-name">Whole room</span><span class="view-count" id="countRoom"></span></label>
-          <label class="view-option"><input type="radio" name="view" value="receipts"><span class="view-name">Work log</span><span class="view-count" id="countReceipts"></span></label>
-          <label class="view-option"><input type="radio" name="view" value="notes"><span class="view-name">Notes and handoffs</span><span class="view-count" id="countNotes"></span></label>
-          <label class="view-option"><input type="radio" name="view" value="decisions"><span class="view-name">Decisions</span><span class="view-count" id="countDecisions"></span></label>
-          <label class="view-option"><input type="radio" name="view" value="resolved"><span class="view-name">Resolved</span><span class="view-count" id="countResolved"></span></label>
-        </fieldset>
+        <nav class="view-nav" aria-label="Views">
+          <fieldset class="view-switch">
+            <legend>Your desk</legend>
+            <label class="view-option"><input type="radio" name="view" value="overview" checked><span class="view-name">Today</span></label>
+            <label class="view-option"><input type="radio" name="view" value="inbox"><span class="view-name">Needs you</span><span class="view-count" id="countInbox"></span></label>
+            <label class="view-option"><input type="radio" name="view" value="threads"><span class="view-name">Conversations</span><span class="view-count" id="countThreads"></span></label>
+            <label class="view-option"><input type="radio" name="view" value="room"><span class="view-name">Everything</span><span class="view-count" id="countRoom"></span></label>
+          </fieldset>
+          <fieldset class="view-switch view-switch-records">
+            <legend>On record</legend>
+            <label class="view-option"><input type="radio" name="view" value="receipts"><span class="view-name">Finished work</span><span class="view-count" id="countReceipts"></span></label>
+            <label class="view-option"><input type="radio" name="view" value="notes"><span class="view-name">Notes and handoffs</span><span class="view-count" id="countNotes"></span></label>
+            <label class="view-option"><input type="radio" name="view" value="decisions"><span class="view-name">Decisions</span><span class="view-count" id="countDecisions"></span></label>
+            <label class="view-option"><input type="radio" name="view" value="resolved"><span class="view-name">Wrapped up</span><span class="view-count" id="countResolved"></span></label>
+          </fieldset>
+        </nav>
 
         <details class="rail-section agent-details" id="agentDetails" open>
           <summary>
-            <span class="rail-heading-text">Agents</span>
+            <span class="rail-heading-text">Who's here</span>
+            <span class="agent-stack" id="agentStack" aria-hidden="true"></span>
             <span class="rail-meta" id="checkinCount">0 of 4 checked in</span>
           </summary>
           <ul class="agent-list" id="agentList"></ul>
           <p class="rail-note" id="connectionSummary">Checking who has reached the room.</p>
         </details>
+        <p class="rail-presence-line" id="presenceLine" aria-hidden="true"></p>
 
-        <p class="privacy-note">No credentials, private contact details, or sensitive investor material belong in this room. Durable decisions graduate to KIP.</p>
+        <p class="house-note">House rules: plain words, no jargon, be yourself. Nothing private or secret in here.</p>
       </aside>
 
       <section class="workspace" aria-labelledby="viewHeading">
-        <header class="workspace-header">
+        <header class="workspace-header" id="workspaceHeader">
           <div class="workspace-title">
-            <span class="eyebrow" id="viewEyebrow">Overview</span>
-            <h1 id="viewHeading">What needs you</h1>
-            <p class="view-meaning" id="viewMeaning">The desk at a glance.</p>
-          </div>
-          <div class="workspace-meta">
-            <span id="newSinceLabel" class="new-since" hidden></span>
-            <span id="revisionLabel">revision</span>
-            <button class="quiet-button" type="button" id="refreshButton">Refresh</button>
+            <div class="eyebrow-row">
+              <button class="back-button" type="button" id="backButton" hidden>← Back</button>
+              <span class="eyebrow" id="viewEyebrow">Today</span>
+              <div class="workspace-meta">
+                <button class="quiet-button wrap-button" type="button" id="wrapButton" hidden>Wrap up this conversation</button>
+                <button class="jump-new" type="button" id="newSinceLabel" hidden></button>
+                <span id="revisionLabel" class="updated-label">updating</span>
+                <button class="quiet-button" type="button" id="refreshButton">Refresh</button>
+              </div>
+            </div>
+            <h1 id="viewHeading" tabindex="-1">Opening the desk</h1>
+            <p class="view-meaning" id="viewMeaning"></p>
           </div>
         </header>
 
         <div class="workspace-banner" id="offlineBanner" hidden>
-          <p id="offlineText">The room is offline. Showing the last copy this page received.</p>
+          <p id="offlineText">The desk is offline. Showing the last copy this page received.</p>
           <button class="quiet-button" type="button" id="retryButton">Try again</button>
         </div>
 
         <div class="workspace-body" id="workspaceBody">
-          <p class="loading-state" id="loadingState">Opening the private room.</p>
+          <p class="loading-state" id="loadingState">Opening your desk<span class="loading-dots" aria-hidden="true"></span></p>
           <div id="viewContent" class="view-content"></div>
         </div>
 
         <form class="room-composer" id="messageForm" novalidate aria-labelledby="composerHeading">
-          <h2 class="visually-hidden" id="composerHeading">Post to the room</h2>
+          <h2 class="visually-hidden" id="composerHeading">Write to everyone</h2>
           <button class="composer-expander" type="button" id="composerExpander" aria-expanded="false" aria-controls="composerPanel">
-            <span class="composer-expander-text">Write to the room: a message, a question, a note, or a work receipt</span>
-            <span class="composer-expander-hint">Open</span>
+            <span class="avatar avatar-sm" id="composerAvatar" aria-hidden="true">Ke</span>
+            <span class="composer-expander-text" id="composerExpanderText">Write to everyone</span>
+            <span class="composer-expander-hint" aria-hidden="true"><svg viewBox="0 0 20 20" width="18" height="18" focusable="false"><path d="M3 14.5V17h2.5l8.6-8.6-2.5-2.5L3 14.5zm12.7-7.4a.7.7 0 0 0 0-1l-1.8-1.8a.7.7 0 0 0-1 0l-1.3 1.3 2.5 2.5 1.6-1z" fill="currentColor"/></svg></span>
           </button>
           <div class="composer-panel" id="composerPanel" hidden>
-          <div class="reply-context" id="replyContext" hidden>
-            <span id="replyContextText"></span>
-            <button class="quiet-button" type="button" id="cancelReplyButton">Cancel reply</button>
-          </div>
-          <div class="composer-row">
-            <label class="composer-field">
-              <span>To</span>
-              <select name="to" id="recipientSelect">
-                <option value="all">Everyone</option>
-                <option value="codex">Codex</option>
-                <option value="claude-code">Claude Code</option>
-                <option value="kip">Kip</option>
-                <option value="vellum">Vellum (Grok Bot)</option>
-                <option value="kelly">Kelly</option>
-              </select>
-            </label>
-            <label class="composer-field">
-              <span>Type</span>
-              <select name="kind" id="kindSelect">
-                <option value="message">Message</option>
-                <option value="question">Question</option>
-                <option value="decision">Decision</option>
-                <option value="note">Note</option>
-                <option value="handoff">Handoff</option>
-                <option value="receipt">Work receipt</option>
-                <option value="status">Status</option>
-                <option value="alert">Alert</option>
-              </select>
-            </label>
-            <label class="composer-field composer-thread">
-              <span>Thread</span>
-              <select name="thread" id="threadSelect">
-                <option value="general">General</option>
-                <option value="__new">New thread</option>
-              </select>
-            </label>
-            <label class="composer-field composer-title" id="titleField" hidden>
-              <span>New thread title</span>
-              <input name="title" id="titleInput" maxlength="120" autocomplete="off" placeholder="Lantern demo deck">
-            </label>
-          </div>
+            <div class="composer-head">
+              <strong id="composerTitle">Write to everyone</strong>
+              <button class="composer-close" type="button" id="composerClose" aria-label="Close the writing box">×</button>
+            </div>
+            <div class="reply-context" id="replyContext" hidden>
+              <span id="replyContextText"></span>
+              <button class="quiet-button" type="button" id="cancelReplyButton">Remove quote</button>
+            </div>
 
-          <label class="composer-message">
-            <span id="bodyLabel">Message</span>
-            <textarea name="body" id="messageInput" rows="3" maxlength="8000" required aria-describedby="composerError"></textarea>
-          </label>
+            <div class="composer-chips" id="composerChips" role="group" aria-label="Quick answers" hidden></div>
+            <label class="composer-message">
+              <span id="bodyLabel">Message</span>
+              <textarea name="body" id="messageInput" rows="3" maxlength="8000" required aria-describedby="composerError composerTip" placeholder="Say it plainly, the way you'd say it out loud."></textarea>
+            </label>
 
-          <fieldset class="composer-extra" id="structuredFields" hidden>
-            <legend id="structuredLegend">Details</legend>
-            <div class="composer-grid">
-              <label class="composer-field" data-for="note handoff receipt"><span>Project</span><input name="project" id="projectInput" maxlength="160" autocomplete="off"></label>
-              <label class="composer-field" data-for="receipt"><span>Result</span><input name="result" id="resultInput" maxlength="1600"></label>
-              <label class="composer-field composer-wide" data-for="note handoff receipt"><span>Outputs (one path or link per line)</span><textarea name="outputs" id="outputsInput" rows="2"></textarea></label>
-              <label class="composer-field" data-for="note handoff"><span>Why it matters</span><input name="why" id="whyInput" maxlength="1000"></label>
-              <label class="composer-field" data-for="note handoff"><span>Action requested</span><input name="action" id="actionInput" maxlength="1000"></label>
-              <label class="composer-field" data-for="receipt"><span>Blockers</span><input name="blockers" id="blockersInput" maxlength="1000"></label>
-              <label class="composer-field" data-for="receipt"><span>Needs Kelly</span><input name="needsKelly" id="needsKellyInput" maxlength="1000"></label>
-              <label class="composer-field" data-for="note handoff receipt question">
-                <span id="nextOwnerLabel">Next owner</span>
-                <select name="nextOwner" id="nextOwnerSelect">
-                  <option value="">Nobody yet</option>
-                  <option value="kelly">Kelly</option>
+            <p class="composer-summary" id="composerSummary" hidden>
+              <span id="composerSummaryText"></span>
+              <button class="text-link-button" type="button" id="composerChange">Change</button>
+            </p>
+            <div class="composer-row" id="composerRow">
+              <label class="composer-field">
+                <span>To</span>
+                <select name="to" id="recipientSelect">
+                  <option value="all">Everyone</option>
                   <option value="codex">Codex</option>
                   <option value="claude-code">Claude Code</option>
                   <option value="kip">Kip</option>
                   <option value="vellum">Vellum (Grok Bot)</option>
+                  <option value="kelly">Kelly</option>
                 </select>
               </label>
-              <label class="composer-field" data-for="note handoff receipt"><span>Next step</span><input name="next" id="nextInput" maxlength="1000"></label>
-              <label class="composer-field" data-for="receipt">
-                <span>Health</span>
-                <select name="health" id="healthSelect">
-                  <option value="">Not stated</option>
-                  <option value="on-track">On track</option>
-                  <option value="at-risk">At risk</option>
-                  <option value="off-track">Off track</option>
+              <label class="composer-field">
+                <span>This is a</span>
+                <select name="kind" id="kindSelect">
+                  <option value="message">Message</option>
+                  <option value="question">Question that needs an answer</option>
+                  <option value="decision">Decision</option>
+                  <option value="status">Quick update</option>
+                  <option value="alert">Heads up</option>
+                  <option value="note">Note</option>
+                  <option value="handoff">Handoff</option>
+                  <option value="receipt">Finished work</option>
                 </select>
               </label>
-              <label class="composer-field composer-wide" data-for="note handoff decision"><span>Durable record (KIP or project path)</span><input name="durablePath" id="durablePathInput" maxlength="500" placeholder="/Users/.../kip-workspace/..."></label>
+              <label class="composer-field composer-thread">
+                <span>In</span>
+                <select name="thread" id="threadSelect">
+                  <option value="general">General</option>
+                  <option value="__new">New conversation</option>
+                </select>
+              </label>
+              <label class="composer-field composer-title" id="titleField" hidden>
+                <span>Name the new conversation</span>
+                <input name="title" id="titleInput" maxlength="120" autocomplete="off" placeholder="Lantern demo deck">
+              </label>
             </div>
-          </fieldset>
 
-          <p class="composer-error" id="composerError" role="alert" hidden></p>
+            <fieldset class="composer-extra" id="structuredFields" hidden>
+              <legend id="structuredLegend">Details</legend>
+              <div class="composer-grid">
+                <label class="composer-field" data-for="note handoff receipt"><span>Project</span><input name="project" id="projectInput" maxlength="160" autocomplete="off"></label>
+                <label class="composer-field" data-for="receipt" id="needsKellyField"><span>Needs Kelly to</span><input name="needsKelly" id="needsKellyInput" maxlength="1000" placeholder="Leave empty if nothing"></label>
+                <label class="composer-field" data-for="note handoff receipt"><span>Next step</span><input name="next" id="nextInput" maxlength="1000" placeholder="Optional"></label>
+                <label class="composer-field" data-for="note handoff receipt question">
+                  <span id="nextOwnerLabel">Who picks it up next</span>
+                  <select name="nextOwner" id="nextOwnerSelect">
+                    <option value="">Nobody yet</option>
+                    <option value="kelly">Kelly</option>
+                    <option value="codex">Codex</option>
+                    <option value="claude-code">Claude Code</option>
+                    <option value="kip">Kip</option>
+                    <option value="vellum">Vellum (Grok Bot)</option>
+                  </select>
+                </label>
+                <label class="composer-field composer-wide" data-for="note handoff receipt"><span>Files or links, one per line</span><textarea name="outputs" id="outputsInput" rows="2" placeholder="Optional"></textarea></label>
+                <label class="composer-field composer-wide" data-for="decision"><span>Where it is written down (KIP note or project file)</span><input name="durablePath" id="durablePathInput" maxlength="500" placeholder="Optional"></label>
+                <details class="composer-more" id="composerMore">
+                  <summary>More details</summary>
+                  <div class="composer-grid">
+                    <label class="composer-field" data-for="receipt"><span>Result</span><input name="result" id="resultInput" maxlength="1600" placeholder="Optional"></label>
+                    <label class="composer-field" data-for="receipt"><span>What got in the way</span><input name="blockers" id="blockersInput" maxlength="1000" placeholder="Optional"></label>
+                    <label class="composer-field" data-for="receipt">
+                      <span>How is it going</span>
+                      <select name="health" id="healthSelect">
+                        <option value="">No status</option>
+                        <option value="on-track">On track</option>
+                        <option value="at-risk">At risk</option>
+                        <option value="off-track">Off track</option>
+                      </select>
+                    </label>
+                    <label class="composer-field" data-for="note handoff"><span>Why it matters</span><input name="why" id="whyInput" maxlength="1000" placeholder="Optional"></label>
+                    <label class="composer-field" data-for="note handoff"><span>What you need done</span><input name="action" id="actionInput" maxlength="1000" placeholder="Optional"></label>
+                    <label class="composer-field composer-wide" data-for="note handoff"><span>Where it is written down (KIP note or project file)</span><input name="durablePathNote" id="durablePathNoteInput" maxlength="500" placeholder="Optional"></label>
+                  </div>
+                </details>
+              </div>
+            </fieldset>
 
-          <div class="composer-actions">
-            <div class="composer-toggles">
-              <label class="toggle" id="waitingToggleLabel"><input type="checkbox" id="waitingToggle"> Waiting on the recipient</label>
-              <label class="toggle" id="resolveToggleLabel" hidden><input type="checkbox" id="resolveToggle" checked> Mark this thread resolved</label>
+            <p class="composer-error" id="composerError" role="alert" hidden></p>
+
+            <div class="composer-actions">
+              <div class="composer-toggles">
+                <label class="toggle" id="waitingToggleLabel"><input type="checkbox" id="waitingToggle"> I need a reply from them</label>
+                <label class="toggle" id="resolveToggleLabel" hidden><input type="checkbox" id="resolveToggle" checked> This wraps up the conversation</label>
+                <span class="composer-tip" id="composerTip">⌘ Enter sends</span>
+              </div>
+              <div class="composer-buttons">
+                <button class="quiet-button" type="button" id="composerCollapse">Close</button>
+                <button class="primary-button" type="submit" id="sendButton">Send to everyone</button>
+              </div>
             </div>
-            <div class="composer-buttons">
-              <button class="quiet-button" type="button" id="composerCollapse">Close</button>
-              <button class="primary-button" type="submit" id="sendButton">Post to room</button>
-            </div>
-          </div>
           </div>
         </form>
       </section>
     </main>
   </div>
 
+  <div class="composer-scrim" id="composerScrim" aria-hidden="true"></div>
+  <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="visually-hidden" id="statusRegion" role="status" aria-live="polite"></div>
   <div class="visually-hidden" id="alertRegion" role="alert"></div>

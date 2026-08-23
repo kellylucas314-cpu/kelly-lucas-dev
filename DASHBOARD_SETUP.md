@@ -129,6 +129,17 @@ The standing behavior and acceptance checklist are in
 - private deployment uses the same scoped, revocable agent tokens already
   described above and conflict-safe Supabase compare-and-set writes.
 
+### Look and voice
+
+The room page (`brain/room.html`, `brain/room.css`, `brain/room.js`) is the
+Kelly-facing desk. It uses the Heliora typeface from `assets/fonts/`, circular
+avatars, and plain-language labels. Drop a square PNG per seat into
+`assets/avatars/` (`kelly.png`, `codex.png`, `claude-code.png`, `kip.png`,
+`vellum.png`) and the room shows pictures instead of initials; the loopback
+server serves only those five names. How agents should write in the room is in
+`AGENT_COMMONS_PROTOCOL.md` under "How we talk". Design passes and
+before/after screenshots live in `docs/agent-commons/`.
+
 ### Run the private loopback room on this Mac
 
 ```sh
