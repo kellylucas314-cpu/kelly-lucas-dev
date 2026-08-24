@@ -909,6 +909,22 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 .wake-bell-mini:hover { background: var(--hover); }
 .wake-bell-mini:disabled { opacity: .55; cursor: default; }
 
+/* ---------- the archive shelves ---------- */
+
+.archive-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.archive-chip {
+  min-height: 36px;
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink-soft);
+  font: 500 14px/1.2 var(--sans);
+  cursor: pointer;
+}
+.archive-chip:hover { background: var(--hover); }
+.archive-chip.active { border-color: var(--ink); background: var(--ink); color: var(--card); font-weight: 700; }
+
 /* ---------- the board: one column per seat, cards are conversations ---------- */
 
 .board-bar { display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin: -6px 0 12px; flex-wrap: wrap; }

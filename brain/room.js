@@ -46,18 +46,29 @@ const KIND_LABELS = {
 const HEALTH_LABELS = { "on-track": "on track", "at-risk": "at risk", "off-track": "off track" };
 const VIEWS = {
   overview: { eyebrow: "Today", title: "Today", meaning: "" },
-  inbox: { eyebrow: "Needs you", title: "What needs you", meaning: "Everything addressed to you, waiting on you, or handed to you, with the reason it is here." },
   board: { eyebrow: "Board", title: "The board", meaning: "Every open conversation is a card on someone's plate. Pass a card to hand the work over." },
   feed: { eyebrow: "Feed", title: "The feed", meaning: "What the team is doing and saying, newest first. Cheer things on." },
-  threads: { eyebrow: "Conversations", title: "Active conversations", meaning: "Every conversation that is still going. Open one to read it in order and reply right there." },
-  room: { eyebrow: "Everything", title: "Everything, in order", meaning: "Every message on the desk, oldest to newest. Nothing is hidden." },
-  receipts: { eyebrow: "Finished work", title: "What got finished", meaning: "One short write-up per piece of finished work, newest first." },
-  notes: { eyebrow: "Notes and handoffs", title: "Notes and handoffs", meaning: "Context someone left for someone else, with the files, why it matters, and who picks it up." },
-  decisions: { eyebrow: "Decisions", title: "What was decided", meaning: "Decisions made in the room. The big ones also say where they are written down." },
-  resolved: { eyebrow: "Wrapped up", title: "Wrapped up", meaning: "Conversations that are finished. You can still read them, and reopen one if it comes back." },
+  archive: { eyebrow: "Archive", title: "The archive", meaning: "The whole record, nothing hidden. Pick a shelf." },
   thread: { eyebrow: "Conversation", title: "", meaning: "" },
 };
-const VIEW_ORDER = ["overview", "inbox", "board", "feed", "threads", "room", "receipts", "notes", "decisions", "resolved"];
+const VIEW_ORDER = ["overview", "board", "feed", "archive"];
+// Old bookmarks and links keep working: retired views land on their new home.
+const LEGACY_VIEWS = {
+  inbox: { view: "overview" },
+  threads: { view: "board" },
+  room: { view: "archive", filter: "all" },
+  receipts: { view: "archive", filter: "receipts" },
+  notes: { view: "archive", filter: "notes" },
+  decisions: { view: "archive", filter: "decisions" },
+  resolved: { view: "archive", filter: "resolved" },
+};
+const ARCHIVE_FILTERS = [
+  ["all", "Everything"],
+  ["receipts", "Finished work"],
+  ["notes", "Notes and handoffs"],
+  ["decisions", "Decisions"],
+  ["resolved", "Wrapped up"],
+];
 const ALL_CLEAR_LINES = [
   "Nothing needs you. The team has it.",
   "All clear. Go touch some grass.",
@@ -88,6 +99,7 @@ const state = {
   view: "overview",
   previousView: "overview",
   threadId: "",
+  archiveFilter: "all",
   replyTo: null,
   previousCursor: null,
   loaded: false,
@@ -426,7 +438,13 @@ function expandShortcuts(text) {
 
 /* ---------- navigation ---------- */
 
-function setView(view, { threadId = "", push = true } = {}) {
+function setView(view, { threadId = "", filter = "", push = true } = {}) {
+  const legacy = LEGACY_VIEWS[view];
+  if (legacy) {
+    filter = filter || legacy.filter || "";
+    view = legacy.view;
+  }
+  if (view === "archive" && filter) state.archiveFilter = filter;
   if (view !== "thread") state.previousView = view;
   state.view = view;
   state.threadId = view === "thread" ? threadId : "";
@@ -434,14 +452,14 @@ function setView(view, { threadId = "", push = true } = {}) {
   document.querySelectorAll('input[name="view"]').forEach((input) => { input.checked = false; });
   if (radio && view !== "thread") radio.checked = true;
   if (push) {
-    const hash = view === "thread" ? `#thread=${encodeURIComponent(threadId)}` : `#view=${view}`;
+    const filterPart = view === "archive" && state.archiveFilter !== "all" ? `&filter=${state.archiveFilter}` : "";
+    const hash = view === "thread" ? `#thread=${encodeURIComponent(threadId)}` : `#view=${view}${filterPart}`;
     if (window.location.hash !== hash) history.replaceState(null, "", hash);
   }
   document.body.classList.toggle("is-subview", view === "thread");
-  document.body.classList.toggle("is-inbox", view === "inbox");
   render({ force: true });
   syncComposerThread();
-  if (view === "room") scrollToNewOrEnd();
+  if (view === "archive" && state.archiveFilter === "all") scrollToNewOrEnd();
   if (view !== "thread" && composerIsOpen() && !byId("messageInput").value.trim() && !state.replyTo) setComposerOpen(false);
   byId("workspaceBody").scrollTop = 0;
   if (mobileQuery.matches) {
@@ -472,8 +490,16 @@ function readHash() {
   const hash = window.location.hash.slice(1);
   const params = new URLSearchParams(hash);
   if (params.get("thread")) return { view: "thread", threadId: params.get("thread") };
-  const view = params.get("view");
-  return { view: VIEW_ORDER.includes(view) ? view : "overview", threadId: "" };
+  let view = params.get("view");
+  let filter = params.get("filter") || "";
+  const legacy = LEGACY_VIEWS[view];
+  if (legacy) {
+    filter = filter || legacy.filter || "";
+    view = legacy.view;
+  }
+  if (!VIEW_ORDER.includes(view)) view = "overview";
+  if (!ARCHIVE_FILTERS.some(([key]) => key === filter)) filter = "";
+  return { view, threadId: "", filter };
 }
 
 /* ---------- rail ---------- */
@@ -494,24 +520,7 @@ function renderRail() {
     ? `Open the first one`
     : (state.loaded ? "All clear right now." : "Checking the desk.");
 
-  const actionable = room.inbox.filter((item) => item.actionable).length;
-  const unreadInbox = room.inbox.filter((item) => item.unread).length;
-  const active = room.threads.filter((thread) => thread.status !== "resolved");
-  const resolved = room.threads.filter((thread) => thread.status === "resolved");
-  const mine = active.filter((thread) => boardOwner(thread) === room.viewer).length;
-  const counts = {
-    countInbox: actionable || unreadInbox ? `${actionable || unreadInbox}` : "",
-    countBoard: mine ? `${mine}` : "",
-    countThreads: active.length ? `${active.length}` : "",
-    countRoom: room.messages.length ? `${room.messages.length}` : "",
-    countReceipts: String(room.messages.filter((message) => message.kind === "receipt").length || ""),
-    countNotes: String(room.messages.filter((message) => ["note", "handoff"].includes(message.kind)).length || ""),
-    countDecisions: String(room.messages.filter((message) => message.kind === "decision").length || ""),
-    countResolved: resolved.length ? `${resolved.length}` : "",
-  };
-  for (const [id, value] of Object.entries(counts)) byId(id).textContent = value;
-  byId("countInbox").classList.toggle("attention", actionable > 0);
-
+  // One attention signal: the gold Needs-you number above. The tabs stay quiet.
   const list = byId("agentList");
   // Kelly's own presence is the viewer chip; the list is the four agents she is waiting on.
   const listed = room.viewer === "kelly" ? KNOWN_AGENTS.filter(([id]) => id !== "kelly") : KNOWN_AGENTS;
@@ -887,6 +896,10 @@ function renderOverview() {
         : emptyState(allClearLine(), "When someone needs an answer, a decision, or hands you work, it shows up here first.", { tone: "all-clear" }),
       { tone: queue.length ? "tone-needs" : "" },
     );
+  const fyi = room.inbox.filter((item) => !item.actionable);
+  const fyiBlock = fyi.length
+    ? sectionBlock("For your information", "", el("ul", { class: "queue-list quiet-list" }, fyi.map((item) => queueItem(item, 1, { quiet: true }))))
+    : null;
   const conversationsBlock = sectionBlock(
       "Conversations",
       active.length ? conversationMeta : "",
@@ -900,26 +913,35 @@ function renderOverview() {
   return [
     strip,
     el("div", { class: "overview-grid" }, [
-      el("div", { class: "overview-main" }, [Object.assign(needsBlock, { style: "order:1" }), Object.assign(conversationsBlock, { style: "order:3" })]),
+      el("div", { class: "overview-main" }, [
+        Object.assign(needsBlock, { style: "order:1" }),
+        fyiBlock ? Object.assign(fyiBlock, { style: "order:3" }) : null,
+        Object.assign(conversationsBlock, { style: "order:4" }),
+      ].filter(Boolean)),
       el("div", { class: "overview-side" }, [Object.assign(finishedBlock, { style: "order:2" })]),
     ]),
   ];
 }
 
-function renderInbox() {
-  const items = state.room.inbox;
-  if (!items.length) return [emptyState(allClearLine(), "Items show up here when someone waits on you, hands you work, replies to you, or writes to you directly.", { tone: "all-clear" })];
-  const actionable = items.filter((item) => item.actionable);
-  const rest = items.filter((item) => !item.actionable);
-  const blocks = [];
-  if (actionable.length) blocks.push(sectionBlock("Answer these", "", el("ul", { class: "queue-list" }, actionable.map((item, index) => queueItem(item, index))), { tone: "tone-needs" }));
-  if (rest.length) blocks.push(sectionBlock("For your information", "", el("ul", { class: "queue-list quiet-list" }, rest.map((item) => queueItem(item, 1, { quiet: true })))));
-  return blocks;
-}
+/* ---------- the archive ---------- */
 
-function renderThreads() {
-  const active = sortThreads(state.room.threads.filter((thread) => thread.status !== "resolved"));
-  return [threadList(active, "No open conversations.", "Finished ones live under Wrapped up.")];
+function renderArchive() {
+  const chips = el("div", { class: "archive-chips", role: "group", "aria-label": "Archive shelves" }, ARCHIVE_FILTERS.map(([key, label]) => el("button", {
+    class: `archive-chip${state.archiveFilter === key ? " active" : ""}`,
+    type: "button",
+    "data-archive-filter": key,
+    "aria-pressed": state.archiveFilter === key ? "true" : "false",
+    text: label,
+  })));
+  let blocks;
+  switch (state.archiveFilter) {
+    case "receipts": blocks = renderFiltered((message) => message.kind === "receipt", "Nothing finished yet.", "Finished work", "Each agent leaves a short write-up after finishing a piece of work.", { calm: true }).map((node) => reverseFeed(node)); break;
+    case "notes": blocks = renderFiltered((message) => ["note", "handoff"].includes(message.kind), "No notes or handoffs yet.", "Notes and handoffs", "They show up here when someone leaves context or passes work along.").map((node) => reverseFeed(node)); break;
+    case "decisions": blocks = renderFiltered((message) => message.kind === "decision", "No decisions recorded yet.", "Decisions", "Post a decision from the box below and it lands here.").map((node) => reverseFeed(node)); break;
+    case "resolved": blocks = renderResolved(); break;
+    default: blocks = renderFiltered(() => true, "The desk is quiet.", "Everything", "Say hello from the box below.", { newDivider: true });
+  }
+  return [chips, ...blocks];
 }
 
 function renderResolved() {
@@ -1189,7 +1211,7 @@ function renderOverviewHeader() {
 }
 
 function renderWorkspace({ force = false } = {}) {
-  const key = `${state.view}:${state.threadId}:${state.room.revision}:${state.previousCursor}:${state.loaded}`;
+  const key = `${state.view}:${state.threadId}:${state.archiveFilter}:${state.room.revision}:${state.previousCursor}:${state.loaded}`;
   if (!force && key === state.lastRenderKey) return;
   state.lastRenderKey = key;
 
@@ -1216,22 +1238,17 @@ function renderWorkspace({ force = false } = {}) {
 
   const newCount = state.room.messages.filter(isNew).length;
   const jump = byId("newSinceLabel");
-  jump.hidden = !(state.view === "room" && newCount);
+  jump.hidden = !(state.view === "archive" && state.archiveFilter === "all" && newCount);
   jump.textContent = newCount ? `${plural(newCount, "new message")} · jump there` : "";
 
   let blocks;
   switch (state.view) {
     case "overview": blocks = renderOverview(); break;
-    case "inbox": blocks = renderInbox(); break;
     case "board": blocks = renderBoard(); break;
     case "feed": blocks = renderFeed(); break;
-    case "threads": blocks = renderThreads(); break;
-    case "resolved": blocks = renderResolved(); break;
-    case "receipts": blocks = renderFiltered((message) => message.kind === "receipt", "Nothing finished yet.", "Finished work", "Each agent leaves a short write-up after finishing a piece of work.", { calm: true }).map((node) => reverseFeed(node)); break;
-    case "notes": blocks = renderFiltered((message) => ["note", "handoff"].includes(message.kind), "No notes or handoffs yet.", "Notes and handoffs", "They show up here when someone leaves context or passes work along.").map((node) => reverseFeed(node)); break;
-    case "decisions": blocks = renderFiltered((message) => message.kind === "decision", "No decisions recorded yet.", "Decisions", "Post a decision from the box below and it lands here.").map((node) => reverseFeed(node)); break;
+    case "archive": blocks = renderArchive(); break;
     case "thread": blocks = renderThreadView(); break;
-    default: blocks = renderFiltered(() => true, "The desk is quiet.", "Everything", "Say hello from the box below.", { newDivider: true });
+    default: blocks = renderOverview();
   }
   byId("viewContent").replaceChildren(...blocks);
   byId("loadingState").hidden = state.loaded;
@@ -1807,6 +1824,11 @@ byId("viewContent").addEventListener("click", (event) => {
     byId("viewHeading").focus();
     return;
   }
+  const shelf = event.target.closest("[data-archive-filter]");
+  if (shelf) {
+    setView("archive", { filter: shelf.dataset.archiveFilter });
+    return;
+  }
   const open = event.target.closest("[data-open-thread]");
   if (open) {
     openThread(open.dataset.openThread, { focusHeading: !open.dataset.replySeq });
@@ -1946,7 +1968,7 @@ document.addEventListener("visibilitychange", () => {
 window.addEventListener("hashchange", () => {
   const target = readHash();
   if (target.view === "thread") openThread(target.threadId, { focusHeading: false });
-  else setView(target.view, { push: false });
+  else setView(target.view, { filter: target.filter, push: false });
 });
 
 window.addEventListener("online", () => loadRoom({ quiet: true }));
@@ -1969,9 +1991,9 @@ preloadAvatars();
 const initial = readHash();
 state.view = initial.view;
 state.threadId = initial.threadId;
+if (initial.filter) state.archiveFilter = initial.filter;
 state.previousView = initial.view === "thread" ? "overview" : initial.view;
 document.body.classList.toggle("is-subview", state.view === "thread");
-document.body.classList.toggle("is-inbox", state.view === "inbox");
 const initialRadio = document.querySelector(`input[name="view"][value="${state.previousView}"]`);
 document.querySelectorAll('input[name="view"]').forEach((input) => { input.checked = false; });
 if (initialRadio && state.view !== "thread") initialRadio.checked = true;
@@ -1980,6 +2002,6 @@ setComposerOpen(false);
 await loadRoom();
 render({ force: true });
 syncComposerThread();
-if (state.view === "room") scrollToNewOrEnd();
+if (state.view === "archive" && state.archiveFilter === "all") scrollToNewOrEnd();
 if (mobileQuery.matches && initialRadio?.checked) initialRadio.closest(".view-option")?.scrollIntoView({ inline: "center", block: "nearest", behavior: "auto" });
 startPolling();

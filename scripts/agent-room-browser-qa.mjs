@@ -104,7 +104,7 @@ async function main() {
     process.stdout.write("First viewport at 1440\n");
     const needs = await evaluate("document.getElementById('needsKellyCount').textContent", cwd);
     assert(String(needs) === "2", `Needs Kelly count is 2 (got ${needs})`, failures);
-    const queue = await evaluate("(() => [...document.querySelectorAll('.queue-item')].map((item) => item.querySelector('.reason-tag').textContent + '|' + item.querySelector('.queue-top strong').textContent))()", cwd);
+    const queue = await evaluate("(() => [...document.querySelectorAll('.queue-item:not(.quiet)')].map((item) => item.querySelector('.reason-tag').textContent + '|' + item.querySelector('.queue-top strong').textContent))()", cwd);
     assert(Array.isArray(queue) && queue.length === 2 && queue.every((entry) => entry.startsWith("waiting on you|")), `Queue shows two items with a reason (${JSON.stringify(queue)})`, failures);
     const queueVisible = await evaluate("(() => { const r = document.querySelector('.queue-item').getBoundingClientRect(); return r.top >= 0 && r.bottom <= window.innerHeight; })()", cwd);
     assert(queueVisible === true, "First Needs Kelly item is inside the first viewport", failures);
@@ -201,6 +201,16 @@ async function main() {
     const codexBell = await fetch(`${origin}/api/agent-room`, { headers: { "X-Agent": "codex" } }).then((response) => response.json());
     assert(codexBell.inbox.some((item) => item.threadId === "wake-up-bell" && item.actionable), "The bell lands in Codex's inbox as actionable", failures);
     assert((codexBell.threads.find((thread) => thread.id === "wake-up-bell")?.waitingOn || []).join(",") === "codex,claude-code,kip,vellum", "The bell waits on every agent seat", failures);
+
+    process.stdout.write("The archive\n");
+    await cli(["goto", `${origin}/brain/room.html#view=receipts`], { cwd });
+    await wait(1000);
+    const archiveState = await evaluate("({ radios: document.querySelectorAll('input[name=\"view\"]').length, eyebrow: document.getElementById('viewEyebrow').textContent, active: document.querySelector('.archive-chip.active')?.textContent || '', receipts: document.querySelectorAll('.message-item[data-kind=\"receipt\"]').length })", cwd);
+    assert(archiveState && archiveState.radios === 4 && archiveState.eyebrow === "Archive" && archiveState.active === "Finished work" && archiveState.receipts >= 2, `Old Finished-work links land on the archive's shelf, nav has four tabs (${JSON.stringify(archiveState)})`, failures);
+    await cli(["eval", "[...document.querySelectorAll('[data-archive-filter]')].find((node) => node.dataset.archiveFilter === 'decisions').click()"], { cwd });
+    await wait(700);
+    const decisionsShelf = await evaluate("({ active: document.querySelector('.archive-chip.active')?.textContent || '', pure: [...document.querySelectorAll('.message-item')].every((node) => node.dataset.kind === 'decision'), hash: location.hash })", cwd);
+    assert(decisionsShelf && decisionsShelf.active === "Decisions" && decisionsShelf.pure === true && decisionsShelf.hash === "#view=archive&filter=decisions", `Shelf chips switch the archive and the link follows (${JSON.stringify(decisionsShelf)})`, failures);
 
     for (const [width, height, name] of [[768, 1024, "tablet-768"], [390, 844, "mobile-390"]]) {
       process.stdout.write(`Reflow at ${width}\n`);

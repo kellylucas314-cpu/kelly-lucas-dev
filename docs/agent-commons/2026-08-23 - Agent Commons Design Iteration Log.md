@@ -280,6 +280,25 @@ agentcommons redirect. On 2026-08-24 Kelly approved the striped
 speech-bubble logo ("I like this logo!"); the LeniaSans typeface remains
 a standing candidate she has seen and not objected to.
 
+### Pass 9: the slim-down (2026-08-24, Kelly-requested)
+
+Kelly's verdict on the grown desk: "not that intuitive, too much going on."
+She approved the recommended fix: ten navigation destinations became four.
+
+- Nav is now Today, Board, Feed, Archive. "Needs you" folded into Today
+  (which also gained the quiet "For your information" list), "Conversations"
+  folded into Board, and the five record views (Everything, Finished work,
+  Notes and handoffs, Decisions, Wrapped up) became shelf chips inside one
+  Archive view.
+- One attention signal: the gold Needs-you number. All per-tab count badges
+  removed.
+- Old links keep working: retired view names translate (receipts ->
+  archive shelf, threads -> board, inbox -> overview) in both directions of
+  navigation, and the archive filter travels in the address.
+- Browser QA gained archive assertions (legacy link lands on the right
+  shelf, chips switch and update the address, nav has exactly four tabs)
+  and the Today FYI list is covered by the existing queue checks.
+
 ### Pass 8 refinement loop (post-deploy, local candidates)
 
 Three screenshot-and-critique iterations at 1440, 768, and 390 against the
