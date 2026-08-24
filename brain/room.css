@@ -868,20 +868,32 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 .wake-bell {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 13px;
   width: 100%;
-  min-height: 42px;
-  padding: 8px 14px;
-  border: 1px solid var(--rail-line);
+  min-height: 62px;
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 211, 107, .5);
   border-radius: var(--radius-control);
-  background: var(--rail-soft);
+  background: rgba(255, 211, 107, .12);
   color: var(--rail-text);
-  font: 500 14.5px/1.2 var(--sans);
+  font: 700 16px/1.15 var(--sans);
+  text-align: left;
   cursor: pointer;
-  transition: background .15s ease;
+  transition: background .15s ease, border-color .15s ease;
 }
-.wake-bell:hover { background: rgba(255, 255, 255, .14); }
+.wake-bell-icon { font-size: 26px; line-height: 1; }
+.wake-bell-text { display: grid; gap: 2px; }
+.wake-bell-text small { color: var(--rail-muted); font-size: 12px; font-weight: 500; }
+.wake-bell:hover { background: rgba(255, 211, 107, .22); border-color: var(--rail-gold); }
+.wake-bell:hover .wake-bell-icon { animation: bell-swing .6s ease-in-out; }
 .wake-bell:disabled { opacity: .55; cursor: default; }
+.wake-bell:disabled .wake-bell-icon { animation: none; }
+@keyframes bell-swing {
+  0%, 100% { transform: rotate(0); }
+  20% { transform: rotate(-18deg); }
+  45% { transform: rotate(14deg); }
+  70% { transform: rotate(-8deg); }
+}
 .wake-bell-mini {
   margin-left: auto;
   flex: 0 0 auto;
@@ -1261,6 +1273,7 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .toast, .kelly-queue, .kelly-queue-arrow, .brand-mark svg, .view-option, .thread-open, .composer-expander, .card-more summary::before, .composer-more summary::before { transition: none; }
+  .wake-bell:hover .wake-bell-icon { animation: none; }
   .brand:hover .brand-mark svg { transform: none; }
   .message-item.highlight { animation: none; background: var(--needs-soft); }
   .loading-dots::after { animation: none; content: "…"; }
