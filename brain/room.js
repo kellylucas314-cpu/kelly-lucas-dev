@@ -33,6 +33,9 @@ const AGENT_BIOS = {
   vellum: "Grok's chief of staff",
 };
 const AVATAR_IMAGES = {};
+// Bumped whenever the icon art changes, so a browser holding an older copy
+// refetches instead of showing the previous version.
+const ICON_V = "2";
 const KIND_LABELS = {
   message: "message",
   question: "question",
@@ -886,7 +889,7 @@ function renderOverview() {
   const strip = el("div", { class: "mobile-presence", "aria-label": "Who is here" }, [
     el("span", { class: "mobile-presence-avatars" }, WORKER_IDS.map((id) => el("span", { class: "mobile-presence-seat", "data-presence": presenceState(agentPresence(room, id)) }, [avatarNode(id, "sm")]))),
     el("span", { class: "mobile-presence-text", text: presenceSummary(room) }),
-    viewerIsKelly ? el("button", { class: "wake-bell-mini", type: "button", "data-ring-bell": "true", title: "Wake the team", "aria-label": "Wake the team" }, [el("img", { src: "/assets/icons/bell.png", alt: "" })]) : null,
+    viewerIsKelly ? el("button", { class: "wake-bell-mini", type: "button", "data-ring-bell": "true", title: "Wake the team", "aria-label": "Wake the team" }, [el("img", { src: `/assets/icons/bell.png?v=${ICON_V}`, alt: "" })]) : null,
     el("button", { class: "wake-bell-mini guide-mini", type: "button", "data-open-guide": "true", title: "How this desk works", "aria-label": "How this desk works", text: "?" }),
   ]);
   const showGuide = state.guideOpen || !guideDismissed();
@@ -935,6 +938,52 @@ function guideDismissed() {
   try { return localStorage.getItem(GUIDE_KEY) === "true"; } catch { return true; }
 }
 
+/* ---------- draft rescue ----------
+ * The composer is the point of the room and it was the one place work got
+ * lost: a 401 on a background poll navigates to sign-in mid-sentence, and
+ * the logo is an ordinary link. Park the text so it survives both. */
+
+const DRAFT_KEY = "acComposerDraft";
+
+// House voice for the moments something breaks. Anything we did not write
+// ourselves gets a plain sentence; the raw text still goes to the console
+// so a failure stays debuggable.
+function friendlyError(error) {
+  const raw = String(error?.message || "").trim();
+  if (/failed to fetch|networkerror|load failed|fetch/i.test(raw)) {
+    console.warn("Agent Commons request failed:", raw);
+    return "Could not reach the desk. It is probably not running on this Mac.";
+  }
+  if (!raw || /^\w+error\b/i.test(raw)) {
+    console.warn("Agent Commons error:", raw);
+    return "Something went wrong reaching the desk. Try again in a moment.";
+  }
+  return raw;
+}
+
+function saveDraft() {
+  try {
+    const body = byId("messageInput").value;
+    if (body.trim()) sessionStorage.setItem(DRAFT_KEY, body);
+    else sessionStorage.removeItem(DRAFT_KEY);
+  } catch { /* private browsing */ }
+}
+
+function clearDraft() {
+  try { sessionStorage.removeItem(DRAFT_KEY); } catch { /* private browsing */ }
+}
+
+function restoreDraft() {
+  let body = "";
+  try { body = sessionStorage.getItem(DRAFT_KEY) || ""; } catch { return; }
+  if (!body.trim()) return;
+  const input = byId("messageInput");
+  input.value = body;
+  setComposerOpen(true);
+  announce("Your unsent message is still here.");
+  showToast("Your unsent message is still here.");
+}
+
 function deskGuide() {
   // Drawn icons, not emoji: same sticker family as the seat avatars, so the
   // warm illustrated layer stays one thing. Each gets a hover motion keyed
@@ -950,7 +999,7 @@ function deskGuide() {
   return el("section", { class: "desk-guide", "aria-label": "How this desk works" }, [
     el("h2", { text: "How this desk works" }),
     el("ul", {}, lines.map(([icon, text]) => el("li", { "data-icon": icon }, [
-      el("span", { class: "guide-icon", "aria-hidden": "true" }, [el("img", { src: `/assets/icons/${icon}.png`, alt: "", loading: "lazy" })]),
+      el("span", { class: "guide-icon", "aria-hidden": "true" }, [el("img", { src: `/assets/icons/${icon}.png?v=${ICON_V}`, alt: "", loading: "lazy" })]),
       text,
     ]))),
     el("button", { class: "primary-button", type: "button", "data-close-guide": "true", text: "Got it" }),
@@ -1059,7 +1108,10 @@ function renderBoard() {
     lastByThread,
     viewerIs(column.id) ? "Nothing on your plate." : `Nothing on ${agentLabel(column.id)}'s plate.`,
   ));
-  if (board.unassigned.length) columns.push(boardColumn("Up for grabs", "up-for-grabs", board.unassigned, lastByThread, ""));
+  // Unowned work goes second, right after the viewer's own plate. It is the
+  // likeliest to be dropped, so it must not sit at the far end of a
+  // horizontal scroll where nobody looks.
+  if (board.unassigned.length) columns.splice(1, 0, boardColumn("Up for grabs", "up-for-grabs", board.unassigned, lastByThread, ""));
   const doneColumn = boardColumn("Wrapped up", "done", board.done, lastByThread, "Nothing wrapped up yet.");
   if (board.doneTotal > board.done.length) {
     doneColumn.append(el("button", { class: "text-link-button board-done-more", type: "button", "data-goto-view": "resolved", text: `See all ${board.doneTotal} wrapped up` }));
@@ -1455,16 +1507,22 @@ function cancelReply() {
 
 function composerError(text, fieldId = "") {
   const node = byId("composerError");
-  node.textContent = text;
+  // Unhide first, then write: content set while the element is still hidden
+  // is not announced by most screen readers, so the error was silent.
   node.hidden = !text;
+  node.textContent = text;
   byId("messageForm").querySelectorAll("[aria-invalid]").forEach((field) => field.removeAttribute("aria-invalid"));
   if (text && fieldId) {
     const field = byId(fieldId);
     field.setAttribute("aria-invalid", "true");
-    field.setAttribute("aria-describedby", "composerError");
+    // Append rather than replace, so the textarea keeps its "⌘ Enter sends" tip.
+    const described = (field.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean);
+    if (!described.includes("composerError")) described.unshift("composerError");
+    field.setAttribute("aria-describedby", described.join(" "));
     const more = field.closest("details");
     if (more) more.open = true;
   }
+  if (text) announce(text, { alert: true });
 }
 
 function composerPayload() {
@@ -1565,6 +1623,9 @@ async function requestJson(url, options = {}) {
   const response = await fetch(url, options);
   const result = await response.json().catch(() => ({}));
   if (response.status === 401) {
+    // The sign-in trip can fire from a background poll, mid-sentence. Keep
+    // whatever is in the box so it comes back with her.
+    saveDraft();
     const returnTo = encodeURIComponent(`/brain/room.html${window.location.hash}`);
     window.location.href = `/brain/login.html?returnTo=${returnTo}`;
     throw new Error("Sign in required");
@@ -1644,7 +1705,10 @@ async function loadRoom({ quiet = false, force = false } = {}) {
         ? "The desk is offline. Showing the last copy this page received; sending is paused until it is back."
         : "The desk could not be opened. Check that it is running on this Mac, then try again.";
       setConnection("error", "not connected");
-      if (!quiet) showToast(error.message, { alert: true });
+      // The banner beside this already says it in house voice; the toast
+      // used to shout the raw browser string ("Failed to fetch") at the one
+      // moment plain words matter most.
+      if (!quiet) showToast(friendlyError(error), { alert: true });
       else announce("The desk went offline", { alert: true });
       byId("loadingState").hidden = true;
     }
@@ -1671,7 +1735,7 @@ async function postMessage(payload, { successText }) {
     return result;
   } catch (error) {
     setConnection("error", error.conflict ? "desk changed" : "not sent");
-    showToast(error.message, { alert: true });
+    showToast(friendlyError(error), { alert: true });
     if (error.conflict) await loadRoom({ quiet: true });
     throw error;
   } finally {
@@ -1691,6 +1755,7 @@ async function sendMessage(event) {
   try {
     const result = await postMessage(payload, { successText: `Sent to ${threadTitle(payload.threadId) || payload.threadId}` });
     const threadId = result.message?.threadId || payload.threadId;
+    clearDraft();
     resetComposer();
     if (payload.thread?.status === "resolved") confettiBurst();
     if (mobileQuery.matches) setComposerOpen(false);
@@ -1960,6 +2025,7 @@ byId("messageInput").addEventListener("keydown", (event) => {
 });
 byId("messageInput").addEventListener("input", (event) => {
   const input = event.target;
+  saveDraft();
   const expanded = expandShortcuts(input.value);
   if (expanded !== input.value && /\s$/.test(input.value)) {
     input.value = expanded;
@@ -2023,6 +2089,7 @@ window.addEventListener("hashchange", () => {
   else setView(target.view, { filter: target.filter, push: false });
 });
 
+window.addEventListener("pagehide", saveDraft);
 window.addEventListener("online", () => loadRoom({ quiet: true }));
 window.addEventListener("offline", () => {
   state.offline = true;
@@ -2056,4 +2123,5 @@ render({ force: true });
 syncComposerThread();
 if (state.view === "archive" && state.archiveFilter === "all") scrollToNewOrEnd();
 if (mobileQuery.matches && initialRadio?.checked) initialRadio.closest(".view-option")?.scrollIntoView({ inline: "center", block: "nearest", behavior: "auto" });
+restoreDraft();
 startPolling();

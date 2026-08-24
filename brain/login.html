@@ -21,6 +21,21 @@
       --red: #b54a45;
       --serif: "Palatino Linotype", Palatino, "Iowan Old Style", Georgia, serif;
     }
+    /* The desk keeps its own front door: same password, same markup, but the
+       room palette and a grotesk wordmark so arriving from a room link does
+       not look like arriving at a different product. */
+    html.room-door {
+      --paper: #f7f7f7;
+      --paper-2: #f0f0f0;
+      --card: #ffffff;
+      --ink: #1e1e1e;
+      --muted: #585858;
+      --faint: #7f7f7f;
+      --line: #d8d8d8;
+      --accent: #2d62ff;
+      --accent-soft: #e6f7ff;
+      --serif: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
     * { box-sizing: border-box; }
     body {
       margin: 0;
@@ -103,6 +118,13 @@
     button:hover { background: #316dd8; }
     button:disabled { cursor: wait; opacity: .7; }
     .message { min-height: 21px; margin: 12px 2px 0; color: var(--red); font-size: 13px; }
+    html.room-door body { background: var(--paper); }
+    html.room-door main { background: var(--card); border-radius: 24px 24px 24px 8px; }
+    html.room-door .wordmark { font: 800 30px/1 var(--serif); letter-spacing: -.02em; }
+    html.room-door h1 { font: 800 27px/1.12 var(--serif); letter-spacing: -.02em; }
+    html.room-door .rule { background: linear-gradient(90deg,#367496,#258360,#8e4605,#652085,#a12661); }
+    html.room-door button { border-radius: 12px 12px 12px 5px; }
+    html.room-door button:hover { background: #1f4fd8; }
     .back { display: block; margin-top: 20px; color: var(--muted); font-size: 12px; text-align: center; }
     .back:hover { color: var(--accent); }
     .sr-only {
@@ -181,6 +203,7 @@
     let buttonIdle = "Open my library";
     if (roomBound) {
       buttonIdle = "Open the desk";
+      document.documentElement.classList.add("room-door");
       document.title = "Agent Commons";
       document.getElementById("wordmark").textContent = "Agent Commons";
       document.getElementById("headline").textContent = "Your team desk, wherever you are.";
@@ -189,7 +212,7 @@
       document.getElementById("passwordLabel").textContent = "Password";
       document.getElementById("submit").textContent = buttonIdle;
       document.getElementById("brandIcon").outerHTML =
-        `<svg width="45" height="45" viewBox="0 0 48 48" aria-hidden="true"><defs><clipPath id="acLoginClip"><path transform="translate(9.5 9.5) scale(0.66)" d="M22 1A21 21 0 0 1 43 22 21 21 0 0 1 22 43H5a4 4 0 0 1-4-4V22A21 21 0 0 1 22 1z"/></clipPath></defs><circle cx="24" cy="24" r="23" fill="#f7f2e4"/><g transform="rotate(-8 24 24)" clip-path="url(#acLoginClip)"><rect x="2" y="2" width="44" height="44" fill="#fffdf8"/><g transform="rotate(24 24 24)"><rect x="4" y="-8" width="6.6" height="64" fill="#2f68de"/><rect x="12.2" y="-8" width="6.6" height="64" fill="#257a5a"/><rect x="20.4" y="-8" width="6.6" height="64" fill="#c6481c"/><rect x="28.6" y="-8" width="6.6" height="64" fill="#7960c9"/><rect x="36.8" y="-8" width="6.6" height="64" fill="#a05a33"/></g></g></svg>`;
+        `<svg width="45" height="45" viewBox="0 0 48 48" aria-hidden="true"><defs><clipPath id="acLoginClip"><path transform="translate(9.5 9.5) scale(0.66)" d="M22 1A21 21 0 0 1 43 22 21 21 0 0 1 22 43H5a4 4 0 0 1-4-4V22A21 21 0 0 1 22 1z"/></clipPath></defs><circle cx="24" cy="24" r="23" fill="#f7f7f7"/><g transform="rotate(-8 24 24)" clip-path="url(#acLoginClip)"><rect x="2" y="2" width="44" height="44" fill="#ffffff"/><g transform="rotate(24 24 24)"><rect x="4" y="-8" width="6.6" height="64" fill="#367496"/><rect x="12.2" y="-8" width="6.6" height="64" fill="#258360"/><rect x="20.4" y="-8" width="6.6" height="64" fill="#8e4605"/><rect x="28.6" y="-8" width="6.6" height="64" fill="#652085"/><rect x="36.8" y="-8" width="6.6" height="64" fill="#a12661"/></g></g></svg>`;
     }
 
     fetch("/api/magpie-session", { credentials: "same-origin", cache: "no-store" })

@@ -120,6 +120,13 @@
 
   --accent: var(--focus);
 
+  /* The disc every drawn icon sits on. Cool slate rather than white, so
+     the warm sticker art reads against it on any surface. */
+  --icon-disc: var(--slate-200);
+  --icon-disc-line: var(--slate-300);
+  --icon-disc-dark: rgba(255, 255, 255, .10);
+  --icon-disc-dark-line: rgba(255, 255, 255, .16);
+
   /* Outline, not elevation. */
   --shadow: none;
   --measure: 1100px;
@@ -925,8 +932,8 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
   cursor: pointer;
   transition: background .15s ease, border-color .15s ease;
 }
-.wake-bell-icon { display: grid; place-items: center; width: 32px; }
-.wake-bell-icon img { display: block; width: 30px; height: 30px; }
+.wake-bell-icon { display: grid; place-items: center; width: 38px; height: 38px; }
+.wake-bell-icon img { display: block; width: 28px; height: 28px; object-fit: contain; }
 .wake-bell-mini img { display: block; width: 24px; height: 24px; margin: auto; }
 .wake-bell-text { display: grid; gap: 2px; }
 .wake-bell-text small { color: var(--rail-muted); font-size: 12px; font-weight: 500; }
@@ -988,8 +995,8 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
   height: 38px;
   border-radius: 50%;
   overflow: hidden;
-  background: var(--card);
-  box-shadow: inset 0 0 0 1px var(--line);
+  background: var(--icon-disc);
+  box-shadow: inset 0 0 0 1px var(--icon-disc-line);
 }
 .guide-icon img {
   display: block;
@@ -997,6 +1004,14 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
   height: 30px;
   object-fit: contain;
   transform-origin: 50% 18%;
+}
+
+/* The bell wears the same disc on the dark rail, so the drawn layer is a
+   circle everywhere it appears. On ink the disc lifts rather than tints. */
+.wake-bell-icon {
+  border-radius: 50%;
+  background: var(--icon-disc-dark);
+  box-shadow: inset 0 0 0 1px var(--icon-disc-dark-line);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -1048,7 +1063,21 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 
 /* ---------- the archive shelves ---------- */
 
-.archive-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+/* The archive opens scrolled to the newest message, which used to leave
+   "Pick a shelf" pointing at controls thousands of pixels above the landing
+   position. The shelves ride along at the top of the scroller instead. */
+.archive-chips {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -4px -4px 18px;
+  padding: 8px 4px;
+  background: var(--card);
+  border-bottom: 1px solid var(--line-soft);
+}
 .archive-chip {
   min-height: 36px;
   padding: 6px 14px;
@@ -1076,7 +1105,7 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
   -webkit-overflow-scrolling: touch;
 }
 .board-column {
-  flex: 0 0 228px;
+  flex: 0 0 196px;
   min-width: 0;
   display: grid;
   gap: 8px;
@@ -1118,6 +1147,11 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 .board-card-meta { color: var(--muted); font-size: 12.5px; }
 .board-card-foot { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; }
 .board-card-foot .status-pill { margin-left: auto; }
+/* On a board card the pill wraps instead of forcing the column wider. The
+   bell produces "waiting on Codex, Claude Code, Kip and Vellum", which at
+   nowrap dragged the whole column 117px into its neighbour. */
+.board-card-foot .status-pill { white-space: normal; min-width: 0; }
+.board-card, .board-card-foot, .board-column-head { min-width: 0; max-width: 100%; }
 .board-pass summary {
   display: inline-flex;
   align-items: center;
