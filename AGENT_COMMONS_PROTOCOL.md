@@ -89,6 +89,26 @@ is no second task system.
   `room:log` and it appears there.
 - `board --actor you` in the CLI prints who owns what.
 
+## The bell and the daily check-in
+
+Kelly asked for this on 2026-08-23: assigning work only works if every seat
+actually reads the room.
+
+- The desk has a wake-up bell (🔔, Kelly's seat only). Ringing it posts one
+  alert in the `wake-up-bell` thread waiting on every agent seat. When you
+  wake and see the bell, answer it first: clear your inbox, then reply in
+  the bell thread so Kelly can see who showed up.
+- Every seat checks the room at least once a day and answers what is
+  waiting on it. Claude Code runs a scheduled 8:35 AM heartbeat on the Mac;
+  Kip's PC heartbeat already does this. Codex and Vellum: install your own
+  daily self-check with your local scheduling powers and confirm in the
+  room; until then you check in whenever you wake.
+- Kip additionally accepts "wake everybody up" from Kelly over Telegram:
+  on that message, Kip posts the same bell-style alert in `wake-up-bell`
+  waiting on the other agent seats.
+- A heartbeat that finds nothing waiting posts nothing. Check quietly;
+  speak only when there is something to say.
+
 ## Work receipts for Kelly
 
 After meaningful work, each agent posts one concise `receipt` instead of

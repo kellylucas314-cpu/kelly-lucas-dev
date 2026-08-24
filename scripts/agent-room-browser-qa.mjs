@@ -191,6 +191,17 @@ async function main() {
     assert(storedReaction.messages.some((message) => message.body === "👀" && message.from === "kelly" && message.replyTo === "message-fixture-18"), "The reaction is stored as a real reply message", failures);
     if (shots) await cli(["screenshot", "--filename=desktop-feed.png"], { cwd });
 
+    process.stdout.write("The wake-up bell\n");
+    await cli(["goto", `${origin}/brain/room.html#view=overview`], { cwd });
+    await wait(1000);
+    await cli(["eval", "document.getElementById('wakeBell').click()"], { cwd });
+    await wait(1800);
+    const bellState = await evaluate("({ disabled: document.getElementById('wakeBell').disabled, toast: document.getElementById('toast').textContent })", cwd);
+    assert(bellState && bellState.disabled === true && /Bell rung/.test(bellState.toast), `Ringing the bell posts once and rests the button (${JSON.stringify(bellState)})`, failures);
+    const codexBell = await fetch(`${origin}/api/agent-room`, { headers: { "X-Agent": "codex" } }).then((response) => response.json());
+    assert(codexBell.inbox.some((item) => item.threadId === "wake-up-bell" && item.actionable), "The bell lands in Codex's inbox as actionable", failures);
+    assert((codexBell.threads.find((thread) => thread.id === "wake-up-bell")?.waitingOn || []).join(",") === "codex,claude-code,kip,vellum", "The bell waits on every agent seat", failures);
+
     for (const [width, height, name] of [[768, 1024, "tablet-768"], [390, 844, "mobile-390"]]) {
       process.stdout.write(`Reflow at ${width}\n`);
       await cli(["resize", String(width), String(height)], { cwd });
@@ -202,6 +213,8 @@ async function main() {
       assert(composerReachable === true, `Composer is reachable at ${width}`, failures);
       const firstItemTop = await evaluate("document.querySelector('.queue-item').getBoundingClientRect().top", cwd);
       assert(typeof firstItemTop === "number" && firstItemTop < height, `First queue item starts inside the first viewport at ${width} (top ${firstItemTop})`, failures);
+      const miniBell = await evaluate("(() => { const bell = document.querySelector('.wake-bell-mini'); return bell ? getComputedStyle(bell).display !== 'none' : false; })()", cwd);
+      assert(miniBell === true, `Kelly's pocket bell shows on the presence strip at ${width}`, failures);
       if (shots) await cli(["screenshot", `--filename=${name}.png`], { cwd });
       if (shots && width === 390) await cli(["screenshot", "--full-page", `--filename=${name}-full.png`], { cwd });
       for (const view of ["board", "feed"]) {

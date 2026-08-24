@@ -863,6 +863,40 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 .composer-tip { color: var(--muted); font-size: 13px; }
 @media (pointer: coarse) { .composer-tip { display: none; } }
 
+/* ---------- the wake-up bell ---------- */
+
+.wake-bell {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 1px solid var(--rail-line);
+  border-radius: var(--radius-control);
+  background: var(--rail-soft);
+  color: var(--rail-text);
+  font: 500 14.5px/1.2 var(--sans);
+  cursor: pointer;
+  transition: background .15s ease;
+}
+.wake-bell:hover { background: rgba(255, 255, 255, .14); }
+.wake-bell:disabled { opacity: .55; cursor: default; }
+.wake-bell-mini {
+  margin-left: auto;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+.wake-bell-mini:hover { background: var(--hover); }
+.wake-bell-mini:disabled { opacity: .55; cursor: default; }
+
 /* ---------- the board: one column per seat, cards are conversations ---------- */
 
 .board-bar { display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin: -6px 0 12px; flex-wrap: wrap; }
@@ -1088,7 +1122,7 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
     padding: 12px;
     border-radius: 18px 18px 18px 6px;
   }
-  .kelly-queue, .agent-details, .rail-presence-line { display: none; }
+  .kelly-queue, .agent-details, .rail-presence-line, .wake-bell { display: none; }
   .room-rail { position: sticky; top: 0; z-index: 6; padding: 8px 12px; border-radius: 0 0 14px 6px; box-shadow: 0 8px 24px rgba(51, 44, 31, .14); }
   html { scroll-padding-top: 72px; }
   .message-item, .new-divider, .queue-item, .thread-head { scroll-margin-top: 72px; }

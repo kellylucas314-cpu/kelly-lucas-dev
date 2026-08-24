@@ -876,6 +876,7 @@ function renderOverview() {
   const strip = el("div", { class: "mobile-presence", "aria-label": "Who is here" }, [
     el("span", { class: "mobile-presence-avatars" }, WORKER_IDS.map((id) => el("span", { class: "mobile-presence-seat", "data-presence": presenceState(agentPresence(room, id)) }, [avatarNode(id, "sm")]))),
     el("span", { class: "mobile-presence-text", text: presenceSummary(room) }),
+    viewerIsKelly ? el("button", { class: "wake-bell-mini", type: "button", "data-ring-bell": "true", title: "Wake the team", "aria-label": "Wake the team", text: "🔔" }) : null,
   ]);
 
   const needsBlock = sectionBlock(
@@ -1556,6 +1557,7 @@ function setUpdatedLabel() {
 
 function setViewerChrome() {
   const viewer = state.room.viewer;
+  byId("wakeBell").hidden = viewer !== "kelly";
   byId("viewerName").textContent = agentLabel(viewer);
   byId("viewerChip").dataset.agent = viewer;
   byId("viewerChip").title = `Signed in as ${agentLabel(viewer)}`;
@@ -1713,6 +1715,34 @@ function startNewTask() {
   announce("Name the task, say who picks it up, and send");
 }
 
+/* The bell: one click drops a wake-up in every agent's inbox. Each seat
+ * clears itself by replying, so "who answered the bell" is just the thread. */
+const BELL_LINES = [
+  "Bell's ringing! Kelly wants everyone at the desk. Check your inbox, answer what's waiting, then wave here.",
+  "Rise and shine, team. Kelly rang the bell: inboxes first, then say hi here.",
+  "Ding ding! All seats to the desk please. Answer what's waiting on you and check the board.",
+];
+async function ringBell(trigger) {
+  const payload = {
+    body: BELL_LINES[Math.floor(Math.random() * BELL_LINES.length)],
+    to: ["all"],
+    kind: "alert",
+    threadId: "wake-up-bell",
+    thread: { title: "Wake-up bell" },
+    waitingOn: WORKER_IDS.filter((id) => id !== state.room.viewer),
+    clientId: `${state.room.viewer}-web-${crypto.randomUUID()}`,
+  };
+  trigger.disabled = true;
+  try {
+    await postMessage(payload, { successText: "Bell rung. It's at the top of every agent's inbox." });
+    render({ force: true });
+  } catch {
+    // the toast already explained
+  } finally {
+    window.setTimeout(() => { trigger.disabled = false; }, 60_000);
+  }
+}
+
 async function sendReaction(messageId, emoji) {
   const parent = messageById(messageId);
   if (!parent) return;
@@ -1742,6 +1772,7 @@ document.querySelectorAll('input[name="view"]').forEach((radio) => {
   });
 });
 
+byId("wakeBell").addEventListener("click", (event) => ringBell(event.currentTarget));
 byId("needsKellyButton").addEventListener("click", () => {
   setView("overview");
   const first = document.querySelector(".queue-item [data-open-thread]");
@@ -1749,6 +1780,11 @@ byId("needsKellyButton").addEventListener("click", () => {
 });
 
 byId("viewContent").addEventListener("click", (event) => {
+  const bell = event.target.closest("[data-ring-bell]");
+  if (bell) {
+    ringBell(bell);
+    return;
+  }
   const react = event.target.closest("[data-react]");
   if (react) {
     react.disabled = true;
