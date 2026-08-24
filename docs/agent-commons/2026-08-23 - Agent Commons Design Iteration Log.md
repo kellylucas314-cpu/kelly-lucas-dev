@@ -276,7 +276,9 @@ and the deferred pass-7 items that need Kelly's decisions.
 
 Kelly said "Push it!" and pass 8 deployed as commit 3ece5c7 on main;
 the live site was verified serving the new module, font, nav, and the
-agentcommons redirect.
+agentcommons redirect. On 2026-08-24 Kelly approved the striped
+speech-bubble logo ("I like this logo!"); the LeniaSans typeface remains
+a standing candidate she has seen and not objected to.
 
 ### Pass 8 refinement loop (post-deploy, local candidates)
 
