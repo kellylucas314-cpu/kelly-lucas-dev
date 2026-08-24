@@ -886,7 +886,7 @@ function renderOverview() {
   const strip = el("div", { class: "mobile-presence", "aria-label": "Who is here" }, [
     el("span", { class: "mobile-presence-avatars" }, WORKER_IDS.map((id) => el("span", { class: "mobile-presence-seat", "data-presence": presenceState(agentPresence(room, id)) }, [avatarNode(id, "sm")]))),
     el("span", { class: "mobile-presence-text", text: presenceSummary(room) }),
-    viewerIsKelly ? el("button", { class: "wake-bell-mini", type: "button", "data-ring-bell": "true", title: "Wake the team", "aria-label": "Wake the team", text: "🔔" }) : null,
+    viewerIsKelly ? el("button", { class: "wake-bell-mini", type: "button", "data-ring-bell": "true", title: "Wake the team", "aria-label": "Wake the team" }, [el("img", { src: "/assets/bell.png", alt: "" })]) : null,
     el("button", { class: "wake-bell-mini guide-mini", type: "button", "data-open-guide": "true", title: "How this desk works", "aria-label": "How this desk works", text: "?" }),
   ]);
   const showGuide = state.guideOpen || !guideDismissed();

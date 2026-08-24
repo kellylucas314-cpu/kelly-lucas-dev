@@ -22,6 +22,7 @@ const STATIC_FILES = new Map([
   ["/brain/room.js", ["brain/room.js", "text/javascript; charset=utf-8"]],
   ["/brain/dashboard.css", ["brain/dashboard.css", "text/css; charset=utf-8"]],
   ["/lib/agent-room-board.js", ["lib/agent-room-board.js", "text/javascript; charset=utf-8"]],
+  ["/assets/bell.png", ["assets/bell.png", "image/png"]],
   ["/assets/fonts/Adriatic-Medium.woff2", ["assets/fonts/Adriatic-Medium.woff2", "font/woff2"]],
   ["/assets/fonts/LeniaSans-Regular.ttf", ["assets/fonts/LeniaSans-Regular.ttf", "font/ttf"]],
   ["/assets/fonts/LeniaSans-Medium.ttf", ["assets/fonts/LeniaSans-Medium.ttf", "font/ttf"]],

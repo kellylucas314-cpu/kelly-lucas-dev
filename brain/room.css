@@ -881,7 +881,9 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
   cursor: pointer;
   transition: background .15s ease, border-color .15s ease;
 }
-.wake-bell-icon { font-size: 26px; line-height: 1; }
+.wake-bell-icon { display: grid; place-items: center; width: 32px; }
+.wake-bell-icon img { display: block; width: 30px; height: 30px; }
+.wake-bell-mini img { display: block; width: 24px; height: 24px; margin: auto; }
 .wake-bell-text { display: grid; gap: 2px; }
 .wake-bell-text small { color: var(--rail-muted); font-size: 12px; font-weight: 500; }
 .wake-bell:hover { background: rgba(255, 211, 107, .22); border-color: var(--rail-gold); }
