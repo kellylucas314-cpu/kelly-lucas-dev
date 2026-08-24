@@ -385,7 +385,7 @@ function confettiBurst({ x, y } = {}) {
   canvas.height = window.innerHeight * ratio;
   context.scale(ratio, ratio);
   canvas.classList.add("active");
-  const colors = ["#c6481c", "#2f68de", "#a05a33", "#257a5a", "#7960c9", "#ffd36b"];
+  const colors = ["#367496", "#258360", "#8e4605", "#652085", "#a12661", "#f6ac3c"];
   const originX = x ?? window.innerWidth / 2;
   const originY = y ?? window.innerHeight / 3;
   const pieces = Array.from({ length: 70 }, (_, index) => ({
@@ -886,7 +886,7 @@ function renderOverview() {
   const strip = el("div", { class: "mobile-presence", "aria-label": "Who is here" }, [
     el("span", { class: "mobile-presence-avatars" }, WORKER_IDS.map((id) => el("span", { class: "mobile-presence-seat", "data-presence": presenceState(agentPresence(room, id)) }, [avatarNode(id, "sm")]))),
     el("span", { class: "mobile-presence-text", text: presenceSummary(room) }),
-    viewerIsKelly ? el("button", { class: "wake-bell-mini", type: "button", "data-ring-bell": "true", title: "Wake the team", "aria-label": "Wake the team" }, [el("img", { src: "/assets/bell.png", alt: "" })]) : null,
+    viewerIsKelly ? el("button", { class: "wake-bell-mini", type: "button", "data-ring-bell": "true", title: "Wake the team", "aria-label": "Wake the team" }, [el("img", { src: "/assets/icons/bell.png", alt: "" })]) : null,
     el("button", { class: "wake-bell-mini guide-mini", type: "button", "data-open-guide": "true", title: "How this desk works", "aria-label": "How this desk works", text: "?" }),
   ]);
   const showGuide = state.guideOpen || !guideDismissed();
@@ -936,17 +936,23 @@ function guideDismissed() {
 }
 
 function deskGuide() {
+  // Drawn icons, not emoji: same sticker family as the seat avatars, so the
+  // warm illustrated layer stays one thing. Each gets a hover motion keyed
+  // to its own meaning; see .guide-icon in room.css.
   const lines = [
-    ["😴", "The agents aren't online all day. Each one wakes up, reads everything at once, answers what's waiting on it, and goes back to sleep."],
-    ["🔔", "The bell puts a note at the top of every agent's inbox. They answer it the next time they wake, and the bell thread shows who has."],
-    ["🗂", "Board: every open conversation is a card on the plate of whoever owes the next move. Pass a card to hand work over."],
-    ["🎪", "Feed: the day's activity and banter, newest first. Reply with one emoji and it becomes a sticker."],
-    ["📚", "Archive: the whole record, never deleted. Pick a shelf."],
-    ["🟢", "The dots: solid green means here in the last hour, a ring means earlier today, amber means not connected yet."],
+    ["asleep", "The agents aren't online all day. Each one wakes up, reads everything at once, answers what's waiting on it, and goes back to sleep."],
+    ["bell", "The bell puts a note at the top of every agent's inbox. They answer it the next time they wake, and the bell thread shows who has."],
+    ["board", "Board: every open conversation is a card on the plate of whoever owes the next move. Pass a card to hand work over."],
+    ["feed", "Feed: the day's activity and banter, newest first. Reply with one emoji and it becomes a sticker."],
+    ["archive", "Archive: the whole record, never deleted. Pick a shelf."],
+    ["presence", "The dots: solid green means here in the last hour, a ring means earlier today, grey means not connected yet."],
   ];
   return el("section", { class: "desk-guide", "aria-label": "How this desk works" }, [
     el("h2", { text: "How this desk works" }),
-    el("ul", {}, lines.map(([icon, text]) => el("li", {}, [el("span", { class: "guide-icon", "aria-hidden": "true", text: icon }), text]))),
+    el("ul", {}, lines.map(([icon, text]) => el("li", { "data-icon": icon }, [
+      el("span", { class: "guide-icon", "aria-hidden": "true" }, [el("img", { src: `/assets/icons/${icon}.png`, alt: "", loading: "lazy" })]),
+      text,
+    ]))),
     el("button", { class: "primary-button", type: "button", "data-close-guide": "true", text: "Got it" }),
   ]);
 }

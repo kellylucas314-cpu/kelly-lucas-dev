@@ -335,3 +335,50 @@ to browser QA: an empty-desk pass (all seats show friendly empty lines, the
 feed shows its calm empty state) and a console-hygiene assertion (no page
 script errors across the whole run). Final: 46 room/model/board tests,
 8 dashboard tests, 40 browser assertions, `git diff --check` clean.
+
+## Pass: white modular ground with a warm illustrated layer (2026-08-23)
+
+Kelly: "very beige and brown." The desk was warm paper (#f4f2ec), warm card
+(#fffdf8), a terracotta accent, and a brown Claude Code seat. She supplied
+the Isomorphic Labs reference system in
+`kip-workspace/resources/design/isomorphic-labs-reference-system/` and six
+drawn sticker icons, and asked to merge that lightness with the way the
+avatars already look, plus a heavier font.
+
+The merge idea: the two references only look opposed. Both are
+outline-first with no shadows. The reference builds authority from a 1px
+near-black hairline; the stickers build charm from a thick dark-brown
+outline. Same idea, two stroke weights. So the system became one outline
+language at two scales, with the illustrated layer as the single
+expressive layer the reference itself calls for.
+
+Done:
+
+- New `brain/tokens.css`: primitives then semantic, nine spectral families.
+- Ground moved to white; page #f7f7f7, card #ffffff, ink #1e1e1e.
+  All shadows removed; major cells now carry the #1e1e1e primary hairline.
+- Seats re-cut from the spectral families. Kelly graphite, Codex mint,
+  Claude Code slate, Kip violet, Vellum sky. No brown or terracotta left.
+- Amber reserved for "needs you" and the bell, so the one attention signal
+  is the only thing on the page wearing it.
+- Display type moved to GC Protage 800 (already licensed and self-hosted).
+  A Google Fonts link would have been blocked by the /brain CSP.
+- The six emoji in the desk guide replaced with Kelly's drawn icons, each
+  with a hover motion keyed to its meaning.
+- Folded in one audit fix, because the heavier type made it worse: the
+  mobile presence sentence was setting ~10 characters to the line in a
+  74px column. It now gets its own full-width row (325px, ~45 characters)
+  and the strip shrank from 94px to 71px.
+
+Kept: the squared bottom-left signature shape, the four doors, the voice,
+the fixed verbs, quick answers that prefill instead of sending, the
+offline and conflict copy, and full reduced-motion coverage.
+
+Verified: 46 unit tests pass; browser QA passes at 1440/768/390 with zero
+horizontal overflow and no console errors; zero text-contrast failures
+measured with alpha compositing on Today and Board.
+
+Still open from the audit: the board hides 618px at 1440, the status pill
+`nowrap` overlap, composer drafts lost on the sign-in redirect, the Magpie
+login front door, the raw "Failed to fetch" toast, and the archive landing
+below its own shelf chips.

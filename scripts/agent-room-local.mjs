@@ -19,15 +19,24 @@ const MAX_BODY_BYTES = 16 * 1024;
 const STATIC_FILES = new Map([
   ["/brain/room.html", ["brain/room.html", "text/html; charset=utf-8"]],
   ["/brain/room.css", ["brain/room.css", "text/css; charset=utf-8"]],
+  ["/brain/tokens.css", ["brain/tokens.css", "text/css; charset=utf-8"]],
   ["/brain/room.js", ["brain/room.js", "text/javascript; charset=utf-8"]],
   ["/brain/dashboard.css", ["brain/dashboard.css", "text/css; charset=utf-8"]],
   ["/lib/agent-room-board.js", ["lib/agent-room-board.js", "text/javascript; charset=utf-8"]],
   ["/assets/bell.png", ["assets/bell.png", "image/png"]],
   ["/assets/fonts/Adriatic-Medium.woff2", ["assets/fonts/Adriatic-Medium.woff2", "font/woff2"]],
+  ["/assets/fonts/LeniaSans-Light.ttf", ["assets/fonts/LeniaSans-Light.ttf", "font/ttf"]],
   ["/assets/fonts/LeniaSans-Regular.ttf", ["assets/fonts/LeniaSans-Regular.ttf", "font/ttf"]],
   ["/assets/fonts/LeniaSans-Medium.ttf", ["assets/fonts/LeniaSans-Medium.ttf", "font/ttf"]],
   ["/assets/fonts/LeniaSans-Bold.ttf", ["assets/fonts/LeniaSans-Bold.ttf", "font/ttf"]],
+  ["/assets/fonts/GCPROTAGE-SemiBold.woff2", ["assets/fonts/GCPROTAGE-SemiBold.woff2", "font/woff2"]],
+  ["/assets/fonts/GCPROTAGE-Bold.woff2", ["assets/fonts/GCPROTAGE-Bold.woff2", "font/woff2"]],
+  ["/assets/fonts/GCPROTAGE-ExtraBold.woff2", ["assets/fonts/GCPROTAGE-ExtraBold.woff2", "font/woff2"]],
 ]);
+
+// The drawn icon set, served like the avatars: an explicit name list, so no
+// request can reach outside assets/icons/.
+const ICON_NAMES = "asleep|bell|board|feed|archive|presence";
 
 function json(response, body, status = 200) {
   response.writeHead(status, {
@@ -216,9 +225,12 @@ export function createLocalRoomServer(options = {}) {
       }
 
       const avatar = url.pathname.match(/^\/assets\/avatars\/(kelly|codex|claude-code|kip|vellum)\.png$/);
+      const icon = url.pathname.match(new RegExp(`^/assets/icons/(${ICON_NAMES})\\.png$`));
       const staticFile = avatar
         ? [`assets/avatars/${avatar[1]}.png`, "image/png"]
-        : STATIC_FILES.get(url.pathname);
+        : icon
+          ? [`assets/icons/${icon[1]}.png`, "image/png"]
+          : STATIC_FILES.get(url.pathname);
       if (!staticFile) return json(response, { error: "Not found" }, 404);
       const [relativePath, contentType] = staticFile;
       let bytes;

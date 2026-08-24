@@ -1,0 +1,152 @@
+/*
+  Agent Commons design tokens.
+
+  Three layers, atoms outward: primitives -> semantic -> component.
+  The palette is a nine-family spectral set on a white modular ground.
+  Interface geometry is hairline and precise; the illustrated layer
+  (avatars, icons) carries all the warmth and weight. One outline
+  language at two scales.
+
+  Layer 3 lives in room.css so the existing component rules keep working.
+*/
+
+:root {
+  /* ================================================================
+     1. PRIMITIVES
+     ================================================================ */
+
+  /* Neutral: dark -> light */
+  --n-900: #c3c3c3;
+  --n-800: #d8d8d8;
+  --n-700: #e8e8e8;
+  --n-600: #f0f0f0;
+  --n-500: #f7f7f7;
+
+  /* Graphite: dark -> light */
+  --g-500: #1e1e1e;
+  --g-400: #3a3a3a;
+  --g-300: #585858;
+  --g-200: #7f7f7f;
+  --g-100: #989898;
+
+  /* Nine spectral families, dark -> light. -900 is ink, -500/-700 are
+     marks, -100/-200 are the fields. */
+  --slate-900:  #304a57;  --slate-700:  #6e848f;  --slate-500:  #cddbe3;
+  --slate-200:  #ebf1f4;  --slate-100:  #f5f8f9;
+
+  --sky-900:    #367496;  --sky-700:    #67aacf;  --sky-500:    #9cdcff;
+  --sky-200:    #ccecfe;  --sky-100:    #e6f7ff;
+
+  --mint-900:   #258360;  --mint-700:   #57be98;  --mint-500:   #94f1cf;
+  --mint-200:   #cbfedc;  --mint-100:   #e9ffe9;
+
+  --violet-900: #652085;  --violet-700: #8744a7;  --violet-500: #d38df4;
+  --violet-200: #edc8ff;  --violet-100: #f8ebff;
+
+  --rose-900:   #a12661;  --rose-700:   #cc508b;  --rose-500:   #f98abf;
+  --rose-200:   #ffbedd;  --rose-100:   #ffecfc;
+
+  --amber-900:  #8e4605;  --amber-700:  #bf7027;  --amber-500:  #f6ac3c;
+  --amber-200:  #fbd193;  --amber-100:  #ffe4cc;
+
+  --lime-900:   #768702;  --lime-700:   #b3c828;  --lime-500:   #e6fa5e;
+  --lime-200:   #dff0ad;  --lime-100:   #e8fac3;
+
+  --white: #ffffff;
+  --signal-blue: #2d62ff;
+
+  /* The illustrated layer keeps its own ink. Sticker outlines are much
+     heavier than interface hairlines, so they are a different value on
+     purpose, not an inconsistency. */
+  --sticker-ink: #3e2317;
+  --sticker-halo: #fbf3e4;
+
+  /* Type. All self-hosted; nothing is fetched from a third party, which
+     the /brain CSP would block anyway. */
+  --display: "GC Protage", "LeniaSans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --sans: "LeniaSans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Spacing: the reference primitive scale. */
+  --sp-1: 4px;   --sp-2: 8px;   --sp-3: 12px;  --sp-4: 14px;
+  --sp-5: 16px;  --sp-6: 20px;  --sp-7: 30px;  --sp-8: 40px;
+  --sp-9: 50px;  --sp-10: 60px; --sp-11: 80px; --sp-12: 120px;
+
+  /* Shape. The squared bottom-left corner stays: it is the one shape
+     that is ours, and it survives the reskin. */
+  --radius-slab: 24px 24px 24px 8px;
+  --radius-card: 16px 16px 16px 6px;
+  --radius-control: 12px 12px 12px 5px;
+  --radius-pill: 999px;
+  --hairline: 1px;
+
+  /* Motion: controls tactile, imagery alive. */
+  --dur: 150ms;
+  --ease: ease;
+  --press: 0.98;
+
+  /* ================================================================
+     2. SEMANTIC
+     ================================================================ */
+
+  --s-page: var(--n-500);
+  --s-card: var(--white);
+  --s-deep: var(--n-600);
+  --s-hover: var(--n-500);
+  --s-dark: var(--g-400);
+
+  --t-ink: var(--g-500);
+  --t-ink-soft: var(--g-400);
+  --t-muted: var(--g-300);
+  --t-on-dark: var(--n-800);
+  --t-on-dark-muted: var(--n-900);
+
+  --b-primary: var(--g-500);
+  --b-soft: var(--n-800);
+  --b-faint: var(--n-700);
+
+  --focus: var(--signal-blue);
+
+  /* Seats. Kelly is graphite: she is the constant, and it keeps every
+     spectral family free for the agents and the states. */
+  --seat-kelly:       var(--g-500);
+  --seat-codex:       var(--mint-900);
+  --seat-claude-code: var(--slate-900);
+  --seat-kip:         var(--violet-900);
+  --seat-vellum:      var(--sky-900);
+
+  /* States. Amber is reserved for "needs you" and the bell, so the one
+     attention signal is the only thing wearing it. */
+  --st-needs:      var(--amber-900);
+  --st-needs-mark: var(--amber-500);
+  --st-needs-soft: var(--amber-100);
+  --st-needs-line: var(--amber-200);
+
+  --st-done:      var(--lime-900);
+  --st-done-soft: var(--lime-100);
+  --st-done-line: var(--lime-200);
+
+  --st-alert:      var(--rose-900);
+  --st-alert-soft: var(--rose-100);
+
+  --st-note:      var(--violet-900);
+  --st-note-soft: var(--violet-100);
+
+  --st-wait:      var(--g-300);
+  --st-wait-soft: var(--n-600);
+
+  /* The pale ambient fields. One expressive layer at a time. */
+  --field-cool: linear-gradient(0deg, var(--sky-100), var(--mint-100));
+  --field-warm: linear-gradient(0deg, var(--amber-100), var(--rose-100));
+}
+
+@media (max-width: 900px) {
+  :root {
+    --radius-slab: 18px 18px 18px 6px;
+    --radius-card: 14px 14px 14px 5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur: 0ms; }
+}
