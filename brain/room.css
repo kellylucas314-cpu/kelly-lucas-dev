@@ -909,6 +909,24 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 .wake-bell-mini:hover { background: var(--hover); }
 .wake-bell-mini:disabled { opacity: .55; cursor: default; }
 
+/* ---------- how this desk works ---------- */
+
+.guide-link { align-self: flex-start; color: var(--rail-muted); font-size: 13px; }
+.guide-link:hover { color: var(--rail-text); }
+.desk-guide {
+  margin-bottom: 24px;
+  padding: 18px 20px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--card-deep);
+}
+.desk-guide h2 { margin: 0 0 10px; font: 700 18px/1.2 var(--display); letter-spacing: -.01em; }
+.desk-guide ul { margin: 0 0 14px; padding: 0; list-style: none; display: grid; gap: 8px; }
+.desk-guide li { display: flex; gap: 10px; align-items: baseline; font-size: 14.5px; line-height: 1.45; color: var(--ink-soft); }
+.guide-icon { flex: 0 0 22px; text-align: center; }
+.desk-guide .primary-button { min-height: 40px; }
+.guide-mini { font: 700 16px/1 var(--sans); color: var(--muted); }
+
 /* ---------- the archive shelves ---------- */
 
 .archive-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
@@ -1182,7 +1200,7 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
   .view-option:has(input:checked)::before { display: none; }
   .view-option:has(input:checked) .view-count { background: rgba(39, 38, 33, .1); color: var(--ink); }
   .view-option:has(input:checked) .view-count.attention { background: var(--needs-strong); color: white; }
-  .house-note { display: none; }
+  .house-note, .guide-link { display: none; }
   .workspace { display: block; overflow: visible; height: auto; border-radius: 18px 18px 18px 6px; }
   .workspace-header { padding: 16px 20px 14px; }
   .workspace-body { overflow: visible; padding: 18px 20px 24px; }
@@ -1285,6 +1303,7 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
   .board-bar { margin-top: -2px; }
   .board-bar .primary-button { width: 100%; min-height: 46px; }
   .react-chip, .react-add summary { min-height: 34px; min-width: 34px; }
+  .wake-bell-mini { width: 44px; height: 44px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

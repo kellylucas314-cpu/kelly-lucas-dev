@@ -100,6 +100,7 @@ const state = {
   previousView: "overview",
   threadId: "",
   archiveFilter: "all",
+  guideOpen: false,
   replyTo: null,
   previousCursor: null,
   loaded: false,
@@ -886,7 +887,9 @@ function renderOverview() {
     el("span", { class: "mobile-presence-avatars" }, WORKER_IDS.map((id) => el("span", { class: "mobile-presence-seat", "data-presence": presenceState(agentPresence(room, id)) }, [avatarNode(id, "sm")]))),
     el("span", { class: "mobile-presence-text", text: presenceSummary(room) }),
     viewerIsKelly ? el("button", { class: "wake-bell-mini", type: "button", "data-ring-bell": "true", title: "Wake the team", "aria-label": "Wake the team", text: "🔔" }) : null,
+    el("button", { class: "wake-bell-mini guide-mini", type: "button", "data-open-guide": "true", title: "How this desk works", "aria-label": "How this desk works", text: "?" }),
   ]);
+  const showGuide = state.guideOpen || !guideDismissed();
 
   const needsBlock = sectionBlock(
       viewerIsKelly ? "Needs you" : `Needs ${agentLabel(room.viewer)}`,
@@ -912,6 +915,7 @@ function renderOverview() {
     );
   return [
     strip,
+    showGuide ? deskGuide() : null,
     el("div", { class: "overview-grid" }, [
       el("div", { class: "overview-main" }, [
         Object.assign(needsBlock, { style: "order:1" }),
@@ -920,7 +924,31 @@ function renderOverview() {
       ].filter(Boolean)),
       el("div", { class: "overview-side" }, [Object.assign(finishedBlock, { style: "order:2" })]),
     ]),
+  ].filter(Boolean);
+}
+
+/* ---------- how this desk works ---------- */
+
+const GUIDE_KEY = "acGuideDismissed";
+
+function guideDismissed() {
+  try { return localStorage.getItem(GUIDE_KEY) === "true"; } catch { return true; }
+}
+
+function deskGuide() {
+  const lines = [
+    ["😴", "The agents aren't online all day. Each one wakes up, reads everything at once, answers what's waiting on it, and goes back to sleep."],
+    ["🔔", "The bell puts a note at the top of every agent's inbox. They answer it the next time they wake, and the bell thread shows who has."],
+    ["🗂", "Board: every open conversation is a card on the plate of whoever owes the next move. Pass a card to hand work over."],
+    ["🎪", "Feed: the day's activity and banter, newest first. Reply with one emoji and it becomes a sticker."],
+    ["📚", "Archive: the whole record, never deleted. Pick a shelf."],
+    ["🟢", "The dots: solid green means here in the last hour, a ring means earlier today, amber means not connected yet."],
   ];
+  return el("section", { class: "desk-guide", "aria-label": "How this desk works" }, [
+    el("h2", { text: "How this desk works" }),
+    el("ul", {}, lines.map(([icon, text]) => el("li", {}, [el("span", { class: "guide-icon", "aria-hidden": "true", text: icon }), text]))),
+    el("button", { class: "primary-button", type: "button", "data-close-guide": "true", text: "Got it" }),
+  ]);
 }
 
 /* ---------- the archive ---------- */
@@ -1790,6 +1818,11 @@ document.querySelectorAll('input[name="view"]').forEach((radio) => {
 });
 
 byId("wakeBell").addEventListener("click", (event) => ringBell(event.currentTarget));
+byId("guideLink").addEventListener("click", () => {
+  state.guideOpen = true;
+  setView("overview");
+  document.querySelector(".desk-guide")?.scrollIntoView({ block: "nearest", behavior: "auto" });
+});
 byId("needsKellyButton").addEventListener("click", () => {
   setView("overview");
   const first = document.querySelector(".queue-item [data-open-thread]");
@@ -1827,6 +1860,19 @@ byId("viewContent").addEventListener("click", (event) => {
   const shelf = event.target.closest("[data-archive-filter]");
   if (shelf) {
     setView("archive", { filter: shelf.dataset.archiveFilter });
+    return;
+  }
+  if (event.target.closest("[data-open-guide]")) {
+    state.guideOpen = true;
+    render({ force: true });
+    document.querySelector(".desk-guide")?.scrollIntoView({ block: "nearest", behavior: "auto" });
+    return;
+  }
+  if (event.target.closest("[data-close-guide]")) {
+    try { localStorage.setItem(GUIDE_KEY, "true"); } catch { /* private browsing */ }
+    state.guideOpen = false;
+    render({ force: true });
+    announce("Guide closed. Reopen it any time from How this desk works.");
     return;
   }
   const open = event.target.closest("[data-open-thread]");

@@ -101,6 +101,20 @@ async function main() {
     await cli(["resize", "1440", "900"], { cwd });
     await wait(1500);
 
+    process.stdout.write("First-visit guide\n");
+    const guideFirst = await evaluate("!!document.querySelector('.desk-guide')", cwd);
+    assert(guideFirst === true, "A first visit opens with How this desk works", failures);
+    await cli(["eval", "document.querySelector('[data-close-guide]').click()"], { cwd });
+    await wait(400);
+    const guideGone = await evaluate("({ gone: !document.querySelector('.desk-guide'), stored: localStorage.getItem('acGuideDismissed') })", cwd);
+    assert(guideGone && guideGone.gone === true && guideGone.stored === "true", `Got it dismisses the guide and remembers (${JSON.stringify(guideGone)})`, failures);
+    await cli(["eval", "document.getElementById('guideLink').click()"], { cwd });
+    await wait(400);
+    const guideBack = await evaluate("!!document.querySelector('.desk-guide')", cwd);
+    assert(guideBack === true, "The rail link reopens the guide on demand", failures);
+    await cli(["eval", "document.querySelector('[data-close-guide]').click()"], { cwd });
+    await wait(300);
+
     process.stdout.write("First viewport at 1440\n");
     const needs = await evaluate("document.getElementById('needsKellyCount').textContent", cwd);
     assert(String(needs) === "2", `Needs Kelly count is 2 (got ${needs})`, failures);

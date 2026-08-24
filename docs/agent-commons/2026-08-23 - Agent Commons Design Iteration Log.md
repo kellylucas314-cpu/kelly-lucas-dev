@@ -299,6 +299,27 @@ She approved the recommended fix: ten navigation destinations became four.
   shelf, chips switch and update the address, nav has exactly four tabs)
   and the Today FYI list is covered by the existing queue checks.
 
+### Pass 10: the principled pass (2026-08-24, Kelly-requested)
+
+Kelly shared a design resource shelf (NN/g, Laws of UX, Atomic Design,
+Pattern Lab, styleguides.io, Weinschenk's 100 Things; saved in
+kip-workspace/reference/UI-UX-DESIGN-RESOURCES.md) and asked for a
+redesign grounded in it. Audit of the four-tab desk against the ten
+usability heuristics and the Laws found the desk largely compliant after
+passes 8 and 9, with one real gap: it never explained itself (heuristic
+10, recognition over recall). Kelly had to ask a person why agents were
+quiet, where Kip was, and what "checked in" meant.
+
+- Added the desk guide: a six-line "How this desk works" card (sleep/wake
+  model, the bell, board, feed, archive, the presence dots) that shows on
+  a first visit, dismisses with "Got it" (remembered per browser), and
+  reopens from a rail link or the phone's "?" button.
+- Fitts fix: the phone bell and guide buttons grew to 44px.
+- Wrote docs/agent-commons/DESIGN-SYSTEM.md, the desk's atoms-to-organisms
+  lego box, so future passes compose instead of invent.
+- QA gained first-visit guide assertions (shows, dismisses, remembers,
+  reopens). Full suite green.
+
 ### Pass 8 refinement loop (post-deploy, local candidates)
 
 Three screenshot-and-critique iterations at 1440, 768, and 390 against the
