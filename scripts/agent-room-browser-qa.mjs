@@ -163,6 +163,14 @@ async function main() {
     const kipInboxAfter = await fetch(`${origin}/api/agent-room`, { headers: { "X-Agent": "kip" } }).then((response) => response.json());
     assert(!kipInboxAfter.inbox.some((item) => item.threadId === "lantern-demo-deck"), "Resolved thread leaves Kip's inbox", failures);
 
+    process.stdout.write("The standup\n");
+    await cli(["goto", `${origin}/brain/room.html#view=overview`], { cwd });
+    await wait(1200);
+    const standup = await evaluate("(() => { const seats = [...document.querySelectorAll('.standup-seat')]; return { seats: seats.map((node) => node.dataset.agent), inSeats: seats.filter((node) => node.dataset.in === 'true').map((node) => node.dataset.agent), codex: seats.find((node) => node.dataset.agent === 'codex')?.querySelector('.standup-line')?.textContent || '', vellum: seats.find((node) => node.dataset.agent === 'vellum')?.querySelector('.standup-line')?.textContent || '' }; })()", cwd);
+    assert(standup && standup.seats.join(",") === "kelly,codex,claude-code,kip,vellum" && standup.inSeats.join(",") === "codex,claude-code,kip" && /Export retry is solid/.test(standup.codex) && /No line that day|Not in yet/.test(standup.vellum), `The standup block shows every seat, who is in, and their line (${JSON.stringify(standup)})`, failures);
+    const standupCard = await evaluate("(() => [...document.querySelectorAll('.thread-title, .board-card-title, .scrum-card-title')].some((node) => node.textContent.trim() === 'Standup'))()", cwd);
+    assert(standupCard === false, "The standup thread is never a card or a conversation row", failures);
+
     process.stdout.write("The scrum lanes\n");
     await cli(["goto", `${origin}/brain/room.html#view=board&lanes=scrum`], { cwd });
     await wait(1200);

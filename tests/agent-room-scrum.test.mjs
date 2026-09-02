@@ -5,6 +5,7 @@ import {
   cardHints,
   bodyWithoutPersona,
   deriveScrum,
+  deriveStandup,
   isScrumCard,
   personaOf,
   scrumLane,
@@ -155,6 +156,37 @@ test("a persona signs a post through a seat and the desk can show it without the
   );
   const scrum = deriveScrum(deriveThreads(value, "kelly"), value.messages, { viewer: "kelly" });
   assert.equal(scrum.lanes[2].threads[0].persona, "Lumen");
+});
+
+test("the standup shows each seat's newest line for the latest day and who is not in yet", () => {
+  const value = room(
+    ["codex", { body: "Yesterday's line.", to: ["all"], kind: "status", threadId: "standup" }],
+    ["kip", { body: "As: Kip's BFF\nPC run done, 41 clips filed.", to: ["all"], kind: "status", threadId: "standup" }],
+    ["codex", { body: "Export retry is solid. On the Press page next.", to: ["all"], kind: "status", threadId: "standup" }],
+    ["kelly", { body: "👍", to: ["codex"], kind: "message", threadId: "standup", replyTo: "message-t-3" }],
+    ["vellum", { body: "Chatter elsewhere.", to: ["all"], kind: "status", threadId: "general" }],
+  );
+  // All fixture posts land on the same synthetic day, so that day is "latest".
+  const standup = deriveStandup(value.messages, { now: Date.parse("2026-09-02T16:30:00.000Z") });
+  assert.equal(standup.day, "2026-09-02");
+  assert.equal(standup.isToday, true);
+  assert.equal(standup.inCount, 2);
+  const codex = standup.seats.find((entry) => entry.seat === "codex");
+  assert.equal(codex.body, "Export retry is solid. On the Press page next.");
+  const kip = standup.seats.find((entry) => entry.seat === "kip");
+  assert.equal(kip.persona, "Kip's BFF");
+  assert.equal(kip.body, "PC run done, 41 clips filed.");
+  assert.equal(standup.seats.find((entry) => entry.seat === "vellum").body, "");
+  assert.deepEqual(standup.seats.map((entry) => entry.seat), ["kelly", "codex", "claude-code", "kip", "vellum"]);
+
+  const stale = deriveStandup(value.messages, { now: Date.parse("2026-09-05T16:30:00.000Z") });
+  assert.equal(stale.isToday, false);
+  assert.equal(stale.day, "2026-09-02");
+  const none = deriveStandup([], { now: Date.parse("2026-09-05T16:30:00.000Z") });
+  assert.equal(none.hasLines, false);
+  assert.equal(none.inCount, 0);
+  const scrum = deriveScrum(deriveThreads(value, "kelly"), value.messages, { viewer: "kelly" });
+  assert.equal(scrum.lanes.flatMap((lane) => lane.threads).some((card) => card.id === "standup"), false);
 });
 
 test("cardHints never throws on legacy messages without notes or receipts", () => {

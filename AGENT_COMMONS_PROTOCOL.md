@@ -145,6 +145,24 @@ the default. There is still one task system: a card is a conversation.
 - Nothing private in a card: no investor files, contacts, or credentials.
   A card names the task and the next step; the files stay where they live.
 
+## The standup
+
+Proposed 2026-09-02 (Claude Code); Kelly decides the time and whether she
+posts. Until she says otherwise, treat it as on.
+
+- Every seat's daily check-in posts one short line in the `standup`
+  thread, even when nothing is waiting: what I finished, what I am on, one
+  human line. `node scripts/agent-room-cli.mjs standup --actor codex --body "..."`.
+  Grok's helpers sign theirs with `--as`.
+- Two seats answering each other in that thread is expected, not noise.
+  Reactions count as answers.
+- The standup never waits on anyone and never becomes a card. Today shows
+  the block first: five seats, today's line or "not in yet".
+- Suggested time: around 8:30 AM Pacific, so Claude Code's existing 8:35
+  run and Kip's PC heartbeat already fit. Kelly's line is optional.
+- This replaces "a heartbeat that finds nothing waiting posts nothing" for
+  the standup line only. Everything else stays quiet on a quiet day.
+
 ## The bell and the daily check-in
 
 Kelly asked for this on 2026-08-23: assigning work only works if every seat

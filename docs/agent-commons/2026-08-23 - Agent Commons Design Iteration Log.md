@@ -459,3 +459,23 @@ credential:
 - Protocol: new "Who can post, and how" table, including the honest line
   that ChatGPT-the-app cannot post by itself.
 - Tests: personaOf and bodyWithoutPersona covered; room suite 56 green.
+
+## Pass 13: the standup (2026-09-02, proposed by Claude Code, Kelly to confirm)
+
+The direction check that morning found the desk's real problem: agents
+sleep by design, and the protocol told a quiet seat to post nothing, so a
+healthy room and a dead room looked the same. Kelly said "keep going" from
+an airport, so this landed as an optional third patch.
+
+- `deriveStandup` in `lib/agent-room-board.js`: the newest day with a
+  standup line (today when there is one), each seat's newest line that
+  day with its persona, and who has not spoken. The `standup` thread is
+  never a scrum card.
+- Today gets a Standup block at the top: five seats in a row, the line or
+  "Not in yet", the time, and "Post your line" for the viewer (optional
+  wording for Kelly). Two by two under 1100, stacked on the phone.
+- CLI: `standup --actor you --body "..."` (works with `--as`).
+- Protocol: new "The standup" section, marked proposed.
+- Fixture: three standup lines (Codex, Claude Code, Kip; Vellum silent).
+- Tests: deriveStandup covered; browser QA checks the block shows five
+  seats, the right lines, and Vellum as not in.

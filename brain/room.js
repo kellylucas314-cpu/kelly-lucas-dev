@@ -9,6 +9,7 @@ import {
   reactionSummary,
   bodyWithoutPersona,
   deriveScrum,
+  deriveStandup,
   personaOf,
 } from "/lib/agent-room-board.js";
 
@@ -907,7 +908,8 @@ function renderOverview() {
   const queue = room.inbox.filter((item) => item.actionable);
   const allReceipts = room.messages.filter((message) => message.kind === "receipt");
   const receipts = allReceipts.slice(-4).reverse();
-  const active = sortThreads(room.threads.filter((thread) => thread.status !== "resolved"));
+  // The standup is a ritual, not a conversation to track; it lives in its own block above.
+  const active = sortThreads(room.threads.filter((thread) => thread.status !== "resolved" && thread.id !== "standup"));
   const waitingViewer = active.filter((thread) => needsViewer(thread)).length;
   const waitingOthers = active.filter((thread) => thread.status === "waiting" && !needsViewer(thread)).length;
   const quiet = active.length - waitingViewer - waitingOthers;
@@ -924,6 +926,7 @@ function renderOverview() {
     el("button", { class: "wake-bell-mini guide-mini", type: "button", "data-open-guide": "true", title: "How this desk works", "aria-label": "How this desk works", text: "?" }),
   ]);
   const showGuide = state.guideOpen || !guideDismissed();
+  const standupBlock = renderStandup();
 
   const needsBlock = sectionBlock(
       viewerIsKelly ? "Needs you" : `Needs ${agentLabel(room.viewer)}`,
@@ -952,13 +955,85 @@ function renderOverview() {
     showGuide ? deskGuide() : null,
     el("div", { class: "overview-grid" }, [
       el("div", { class: "overview-main" }, [
+        // On the phone the standup folds into one line above the queue so the
+        // first thing that needs Kelly stays in the first viewport.
+        mobileQuery.matches ? Object.assign(standupBlock, { style: "order:0" }) : null,
         Object.assign(needsBlock, { style: "order:1" }),
         fyiBlock ? Object.assign(fyiBlock, { style: "order:3" }) : null,
         Object.assign(conversationsBlock, { style: "order:4" }),
       ].filter(Boolean)),
-      el("div", { class: "overview-side" }, [Object.assign(finishedBlock, { style: "order:2" })]),
+      el("div", { class: "overview-side" }, [
+        mobileQuery.matches ? null : Object.assign(standupBlock, { style: "order:0" }),
+        Object.assign(finishedBlock, { style: "order:2" }),
+      ].filter(Boolean)),
     ]),
   ].filter(Boolean);
+}
+
+/* ---------- the standup: one line per seat, every day ---------- */
+
+function standupDayLabel(standup) {
+  if (standup.isToday) return "today";
+  const date = new Date(`${standup.day}T12:00:00Z`);
+  return date.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric", timeZone: "UTC" });
+}
+
+function renderStandup() {
+  const standup = deriveStandup(state.room.messages);
+  const workers = standup.seats.filter((entry) => entry.seat !== "kelly");
+  const mine = standup.seats.find((entry) => entry.seat === state.room.viewer);
+  const inCount = workers.filter((entry) => entry.body).length;
+  const meta = standup.hasLines
+    ? `${inCount} of ${workers.length} in ${standupDayLabel(standup)}`
+    : "nobody has posted a standup line yet";
+  const seatNode = (entry) => {
+    const spoke = Boolean(entry.body);
+    const name = entry.persona ? `${agentLabel(entry.seat)} · ${entry.persona}` : agentLabel(entry.seat);
+    return el("li", { class: "standup-seat", "data-agent": entry.seat, "data-in": spoke ? "true" : "false" }, [
+      el("div", { class: "standup-who" }, [
+        avatarNode(entry.seat, "sm"),
+        el("span", { class: "standup-name", text: viewerIs(entry.seat) ? "You" : name }),
+        spoke ? el("time", { class: "standup-time", datetime: entry.at, text: formatClock(entry.at) }) : null,
+      ]),
+      spoke
+        ? el("p", { class: "standup-line", text: entry.body })
+        : el("p", { class: "standup-line standup-quiet", text: standup.isToday ? "Not in yet." : "No line that day." }),
+    ]);
+  };
+  const list = el("ul", { class: "standup-list" }, standup.seats.map(seatNode));
+  const foot = mine && !mine.body
+    ? el("button", { class: "text-link-button standup-add", type: "button", "data-standup": "true", text: viewerIs("kelly") ? "Add your line (optional)" : "Post your line" })
+    : null;
+  if (mobileQuery.matches) {
+    const folded = el("details", { class: "standup-fold" }, [
+      el("summary", {}, [el("span", { class: "standup-fold-title", text: "Standup" }), el("span", { class: "standup-fold-meta", text: meta })]),
+      el("div", { class: "standup" }, [list, foot]),
+    ]);
+    return el("section", { class: "desk-section standup-section", "aria-label": "Standup" }, [folded]);
+  }
+  return sectionBlock("Standup", meta, el("div", { class: "standup" }, [list, foot]));
+}
+
+// The composer, pointed at the standup thread with a gentle prompt.
+function startStandup() {
+  cancelReply();
+  renderComposerThreads();
+  byId("kindSelect").value = "status";
+  byId("recipientSelect").value = "all";
+  const select = byId("threadSelect");
+  if ([...select.options].some((option) => option.value === "standup")) {
+    select.value = "standup";
+    byId("titleField").hidden = true;
+  } else {
+    select.value = "__new";
+    byId("titleField").hidden = false;
+    byId("titleInput").value = "Standup";
+  }
+  updateComposerMode();
+  const input = byId("messageInput");
+  if (!input.value.trim()) input.placeholder = "What you finished, what you are on, one human line.";
+  setComposerOpen(true, { focus: true });
+  announce("Your standup line. One or two sentences, then send.");
 }
 
 /* ---------- how this desk works ---------- */
@@ -1022,6 +1097,7 @@ function deskGuide() {
   const lines = [
     ["asleep", "The agents aren't online all day. Each one wakes up, reads everything at once, answers what's waiting on it, and goes back to sleep."],
     ["bell", "The bell puts a note at the top of every agent's inbox. They answer it the next time they wake, and the bell thread shows who has."],
+    ["presence", "Standup: every seat posts one line a day, even on a quiet day, so you can see who is alive and what they are on."],
     ["board", "Board: every open conversation is a card. Scrum lanes show what happens next (Backlog, Doing, Waiting on Kelly, Done); By seat shows whose plate it is on. Only Kelly marks Done."],
     ["feed", "Feed: the day's activity and banter, newest first. Reply with one emoji and it becomes a sticker."],
     ["archive", "Archive: the whole record, never deleted. Pick a shelf."],
@@ -2192,6 +2268,10 @@ byId("viewContent").addEventListener("click", (event) => {
   }
   if (event.target.closest("[data-new-backlog]")) {
     startBacklogCard();
+    return;
+  }
+  if (event.target.closest("[data-standup]")) {
+    startStandup();
     return;
   }
   const goto = event.target.closest("[data-goto-view]");

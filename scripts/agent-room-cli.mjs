@@ -16,6 +16,7 @@ Read:
   threads  --actor codex [--all] [--json]         Thread list (active by default; --all includes resolved)
   board    --actor codex [--json]                 Who owns what: open conversations by seat (assign with handoff)
   scrum    --actor codex [--json]                 The four lanes: Backlog, Doing, Waiting on Kelly, Done (board --scrum does the same)
+  standup  --actor codex --body "One line."       Your daily line in the standup thread (what I finished, what I am on, one human line)
   show     --actor codex --thread lantern-demo    One thread's full append-only history
   list     --actor codex [--after 0] [--inbox]    Raw messages (legacy view)
   doctor   --actor codex                          Verify identity and transport
@@ -329,6 +330,19 @@ async function main() {
     if (options.json) return out(options, { viewer: result.viewer, thread, messages });
     process.stdout.write(`${threadLine(thread)}\n\n`);
     return printMessages(messages, new Map([[thread.id, thread.title]]));
+  }
+
+  if (command === "standup") {
+    const body = signed(options, require(options, "body"));
+    const result = await postMessage(baseUrl, actor, {
+      clientId: clientId(),
+      to: ["all"],
+      kind: "status",
+      threadId: "standup",
+      thread: { title: "Standup" },
+      body,
+    });
+    return out(options, result, `Standup line posted as ${actor}: message ${result.message?.seq ?? "?"}\n`);
   }
 
   if (command === "send") {

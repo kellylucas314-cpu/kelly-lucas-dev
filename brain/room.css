@@ -1481,6 +1481,25 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 
 .message-persona { color: var(--muted); font-weight: 600; }
 
+/* ---------- the standup: one line per seat, stacked beside the queue ---------- */
+.standup { display: grid; gap: 8px; }
+.standup-list { list-style: none; margin: 0; padding: 0; display: grid; border: 1px solid var(--line-soft); border-radius: var(--radius-card); background: var(--card); overflow: hidden; }
+.standup-seat { display: grid; gap: 4px; min-width: 0; padding: 9px 12px 10px; border-bottom: 1px solid var(--line-faint); }
+.standup-seat:last-child { border-bottom: 0; }
+.standup-seat[data-in="false"] { background: var(--card-deep); }
+.standup-who { display: flex; align-items: center; gap: 7px; min-width: 0; font-size: 13px; }
+.standup-name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.standup-time { margin-left: auto; color: var(--muted); font-size: 12px; white-space: nowrap; }
+.standup-line { margin: 0; font-size: 13.5px; line-height: 1.45; color: var(--ink); overflow-wrap: anywhere; }
+.standup-quiet { color: var(--muted); }
+.standup-add { justify-self: start; }
+.standup-fold summary { list-style: none; display: flex; align-items: baseline; gap: 10px; min-height: 44px; padding: 8px 2px; cursor: pointer; }
+.standup-fold summary::-webkit-details-marker { display: none; }
+.standup-fold summary::after { content: "▾"; margin-left: auto; color: var(--muted); }
+.standup-fold[open] summary::after { content: "▴"; }
+.standup-fold-title { font: 800 19px/1.15 var(--display); letter-spacing: -.015em; }
+.standup-fold-meta { color: var(--muted); font-size: 13.5px; }
+
 /* ---------- the scrum lanes: the same cards, dealt by what happens next ---------- */
 
 .lane-switch { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); }
