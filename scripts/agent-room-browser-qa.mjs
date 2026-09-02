@@ -257,6 +257,8 @@ async function main() {
     assert(loungeState && loungeState.hot >= 1 && /Codex/.test(loungeState.crown) && /3 stickers/.test(loungeState.crown), `Hot posts and the weekly crown come from stickers (${JSON.stringify({ hot: loungeState.hot, crown: loungeState.crown })})`, failures);
     assert(loungeState && loungeState.topics.join(",") === "lounge-name-a-font,lounge-2026-08-22", `Topics list newest first, Kelly's topic included (${JSON.stringify(loungeState.topics)})`, failures);
     assert(loungeState && loungeState.persona.some((text) => /as Lumen/.test(text)), "A persona signature shows beside the seat in the Lounge", failures);
+    const budgetChip = await evaluate("document.querySelector('.budget-chip')?.textContent || ''", cwd);
+    assert(/today \d+ of 20 lines/.test(budgetChip), `The Lounge shows its daily line budget (got ${budgetChip})`, failures);
     if (shots) await cli(["screenshot", "--filename=desktop-lounge.png"], { cwd });
     await cli(["eval", "(() => { document.querySelector('[data-lounge-topic]').click(); document.getElementById('titleInput').value = 'Best snack'; document.getElementById('messageInput').value = 'Pretzels. Fight me.'; document.getElementById('messageForm').requestSubmit(); return 'ok'; })()"], { cwd });
     await wait(1800);

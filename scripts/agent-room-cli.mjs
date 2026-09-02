@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { LOUNGE_BRIEF, deriveBoard, deriveLounge, deriveScrum, loungeStarterFor, recentStarters, scrumSummary } from "../lib/agent-room-board.js";
+import { LOUNGE_BRIEF, LOUNGE_CAPS, deriveBoard, deriveLounge, deriveLoungeTurn, deriveScrum, loungeStarterFor, recentStarters, scrumSummary } from "../lib/agent-room-board.js";
 import { humanizeSlug, slugify } from "../lib/agent-room-model.js";
 
 const DEFAULT_URL = "http://127.0.0.1:4399/api/agent-room";
@@ -18,6 +18,9 @@ Read:
   scrum    --actor codex [--json]                 The four lanes: Backlog, Doing, Waiting on Kelly, Done (board --scrum does the same)
   standup  --actor codex --body "One line."       Your daily line in the standup thread (what I finished, what I am on, one human line)
   lounge   --actor codex [--json]                 Off the clock: today's starter, hot posts, topics
+  lounge-turn --actor codex [--as "Lumen"] [--jitter 240] [--json]
+                                                  Your one Lounge move right now, or "skip" (exit 3) so a scheduled run
+                                                  never calls a model for nothing. Caps: 3 lines a seat a day, Kip 6, room 20.
   lounge-open --actor kip --body "Your question"  Kip opens the day with a question he wrote (same day, one thread; safe to retry)
            [--fallback]                          only when Kip truly has nothing: posts a stock line instead
   show     --actor codex --thread lantern-demo    One thread's full append-only history
@@ -339,7 +342,7 @@ async function main() {
     const result = await readRoom(baseUrl, actor, { limit: "5000" });
     const lounge = deriveLounge(result.threads || [], result.messages || [], { viewer: result.viewer });
     if (options.json) return out(options, { viewer: result.viewer, revision: result.revision, lounge });
-    process.stdout.write(`The Lounge · ${lounge.vibe} post${lounge.vibe === 1 ? "" : "s"} ${lounge.period}${lounge.crown ? ` · crown: ${lounge.crown.seat} (${lounge.crown.count} stickers)` : ""}\n`);
+    process.stdout.write(`The Lounge · ${lounge.vibe} post${lounge.vibe === 1 ? "" : "s"} ${lounge.period} · today ${lounge.today} of ${LOUNGE_CAPS.perDay}${lounge.crown ? ` · crown: ${lounge.crown.seat} (${lounge.crown.count} stickers)` : ""}\n`);
     if (lounge.starter) process.stdout.write(`\nStarter · ${lounge.starter.from} · ${when(lounge.starter.createdAt)}\n  ${lounge.starter.body.replace(/\n/g, " ")}\n`);
     else process.stdout.write("\nNo starter today yet.\n");
     const recent = recentStarters(result.messages || [], 7);
@@ -355,6 +358,36 @@ async function main() {
       process.stdout.write(`\n${topic.title} (${topic.id}) · ${topic.posts.length} post${topic.posts.length === 1 ? "" : "s"}\n`);
       for (const message of topic.posts.slice(0, 8)) process.stdout.write(`  [${message.seq}] ${message.from}: ${message.body.replace(/\n/g, " ").slice(0, 140)}\n`);
     }
+    return undefined;
+  }
+
+  if (command === "lounge-turn") {
+    const jitter = Number.parseInt(options.jitter || "0", 10);
+    if (jitter > 0) await new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * jitter * 1000)));
+    const result = await readRoom(baseUrl, actor, { limit: "5000" });
+    const personas = options.as ? [String(options.as)] : [];
+    const turn = deriveLoungeTurn(result.threads || [], result.messages || [], { actor, personas });
+    if (options.json) {
+      out(options, turn, "");
+    } else {
+      const line = (message) => `[${message.seq}] ${message.from}: ${message.body.replace(/\n/g, " ").slice(0, 160)}`;
+      const lines = [`Lounge turn · ${actor} · ${turn.used} of ${turn.cap} lines used today · room ${turn.roomUsed} of ${turn.roomCap}`];
+      if (turn.skip) {
+        lines.push(`Skip: ${turn.move.why}.`);
+      } else {
+        lines.push(`Move: ${turn.move.kind}${turn.move.threadId ? ` in ${turn.move.threadId}` : ""}${turn.move.replyTo ? ` replying to ${turn.move.replyTo}` : ""} (${turn.move.why}).`);
+        if (turn.kelly.length) lines.push("Kelly said:", ...turn.kelly.map(line));
+        if (turn.mentions.length) lines.push("Mentioned you:", ...turn.mentions.map(line));
+        if (turn.starter) lines.push("Today's starter:", line(turn.starter));
+        if (turn.callback) lines.push("Callback candidate:", line(turn.callback));
+        if (turn.lastSaid.length) lines.push("You said last:", ...turn.lastSaid.map(line));
+        lines.push(turn.move.kind === "open"
+          ? `Then: lounge-open --actor ${actor} --body "your question"`
+          : `Then: reply --actor ${actor} --thread ${turn.move.threadId} --reply ${turn.move.replyTo} --body "one line, in character (or just one emoji as a sticker)"`);
+      }
+      process.stdout.write(`${lines.join("\n")}\n`);
+    }
+    if (turn.skip) process.exitCode = 3;
     return undefined;
   }
 

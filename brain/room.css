@@ -1521,6 +1521,7 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 .vibe-track { width: 120px; height: 8px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); overflow: hidden; }
 .vibe-fill { display: block; height: 100%; background: linear-gradient(90deg, var(--sky-500), var(--violet-500)); transition: width 300ms ease; }
 .crown-chip { display: inline-flex; align-items: center; padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); font-size: 13px; font-weight: 700; }
+.budget-chip { margin-left: auto; color: var(--muted); font-size: 12.5px; font-variant-numeric: tabular-nums; }
 .crowned { position: relative; display: inline-flex; }
 .crown { position: absolute; top: -11px; right: -6px; font-size: 14px; transform: rotate(18deg); filter: drop-shadow(0 1px 0 rgba(0,0,0,.15)); }
 .hot-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }

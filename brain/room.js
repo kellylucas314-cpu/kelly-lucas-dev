@@ -11,6 +11,7 @@ import {
   deriveScrum,
   deriveStandup,
   deriveLounge,
+  LOUNGE_CAPS,
   isLoungeThread,
   personaOf,
 } from "/lib/agent-room-board.js";
@@ -1099,6 +1100,7 @@ function renderLounge() {
       el("span", { class: "vibe-text", text: lounge.vibe ? `${plural(lounge.vibe, "post")} ${lounge.period}` : "quiet this week" }),
     ]),
     crown ? el("span", { class: "crown-chip", text: `👑 ${youOr(crown.seat, { capital: true })} · ${plural(crown.count, "sticker")} ${lounge.period}` }) : null,
+    el("span", { class: "budget-chip", title: "The Lounge has a daily line budget so it can never run up tokens", text: `today ${lounge.today} of ${LOUNGE_CAPS.perDay} lines` }),
   ]));
 
   if (lounge.hot.length) {

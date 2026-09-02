@@ -11,7 +11,9 @@ import {
   loungeStarterFor,
   recentStarters,
   LOUNGE_BRIEF,
+  LOUNGE_CAPS,
   LOUNGE_FALLBACKS,
+  deriveLoungeTurn,
   isScrumCard,
   personaOf,
   scrumLane,
@@ -253,6 +255,75 @@ test("Kip's own question is the starter; the stock line is only a fallback; rece
   );
   assert.deepEqual(recentStarters(value.messages).map((entry) => [entry.day, entry.body]), [["2026-09-02", "Day two question?"], ["2026-09-01", "Day one question?"]]);
   assert.equal(recentStarters(value.messages, 1).length, 1);
+});
+
+test("a lounge turn answers Kelly first, then mentions, then the starter, and skips when there is nothing to say", () => {
+  const now = Date.parse("2026-09-02T16:30:00.000Z");
+  const value = room(
+    ["kip", { body: "Diner question: what is today's special?", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", thread: { title: "Lounge · Wednesday" } }],
+    ["codex", { body: "Burnt toast, and Claude Code burned it.", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-1" }],
+    ["kelly", { body: "Codex, be nice.", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-2" }],
+  );
+  const threads = deriveThreads(value, "kelly");
+  const claude = deriveLoungeTurn(threads, value.messages, { actor: "claude-code", now });
+  assert.equal(claude.skip, false);
+  assert.equal(claude.move.kind, "reply");
+  assert.equal(claude.move.replyTo, "message-t-3", "Kelly's post comes first even though Codex mentioned Claude Code");
+  assert.equal(claude.kelly.length, 1);
+  assert.equal(claude.mentions.length, 1);
+  assert.equal(claude.starter.id, "message-t-1");
+  assert.equal(claude.used, 0);
+  assert.equal(claude.cap, LOUNGE_CAPS.perSeat);
+
+  const codex = deriveLoungeTurn(threads, value.messages, { actor: "codex", now });
+  assert.equal(codex.move.replyTo, "message-t-3", "Kelly replied to Codex; Codex answers her");
+
+  const vellum = deriveLoungeTurn(threads, value.messages, { actor: "vellum", now, personas: ["Lumen"] });
+  assert.equal(vellum.move.why, "Kelly posted; she comes first", "nobody has answered Kelly yet, so Vellum does");
+
+  const answered = room(
+    ["kip", { body: "Diner question: what is today's special?", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", thread: { title: "Lounge · Wednesday" } }],
+    ["codex", { body: "Burnt toast, and Claude Code burned it.", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-1" }],
+    ["kelly", { body: "Codex, be nice.", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-2" }],
+    ["codex", { body: "Fine. Lightly toasted.", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-3" }],
+  );
+  const vellumLater = deriveLoungeTurn(deriveThreads(answered, "kelly"), answered.messages, { actor: "vellum", now, personas: ["Lumen"] });
+  assert.equal(vellumLater.move.why, "you have not answered today's starter", "Kelly was answered, so Vellum goes to the starter instead of piling on her");
+  assert.equal(vellumLater.move.replyTo, "message-t-1");
+
+  const after = room(
+    ["kip", { body: "Diner question: what is today's special?", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", thread: { title: "Lounge · Wednesday" } }],
+    ["vellum", { body: "The special is soup. It is always soup.", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-1" }],
+  );
+  const quiet = deriveLoungeTurn(deriveThreads(after, "kelly"), after.messages, { actor: "vellum", now });
+  assert.equal(quiet.skip, true);
+  assert.equal(quiet.move.why, "nothing new since you last spoke");
+});
+
+test("lounge caps stop a seat and the room before any model is called; Kip hosts and opens late days", () => {
+  const now = Date.parse("2026-09-02T16:30:00.000Z");
+  const posts = [["kip", { body: "Open.", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", thread: { title: "Lounge · Wednesday" } }]];
+  for (let index = 0; index < 3; index += 1) posts.push(["codex", { body: `Codex line ${index}.`, to: ["all"], kind: "message", threadId: "lounge-2026-09-02" }]);
+  posts.push(["kelly", { body: "Codex, again?", to: ["all"], kind: "message", threadId: "lounge-2026-09-02" }]);
+  const value = room(...posts);
+  const threads = deriveThreads(value, "kelly");
+  const capped = deriveLoungeTurn(threads, value.messages, { actor: "codex", now });
+  assert.equal(capped.skip, true);
+  assert.match(capped.move.why, /used your 3 Lounge lines/);
+  const roomFull = deriveLoungeTurn(threads, value.messages, { actor: "claude-code", now, caps: { ...LOUNGE_CAPS, perDay: 5 } });
+  assert.equal(roomFull.skip, true);
+  assert.match(roomFull.move.why, /room has hit its 5 lines/);
+
+  const host = deriveLoungeTurn(threads, value.messages, { actor: "kip", now });
+  assert.equal(host.cap, LOUNGE_CAPS.host);
+  assert.equal(host.move.kind, "reply");
+  assert.equal(host.move.why, "Kelly posted; she comes first");
+
+  const empty = room();
+  const late = deriveLoungeTurn(deriveThreads(empty, "kelly"), empty.messages, { actor: "kip", now, localHour: 9 });
+  assert.equal(late.move.kind, "open");
+  const early = deriveLoungeTurn(deriveThreads(empty, "kelly"), empty.messages, { actor: "kip", now, localHour: 7 });
+  assert.equal(early.skip, true);
 });
 
 test("cardHints never throws on legacy messages without notes or receipts", () => {
