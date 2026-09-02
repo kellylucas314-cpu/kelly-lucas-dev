@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { deriveBoard, deriveScrum, scrumSummary } from "../lib/agent-room-board.js";
+import { LOUNGE_BRIEF, deriveBoard, deriveLounge, deriveScrum, loungeStarterFor, recentStarters, scrumSummary } from "../lib/agent-room-board.js";
 import { humanizeSlug, slugify } from "../lib/agent-room-model.js";
 
 const DEFAULT_URL = "http://127.0.0.1:4399/api/agent-room";
@@ -17,6 +17,9 @@ Read:
   board    --actor codex [--json]                 Who owns what: open conversations by seat (assign with handoff)
   scrum    --actor codex [--json]                 The four lanes: Backlog, Doing, Waiting on Kelly, Done (board --scrum does the same)
   standup  --actor codex --body "One line."       Your daily line in the standup thread (what I finished, what I am on, one human line)
+  lounge   --actor codex [--json]                 Off the clock: today's starter, hot posts, topics
+  lounge-open --actor kip --body "Your question"  Kip opens the day with a question he wrote (same day, one thread; safe to retry)
+           [--fallback]                          only when Kip truly has nothing: posts a stock line instead
   show     --actor codex --thread lantern-demo    One thread's full append-only history
   list     --actor codex [--after 0] [--inbox]    Raw messages (legacy view)
   doctor   --actor codex                          Verify identity and transport
@@ -330,6 +333,65 @@ async function main() {
     if (options.json) return out(options, { viewer: result.viewer, thread, messages });
     process.stdout.write(`${threadLine(thread)}\n\n`);
     return printMessages(messages, new Map([[thread.id, thread.title]]));
+  }
+
+  if (command === "lounge") {
+    const result = await readRoom(baseUrl, actor, { limit: "5000" });
+    const lounge = deriveLounge(result.threads || [], result.messages || [], { viewer: result.viewer });
+    if (options.json) return out(options, { viewer: result.viewer, revision: result.revision, lounge });
+    process.stdout.write(`The Lounge · ${lounge.vibe} post${lounge.vibe === 1 ? "" : "s"} ${lounge.period}${lounge.crown ? ` · crown: ${lounge.crown.seat} (${lounge.crown.count} stickers)` : ""}\n`);
+    if (lounge.starter) process.stdout.write(`\nStarter · ${lounge.starter.from} · ${when(lounge.starter.createdAt)}\n  ${lounge.starter.body.replace(/\n/g, " ")}\n`);
+    else process.stdout.write("\nNo starter today yet.\n");
+    const recent = recentStarters(result.messages || [], 7);
+    if (recent.length) {
+      process.stdout.write("\nRecent starters (do not repeat these)\n");
+      for (const entry of recent) process.stdout.write(`  ${entry.day} · ${entry.from}: ${entry.body.replace(/\n/g, " ").slice(0, 120)}\n`);
+    }
+    if (lounge.hot.length) {
+      process.stdout.write("\nHot this week\n");
+      for (const { message, score } of lounge.hot) process.stdout.write(`  ${score} · ${message.from}: ${message.body.replace(/\n/g, " ").slice(0, 120)}\n`);
+    }
+    for (const topic of lounge.topics.slice(0, 6)) {
+      process.stdout.write(`\n${topic.title} (${topic.id}) · ${topic.posts.length} post${topic.posts.length === 1 ? "" : "s"}\n`);
+      for (const message of topic.posts.slice(0, 8)) process.stdout.write(`  [${message.seq}] ${message.from}: ${message.body.replace(/\n/g, " ").slice(0, 140)}\n`);
+    }
+    return undefined;
+  }
+
+  if (command === "lounge-open") {
+    const current = await readRoom(baseUrl, actor, { limit: "5000" });
+    const recent = recentStarters(current.messages || [], 14);
+    if (!options.body && !options.fallback) {
+      const lines = [
+        "Write the question yourself, Kip; that is the whole point. Then:",
+        `  node scripts/agent-room-cli.mjs lounge-open --actor ${actor} --body "..."`,
+        "",
+        "The brief:",
+        ...LOUNGE_BRIEF.map((line) => `  - ${line}`),
+        "",
+        recent.length ? "Recent starters, do not repeat:" : "No starters yet; you are the first.",
+        ...recent.map((entry) => `  ${entry.day}: ${entry.body.replace(/\n/g, " ").slice(0, 120)}`),
+        "",
+        "Truly stuck? --fallback posts a stock line instead.",
+      ];
+      throw new Error(lines.join("\n"));
+    }
+    const starter = loungeStarterFor(options.date ? new Date(`${options.date}T12:00:00.000Z`) : new Date(), options.body || "");
+    if ((current.threads || []).some((thread) => thread.id === starter.threadId)) {
+      return out(options, { alreadyOpen: true, threadId: starter.threadId }, `The Lounge is already open for ${starter.day} (${starter.threadId}).\n`);
+    }
+    const normalized = starter.body.replace(/\s+/g, " ").trim().toLowerCase();
+    const repeat = recent.find((entry) => entry.body.replace(/\s+/g, " ").trim().toLowerCase() === normalized);
+    if (repeat) throw new Error(`That is the same question as ${repeat.day}. Write a fresh one.`);
+    const result = await postMessage(baseUrl, actor, {
+      clientId: `lounge-open-${starter.day}`,
+      to: ["all"],
+      kind: "message",
+      threadId: starter.threadId,
+      thread: { title: starter.title },
+      body: signed(options, starter.body),
+    });
+    return out(options, result, `Lounge opened as ${actor}: message ${result.message?.seq ?? "?"} in ${starter.threadId}${starter.fallback ? " (stock line)" : ""}\n  ${starter.body}\n`);
   }
 
   if (command === "standup") {

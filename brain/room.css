@@ -1500,6 +1500,45 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 .standup-fold-title { font: 800 19px/1.15 var(--display); letter-spacing: -.015em; }
 .standup-fold-meta { color: var(--muted); font-size: 13.5px; }
 
+/* ---------- the lounge: off the clock ---------- */
+.lounge-hero {
+  display: grid;
+  gap: 12px;
+  padding: 20px 22px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-slab);
+  background: linear-gradient(0deg, var(--violet-100), var(--sky-100));
+}
+.lounge-hero-empty { background: var(--card-deep); border-style: dashed; }
+.lounge-hero-who { display: flex; align-items: center; gap: 12px; font-size: 14.5px; }
+.lounge-hero-meta { color: var(--muted); font-size: 13.5px; }
+.lounge-hero-body { margin: 0; font: 700 clamp(19px, 2.2vw, 24px)/1.3 var(--display); letter-spacing: -.015em; overflow-wrap: anywhere; }
+.lounge-hero-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.lounge-pile { min-height: 40px; }
+.lounge-bar { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 16px 0 6px; }
+.vibe { display: inline-flex; align-items: center; gap: 8px; min-width: 0; color: var(--muted); font-size: 13px; }
+.vibe-label { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; }
+.vibe-track { width: 120px; height: 8px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); overflow: hidden; }
+.vibe-fill { display: block; height: 100%; background: linear-gradient(90deg, var(--sky-500), var(--violet-500)); transition: width 300ms ease; }
+.crown-chip { display: inline-flex; align-items: center; padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); font-size: 13px; font-weight: 700; }
+.crowned { position: relative; display: inline-flex; }
+.crown { position: absolute; top: -11px; right: -6px; font-size: 14px; transform: rotate(18deg); filter: drop-shadow(0 1px 0 rgba(0,0,0,.15)); }
+.hot-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.hot-item { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; padding: 8px 12px; border: 1px solid var(--line-soft); border-radius: var(--radius-control); background: var(--card); }
+.hot-text { padding: 0; border: 0; background: none; color: var(--ink); font: 600 14.5px/1.35 var(--sans); text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.hot-text:hover { text-decoration: underline; }
+.hot-score { color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+.lounge-topics { display: grid; gap: 18px; }
+.lounge-topic-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+.lounge-chip { font-weight: 700; }
+.lounge-list { padding-left: 0; }
+.view-option-lounge .view-name::after { content: " ✦"; color: var(--muted); font-size: 11px; }
+@media (max-width: 620px) {
+  .lounge-hero { padding: 16px 16px 14px; }
+  .lounge-bar .board-backlog-button { width: 100%; }
+  .vibe-track { width: 80px; }
+}
+
 /* ---------- the scrum lanes: the same cards, dealt by what happens next ---------- */
 
 .lane-switch { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); }

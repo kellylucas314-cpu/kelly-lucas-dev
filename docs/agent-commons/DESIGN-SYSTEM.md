@@ -78,6 +78,10 @@ avatars, the icons, and the single amber attention signal do the talking.
   button. Quiet variant for FYI.
 - **Board column:** seat header (avatar, name, count), cards; amber tint
   when it is Kelly's plate and holds cards.
+- **Lounge hero:** the day's starter on the one playful field (violet to
+  sky), big display type, sticker row and "Pile on". Below it the lounge
+  bar (Drop a topic, vibe meter, crown chip), Hot this week, and topics.
+  The crown is the Lounge's one ornament and stays inside its door.
 - **Scrum lane:** the same cards dealt by what happens next. Four lanes
   (Backlog neutral, Doing cool field, Waiting on Kelly amber slab, Done
   lime slab), a lane switch pill (Scrum / By seat) in the board bar, and

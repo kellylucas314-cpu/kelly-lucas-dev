@@ -249,6 +249,28 @@ async function main() {
     assert(storedReaction.messages.some((message) => message.body === "👀" && message.from === "kelly" && message.replyTo === "message-fixture-18"), "The reaction is stored as a real reply message", failures);
     if (shots) await cli(["screenshot", "--filename=desktop-feed.png"], { cwd });
 
+    process.stdout.write("The Lounge\n");
+    await cli(["goto", `${origin}/brain/room.html#view=lounge`], { cwd });
+    await wait(1200);
+    const loungeState = await evaluate("(() => ({ starter: document.querySelector('.lounge-hero-body')?.textContent || '', who: document.querySelector('.lounge-hero-who strong')?.textContent || '', hot: document.querySelectorAll('.hot-item').length, crown: document.querySelector('.crown-chip')?.textContent || '', topics: [...document.querySelectorAll('.lounge-topic')].map((node) => node.dataset.topic), needs: document.getElementById('needsKellyCount')?.textContent || document.querySelector('.kelly-queue-count')?.textContent || '', persona: [...document.querySelectorAll('.message-persona')].map((node) => node.textContent) }))()", cwd);
+    assert(loungeState && /hot dog/.test(loungeState.starter) && loungeState.who === "Kip", `Kip's starter opens the Lounge (${JSON.stringify({ starter: loungeState.starter, who: loungeState.who })})`, failures);
+    assert(loungeState && loungeState.hot >= 1 && /Codex/.test(loungeState.crown) && /3 stickers/.test(loungeState.crown), `Hot posts and the weekly crown come from stickers (${JSON.stringify({ hot: loungeState.hot, crown: loungeState.crown })})`, failures);
+    assert(loungeState && loungeState.topics.join(",") === "lounge-name-a-font,lounge-2026-08-22", `Topics list newest first, Kelly's topic included (${JSON.stringify(loungeState.topics)})`, failures);
+    assert(loungeState && loungeState.persona.some((text) => /as Lumen/.test(text)), "A persona signature shows beside the seat in the Lounge", failures);
+    if (shots) await cli(["screenshot", "--filename=desktop-lounge.png"], { cwd });
+    await cli(["eval", "(() => { document.querySelector('[data-lounge-topic]').click(); document.getElementById('titleInput').value = 'Best snack'; document.getElementById('messageInput').value = 'Pretzels. Fight me.'; document.getElementById('messageForm').requestSubmit(); return 'ok'; })()"], { cwd });
+    await wait(1800);
+    const droppedTopic = await fetch(`${origin}/api/agent-room`, { headers: { "X-Agent": "codex" } }).then((response) => response.json());
+    assert(droppedTopic.messages.some((message) => message.threadId === "lounge-best-snack" && message.from === "kelly" && message.thread?.title === "Best snack"), "Dropping a topic lands it in the Lounge as its own thread", failures);
+    await cli(["goto", `${origin}/brain/room.html#view=feed`], { cwd });
+    await wait(1000);
+    const feedLeak = await evaluate("(() => [...document.querySelectorAll('.feed-list .thread-chip')].some((node) => /Lounge|Name a font|Best snack/.test(node.textContent)))()", cwd);
+    assert(feedLeak === false, "Lounge chatter stays out of the work feed", failures);
+    await cli(["goto", `${origin}/brain/room.html#view=board&lanes=scrum`], { cwd });
+    await wait(1000);
+    const loungeCard = await evaluate("(() => [...document.querySelectorAll('.scrum-card-title')].some((node) => /Lounge|Name a font|Best snack/.test(node.textContent)))()", cwd);
+    assert(loungeCard === false, "Lounge threads never become cards", failures);
+
     process.stdout.write("The wake-up bell\n");
     await cli(["goto", `${origin}/brain/room.html#view=overview`], { cwd });
     await wait(1000);
@@ -264,7 +286,7 @@ async function main() {
     await cli(["goto", `${origin}/brain/room.html#view=receipts`], { cwd });
     await wait(1000);
     const archiveState = await evaluate("({ radios: document.querySelectorAll('input[name=\"view\"]').length, eyebrow: document.getElementById('viewEyebrow').textContent, active: document.querySelector('.archive-chip.active')?.textContent || '', receipts: document.querySelectorAll('.message-item[data-kind=\"receipt\"]').length })", cwd);
-    assert(archiveState && archiveState.radios === 4 && archiveState.eyebrow === "Archive" && archiveState.active === "Finished work" && archiveState.receipts >= 2, `Old Finished-work links land on the archive's shelf, nav has four tabs (${JSON.stringify(archiveState)})`, failures);
+    assert(archiveState && archiveState.radios === 5 && archiveState.eyebrow === "Archive" && archiveState.active === "Finished work" && archiveState.receipts >= 2, `Old Finished-work links land on the archive's shelf, nav has five doors (${JSON.stringify(archiveState)})`, failures);
     await cli(["eval", "[...document.querySelectorAll('[data-archive-filter]')].find((node) => node.dataset.archiveFilter === 'decisions').click()"], { cwd });
     await wait(700);
     const decisionsShelf = await evaluate("({ active: document.querySelector('.archive-chip.active')?.textContent || '', pure: [...document.querySelectorAll('.message-item')].every((node) => node.dataset.kind === 'decision'), hash: location.hash })", cwd);
@@ -285,7 +307,7 @@ async function main() {
       assert(miniBell === true, `Kelly's pocket bell shows on the presence strip at ${width}`, failures);
       if (shots) await cli(["screenshot", `--filename=${name}.png`], { cwd });
       if (shots && width === 390) await cli(["screenshot", "--full-page", `--filename=${name}-full.png`], { cwd });
-      for (const [view, target] of [["board", "board&lanes=seat"], ["scrum", "board&lanes=scrum"], ["feed", "feed"]]) {
+      for (const [view, target] of [["board", "board&lanes=seat"], ["scrum", "board&lanes=scrum"], ["feed", "feed"], ["lounge", "lounge"]]) {
         await cli(["goto", `${origin}/brain/room.html#view=${target}`], { cwd });
         await wait(1000);
         const viewOverflow = await evaluate("document.documentElement.scrollWidth - window.innerWidth", cwd);

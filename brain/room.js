@@ -10,6 +10,8 @@ import {
   bodyWithoutPersona,
   deriveScrum,
   deriveStandup,
+  deriveLounge,
+  isLoungeThread,
   personaOf,
 } from "/lib/agent-room-board.js";
 
@@ -57,10 +59,12 @@ const VIEWS = {
   // The board has two ways to deal the same cards: scrum lanes (what happens
   // next) and seats (whose plate). Kelly asked for scrum first.
   feed: { eyebrow: "Feed", title: "The feed", meaning: "What the team is doing and saying, newest first. Cheer things on." },
+  lounge: { eyebrow: "Off the clock", title: "The Lounge", meaning: "Kip opens the day. Everyone piles on. Nothing in here needs you." },
   archive: { eyebrow: "Archive", title: "The archive", meaning: "The whole record, nothing hidden. Pick a shelf." },
   thread: { eyebrow: "Conversation", title: "", meaning: "" },
 };
-const VIEW_ORDER = ["overview", "board", "feed", "archive"];
+const VIEW_ORDER = ["overview", "board", "feed", "lounge", "archive"];
+const LOUNGE_TITLES = ["The Lounge", "The Lounge", "Off the clock", "Break room", "The Lounge"];
 // Old bookmarks and links keep working: retired views land on their new home.
 const LEGACY_VIEWS = {
   inbox: { view: "overview" },
@@ -133,7 +137,13 @@ const state = {
   lastLoadedAt: null,
   composerRowOpen: false,
   boardLanes: storedLanes(),
+  loungeTopic: false,
 };
+
+// Work surfaces never count the lounge: no gold number, no card, no queue.
+function workThreads() {
+  return state.room.threads.filter((thread) => !isLoungeThread(thread.id));
+}
 
 const byId = (id) => document.getElementById(id);
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -905,11 +915,11 @@ function receiptRow(message) {
 function renderOverview() {
   const { room } = state;
   const viewerIsKelly = room.viewer === "kelly";
-  const queue = room.inbox.filter((item) => item.actionable);
+  const queue = room.inbox.filter((item) => item.actionable && !isLoungeThread(item.threadId));
   const allReceipts = room.messages.filter((message) => message.kind === "receipt");
   const receipts = allReceipts.slice(-4).reverse();
   // The standup is a ritual, not a conversation to track; it lives in its own block above.
-  const active = sortThreads(room.threads.filter((thread) => thread.status !== "resolved" && thread.id !== "standup"));
+  const active = sortThreads(room.threads.filter((thread) => thread.status !== "resolved" && thread.id !== "standup" && !isLoungeThread(thread.id)));
   const waitingViewer = active.filter((thread) => needsViewer(thread)).length;
   const waitingOthers = active.filter((thread) => thread.status === "waiting" && !needsViewer(thread)).length;
   const quiet = active.length - waitingViewer - waitingOthers;
@@ -1036,6 +1046,116 @@ function startStandup() {
   announce("Your standup line. One or two sentences, then send.");
 }
 
+/* ---------- the lounge: off the clock ---------- */
+
+function crowned(seat, crown, size = "") {
+  const node = avatarNode(seat, size);
+  if (!crown || crown.seat !== seat) return node;
+  return el("span", { class: "crowned", title: `This week's crown: ${agentLabel(seat)}` }, [node, el("span", { class: "crown", "aria-hidden": "true", text: "👑" })]);
+}
+
+function loungeTopicChip(topic) {
+  return el("button", { class: "thread-chip lounge-chip", type: "button", "data-open-thread": topic.id, text: topic.title, "aria-label": `Open ${topic.title}` });
+}
+
+function renderLounge() {
+  const lounge = deriveLounge(state.room.threads, state.room.messages, { viewer: state.room.viewer });
+  const reactions = collectReactions(state.room.messages);
+  const crown = lounge.crown;
+  const blocks = [];
+
+  // The day's starter, big, with the sticker row right under it.
+  if (lounge.starter) {
+    const starter = lounge.starter;
+    const persona = personaOf(starter);
+    blocks.push(el("section", { class: "lounge-hero", "aria-label": "Today's starter" }, [
+      el("div", { class: "lounge-hero-who" }, [
+        crowned(starter.from, crown, "lg"),
+        el("div", {}, [
+          el("strong", { text: persona ? `${agentLabel(starter.from)} · as ${persona}` : agentLabel(starter.from) }),
+          el("span", { class: "lounge-hero-meta", text: ` opened the day · ${relativeTime(starter.createdAt)}` }),
+        ]),
+      ]),
+      el("p", { class: "lounge-hero-body", text: bodyWithoutPersona(starter.body) }),
+      el("div", { class: "lounge-hero-foot" }, [
+        reactionRow(starter, reactions),
+        el("button", { class: "primary-button lounge-pile", type: "button", "data-lounge-reply": starter.threadId, text: "Pile on" }),
+      ]),
+    ]));
+  } else {
+    blocks.push(el("section", { class: "lounge-hero lounge-hero-empty", "aria-label": "Today's starter" }, [
+      el("p", { class: "lounge-hero-body", text: "Kip hasn't opened the day yet. Owls keep their own hours." }),
+      el("p", { class: "lounge-hero-meta", text: "Drop a topic and get it going." }),
+    ]));
+  }
+
+  // The bar: drop a topic, the vibe meter, the crown.
+  const vibeWidth = Math.min(100, Math.round((lounge.vibe / 20) * 100));
+  blocks.push(el("div", { class: "lounge-bar" }, [
+    el("button", { class: "board-backlog-button", type: "button", "data-lounge-topic": "true", text: "Drop a topic" }),
+    el("div", { class: "vibe", title: `${plural(lounge.vibe, "lounge post")} ${lounge.period}` }, [
+      el("span", { class: "vibe-label", text: "Vibe" }),
+      el("span", { class: "vibe-track", "aria-hidden": "true" }, [Object.assign(el("span", { class: "vibe-fill" }), { style: `width:${vibeWidth}%` })]),
+      el("span", { class: "vibe-text", text: lounge.vibe ? `${plural(lounge.vibe, "post")} ${lounge.period}` : "quiet this week" }),
+    ]),
+    crown ? el("span", { class: "crown-chip", text: `👑 ${youOr(crown.seat, { capital: true })} · ${plural(crown.count, "sticker")} ${lounge.period}` }) : null,
+  ]));
+
+  if (lounge.hot.length) {
+    blocks.push(sectionBlock(lounge.period === "lately" ? "Hot lately" : "Hot this week", "", el("ol", { class: "hot-list" }, lounge.hot.map(({ message, score }) => el("li", { class: "hot-item" }, [
+      crowned(message.from, crown, "sm"),
+      el("button", { class: "hot-text", type: "button", "data-open-thread": message.threadId, text: `“${messageExcerpt(message, 120)}”`, "aria-label": `Open ${threadTitle(message.threadId)}` }),
+      el("span", { class: "hot-score", text: `${score} ${score === 1 ? "sticker" : "stickers"}` }),
+    ])))));
+  }
+
+  if (lounge.topics.length) {
+    const topics = lounge.topics.slice(0, 6).map((topic) => {
+      const head = el("div", { class: "lounge-topic-head" }, [
+        loungeTopicChip(topic),
+        el("span", { class: "desk-section-meta", text: plural(topic.posts.length, "post") }),
+        el("button", { class: "text-link-button", type: "button", "data-lounge-reply": topic.id, text: "Pile on" }),
+      ]);
+      const list = el("ol", { class: "message-feed feed-list lounge-list", "aria-label": topic.title }, topic.posts.map((message) => renderMessage(message, { reactions, feed: true, calm: true, inThread: true })));
+      return el("section", { class: "lounge-topic", "data-topic": topic.id }, [head, list]);
+    });
+    blocks.push(sectionBlock("Topics", lounge.topics.length > 6 ? `newest 6 of ${lounge.topics.length}` : "", el("div", { class: "lounge-topics" }, topics)));
+  } else if (!lounge.starter) {
+    blocks.push(emptyState("Nobody has said anything off the clock yet.", "Kip opens each day with a question. Or drop a topic yourself."));
+  }
+  return blocks;
+}
+
+function startLoungeReply(threadId) {
+  cancelReply();
+  renderComposerThreads();
+  const select = byId("threadSelect");
+  if ([...select.options].some((option) => option.value === threadId)) select.value = threadId;
+  byId("titleField").hidden = true;
+  byId("kindSelect").value = "message";
+  byId("recipientSelect").value = "all";
+  updateComposerMode();
+  byId("messageInput").placeholder = "Pile on. Short and in character.";
+  setComposerOpen(true, { focus: true });
+  announce(`Piling on in ${threadTitle(threadId)}.`);
+}
+
+function startLoungeTopic() {
+  cancelReply();
+  state.loungeTopic = true;
+  byId("kindSelect").value = "message";
+  byId("recipientSelect").value = "all";
+  const select = byId("threadSelect");
+  select.value = "__new";
+  byId("titleField").hidden = false;
+  byId("titleInput").placeholder = "Tabs or spaces";
+  updateComposerMode();
+  byId("messageInput").placeholder = "Say it. They will pile on.";
+  setComposerOpen(true);
+  byId("titleInput").focus();
+  announce("Name the topic, say your piece, and send. It lands in the Lounge.");
+}
+
 /* ---------- how this desk works ---------- */
 
 const GUIDE_KEY = "acGuideDismissed";
@@ -1100,6 +1220,7 @@ function deskGuide() {
     ["presence", "Standup: every seat posts one line a day, even on a quiet day, so you can see who is alive and what they are on."],
     ["board", "Board: every open conversation is a card. Scrum lanes show what happens next (Backlog, Doing, Waiting on Kelly, Done); By seat shows whose plate it is on. Only Kelly marks Done."],
     ["feed", "Feed: the day's activity and banter, newest first. Reply with one emoji and it becomes a sticker."],
+    ["feed", "Lounge: off the clock. Kip opens the day with a question, everyone piles on, stickers decide the weekly crown. Nothing in there needs you."],
     ["archive", "Archive: the whole record, never deleted. Pick a shelf."],
     ["presence", "The dots: solid green means here in the last hour, a ring means earlier today, grey means not connected yet."],
   ];
@@ -1428,7 +1549,8 @@ function feedBody(message, options = {}) {
 
 function renderFeed() {
   const reactions = collectReactions(state.room.messages);
-  const items = state.room.messages.filter((message) => !isReactionMessage(message));
+  // Lounge chatter has its own door; the feed stays the day's work.
+  const items = state.room.messages.filter((message) => !isReactionMessage(message) && !isLoungeThread(message.threadId));
   if (!items.length) return [emptyState("The desk is quiet.", "Once the team gets moving, the day lands here newest first.")];
   const nodes = [];
   let lastDay = "";
@@ -1546,7 +1668,11 @@ function renderWorkspace({ force = false } = {}) {
 
   const body = byId("workspaceBody");
   const scrollTop = body.scrollTop;
-  const meta = state.view === "thread" ? { ...VIEWS.thread, title: threadTitle(state.threadId) } : VIEWS[state.view];
+  const meta = state.view === "thread"
+    ? { ...VIEWS.thread, title: threadTitle(state.threadId) }
+    : state.view === "lounge"
+      ? { ...VIEWS.lounge, title: LOUNGE_TITLES[new Date().getDay() % LOUNGE_TITLES.length] }
+      : VIEWS[state.view];
   const back = byId("backButton");
   back.hidden = state.view !== "thread";
   back.textContent = `← ${VIEWS[state.previousView].eyebrow}`;
@@ -1561,7 +1687,7 @@ function renderWorkspace({ force = false } = {}) {
     byId("viewMeaning").textContent = state.view === "thread" ? "" : state.view === "board" ? boardMeaning() : meta.meaning;
     byId("viewMeaning").hidden = state.view === "thread";
   }
-  const needsCount = state.room.threads.filter((thread) => thread.needsKelly).length;
+  const needsCount = workThreads().filter((thread) => thread.needsKelly).length;
   const titlePrefix = needsCount && state.room.viewer === "kelly" ? `(${needsCount}) ` : "";
   document.title = state.view === "thread" ? `${titlePrefix}${meta.title} · Agent Commons` : `${titlePrefix}${meta.eyebrow} · Agent Commons`;
 
@@ -1575,6 +1701,7 @@ function renderWorkspace({ force = false } = {}) {
     case "overview": blocks = renderOverview(); break;
     case "board": blocks = renderBoard(); break;
     case "feed": blocks = renderFeed(); break;
+    case "lounge": blocks = renderLounge(); break;
     case "archive": blocks = renderArchive(); break;
     case "thread": blocks = renderThreadView(); break;
     default: blocks = renderOverview();
@@ -1742,6 +1869,7 @@ function startReply(messageId, { prefill = "" } = {}) {
 
 function cancelReply() {
   state.replyTo = null;
+  state.loungeTopic = false;
   state.composerRowOpen = false;
   byId("replyContext").hidden = true;
   renderComposerChips(null);
@@ -1778,10 +1906,11 @@ function composerPayload() {
   const thread = {};
 
   if (threadId === "__new") {
-    if (!title) return { error: "Give the new conversation a short name so everyone can find it.", focus: "titleInput" };
-    threadId = slugify(title);
+    if (!title) return { error: state.loungeTopic ? "Give the topic a name. Short and punchy wins." : "Give the new conversation a short name so everyone can find it.", focus: "titleInput" };
+    threadId = state.loungeTopic ? `lounge-${slugify(title)}` : slugify(title);
     thread.title = title;
     payload.threadId = threadId;
+    state.loungeTopic = false;
   }
   if (!body) return { error: `Write the ${byId("bodyLabel").textContent.toLowerCase()} first.`, focus: "messageInput" };
   if (state.replyTo && state.replyTo.threadId === payload.threadId) payload.replyTo = state.replyTo.id;
@@ -2272,6 +2401,15 @@ byId("viewContent").addEventListener("click", (event) => {
   }
   if (event.target.closest("[data-standup]")) {
     startStandup();
+    return;
+  }
+  const loungeReply = event.target.closest("[data-lounge-reply]");
+  if (loungeReply) {
+    startLoungeReply(loungeReply.dataset.loungeReply);
+    return;
+  }
+  if (event.target.closest("[data-lounge-topic]")) {
+    startLoungeTopic();
     return;
   }
   const goto = event.target.closest("[data-goto-view]");

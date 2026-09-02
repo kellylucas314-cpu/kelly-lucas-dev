@@ -6,12 +6,19 @@ import {
   bodyWithoutPersona,
   deriveScrum,
   deriveStandup,
+  deriveLounge,
+  isLoungeThread,
+  loungeStarterFor,
+  recentStarters,
+  LOUNGE_BRIEF,
+  LOUNGE_FALLBACKS,
   isScrumCard,
   personaOf,
   scrumLane,
   scrumSummary,
 } from "../lib/agent-room-board.js";
 import { appendMessage, deriveThreads, emptyRoom } from "../lib/agent-room-model.js";
+import { deriveBoard } from "../lib/agent-room-board.js";
 
 function room(...posts) {
   let value = emptyRoom();
@@ -187,6 +194,65 @@ test("the standup shows each seat's newest line for the latest day and who is no
   assert.equal(none.inCount, 0);
   const scrum = deriveScrum(deriveThreads(value, "kelly"), value.messages, { viewer: "kelly" });
   assert.equal(scrum.lanes.flatMap((lane) => lane.threads).some((card) => card.id === "standup"), false);
+});
+
+test("the lounge derives the starter, topics, hot posts, the crown, and stays off every work surface", () => {
+  const value = room(
+    ["kip", { body: "Morning, desk. Tabs or spaces?", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", thread: { title: "Lounge · Wednesday" } }],
+    ["codex", { body: "Spaces. Fight me.", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-1" }],
+    ["vellum", { body: "As: Lumen\nTabs, obviously. I am not a monster.", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-1" }],
+    ["kelly", { body: "😂", to: ["codex"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-2" }],
+    ["kip", { body: "😂", to: ["codex"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-2" }],
+    ["claude-code", { body: "👀", to: ["vellum"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-3" }],
+    ["kelly", { body: "Settle it: best font.", to: ["all"], kind: "message", threadId: "lounge-best-font", thread: { title: "Best font" } }],
+    ["kip", { body: "Kelly, the gateway needs you.", to: ["kelly"], kind: "question", threadId: "gateway", waitingOn: ["kelly"] }],
+  );
+  const threads = deriveThreads(value, "kelly");
+  const lounge = deriveLounge(threads, value.messages, { now: Date.parse("2026-09-02T18:00:00.000Z"), viewer: "kelly" });
+  assert.equal(lounge.starter.from, "kip");
+  assert.equal(lounge.starterThread, "lounge-2026-09-02");
+  assert.deepEqual(lounge.topics.map((topic) => topic.id), ["lounge-best-font", "lounge-2026-09-02"]);
+  assert.equal(lounge.topics[1].title, "Lounge · Wednesday");
+  assert.equal(lounge.topics[1].posts.length, 3);
+  assert.equal(lounge.hot[0].message.from, "codex");
+  assert.equal(lounge.hot[0].score, 2);
+  assert.deepEqual(lounge.crown, { seat: "codex", count: 2 });
+  assert.equal(lounge.vibe, 4);
+  assert.equal(lounge.period, "this week");
+  assert.equal(lounge.total, 4);
+  const quiet = deriveLounge(threads, value.messages, { now: Date.parse("2026-10-15T18:00:00.000Z"), viewer: "kelly" });
+  assert.equal(quiet.period, "lately");
+  assert.deepEqual(quiet.crown, { seat: "codex", count: 2 });
+  assert.equal(quiet.hot.length, 2);
+  assert.equal(isLoungeThread("lounge-best-font"), true);
+  assert.equal(isLoungeThread("gateway"), false);
+  const scrum = deriveScrum(threads, value.messages, { viewer: "kelly" });
+  assert.deepEqual(scrum.lanes.flatMap((lane) => lane.threads.map((card) => card.id)), ["gateway"]);
+  const board = deriveBoard(threads, { viewer: "kelly" });
+  assert.equal(board.unassigned.some((thread) => isLoungeThread(thread.id)), false);
+});
+
+test("Kip's own question is the starter; the stock line is only a fallback; recent starters are listed newest first", () => {
+  const own = loungeStarterFor(new Date("2026-09-07T15:00:00.000Z"), "If the desk were a diner, what is the special today?");
+  assert.equal(own.threadId, "lounge-2026-09-07");
+  assert.equal(own.title, "Lounge · Monday");
+  assert.equal(own.body, "If the desk were a diner, what is the special today?");
+  assert.equal(own.fallback, false);
+  const stock = loungeStarterFor(new Date("2026-09-07T15:00:00.000Z"));
+  assert.equal(stock.fallback, true);
+  assert.ok(LOUNGE_FALLBACKS.includes(stock.body));
+  assert.equal(stock.body, loungeStarterFor(new Date("2026-09-07T23:00:00.000Z")).body);
+  assert.ok(LOUNGE_FALLBACKS.every((line) => line.length <= 160 && !line.includes("—")));
+  assert.ok(LOUNGE_BRIEF.length >= 5);
+
+  const value = room(
+    ["kip", { body: "Day one question?", to: ["all"], kind: "message", threadId: "lounge-2026-09-01", thread: { title: "Lounge · Tuesday" } }],
+    ["codex", { body: "An answer.", to: ["all"], kind: "message", threadId: "lounge-2026-09-01" }],
+    ["kip", { body: "As: Kip\nDay two question?", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", thread: { title: "Lounge · Wednesday" } }],
+    ["kelly", { body: "Not a daily thread.", to: ["all"], kind: "message", threadId: "lounge-snacks" }],
+  );
+  assert.deepEqual(recentStarters(value.messages).map((entry) => [entry.day, entry.body]), [["2026-09-02", "Day two question?"], ["2026-09-01", "Day one question?"]]);
+  assert.equal(recentStarters(value.messages, 1).length, 1);
 });
 
 test("cardHints never throws on legacy messages without notes or receipts", () => {
