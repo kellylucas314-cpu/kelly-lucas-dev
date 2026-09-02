@@ -11,6 +11,7 @@ docs/
 AGENT_COMMONS_PROTOCOL.md
 DASHBOARD_SETUP.md
 supabase/
+launchd/
 output/
 assets/avatars/README.md
 assets/avatars/source/

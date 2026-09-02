@@ -39,6 +39,7 @@ Note and handoff options:
   --durable PATH         Where the durable record lives (KIP or project file)
   --thread slug          Thread (defaults to the project slug)
   --title "..."          Readable thread title
+  --as "Lumen"           Sign the post as a persona speaking through your seat (no new token needed)
 
 Receipt options:
   --result "..."         What changed or was learned
@@ -78,6 +79,13 @@ export function parseArguments(argv) {
     index += 1;
   }
   return { command, options };
+}
+
+// A persona (Lumen, Elli Bot, Scrum...) posts through a seat and signs the
+// first line; the desk shows "Vellum · as Lumen" and keeps the seat as sender.
+function signed(options, body) {
+  const persona = options.as ? String(options.as).trim().slice(0, 60) : "";
+  return persona ? `As: ${persona}\n${body}` : body;
 }
 
 function splitList(value) {
@@ -190,7 +198,8 @@ function threadLine(thread) {
 
 function cardLine(card) {
   const bits = [card.project || "General"];
-  if (card.owner && card.owner !== "kelly") bits.push(`on ${card.owner}'s plate`);
+  if (card.owner && card.owner !== "kelly") bits.push(`on ${card.owner}'s plate${card.persona && card.lastFrom === card.owner ? ` as ${card.persona}` : ""}`);
+  else if (card.persona) bits.push(`from ${card.lastFrom} as ${card.persona}`);
   else if (card.waitingOn?.length) bits.push(`waiting on ${card.waitingOn.join(", ")}`);
   if (card.ready) bits.push(`ready for Kelly (wrapped by ${card.resolvedBy})`);
   if (card.outsideOwner) bits.push(`with ${card.outsideOwner}`);
@@ -323,7 +332,7 @@ async function main() {
   }
 
   if (command === "send") {
-    const body = require(options, "body");
+    const body = signed(options, require(options, "body"));
     const threadId = options.thread ? slugify(options.thread) : (options.title ? slugify(options.title) : "general");
     const payload = {
       body,
@@ -341,7 +350,7 @@ async function main() {
   }
 
   if (command === "reply") {
-    const body = require(options, "body");
+    const body = signed(options, require(options, "body"));
     const threadId = slugify(require(options, "thread"));
     const thread = {};
     if (options["next-owner"]) thread.nextOwner = options["next-owner"];
@@ -364,7 +373,7 @@ async function main() {
     const note = noteFromOptions(options, command);
     const threadId = options.thread ? slugify(options.thread) : slugify(note.project);
     const payload = {
-      body: noteBody(note, command),
+      body: signed(options, noteBody(note, command)),
       to: splitList(options.to || (note.nextOwner ? `${note.nextOwner},kelly` : "all")),
       waitingOn: command === "handoff" ? [note.nextOwner] : splitList(options.waiting),
       threadId,
@@ -384,7 +393,7 @@ async function main() {
     if (receipt.needsKelly) waitingOn.push("kelly");
     if (receipt.nextOwner && receipt.nextOwner !== actor && !waitingOn.includes(receipt.nextOwner)) waitingOn.push(receipt.nextOwner);
     const payload = {
-      body: workReceiptBody(receipt),
+      body: signed(options, workReceiptBody(receipt)),
       to: ["all"],
       waitingOn,
       threadId,

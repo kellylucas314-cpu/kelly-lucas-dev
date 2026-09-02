@@ -1479,6 +1479,8 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
   .workspace { border: 0; box-shadow: none; }
 }
 
+.message-persona { color: var(--muted); font-weight: 600; }
+
 /* ---------- the scrum lanes: the same cards, dealt by what happens next ---------- */
 
 .lane-switch { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); }

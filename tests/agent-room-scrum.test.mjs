@@ -3,8 +3,10 @@ import test from "node:test";
 import {
   SCRUM_LANE_IDS,
   cardHints,
+  bodyWithoutPersona,
   deriveScrum,
   isScrumCard,
+  personaOf,
   scrumLane,
   scrumSummary,
 } from "../lib/agent-room-board.js";
@@ -139,6 +141,20 @@ test("chatter and bells stay off the lanes; work, titles, waits on Kelly, and wr
   assert.deepEqual(ids.sort(), ["deck", "gateway", "idea"]);
   assert.equal(scrum.skipped, 2);
   assert.equal(isScrumCard({ status: "open", kinds: ["message"], needsKelly: false, nextOwner: "" }, [{ kind: "message" }]), false);
+});
+
+test("a persona signs a post through a seat and the desk can show it without the signature line", () => {
+  assert.equal(personaOf({ body: "As: Lumen\nResearch is done; your call." }), "Lumen");
+  assert.equal(personaOf({ body: "Handoff: HelioFlux\nSigned: Elli Bot\nForm ready." }), "Elli Bot");
+  assert.equal(personaOf({ body: "No signature here.\nAs: too late\n\n\nAs: five lines down" }), "too late");
+  assert.equal(personaOf({ body: "plain" }), "");
+  assert.equal(bodyWithoutPersona("As: Lumen\nResearch is done."), "Research is done.");
+  assert.equal(bodyWithoutPersona("plain\nlines"), "plain\nlines");
+  const value = room(
+    ["vellum", { body: "As: Lumen\nResearch is done; your call.", to: ["kelly"], kind: "question", threadId: "founders", thread: { title: "Founders" }, waitingOn: ["kelly"] }],
+  );
+  const scrum = deriveScrum(deriveThreads(value, "kelly"), value.messages, { viewer: "kelly" });
+  assert.equal(scrum.lanes[2].threads[0].persona, "Lumen");
 });
 
 test("cardHints never throws on legacy messages without notes or receipts", () => {

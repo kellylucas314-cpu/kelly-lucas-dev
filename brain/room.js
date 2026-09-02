@@ -7,7 +7,9 @@ import {
   hasReacted,
   isReactionMessage,
   reactionSummary,
+  bodyWithoutPersona,
   deriveScrum,
+  personaOf,
 } from "/lib/agent-room-board.js";
 
 // On the Mac loopback service the page talks to the local proxy; on
@@ -672,10 +674,18 @@ function noteBody(message, { calm = false } = {}) {
   ]);
 }
 
+function senderNode(message, labelId) {
+  const persona = personaOf(message);
+  return el("strong", { id: labelId, class: "message-sender" }, [
+    agentLabel(message.from),
+    persona ? el("span", { class: "message-persona", text: ` · as ${persona}` }) : null,
+  ]);
+}
+
 function messageBody(message, { calm = false } = {}) {
   if (message.kind === "receipt") return receiptBody(message, { calm });
   if (message.kind === "note" || message.kind === "handoff") return noteBody(message, { calm });
-  const body = el("p", { class: "message-body", text: message.body });
+  const body = el("p", { class: "message-body", text: bodyWithoutPersona(message.body) });
   if (message.kind === "decision" && message.note?.durablePath) {
     return el("div", {}, [body, cardLines([cardLine("Written down", [message.note.durablePath], { files: true })])]);
   }
@@ -690,7 +700,7 @@ function renderMessage(message, { inThread = false, previousId = "", calm = fals
       avatarNode(message.from),
       el("article", { class: "message-content", "aria-labelledby": labelId }, [
         el("header", { class: "message-header" }, [
-          el("strong", { id: labelId, class: "message-sender", text: agentLabel(message.from) }),
+          senderNode(message, labelId),
           el("span", { class: "message-route", text: `asked you this · pinned at the top` }),
           el("time", { class: "message-time", datetime: message.createdAt, text: formatTime(message.createdAt) }),
         ]),
@@ -709,7 +719,7 @@ function renderMessage(message, { inThread = false, previousId = "", calm = fals
   });
 
   const header = el("header", { class: "message-header" }, [
-    el("strong", { id: labelId, class: "message-sender", text: agentLabel(message.from) }),
+    senderNode(message, labelId),
     el("span", { class: "message-route", text: messageVerb(message) }),
     el("time", { class: "message-time", datetime: message.createdAt, text: formatTime(message.createdAt) }),
   ]);
@@ -1181,7 +1191,9 @@ function scrumCard(card, lastByThread) {
   const viewerKelly = viewerIs("kelly");
   const askedBy = card.lane === "waiting-on-kelly" && card.lastFrom !== "kelly" ? card.lastFrom : "";
   const seat = card.owner && card.owner !== "kelly" ? card.owner : askedBy;
-  const seatText = seat ? (card.lane === "waiting-on-kelly" ? `from ${youOr(seat)}` : youOr(seat)) : "";
+  const persona = card.lastFrom === seat ? card.persona : "";
+  const seatLabel = persona ? `${youOr(seat)} · ${persona}` : youOr(seat);
+  const seatText = seat ? (card.lane === "waiting-on-kelly" ? `from ${seatLabel}` : seatLabel) : "";
   const top = el("div", { class: "scrum-card-top" }, [
     el("span", { class: "scrum-chip", text: card.project || "General" }),
     seat ? el("span", { class: "scrum-seat", title: seatText }, [avatarNode(seat, "xs"), el("span", { class: "scrum-seat-name", text: seatText })]) : null,
