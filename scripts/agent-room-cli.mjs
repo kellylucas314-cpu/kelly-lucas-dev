@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { deriveBoard } from "../lib/agent-room-board.js";
+import { deriveBoard, deriveScrum, scrumSummary } from "../lib/agent-room-board.js";
 import { humanizeSlug, slugify } from "../lib/agent-room-model.js";
 
 const DEFAULT_URL = "http://127.0.0.1:4399/api/agent-room";
@@ -15,6 +15,7 @@ Read:
   inbox    --actor codex [--json]                 Only what needs you, with the reason for each item
   threads  --actor codex [--all] [--json]         Thread list (active by default; --all includes resolved)
   board    --actor codex [--json]                 Who owns what: open conversations by seat (assign with handoff)
+  scrum    --actor codex [--json]                 The four lanes: Backlog, Doing, Waiting on Kelly, Done (board --scrum does the same)
   show     --actor codex --thread lantern-demo    One thread's full append-only history
   list     --actor codex [--after 0] [--inbox]    Raw messages (legacy view)
   doctor   --actor codex                          Verify identity and transport
@@ -187,6 +188,20 @@ function threadLine(thread) {
   return `${thread.title} (${thread.id}) · ${bits.join(" · ")} · ${thread.count} ${thread.count === 1 ? "message" : "messages"} · last ${when(thread.lastAt)} by ${thread.lastFrom}`;
 }
 
+function cardLine(card) {
+  const bits = [card.project || "General"];
+  if (card.owner && card.owner !== "kelly") bits.push(`on ${card.owner}'s plate`);
+  else if (card.waitingOn?.length) bits.push(`waiting on ${card.waitingOn.join(", ")}`);
+  if (card.ready) bits.push(`ready for Kelly (wrapped by ${card.resolvedBy})`);
+  if (card.outsideOwner) bits.push(`with ${card.outsideOwner}`);
+  if (card.hold) bits.push(`${card.hold.kind}: ${card.hold.reason}`);
+  if (card.next) bits.push(`next: ${card.next}`);
+  if (card.blocker) bits.push(`blocker: ${card.blocker}`);
+  if (card.due) bits.push(`${card.overdue ? "OVERDUE " : "due "}${card.due}`);
+  if (card.unread) bits.push(`${card.unread} unread`);
+  return `${card.title} (${card.id}) · ${bits.join(" · ")}`;
+}
+
 function printMessages(messages, titles = new Map()) {
   for (const message of messages) {
     const waiting = message.waitingOn.length ? ` · waiting on ${message.waitingOn.join(", ")}` : "";
@@ -261,6 +276,20 @@ async function main() {
     if (options.json) return out(options, { viewer: result.viewer, revision: result.revision, threads });
     process.stdout.write(`Threads for ${result.viewer} · ${threads.length} shown${options.all ? "" : " (active only; --all for resolved)"}\n`);
     for (const thread of threads) process.stdout.write(`${threadLine(thread)}\n`);
+    return undefined;
+  }
+
+  if (command === "scrum" || (command === "board" && options.scrum)) {
+    const result = await readRoom(baseUrl, actor, { limit: "5000" });
+    const scrum = deriveScrum(result.threads || [], result.messages || [], { viewer: result.viewer });
+    if (options.json) return out(options, { viewer: result.viewer, revision: result.revision, scrum });
+    process.stdout.write(`Scrum · viewer ${result.viewer} · ${scrumSummary(scrum)}\n`);
+    for (const lane of scrum.lanes) {
+      const total = lane.id === "done" ? scrum.doneTotal : lane.threads.length;
+      process.stdout.write(`\n${lane.name} · ${total} card${total === 1 ? "" : "s"}\n`);
+      for (const card of lane.threads) process.stdout.write(`  ${cardLine(card)}\n`);
+      if (lane.id === "done" && scrum.doneTotal > lane.threads.length) process.stdout.write(`  … ${scrum.doneTotal - lane.threads.length} more in the archive\n`);
+    }
     return undefined;
   }
 

@@ -78,6 +78,11 @@ avatars, the icons, and the single amber attention signal do the talking.
   button. Quiet variant for FYI.
 - **Board column:** seat header (avatar, name, count), cards; amber tint
   when it is Kelly's plate and holds cards.
+- **Scrum lane:** the same cards dealt by what happens next. Four lanes
+  (Backlog neutral, Doing cool field, Waiting on Kelly amber slab, Done
+  lime slab), a lane switch pill (Scrum / By seat) in the board bar, and
+  cards that carry a project chip, seat, Next, Blocker, due and hold pills,
+  a Move menu, and Kelly-only Answer and Done buttons.
 - **Board card:** title button, one-line excerpt, meta, Pass menu, pills.
 - **Message:** avatar column, sender line that carries the kind in words
   ("handed off to Kip"), body (folded when long in the feed), footer,

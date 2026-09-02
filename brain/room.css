@@ -1478,3 +1478,161 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
   .room-rail, .room-composer, .workspace-meta, .skip-link { display: none; }
   .workspace { border: 0; box-shadow: none; }
 }
+
+/* ---------- the scrum lanes: the same cards, dealt by what happens next ---------- */
+
+.lane-switch { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); }
+.lane-option {
+  min-height: 30px;
+  padding: 3px 13px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.lane-option[aria-pressed="true"] { background: var(--ink); color: var(--card); }
+.lane-option:hover:not([aria-pressed="true"]) { background: var(--hover); }
+.board-bar-spacer { flex: 1; }
+.board-backlog-button {
+  min-height: 38px;
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.board-backlog-button:hover { background: var(--hover); }
+
+.scrum { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; align-items: stretch; }
+.scrum-lane {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  min-width: 0;
+  min-height: 260px;
+  padding: 12px 10px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--card-deep);
+}
+.scrum-lane[data-lane="doing"] { background: var(--field-cool); border-color: #bcdccf; }
+.scrum-lane[data-lane="waiting-on-kelly"] { background: var(--needs-slab); border-color: var(--needs-line); }
+.scrum-lane[data-lane="done"] { background: var(--done-slab); border-color: var(--done-line); }
+.scrum-lane-head { display: flex; align-items: center; gap: 8px; padding: 0 2px; }
+.scrum-lane-name { margin: 0; font: 800 15.5px/1.2 var(--display); letter-spacing: -.01em; }
+.scrum-lane[data-lane="waiting-on-kelly"] .scrum-lane-name { color: var(--needs); }
+.scrum-lane[data-lane="done"] .scrum-lane-name { color: var(--done); }
+.scrum-lane-meaning { margin: -4px 0 4px; padding: 0 2px; color: var(--muted); font-size: 12.5px; line-height: 1.35; }
+
+.scrum-card {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 10px 12px 9px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-control);
+  background: var(--card);
+}
+.scrum-card[data-needs-viewer="true"] { border-color: var(--needs-line); box-shadow: inset 3px 0 0 var(--needs-strong); }
+.scrum-card[data-ready="true"] { border-color: var(--done-line); box-shadow: inset 3px 0 0 var(--done); }
+.scrum-card[data-hold] { border-style: dashed; background: transparent; }
+.scrum-card[data-lane="done"] { background: transparent; }
+.scrum-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
+.scrum-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.scrum-seat { display: inline-flex; align-items: center; gap: 5px; min-width: 0; color: var(--muted); font-size: 12px; }
+.scrum-seat-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.scrum-card-title {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: 700 15px/1.3 var(--sans);
+  text-align: left;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.scrum-card-title:hover { text-decoration: underline; }
+.scrum-card-excerpt { margin: 0; color: var(--ink-soft); font-size: 13.5px; line-height: 1.4; overflow-wrap: anywhere; }
+.scrum-line { display: grid; grid-template-columns: auto 1fr; gap: 7px; margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; }
+.scrum-key { padding-top: 2px; color: var(--muted); font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.scrum-blocker .scrum-key { color: var(--alert); }
+.scrum-card-meta { margin: 0; color: var(--muted); font-size: 12.5px; }
+.scrum-card-foot { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; padding-top: 2px; }
+.scrum-card-foot .new-pill, .scrum-card-foot .state-pill { font-size: 12px; }
+.hold-pill, .due-pill, .scrum-with {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  padding: 1px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: normal;
+}
+.hold-pill::first-letter, .due-pill::first-letter { text-transform: uppercase; }
+.due-pill[data-overdue="true"] { color: var(--alert); border-color: #ffbedd; background: var(--alert-soft); font-weight: 700; }
+.scrum-answer, .scrum-done {
+  min-height: 30px;
+  padding: 3px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.scrum-answer:hover { background: var(--hover); }
+.scrum-done { color: var(--done); border-color: var(--done-line); }
+.scrum-done::before { content: "✓"; margin-right: 5px; font-size: 11px; }
+.scrum-done:hover { background: var(--done-soft); }
+.scrum-done:disabled, .scrum-answer:disabled { opacity: .6; cursor: default; }
+
+@media (max-width: 1100px) {
+  .scrum { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 620px) {
+  .scrum {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0 -14px;
+    padding: 2px 14px 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scrum-lane { flex: 0 0 min(82vw, 300px); min-height: 0; scroll-snap-align: start; }
+  .lane-switch { width: 100%; }
+  .lane-option { flex: 1; min-height: 40px; }
+  .board-bar-spacer { display: none; }
+  .board-backlog-button { width: 100%; min-height: 46px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lane-option, .scrum-card { transition: none; }
+}

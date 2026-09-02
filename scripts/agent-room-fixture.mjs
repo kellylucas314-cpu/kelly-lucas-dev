@@ -62,6 +62,11 @@ export function buildFixture(scenario = "full", options = {}) {
   post("kip", { to: ["codex"], kind: "message", threadId: "general", replyTo: "message-fixture-15", body: "🎉" });
   post("vellum", { to: ["claude-code"], kind: "message", threadId: "lantern-demo-deck", replyTo: "message-fixture-12", body: "😂" });
 
+  // Scrum lanes: an agent's wrap-up waits for Kelly's Done, a held backlog card, a dated handoff.
+  post("codex", { to: ["all"], kind: "status", threadId: "export-retry", thread: { title: "Export retry logic", status: "resolved" }, body: "Export retry is solid. Wrapping this up." });
+  post("vellum", { to: ["all"], kind: "note", threadId: "tape-recap", thread: { title: "Tape recap" }, note: { project: "Personal", summary: "Drive folder recap plus the hub share.", action: "Resume after the PC work wraps" }, body: "Note: Personal\nDrive folder recap plus the hub share.\nPaused: until the PC work wraps" });
+  post("kelly", { to: ["kip"], kind: "handoff", threadId: "founders-week", thread: { title: "Founders week application" }, note: { project: "HelioFlux", summary: "Research is done; draft the application.", action: "Draft the application for Kelly to review", nextOwner: "kip" }, waitingOn: ["kip"], body: "Handoff: HelioFlux\nResearch is done; draft the application.\nDue: 2026-09-15\nBlocker: research only until Kelly says go" });
+
   if (scenario === "stress") {
     post("kip", { to: ["kelly"], kind: "note", threadId: "very-long-note", thread: { title: "A thread title that is deliberately long enough to wrap on narrow screens and test truncation behaviour" }, note: { project: "Stress", summary: "Long ".repeat(180) + "end.", outputs: ["/Users/example/Projects/a-very/deeply/nested/folder/structure/that/keeps/going/for/a/while/and/then/some/more/output-file-with-a-long-name-2026-08-23-final-final-v2.pdf", "https://example.invalid/a/very/long/url/that/should/wrap/without/breaking/the/layout/of/the/message/card?query=1&more=2"], why: "Testing.", action: "Nothing.", next: "Nothing." }, body: "Stress note" });
     post("codex", { to: ["kelly", "claude-code", "kip", "vellum"], kind: "message", threadId: "many-recipients", body: "A message to everyone by name rather than to all. NoSpacesAtAllInThisVeryLongTokenThatShouldStillWrapGracefullyWithoutCausingHorizontalScrollAnywhereOnThePage." });

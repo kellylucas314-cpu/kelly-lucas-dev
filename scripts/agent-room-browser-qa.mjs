@@ -163,8 +163,44 @@ async function main() {
     const kipInboxAfter = await fetch(`${origin}/api/agent-room`, { headers: { "X-Agent": "kip" } }).then((response) => response.json());
     assert(!kipInboxAfter.inbox.some((item) => item.threadId === "lantern-demo-deck"), "Resolved thread leaves Kip's inbox", failures);
 
+    process.stdout.write("The scrum lanes\n");
+    await cli(["goto", `${origin}/brain/room.html#view=board&lanes=scrum`], { cwd });
+    await wait(1200);
+    const lanes = await evaluate("(() => [...document.querySelectorAll('.scrum-lane')].map((lane) => lane.dataset.lane))()", cwd);
+    assert(Array.isArray(lanes) && lanes.join(",") === "backlog,doing,waiting-on-kelly,done", `Board opens on four scrum lanes in order (${JSON.stringify(lanes)})`, failures);
+    const laneOf = (title) => evaluate(`(() => { const card = [...document.querySelectorAll('.scrum-card-title')].find((node) => node.textContent === ${JSON.stringify(title)}); return card ? card.closest('.scrum-lane').dataset.lane : 'missing'; })()`, cwd);
+    assert((await laneOf("Lantern demo deck")) === "done", "A conversation Kelly wrapped up sits in Done", failures);
+    assert((await laneOf("Export retry logic")) === "waiting-on-kelly", "An agent's wrap-up waits for Kelly's Done instead of counting as done", failures);
+    const readyCard = await evaluate("(() => { const card = [...document.querySelectorAll('.scrum-card')].find((node) => node.querySelector('.scrum-card-title')?.textContent === 'Export retry logic'); return card ? { ready: card.dataset.ready, pill: card.querySelector('.state-pill')?.textContent || '' } : null; })()", cwd);
+    assert(readyCard && readyCard.ready === "true" && /ready for you/.test(readyCard.pill), `The agent-wrapped card is marked ready for Kelly (${JSON.stringify(readyCard)})`, failures);
+    assert((await laneOf("Tape recap")) === "backlog", "A note with nobody on it sits in Backlog", failures);
+    const heldCard = await evaluate("(() => { const card = [...document.querySelectorAll('.scrum-card')].find((node) => node.querySelector('.scrum-card-title')?.textContent === 'Tape recap'); return card ? { hold: card.dataset.hold, pill: card.querySelector('.hold-pill')?.textContent || '' } : null; })()", cwd);
+    assert(heldCard && heldCard.hold === "paused" && /until the PC work wraps/.test(heldCard.pill), `A Paused: line shows as a hold on the backlog card (${JSON.stringify(heldCard)})`, failures);
+    assert((await laneOf("Founders week application")) === "doing", "A handoff to an agent sits in Doing", failures);
+    const datedCard = await evaluate("(() => { const card = [...document.querySelectorAll('.scrum-card')].find((node) => node.querySelector('.scrum-card-title')?.textContent === 'Founders week application'); return card ? { due: card.querySelector('.due-pill')?.textContent || '', blocker: card.querySelector('.scrum-blocker')?.textContent || '', next: card.querySelector('.scrum-next')?.textContent || '' } : null; })()", cwd);
+    assert(datedCard && datedCard.due === "by Sep 15" && /research only/.test(datedCard.blocker) && /Draft the application/.test(datedCard.next), `A card shows next step, blocker, and due date from plain lines (${JSON.stringify(datedCard)})`, failures);
+    const meaning = await evaluate("document.getElementById('viewMeaning').textContent", cwd);
+    assert(/Only you mark Done/.test(meaning), `The board explains that only Kelly marks Done (got ${meaning})`, failures);
+    if (shots) await cli(["screenshot", "--filename=desktop-scrum.png"], { cwd });
+
+    process.stdout.write("Kelly marks a card done\n");
+    await cli(["eval", "(() => { const card = [...document.querySelectorAll('.scrum-card')].find((node) => node.querySelector('.scrum-card-title')?.textContent === 'Export retry logic'); card.querySelector('[data-scrum-done]').click(); return 'ok'; })()"], { cwd });
+    await wait(1800);
+    assert((await laneOf("Export retry logic")) === "done", "Kelly's Done moves the card to Done", failures);
+    const storedDone = await fetch(`${origin}/api/agent-room`, { headers: { "X-Agent": "codex" } }).then((response) => response.json());
+    const doneMessage = storedDone.messages.find((message) => message.threadId === "export-retry" && message.from === "kelly" && message.thread?.status === "resolved");
+    assert(Boolean(doneMessage), "Done is stored as Kelly's own wrap-up message, history untouched", failures);
+    const doneCount = await evaluate("document.querySelector('.scrum-lane[data-lane=\"done\"] .board-count').textContent", cwd);
+    assert(doneCount === "3", `Done lane counts Kelly's wrap-ups only (got ${doneCount})`, failures);
+
+    process.stdout.write("Switch the deal to seats\n");
+    await cli(["eval", "document.querySelector('[data-lanes=\"seat\"]').click()"], { cwd });
+    await wait(500);
+    const seatSwitch = await evaluate("({ columns: document.querySelectorAll('.board-column').length, lanes: document.querySelectorAll('.scrum-lane').length, hash: location.hash, pressed: document.querySelector('[data-lanes=\"seat\"]').getAttribute('aria-pressed') })", cwd);
+    assert(seatSwitch && seatSwitch.columns >= 6 && seatSwitch.lanes === 0 && seatSwitch.hash === "#view=board&lanes=seat" && seatSwitch.pressed === "true", `By seat deals the same cards by plate and the link follows (${JSON.stringify(seatSwitch)})`, failures);
+
     process.stdout.write("The board\n");
-    await cli(["goto", `${origin}/brain/room.html#view=board`], { cwd });
+    await cli(["goto", `${origin}/brain/room.html#view=board&lanes=seat`], { cwd });
     await wait(1200);
     const columns = await evaluate("(() => [...document.querySelectorAll('.board-column')].map((column) => column.dataset.column))()", cwd);
     assert(Array.isArray(columns) && ["kelly", "codex", "claude-code", "kip", "vellum", "done"].every((seat) => columns.includes(seat)), `Board shows a column per seat plus wrapped up (${JSON.stringify(columns)})`, failures);
@@ -183,7 +219,7 @@ async function main() {
     await wait(1800);
     const vellumInbox = await fetch(`${origin}/api/agent-room`, { headers: { "X-Agent": "vellum" } }).then((response) => response.json());
     assert(vellumInbox.inbox.some((item) => item.threadId === "wiki-inbox-triage" && item.actionable), "The handoff lands in Vellum's inbox as actionable", failures);
-    await cli(["goto", `${origin}/brain/room.html#view=board`], { cwd });
+    await cli(["goto", `${origin}/brain/room.html#view=board&lanes=seat`], { cwd });
     await wait(1200);
     const wikiColumn = await evaluate("(() => { const card = [...document.querySelectorAll('.board-card-title')].find((node) => node.textContent === 'Wiki inbox triage'); return card ? card.closest('.board-column').dataset.column : 'missing'; })()", cwd);
     assert(wikiColumn === "vellum", `The passed card moved to Vellum's column (got ${wikiColumn})`, failures);
@@ -241,8 +277,8 @@ async function main() {
       assert(miniBell === true, `Kelly's pocket bell shows on the presence strip at ${width}`, failures);
       if (shots) await cli(["screenshot", `--filename=${name}.png`], { cwd });
       if (shots && width === 390) await cli(["screenshot", "--full-page", `--filename=${name}-full.png`], { cwd });
-      for (const view of ["board", "feed"]) {
-        await cli(["goto", `${origin}/brain/room.html#view=${view}`], { cwd });
+      for (const [view, target] of [["board", "board&lanes=seat"], ["scrum", "board&lanes=scrum"], ["feed", "feed"]]) {
+        await cli(["goto", `${origin}/brain/room.html#view=${target}`], { cwd });
         await wait(1000);
         const viewOverflow = await evaluate("document.documentElement.scrollWidth - window.innerWidth", cwd);
         assert(viewOverflow === 0, `No horizontal page overflow on the ${view} at ${width} (delta ${viewOverflow})`, failures);
@@ -261,8 +297,12 @@ async function main() {
     try {
       const emptyOrigin = `http://127.0.0.1:${emptyServer.address().port}`;
       await cli(["resize", "1440", "900"], { cwd });
-      await cli(["goto", `${emptyOrigin}/brain/room.html#view=board`], { cwd });
+      await cli(["goto", `${emptyOrigin}/brain/room.html#view=board&lanes=scrum`], { cwd });
       await wait(1500);
+      const emptyScrum = await evaluate("(() => ({ lanes: document.querySelectorAll('.scrum-lane').length, empties: document.querySelectorAll('.scrum-lane .board-empty').length, mine: [...document.querySelectorAll('.board-empty')].some((node) => node.textContent === 'Nothing needs you.') }))()", cwd);
+      assert(emptyScrum && emptyScrum.lanes === 4 && emptyScrum.empties === 4 && emptyScrum.mine === true, `Empty scrum lanes each show a friendly empty line (${JSON.stringify(emptyScrum)})`, failures);
+      await cli(["goto", `${emptyOrigin}/brain/room.html#view=board&lanes=seat`], { cwd });
+      await wait(1000);
       const emptyBoard = await evaluate("(() => ({ columns: document.querySelectorAll('.board-column').length, mine: [...document.querySelectorAll('.board-empty')].some((node) => node.textContent === 'Nothing on your plate.') }))()", cwd);
       assert(emptyBoard && emptyBoard.columns >= 6 && emptyBoard.mine === true, `Empty board still shows every seat with a friendly empty line (${JSON.stringify(emptyBoard)})`, failures);
       await cli(["goto", `${emptyOrigin}/brain/room.html#view=feed`], { cwd });

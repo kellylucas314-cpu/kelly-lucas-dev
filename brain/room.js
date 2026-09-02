@@ -7,6 +7,7 @@ import {
   hasReacted,
   isReactionMessage,
   reactionSummary,
+  deriveScrum,
 } from "/lib/agent-room-board.js";
 
 // On the Mac loopback service the page talks to the local proxy; on
@@ -50,6 +51,8 @@ const HEALTH_LABELS = { "on-track": "on track", "at-risk": "at risk", "off-track
 const VIEWS = {
   overview: { eyebrow: "Today", title: "Today", meaning: "" },
   board: { eyebrow: "Board", title: "The board", meaning: "Every open conversation is a card on someone's plate. Pass a card to hand the work over." },
+  // The board has two ways to deal the same cards: scrum lanes (what happens
+  // next) and seats (whose plate). Kelly asked for scrum first.
   feed: { eyebrow: "Feed", title: "The feed", meaning: "What the team is doing and saying, newest first. Cheer things on." },
   archive: { eyebrow: "Archive", title: "The archive", meaning: "The whole record, nothing hidden. Pick a shelf." },
   thread: { eyebrow: "Conversation", title: "", meaning: "" },
@@ -65,6 +68,20 @@ const LEGACY_VIEWS = {
   decisions: { view: "archive", filter: "decisions" },
   resolved: { view: "archive", filter: "resolved" },
 };
+const BOARD_LANES = ["scrum", "seat"];
+const BOARD_MEANINGS = {
+  scrum: "Backlog, Doing, Waiting on Kelly, Done. A card is a conversation. Only Kelly marks Done.",
+  seat: "Every open conversation is a card on someone's plate. Pass a card to hand the work over.",
+};
+const LANES_KEY = "acBoardLanes";
+function storedLanes() {
+  try {
+    const value = localStorage.getItem(LANES_KEY);
+    return BOARD_LANES.includes(value) ? value : "scrum";
+  } catch {
+    return "scrum";
+  }
+}
 const ARCHIVE_FILTERS = [
   ["all", "Everything"],
   ["receipts", "Finished work"],
@@ -112,6 +129,7 @@ const state = {
   lastRenderKey: "",
   lastLoadedAt: null,
   composerRowOpen: false,
+  boardLanes: storedLanes(),
 };
 
 const byId = (id) => document.getElementById(id);
@@ -457,7 +475,8 @@ function setView(view, { threadId = "", filter = "", push = true } = {}) {
   if (radio && view !== "thread") radio.checked = true;
   if (push) {
     const filterPart = view === "archive" && state.archiveFilter !== "all" ? `&filter=${state.archiveFilter}` : "";
-    const hash = view === "thread" ? `#thread=${encodeURIComponent(threadId)}` : `#view=${view}${filterPart}`;
+    const lanesPart = view === "board" ? `&lanes=${state.boardLanes}` : "";
+    const hash = view === "thread" ? `#thread=${encodeURIComponent(threadId)}` : `#view=${view}${filterPart}${lanesPart}`;
     if (window.location.hash !== hash) history.replaceState(null, "", hash);
   }
   document.body.classList.toggle("is-subview", view === "thread");
@@ -503,6 +522,8 @@ function readHash() {
   }
   if (!VIEW_ORDER.includes(view)) view = "overview";
   if (!ARCHIVE_FILTERS.some(([key]) => key === filter)) filter = "";
+  const lanes = params.get("lanes");
+  if (view === "board" && BOARD_LANES.includes(lanes)) state.boardLanes = lanes;
   return { view, threadId: "", filter };
 }
 
@@ -991,7 +1012,7 @@ function deskGuide() {
   const lines = [
     ["asleep", "The agents aren't online all day. Each one wakes up, reads everything at once, answers what's waiting on it, and goes back to sleep."],
     ["bell", "The bell puts a note at the top of every agent's inbox. They answer it the next time they wake, and the bell thread shows who has."],
-    ["board", "Board: every open conversation is a card on the plate of whoever owes the next move. Pass a card to hand work over."],
+    ["board", "Board: every open conversation is a card. Scrum lanes show what happens next (Backlog, Doing, Waiting on Kelly, Done); By seat shows whose plate it is on. Only Kelly marks Done."],
     ["feed", "Feed: the day's activity and banter, newest first. Reply with one emoji and it becomes a sticker."],
     ["archive", "Archive: the whole record, never deleted. Pick a shelf."],
     ["presence", "The dots: solid green means here in the last hour, a ring means earlier today, grey means not connected yet."],
@@ -1092,15 +1113,149 @@ function boardColumn(name, id, threads, lastByThread, emptyText) {
   ]);
 }
 
+function boardMeaning() {
+  const text = BOARD_MEANINGS[state.boardLanes] || BOARD_MEANINGS.scrum;
+  return viewerIs("kelly") ? text.replace("Waiting on Kelly", "Waiting on you").replace("Only Kelly marks Done.", "Only you mark Done.") : text;
+}
+
+function boardBar() {
+  const scrum = state.boardLanes === "scrum";
+  const switcher = el("div", { class: "lane-switch", role: "group", "aria-label": "How the cards are dealt" }, [
+    el("button", { class: "lane-option", type: "button", "data-lanes": "scrum", "aria-pressed": scrum ? "true" : "false", text: "Scrum" }),
+    el("button", { class: "lane-option", type: "button", "data-lanes": "seat", "aria-pressed": scrum ? "false" : "true", text: "By seat" }),
+  ]);
+  const actions = [el("button", { class: "primary-button", type: "button", "data-new-task": "true", text: "Give someone a task" })];
+  if (scrum) actions.push(el("button", { class: "board-backlog-button", type: "button", "data-new-backlog": "true", text: "Add to backlog" }));
+  return el("div", { class: "board-bar" }, [switcher, el("span", { class: "board-bar-spacer", "aria-hidden": "true" }), ...actions]);
+}
+
+/* ---------- the scrum lanes: the same cards, dealt by what happens next ---------- */
+
+const EMPTY_LANES = {
+  backlog: "Nothing waiting to start.",
+  doing: "Nobody is on anything right now.",
+  "waiting-on-kelly": "Nothing needs Kelly.",
+  done: "Nothing marked done yet.",
+};
+
+function laneName(lane) {
+  if (lane.id === "waiting-on-kelly" && viewerIs("kelly")) return "Waiting on you";
+  return lane.name;
+}
+
+function laneMeaning(lane) {
+  if (!viewerIs("kelly")) return lane.meaning;
+  return lane.meaning.replace("Kelly's", "your").replace("Kelly marked", "You marked");
+}
+
+function dueLabel(card) {
+  if (!card.dueAt) return card.due;
+  const date = new Date(card.dueAt);
+  return date.toLocaleDateString(undefined, { month: "short", day: "numeric", timeZone: "UTC" });
+}
+
+function scrumMenu(card) {
+  const options = [];
+  const passLabel = card.lane === "backlog" ? "Hand to" : "Pass to";
+  if (card.lane !== "done") {
+    for (const [id, label] of KNOWN_AGENTS) {
+      if (id === "kelly" || id === card.owner) continue;
+      options.push(el("button", { class: "board-pass-option", type: "button", "data-pass-thread": card.id, "data-pass-to": id }, [avatarNode(id, "xs"), `${passLabel} ${viewerIs(id) ? "me" : label}`]));
+    }
+  }
+  if (viewerIs("kelly")) {
+    if (card.lane === "doing") options.push(el("button", { class: "board-pass-option", type: "button", "data-pass-thread": card.id, "data-pass-to": "kelly" }, [avatarNode("kelly", "xs"), "Bring it to me"]));
+    if (card.lane === "done") options.push(el("button", { class: "board-pass-option", type: "button", "data-scrum-reopen": card.id, text: "Reopen" }));
+  } else if (card.lane === "doing" && card.owner === state.room.viewer) {
+    options.unshift(el("button", { class: "board-pass-option", type: "button", "data-scrum-ready": card.id }, [avatarNode("kelly", "xs"), "Ready for Kelly"]));
+  }
+  options.push(el("button", { class: "board-pass-option", type: "button", "data-open-thread": card.id, text: "Open the conversation" }));
+  const label = card.lane === "done" ? "More" : "Move";
+  return el("details", { class: "board-pass scrum-menu" }, [
+    el("summary", { "aria-label": `${label} ${card.title}` }, [label]),
+    el("div", { class: "board-pass-menu" }, options),
+  ]);
+}
+
+function scrumCard(card, lastByThread) {
+  const viewerKelly = viewerIs("kelly");
+  const askedBy = card.lane === "waiting-on-kelly" && card.lastFrom !== "kelly" ? card.lastFrom : "";
+  const seat = card.owner && card.owner !== "kelly" ? card.owner : askedBy;
+  const seatText = seat ? (card.lane === "waiting-on-kelly" ? `from ${youOr(seat)}` : youOr(seat)) : "";
+  const top = el("div", { class: "scrum-card-top" }, [
+    el("span", { class: "scrum-chip", text: card.project || "General" }),
+    seat ? el("span", { class: "scrum-seat", title: seatText }, [avatarNode(seat, "xs"), el("span", { class: "scrum-seat-name", text: seatText })]) : null,
+  ]);
+  const last = lastByThread.get(card.id);
+  // A finished card has no next step or blocker left to show.
+  const next = card.lane === "done"
+    ? (last ? el("p", { class: "scrum-card-excerpt", text: messageExcerpt(last, 90) }) : null)
+    : card.next
+      ? el("p", { class: "scrum-line scrum-next" }, [el("span", { class: "scrum-key", text: "Next" }), el("span", { text: card.next })])
+      : (last ? el("p", { class: "scrum-card-excerpt", text: messageExcerpt(last, 110) }) : null);
+  const blocker = card.blocker && card.lane !== "done" ? el("p", { class: "scrum-line scrum-blocker" }, [el("span", { class: "scrum-key", text: "Blocker" }), el("span", { text: card.blocker })]) : null;
+  const tags = [];
+  if (card.ready) tags.push(el("span", { class: "state-pill resolved", text: `ready for ${viewerKelly ? "you" : "Kelly"}` }));
+  if (card.hold && card.lane === "backlog") tags.push(el("span", { class: "hold-pill", "data-hold": card.hold.kind, text: `${card.hold.kind} · ${card.hold.reason}` }));
+  if (card.due) tags.push(el("span", { class: "due-pill", "data-overdue": card.overdue ? "true" : undefined, text: card.overdue ? `overdue · ${dueLabel(card)}` : `by ${dueLabel(card)}` }));
+  if (card.outsideOwner) tags.push(el("span", { class: "scrum-with", text: `with ${card.outsideOwner}` }));
+  if (card.unread && card.lane !== "done") tags.push(el("span", { class: "new-pill", text: `${card.unread} new` }));
+  const meta = el("p", { class: "scrum-card-meta", text: card.lane === "done"
+    ? `done ${relativeTime(card.resolvedAt)}`
+    : `last from ${youOr(card.lastFrom)} ${relativeTime(card.lastAt)}` });
+  const buttons = [];
+  if (viewerKelly && card.lane === "waiting-on-kelly") {
+    buttons.push(el("button", { class: "scrum-answer", type: "button", "data-open-thread": card.id, text: "Answer", "aria-label": `Answer ${card.title}` }));
+    buttons.push(el("button", { class: "scrum-done", type: "button", "data-scrum-done": card.id, text: "Done", "aria-label": `Mark ${card.title} done` }));
+  }
+  const foot = el("div", { class: "scrum-card-foot" }, [scrumMenu(card), ...buttons, ...tags]);
+  return el("article", {
+    class: "scrum-card",
+    "data-lane": card.lane,
+    "data-thread": card.id,
+    "data-needs-viewer": card.lane !== "done" && needsViewer(card) ? "true" : undefined,
+    "data-ready": card.ready ? "true" : undefined,
+    "data-overdue": card.overdue ? "true" : undefined,
+    "data-hold": card.hold && card.lane === "backlog" ? card.hold.kind : undefined,
+  }, [top, el("button", { class: "scrum-card-title", type: "button", "data-open-thread": card.id, text: card.title, "aria-label": `Open ${card.title}` }), next, blocker, meta, foot]);
+}
+
+function renderScrum() {
+  const scrum = deriveScrum(state.room.threads, state.room.messages, { viewer: state.room.viewer });
+  const lastByThread = new Map();
+  for (const message of state.room.messages) {
+    if (!isReactionMessage(message)) lastByThread.set(message.threadId, message);
+  }
+  const lanes = scrum.lanes.map((lane) => {
+    const count = lane.id === "done" ? scrum.doneTotal : lane.threads.length;
+    const head = el("div", { class: "scrum-lane-head" }, [
+      el("h2", { class: "scrum-lane-name", text: laneName(lane) }),
+      el("span", { class: "board-count", text: String(count) }),
+    ]);
+    const cards = lane.threads.length
+      ? lane.threads.map((card) => scrumCard(card, lastByThread))
+      : [el("p", { class: "board-empty", text: lane.id === "waiting-on-kelly" && viewerIs("kelly") ? "Nothing needs you." : EMPTY_LANES[lane.id] })];
+    const more = lane.id === "done" && scrum.doneTotal > lane.threads.length
+      ? [el("button", { class: "text-link-button board-done-more", type: "button", "data-goto-view": "resolved", text: `See all ${scrum.doneTotal} done` })]
+      : [];
+    return el("section", {
+      class: "scrum-lane",
+      "data-lane": lane.id,
+      "data-has-cards": lane.threads.length ? "true" : undefined,
+      "aria-label": laneName(lane),
+    }, [head, el("p", { class: "scrum-lane-meaning", text: laneMeaning(lane) }), ...cards, ...more]);
+  });
+  return [el("div", { class: "scrum", "aria-label": "The scrum board" }, lanes)];
+}
+
 function renderBoard() {
+  const bar = boardBar();
+  if (state.boardLanes === "scrum") return [bar, ...renderScrum()];
   const board = deriveBoard(state.room.threads, { viewer: state.room.viewer });
   const lastByThread = new Map();
   for (const message of state.room.messages) {
     if (!isReactionMessage(message)) lastByThread.set(message.threadId, message);
   }
-  const bar = el("div", { class: "board-bar" }, [
-    el("button", { class: "primary-button", type: "button", "data-new-task": "true", text: "Give someone a task" }),
-  ]);
   const columns = board.columns.map((column) => boardColumn(
     agentLabel(column.id),
     column.id,
@@ -1297,7 +1452,7 @@ function renderOverviewHeader() {
 }
 
 function renderWorkspace({ force = false } = {}) {
-  const key = `${state.view}:${state.threadId}:${state.archiveFilter}:${state.room.revision}:${state.previousCursor}:${state.loaded}`;
+  const key = `${state.view}:${state.threadId}:${state.archiveFilter}:${state.boardLanes}:${state.room.revision}:${state.previousCursor}:${state.loaded}`;
   if (!force && key === state.lastRenderKey) return;
   state.lastRenderKey = key;
 
@@ -1315,7 +1470,7 @@ function renderWorkspace({ force = false } = {}) {
   } else {
     byId("viewEyebrow").textContent = meta.eyebrow;
     byId("viewHeading").textContent = meta.title;
-    byId("viewMeaning").textContent = state.view === "thread" ? "" : meta.meaning;
+    byId("viewMeaning").textContent = state.view === "thread" ? "" : state.view === "board" ? boardMeaning() : meta.meaning;
     byId("viewMeaning").hidden = state.view === "thread";
   }
   const needsCount = state.room.threads.filter((thread) => thread.needsKelly).length;
@@ -1772,11 +1927,11 @@ async function sendMessage(event) {
   }
 }
 
-async function threadAction(status, trigger) {
-  const thread = threadById(state.threadId);
-  if (!thread) return;
+async function postThreadStatus(threadId, status, trigger, { body = "", successText = "" } = {}) {
+  const thread = threadById(threadId);
+  if (!thread) return false;
   const payload = {
-    body: status === "resolved" ? `Wrapping up "${thread.title}".` : `Reopening "${thread.title}".`,
+    body: body || (status === "resolved" ? `Wrapping up "${thread.title}".` : `Reopening "${thread.title}".`),
     to: ["all"],
     kind: "status",
     threadId: thread.id,
@@ -1784,16 +1939,80 @@ async function threadAction(status, trigger) {
     clientId: `${state.room.viewer}-web-${crypto.randomUUID()}`,
   };
   try {
-    await postMessage(payload, { successText: status === "resolved" ? "Wrapped up. Nice." : "Reopened." });
+    await postMessage(payload, { successText: successText || (status === "resolved" ? "Wrapped up. Nice." : "Reopened.") });
     if (status === "resolved") {
       const rect = trigger?.getBoundingClientRect();
       confettiBurst(rect ? { x: rect.left + rect.width / 2, y: rect.top } : {});
     }
     render({ force: true });
-    byId("viewHeading").focus();
+    return true;
   } catch {
     // toast already shown
+    return false;
   }
+}
+
+async function threadAction(status, trigger) {
+  if (await postThreadStatus(state.threadId, status, trigger)) byId("viewHeading").focus();
+}
+
+/* Scrum lane moves. Done is Kelly's word: the lanes only count her wrap-up
+ * as Done, so an agent's wrap-up parks the card in Waiting on Kelly as
+ * "ready for you" until she confirms. */
+async function scrumDone(threadId, trigger) {
+  const thread = threadById(threadId);
+  if (!thread || !viewerIs("kelly")) return;
+  trigger.disabled = true;
+  try {
+    await postThreadStatus(threadId, "resolved", trigger, { body: `Done. "${thread.title}" is finished.`, successText: "Marked done. Nice." });
+  } finally {
+    trigger.disabled = false;
+  }
+}
+
+async function scrumReopen(threadId, trigger) {
+  const thread = threadById(threadId);
+  if (!thread) return;
+  trigger.disabled = true;
+  try {
+    await postThreadStatus(threadId, "reopened", trigger, { body: `Reopening "${thread.title}". Back on the board.`, successText: "Reopened. It is back on the board." });
+  } finally {
+    trigger.disabled = false;
+  }
+}
+
+async function scrumReady(threadId, trigger) {
+  const thread = threadById(threadId);
+  if (!thread) return;
+  const payload = {
+    body: `Ready for you, Kelly: "${thread.title}". Mark it done or send it back.`,
+    to: ["kelly"],
+    kind: "status",
+    threadId: thread.id,
+    waitingOn: ["kelly"],
+    clientId: `${state.room.viewer}-web-${crypto.randomUUID()}`,
+  };
+  trigger.disabled = true;
+  try {
+    await postMessage(payload, { successText: "Told Kelly it is ready." });
+    render({ force: true });
+  } catch {
+    // toast already shown
+  } finally {
+    trigger.disabled = false;
+  }
+}
+
+function setLanes(lanes) {
+  if (!BOARD_LANES.includes(lanes) || lanes === state.boardLanes) return;
+  state.boardLanes = lanes;
+  try { localStorage.setItem(LANES_KEY, lanes); } catch { /* private browsing */ }
+  if (state.view === "board") {
+    const hash = `#view=board&lanes=${lanes}`;
+    if (window.location.hash !== hash) history.replaceState(null, "", hash);
+  }
+  render({ force: true });
+  announce(lanes === "scrum" ? "Scrum lanes: Backlog, Doing, Waiting on Kelly, Done." : "Cards by seat.");
 }
 
 /* ---------- board and feed actions ---------- */
@@ -1829,6 +2048,21 @@ function startNewTask() {
   setComposerOpen(true);
   byId("titleInput").focus();
   announce("Name the task, say who picks it up, and send");
+}
+
+// A backlog card is a note with no owner: it waits until someone picks it up.
+function startBacklogCard() {
+  cancelReply();
+  byId("kindSelect").value = "note";
+  byId("recipientSelect").value = "all";
+  const select = byId("threadSelect");
+  select.value = "__new";
+  byId("titleField").hidden = false;
+  byId("nextOwnerSelect").value = "";
+  updateComposerMode();
+  setComposerOpen(true);
+  byId("titleInput").focus();
+  announce("Name the card and say what it is. It waits in the backlog until someone picks it up.");
 }
 
 /* The bell: one click drops a wake-up in every agent's inbox. Each seat
@@ -1913,6 +2147,28 @@ byId("viewContent").addEventListener("click", (event) => {
     sendReaction(react.dataset.reactTo, react.dataset.react);
     return;
   }
+  const lanes = event.target.closest("[data-lanes]");
+  if (lanes) {
+    setLanes(lanes.dataset.lanes);
+    return;
+  }
+  const done = event.target.closest("[data-scrum-done]");
+  if (done) {
+    scrumDone(done.dataset.scrumDone, done);
+    return;
+  }
+  const reopen = event.target.closest("[data-scrum-reopen]");
+  if (reopen) {
+    reopen.closest("details")?.removeAttribute("open");
+    scrumReopen(reopen.dataset.scrumReopen, reopen);
+    return;
+  }
+  const ready = event.target.closest("[data-scrum-ready]");
+  if (ready) {
+    ready.closest("details")?.removeAttribute("open");
+    scrumReady(ready.dataset.scrumReady, ready);
+    return;
+  }
   const pass = event.target.closest("[data-pass-to]");
   if (pass) {
     startPass(pass.dataset.passThread, pass.dataset.passTo);
@@ -1920,6 +2176,10 @@ byId("viewContent").addEventListener("click", (event) => {
   }
   if (event.target.closest("[data-new-task]")) {
     startNewTask();
+    return;
+  }
+  if (event.target.closest("[data-new-backlog]")) {
+    startBacklogCard();
     return;
   }
   const goto = event.target.closest("[data-goto-view]");

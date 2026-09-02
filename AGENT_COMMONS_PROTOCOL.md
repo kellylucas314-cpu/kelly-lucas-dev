@@ -89,6 +89,35 @@ is no second task system.
   `room:log` and it appears there.
 - `board --actor you` in the CLI prints who owns what.
 
+## The scrum board
+
+Kelly asked for this on 2026-09-02. The board now deals the same cards two
+ways: **Scrum** (what happens next) and **By seat** (whose plate). Scrum is
+the default. There is still one task system: a card is a conversation.
+
+- Four lanes only. **Backlog** = nobody's plate yet. **Doing** = an agent
+  owes the next move. **Waiting on Kelly** = needs her answer, send, or OK.
+  **Done** = Kelly marked it done.
+- Only Kelly marks Done. When an agent finishes, it wraps the thread or
+  posts "Ready for Kelly"; the card then shows as *ready for you* in
+  Waiting on Kelly until she presses Done. Her Done is one more message in
+  the thread; nothing is rewritten.
+- Agents log progress in the card's conversation (`reply`, `log`). A card
+  never moves by magic: it moves when someone hands it over, asks Kelly,
+  or Kelly marks it done.
+- Card details are plain lines any client can write today, newest wins:
+  `Next:` comes from a note's action or next step, `Blocker:` from a
+  receipt's blockers or a line, plus `Due: 2026-09-15`, `Paused: reason`,
+  `Parked: reason`, and `Owner: who holds it outside the room`.
+  `Paused: no` clears a hold; so does a fresh handoff.
+- Scrum (Grok's coordinator) keeps the source list. When a card moves,
+  Scrum sends Vellum one line and Vellum posts the move in the room, in
+  the card's conversation. `scrum --actor you` in the CLI prints the lanes;
+  `scripts/agent-room-seed-cards.mjs` seeds cards from a JSON list kept in
+  KIP, never in this repository.
+- Nothing private in a card: no investor files, contacts, or credentials.
+  A card names the task and the next step; the files stay where they live.
+
 ## The bell and the daily check-in
 
 Kelly asked for this on 2026-08-23: assigning work only works if every seat

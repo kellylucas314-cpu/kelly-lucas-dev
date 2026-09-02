@@ -382,3 +382,59 @@ Still open from the audit: the board hides 618px at 1440, the status pill
 `nowrap` overlap, composer drafts lost on the sign-in redirect, the Magpie
 login front door, the raw "Failed to fetch" toast, and the archive landing
 below its own shelf chips.
+
+## Pass 11: the scrum lanes (2026-09-02, Kelly-requested, built off the Mac)
+
+Kelly, relaying Scrum's spec: "four columns Backlog / Doing / Waiting on
+Kelly / Done. Each card is a conversation. Claude and Codex log progress in
+that conversation. Only Kelly marks Done." Then in her own words: "build a
+to do scrum board that could pass as real SaaS software", "beautiful UI,
+light soft colors", "make it part of the commons".
+
+Built on the existing board, not beside it. Written in a Claude Code web
+session against the GitHub copy at `95a2bbd`, so the Mac copy must apply
+the patches (kip-workspace `tools/agent-commons-scrum/`) and re-run QA.
+
+- `lib/agent-room-board.js` gains `scrumLane`, `cardHints`, `deriveScrum`,
+  `scrumSummary`. Pure derivations over the same threads and messages: no
+  stored field changed, so the deployed Edge Function keeps working as is.
+  Done means resolved *by Kelly*; an agent's wrap-up is "ready for you" in
+  Waiting on Kelly. Next step, blocker, due date, hold, and outside owner
+  read from note and receipt fields plus `Due:`/`Blocker:`/`Paused:`/
+  `Parked:`/`Owner:` lines in any post.
+- The Board view gets a Scrum / By seat switch (remembered per browser,
+  carried in the link as `lanes=`). Scrum is the default. Four lanes in a
+  grid at 1440, two by two under 1100, side-scroll snap on the phone like
+  the seat board. Lane tints: neutral, the cool sky-to-mint field for
+  Doing, the amber slab for Waiting on Kelly (the one attention colour,
+  unchanged), the lime slab for Done.
+- Cards: project chip, seat avatar, title, Next, Blocker (rose key), meta,
+  then Move menu (Hand to / Pass to a seat, Bring it to me, Ready for
+  Kelly, Reopen, Open the conversation), Kelly-only Answer and Done
+  buttons on Waiting cards, pills for ready, hold (dashed card), due
+  (rose when overdue), outside owner, and unread. No drag and drop, same
+  reasoning as pass 8.
+- "Add to backlog" opens the composer as a note with nobody on it.
+- CLI: `scrum --actor you` (or `board --scrum`) prints the lanes with the
+  same hints. `scripts/agent-room-seed-cards.mjs --cards list.json` seeds
+  cards idempotently (dry run by default; `--post` writes). The real list
+  lives in kip-workspace, not here.
+- Protocol: new "The scrum board" section.
+- Tests: `tests/agent-room-scrum.test.mjs` (8) on lanes, hints, sorting,
+  holds, done semantics. Browser QA gained the scrum section (lanes in
+  order, done versus ready, hold, due and blocker from lines, Kelly's Done
+  moves the card and is stored as her message, the seat switch and its
+  link, empty lanes) and screenshots `desktop-scrum.png`,
+  `tablet-768-scrum.png`, `mobile-390-scrum.png`.
+
+Verification in the web session used a small playwright-cli stand-in (same
+commands, headless Chromium), so the numbers below need a Mac re-run:
+model, CLI, board, and scrum suites green; browser QA green except the
+pre-existing "Conversations heading inside the first viewport" check,
+which failed before this pass in that environment (font metrics) and was
+not touched.
+
+Deferred, on purpose: drag and drop; a "Doing" sub-state per seat; a
+Cadence strip for the Sheet's recurring rows; a due-date picker in the
+composer (a `Due:` line in the message works today); syncing the Drive
+Sheet (Scrum stays the source list by hand, as specified).
