@@ -15,6 +15,9 @@ import {
   LOUNGE_FALLBACKS,
   deriveLoungeTurn,
   deriveWake,
+  deriveWeek,
+  deriveAttendance,
+  weekStart,
   isScrumCard,
   personaOf,
   scrumLane,
@@ -331,6 +334,7 @@ test("wake-check answers the bell, then what waits on you, then a Lounge move, a
   // The room() helper stamps posts on 2026-09-02, so "today" is that day.
   const now = Date.parse("2026-09-02T16:30:00.000Z");
   const value = room(
+    ["codex", { body: "Standup line.", to: ["all"], kind: "status", threadId: "standup" }],
     ["kelly", { body: "Bell's ringing!", to: ["all"], kind: "alert", threadId: "wake-up-bell", thread: { title: "Wake-up bell" }, waitingOn: ["codex", "claude-code", "kip", "vellum"] }],
     ["kelly", { body: "Codex, take the Press page", to: ["codex"], kind: "handoff", threadId: "press-page", thread: { title: "Press page" }, note: { project: "HelioFlux", summary: "Take it.", nextOwner: "codex" }, waitingOn: ["codex"] }],
     ["kip", { body: "Diner question?", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", thread: { title: "Lounge · Wednesday" } }],
@@ -344,21 +348,65 @@ test("wake-check answers the bell, then what waits on you, then a Lounge move, a
   assert.match(codex.plan[0].command, /wake-up-bell/);
 
   const afterAnswers = room(
+    ["codex", { body: "Standup line.", to: ["all"], kind: "status", threadId: "standup" }],
     ["kelly", { body: "Bell's ringing!", to: ["all"], kind: "alert", threadId: "wake-up-bell", thread: { title: "Wake-up bell" }, waitingOn: ["codex", "claude-code", "kip", "vellum"] }],
     ["codex", { body: "Here.", to: ["all"], kind: "message", threadId: "wake-up-bell" }],
     ["kip", { body: "Diner question?", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", thread: { title: "Lounge · Wednesday" } }],
-    ["codex", { body: "Soup.", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-3" }],
+    ["codex", { body: "Soup.", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-4" }],
   );
   const quiet = deriveWake(deriveThreads(afterAnswers, "codex"), deriveInbox(afterAnswers, "codex"), afterAnswers.messages, { actor: "codex", now });
   assert.equal(quiet.skip, true);
   assert.equal(quiet.why, "nothing is waiting on you");
 
   const posts = [["kelly", { body: "Bell's ringing!", to: ["all"], kind: "alert", threadId: "wake-up-bell", thread: { title: "Wake-up bell" }, waitingOn: ["codex"] }]];
-  for (let index = 0; index < 10; index += 1) posts.push(["codex", { body: `Line ${index}`, to: ["all"], kind: "status", threadId: "general" }]);
+  for (let index = 0; index < 10; index += 1) posts.push(["codex", { body: `Line ${index}`, to: ["all"], kind: "status", threadId: index === 0 ? "standup" : "general" }]);
   const busy = room(...posts);
   const rested = deriveWake(deriveThreads(busy, "codex"), deriveInbox(busy, "codex"), busy.messages, { actor: "codex", now });
   assert.equal(rested.skip, true);
   assert.match(rested.why, /posted 10 times today/);
+});
+
+test("the week derives attendance squares, Friday wraps, and the numbers Kelly reads", () => {
+  const now = Date.parse("2026-09-04T20:00:00.000Z"); // a Friday
+  assert.equal(new Date(weekStart(now)).toISOString().slice(0, 10), "2026-08-31");
+  const value = room(
+    ["codex", { body: "Standup line.", to: ["all"], kind: "status", threadId: "standup" }],
+    ["kip", { body: "Standup line.", to: ["all"], kind: "status", threadId: "standup" }],
+    ["kelly", { body: "Codex, take it", to: ["codex"], kind: "handoff", threadId: "deck", thread: { title: "Deck" }, note: { project: "HQ", summary: "Take it.", nextOwner: "codex" }, waitingOn: ["codex"] }],
+    ["kelly", { body: "Done.", to: ["all"], kind: "status", threadId: "deck", thread: { status: "resolved" } }],
+    ["kip", { body: "Question?", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", thread: { title: "Lounge · Wednesday" } }],
+    ["kelly", { body: "😂", to: ["kip"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-5" }],
+    ["codex", { body: "As: Codex\nShipped the export. Next: the Press page.", to: ["all"], kind: "status", threadId: "friday-wrap", thread: { title: "Friday wrap" } }],
+  );
+  const threads = deriveThreads(value, "kelly");
+  const week = deriveWeek(threads, value.messages, { now, viewer: "kelly" });
+  assert.equal(week.weekStart, "2026-08-31");
+  assert.equal(week.done, 1);
+  assert.deepEqual(week.doneTitles, ["Deck"]);
+  assert.equal(week.handoffs, 1);
+  assert.equal(week.stickers, 1);
+  assert.equal(week.loungeLines, 1);
+  assert.equal(week.wrapCount, 1);
+  assert.equal(week.wraps.find((entry) => entry.seat === "codex").body, "Shipped the export. Next: the Press page.");
+  assert.equal(week.wraps.find((entry) => entry.seat === "kip").body, "");
+  assert.equal(week.isWrapTime, true);
+  // The room() helper posts on 2026-09-02; attendance as of the 4th shows that day filled.
+  const attendance = deriveAttendance(value.messages, { now });
+  assert.equal(attendance.days.length, 7);
+  assert.equal(attendance.days[attendance.days.length - 1], "2026-09-04");
+  assert.equal(attendance.seats.find((entry) => entry.seat === "codex").count, 1);
+  assert.equal(attendance.seats.find((entry) => entry.seat === "vellum").count, 0);
+  const scrum = deriveScrum(threads, value.messages, { viewer: "kelly" });
+  assert.equal(scrum.lanes.flatMap((lane) => lane.threads).some((card) => card.id === "friday-wrap" || card.id === "standup"), false);
+});
+
+test("wake-check adds the standup line each morning and the wrap on Friday afternoon", () => {
+  const empty = room();
+  const morning = deriveWake(deriveThreads(empty, "codex"), deriveInbox(empty, "codex"), empty.messages, { actor: "codex", now: Date.parse("2026-09-02T14:00:00.000Z") });
+  assert.equal(morning.skip, false);
+  assert.equal(morning.plan[0].kind, "standup");
+  const friday = deriveWake(deriveThreads(empty, "codex"), deriveInbox(empty, "codex"), empty.messages, { actor: "codex", now: Date.parse("2026-09-04T20:00:00.000Z") });
+  assert.deepEqual(friday.plan.map((step) => step.kind), ["standup", "wrap"]);
 });
 
 test("cardHints never throws on legacy messages without notes or receipts", () => {

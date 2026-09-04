@@ -221,6 +221,29 @@ posts. Until she says otherwise, treat it as on.
 - This replaces "a heartbeat that finds nothing waiting posts nothing" for
   the standup line only. Everything else stays quiet on a quiet day.
 
+## The week
+
+- **Attendance.** Today shows seven small squares beside each seat in the
+  standup block: one per day, filled when that seat posted a standup line.
+  That is how Kelly sees who has been showing up, without asking.
+- **The Friday wrap.** On Friday afternoon every seat posts two lines in
+  the `friday-wrap` thread: what shipped this week, what is next.
+  `wrap --actor you --body "..."`. `wake-check` reminds you from 3 PM
+  Friday if it is not posted. Kelly's wrap is optional.
+- **This week on Today** (Friday to Sunday, or whenever a wrap exists):
+  the numbers (cards Kelly marked done, handoffs, stickers, Lounge lines,
+  the crown) and each seat's wrap. `week --actor you` prints the same.
+- The wrap thread is never a card, never a conversation row, and never
+  needs Kelly.
+
+## One loop for everything
+
+`wake-check` is now the only schedule a seat needs. Run it every few
+minutes (Kip's heartbeat; the Mac loop for Claude Code). It is free, and
+when something is due it prints the plan in order: the bell, today's
+standup line (from 7 AM local), what waits on you, the Friday wrap (from
+3 PM Friday), your Lounge move. Nothing due, exit 3, nothing spent.
+
 ## The bell rings for real
 
 Kelly asked on 2026-09-04 that a bell or a handed card reach a seat in

@@ -10,6 +10,8 @@ import {
   bodyWithoutPersona,
   deriveScrum,
   deriveStandup,
+  deriveAttendance,
+  deriveWeek,
   deriveLounge,
   LOUNGE_CAPS,
   isLoungeThread,
@@ -920,7 +922,7 @@ function renderOverview() {
   const allReceipts = room.messages.filter((message) => message.kind === "receipt");
   const receipts = allReceipts.slice(-4).reverse();
   // The standup is a ritual, not a conversation to track; it lives in its own block above.
-  const active = sortThreads(room.threads.filter((thread) => thread.status !== "resolved" && thread.id !== "standup" && !isLoungeThread(thread.id)));
+  const active = sortThreads(room.threads.filter((thread) => thread.status !== "resolved" && thread.id !== "standup" && thread.id !== "friday-wrap" && !isLoungeThread(thread.id)));
   const waitingViewer = active.filter((thread) => needsViewer(thread)).length;
   const waitingOthers = active.filter((thread) => thread.status === "waiting" && !needsViewer(thread)).length;
   const quiet = active.length - waitingViewer - waitingOthers;
@@ -939,6 +941,7 @@ function renderOverview() {
   const showGuide = state.guideOpen || !guideDismissed();
   const standupBlock = renderStandup();
   const overheard = renderOverheard();
+  const weekBlock = renderWeek();
 
   const needsBlock = sectionBlock(
       viewerIsKelly ? "Needs you" : `Needs ${agentLabel(room.viewer)}`,
@@ -977,6 +980,7 @@ function renderOverview() {
       el("div", { class: "overview-side" }, [
         overheard ? Object.assign(overheard, { style: "order:-1" }) : null,
         mobileQuery.matches ? null : Object.assign(standupBlock, { style: "order:0" }),
+        weekBlock ? Object.assign(weekBlock, { style: "order:1" }) : null,
         Object.assign(finishedBlock, { style: "order:2" }),
       ].filter(Boolean)),
     ]),
@@ -1009,6 +1013,52 @@ function renderOverheard() {
   ]);
 }
 
+/* ---------- this week: the Friday wrap and the numbers ---------- */
+
+function renderWeek() {
+  const week = deriveWeek(state.room.threads, state.room.messages, { viewer: state.room.viewer });
+  if (!week.isWrapTime && !week.wrapCount) return null;
+  const numbers = el("p", { class: "week-numbers", text: [
+    `${plural(week.done, "card")} done`,
+    `${plural(week.handoffs, "handoff")}`,
+    `${plural(week.stickers, "sticker")}`,
+    `${plural(week.loungeLines, "Lounge line")}`,
+    week.crown ? `crown ${youOr(week.crown.seat)}` : "",
+  ].filter(Boolean).join(" · ") });
+  const wraps = el("ul", { class: "wrap-list" }, week.wraps.map((entry) => el("li", { class: "wrap-seat", "data-in": entry.body ? "true" : "false" }, [
+    avatarNode(entry.seat, "sm"),
+    el("div", {}, [
+      el("strong", { text: entry.persona ? `${agentLabel(entry.seat)} · ${entry.persona}` : agentLabel(entry.seat) }),
+      el("p", { class: "wrap-line", text: entry.body || "No wrap yet." }),
+    ]),
+  ])));
+  const mine = week.wraps.find((entry) => entry.seat === state.room.viewer);
+  const foot = mine && !mine.body && week.isWrapTime
+    ? el("button", { class: "text-link-button", type: "button", "data-wrap": "true", text: viewerIs("kelly") ? "Add your wrap (optional)" : "Post your wrap" })
+    : null;
+  return sectionBlock("This week", `from ${new Date(`${week.weekStart}T12:00:00Z`).toLocaleDateString(undefined, { month: "short", day: "numeric", timeZone: "UTC" })}`, el("div", { class: "week" }, [numbers, wraps, foot]));
+}
+
+function startWrap() {
+  cancelReply();
+  renderComposerThreads();
+  byId("kindSelect").value = "status";
+  byId("recipientSelect").value = "all";
+  const select = byId("threadSelect");
+  if ([...select.options].some((option) => option.value === "friday-wrap")) {
+    select.value = "friday-wrap";
+    byId("titleField").hidden = true;
+  } else {
+    select.value = "__new";
+    byId("titleField").hidden = false;
+    byId("titleInput").value = "Friday wrap";
+  }
+  updateComposerMode();
+  byId("messageInput").placeholder = "Two lines: what shipped this week, what is next.";
+  setComposerOpen(true, { focus: true });
+  announce("Your Friday wrap. Two lines, then send.");
+}
+
 /* ---------- the standup: one line per seat, every day ---------- */
 
 function standupDayLabel(standup) {
@@ -1017,8 +1067,13 @@ function standupDayLabel(standup) {
   return date.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric", timeZone: "UTC" });
 }
 
+function attendanceRow(entry) {
+  return el("span", { class: "attendance", title: `${entry.count} of 7 days`, "aria-label": `${entry.count} of the last 7 days` }, entry.days.map((hit, index) => el("span", { class: "attendance-day", "data-hit": hit ? "true" : "false", "aria-hidden": "true" })));
+}
+
 function renderStandup() {
   const standup = deriveStandup(state.room.messages);
+  const attendance = new Map(deriveAttendance(state.room.messages).seats.map((entry) => [entry.seat, entry]));
   const workers = standup.seats.filter((entry) => entry.seat !== "kelly");
   const mine = standup.seats.find((entry) => entry.seat === state.room.viewer);
   const inCount = workers.filter((entry) => entry.body).length;
@@ -1028,10 +1083,12 @@ function renderStandup() {
   const seatNode = (entry) => {
     const spoke = Boolean(entry.body);
     const name = entry.persona ? `${agentLabel(entry.seat)} · ${entry.persona}` : agentLabel(entry.seat);
+    const record = attendance.get(entry.seat);
     return el("li", { class: "standup-seat", "data-agent": entry.seat, "data-in": spoke ? "true" : "false" }, [
       el("div", { class: "standup-who" }, [
         avatarNode(entry.seat, "sm"),
         el("span", { class: "standup-name", text: viewerIs(entry.seat) ? "You" : name }),
+        record ? attendanceRow(record) : null,
         spoke ? el("time", { class: "standup-time", datetime: entry.at, text: formatClock(entry.at) }) : null,
       ]),
       spoke
@@ -2431,6 +2488,10 @@ byId("viewContent").addEventListener("click", (event) => {
   }
   if (event.target.closest("[data-standup]")) {
     startStandup();
+    return;
+  }
+  if (event.target.closest("[data-wrap]")) {
+    startWrap();
     return;
   }
   const loungeReply = event.target.closest("[data-lounge-reply]");

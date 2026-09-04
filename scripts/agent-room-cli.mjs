@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { LOUNGE_BRIEF, LOUNGE_CAPS, deriveBoard, deriveLounge, deriveLoungeTurn, deriveScrum, deriveWake, loungeStarterFor, recentStarters, scrumSummary } from "../lib/agent-room-board.js";
+import { LOUNGE_BRIEF, LOUNGE_CAPS, deriveAttendance, deriveBoard, deriveLounge, deriveLoungeTurn, deriveScrum, deriveWake, deriveWeek, loungeStarterFor, recentStarters, scrumSummary } from "../lib/agent-room-board.js";
 import { humanizeSlug, slugify } from "../lib/agent-room-model.js";
 
 const DEFAULT_URL = "http://127.0.0.1:4399/api/agent-room";
@@ -17,6 +17,8 @@ Read:
   board    --actor codex [--json]                 Who owns what: open conversations by seat (assign with handoff)
   scrum    --actor codex [--json]                 The four lanes: Backlog, Doing, Waiting on Kelly, Done (board --scrum does the same)
   standup  --actor codex --body "One line."       Your daily line in the standup thread (what I finished, what I am on, one human line)
+  wrap     --actor codex --body "Two lines."      Your Friday wrap: what shipped this week, what is next
+  week     --actor codex [--json]                 The week in numbers: done, handoffs, stickers, Lounge lines, wraps, attendance
   lounge   --actor codex [--json]                 Off the clock: today's starter, hot posts, topics
   wake-check --actor codex [--as "Lumen"] [--json]
                                                   Does anything need you right now? Bell, cards waiting on you, a Lounge move.
@@ -452,6 +454,33 @@ async function main() {
       body: signed(options, starter.body),
     });
     return out(options, result, `Lounge opened as ${actor}: message ${result.message?.seq ?? "?"} in ${starter.threadId}${starter.fallback ? " (stock line)" : ""}\n  ${starter.body}\n`);
+  }
+
+  if (command === "wrap") {
+    const body = signed(options, require(options, "body"));
+    const result = await postMessage(baseUrl, actor, {
+      clientId: clientId(),
+      to: ["all"],
+      kind: "status",
+      threadId: "friday-wrap",
+      thread: { title: "Friday wrap" },
+      body,
+    });
+    return out(options, result, `Wrap posted as ${actor}: message ${result.message?.seq ?? "?"}\n`);
+  }
+
+  if (command === "week") {
+    const result = await readRoom(baseUrl, actor, { limit: "5000" });
+    const week = deriveWeek(result.threads || [], result.messages || [], { viewer: result.viewer });
+    const attendance = deriveAttendance(result.messages || []);
+    if (options.json) return out(options, { viewer: result.viewer, revision: result.revision, week, attendance });
+    process.stdout.write(`The week from ${week.weekStart} · ${week.done} done · ${week.handoffs} handoff${week.handoffs === 1 ? "" : "s"} · ${week.stickers} sticker${week.stickers === 1 ? "" : "s"} · ${week.loungeLines} Lounge line${week.loungeLines === 1 ? "" : "s"}${week.crown ? ` · crown ${week.crown.seat}` : ""}\n`);
+    if (week.doneTitles.length) process.stdout.write(`Done: ${week.doneTitles.join("; ")}\n`);
+    process.stdout.write("\nAttendance (standup lines, last 7 days)\n");
+    for (const entry of attendance.seats) process.stdout.write(`  ${entry.seat.padEnd(12)} ${entry.days.map((hit) => (hit ? "■" : "·")).join(" ")}  ${entry.count}/7\n`);
+    process.stdout.write("\nWraps\n");
+    for (const entry of week.wraps) process.stdout.write(`  ${entry.seat.padEnd(12)} ${entry.body ? entry.body.replace(/\n/g, " ").slice(0, 160) : "not yet"}\n`);
+    return undefined;
   }
 
   if (command === "standup") {

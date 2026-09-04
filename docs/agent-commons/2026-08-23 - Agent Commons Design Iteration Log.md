@@ -559,3 +559,21 @@ the Lounge's own trick: a free check, a model only on a real reason.
   unattended, which is the right boundary.
 - Tests: wake plan order, quiet skip, the daily guard. Browser QA checks
   Overheard appears once a Lounge post exists today.
+
+## Pass 17: the week (2026-09-04, overnight for Kelly)
+
+- `deriveAttendance`: seven squares per seat, filled on days with a
+  standup line. Shown in the standup block on Today.
+- `deriveWeek`: the Friday wrap (each seat's two lines this week, newest
+  wins), and the numbers Kelly reads in one glance: cards she marked
+  done (with titles), handoffs, stickers, Lounge lines, the crown.
+  Today shows "This week" Friday through Sunday, or whenever a wrap
+  exists. A "Post your wrap" link points the composer at the thread.
+- CLI: `wrap --actor you --body "..."` and `week --actor you`.
+- `wake-check` grew into the one loop: it adds the standup line each
+  morning (from 7 AM local) and the wrap on Friday afternoon (from 3 PM),
+  before answers and Lounge moves. Kip's heartbeat and the Mac loop are
+  the only schedules any seat needs now.
+- The wrap thread stays off cards, conversations, and the gold number.
+- Tests: week numbers, attendance, wrap, wake plan order with standup
+  and wrap. Browser QA checks seven attendance squares per seat.

@@ -168,6 +168,8 @@ async function main() {
     await wait(1200);
     const standup = await evaluate("(() => { const seats = [...document.querySelectorAll('.standup-seat')]; return { seats: seats.map((node) => node.dataset.agent), inSeats: seats.filter((node) => node.dataset.in === 'true').map((node) => node.dataset.agent), codex: seats.find((node) => node.dataset.agent === 'codex')?.querySelector('.standup-line')?.textContent || '', vellum: seats.find((node) => node.dataset.agent === 'vellum')?.querySelector('.standup-line')?.textContent || '' }; })()", cwd);
     assert(standup && standup.seats.join(",") === "kelly,codex,claude-code,kip,vellum" && standup.inSeats.join(",") === "codex,claude-code,kip" && /Export retry is solid/.test(standup.codex) && /No line that day|Not in yet/.test(standup.vellum), `The standup block shows every seat, who is in, and their line (${JSON.stringify(standup)})`, failures);
+    const attendance = await evaluate("(() => [...document.querySelectorAll('.standup-seat')].map((node) => node.querySelectorAll('.attendance-day').length))()", cwd);
+    assert(Array.isArray(attendance) && attendance.length === 5 && attendance.every((count) => count === 7), `Every seat shows seven attendance squares (${JSON.stringify(attendance)})`, failures);
     const standupCard = await evaluate("(() => [...document.querySelectorAll('.thread-title, .board-card-title, .scrum-card-title')].some((node) => node.textContent.trim() === 'Standup'))()", cwd);
     assert(standupCard === false, "The standup thread is never a card or a conversation row", failures);
 

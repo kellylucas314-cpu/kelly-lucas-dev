@@ -1500,6 +1500,18 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 .standup-fold-title { font: 800 19px/1.15 var(--display); letter-spacing: -.015em; }
 .standup-fold-meta { color: var(--muted); font-size: 13.5px; }
 
+/* ---------- attendance squares and the week ---------- */
+.attendance { display: inline-flex; gap: 2px; margin-left: 6px; }
+.attendance-day { width: 7px; height: 7px; border-radius: 2px; border: 1px solid var(--line-soft); background: transparent; }
+.attendance-day[data-hit="true"] { background: var(--done); border-color: var(--done); }
+.week { display: grid; gap: 10px; }
+.week-numbers { margin: 0; color: var(--ink-soft); font-size: 13.5px; }
+.wrap-list { list-style: none; margin: 0; padding: 0; display: grid; border: 1px solid var(--line-soft); border-radius: var(--radius-card); background: var(--card); overflow: hidden; }
+.wrap-seat { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; border-bottom: 1px solid var(--line-faint); font-size: 13.5px; }
+.wrap-seat:last-child { border-bottom: 0; }
+.wrap-seat[data-in="false"] { background: var(--card-deep); color: var(--muted); }
+.wrap-line { margin: 2px 0 0; line-height: 1.45; overflow-wrap: anywhere; }
+
 /* ---------- overheard: one Lounge line on Today ---------- */
 .overheard { display: grid; gap: 8px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius-card); background: linear-gradient(0deg, var(--violet-100), var(--sky-100)); }
 .overheard-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
