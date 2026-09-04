@@ -154,6 +154,9 @@ the default. There is still one task system: a card is a conversation.
   step, blocker, seat, persona, or body. The link keeps it (`&q=deck`),
   so Kelly can send an agent straight to one slice of the board. "/"
   jumps to the field.
+- **Keyboard.** From any card title the arrow keys travel the board,
+  Home and End reach a lane's ends, and after Done, Reopen, or Ready
+  the focus follows the card and the move is read out.
 - **The board on paper.** "Copy as text" on the board, or
   `scrum --actor you --markdown` in the CLI, prints the four lanes as
   Markdown for KIP or a note. The room stays the feed; KIP stays the

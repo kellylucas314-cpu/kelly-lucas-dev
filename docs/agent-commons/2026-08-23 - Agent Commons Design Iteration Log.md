@@ -615,4 +615,19 @@ the Lounge's own trick: a free check, a model only on a real reason.
   caret stay put. `filterScrum`, `cardMatches`, and `messageMatches`
   live in the library and are tested. "/" jumps to the field from
   anywhere on the board or the feed.
+
+
+## Pass 20: the keyboard on the board (2026-09-04, overnight)
+
+- Arrow keys travel the cards from any card title: down and up inside
+  a lane, left and right across lanes (same row, or the last card of a
+  shorter lane; empty lanes skipped), Home and End to the ends. No new
+  markup: the card titles were already the focusable thing.
+- After Done, Reopen, or Ready for Kelly the board re-renders and the
+  pressed button is gone; focus now lands on the same card where it
+  landed, and the polite live region says "Deck is now in Done", so a
+  keyboard or screen-reader user is never dropped on the floor.
+- Browser QA walks the six keys and checks the follow after Done. The
+  rubric's keyboard line moves from 7 toward 9; a visible hint is the
+  remaining piece and waits for Kelly's taste.
 \n

@@ -2346,6 +2346,20 @@ async function threadAction(status, trigger) {
   if (await postThreadStatus(state.threadId, status, trigger)) byId("viewHeading").focus();
 }
 
+/* After a card changes lane the board re-renders, so the button that was
+ * pressed is gone. Put focus back on the same card where it landed and say
+ * where it went, so keyboard and screen-reader users are not dropped. */
+function followCard(threadId) {
+  if (state.view !== "board" || state.boardLanes !== "scrum") return;
+  const card = document.querySelector(`.scrum-card[data-thread="${CSS.escape(threadId)}"]`);
+  const lane = card?.closest(".scrum-lane");
+  const title = card?.querySelector(".scrum-card-title");
+  if (!card || !lane || !title) return;
+  const laneLabel = lane.getAttribute("aria-label") || lane.dataset.lane;
+  announce(`${title.textContent} is now in ${laneLabel}.`);
+  title.focus({ preventScroll: false });
+}
+
 /* Scrum lane moves. Done is Kelly's word: the lanes only count her wrap-up
  * as Done, so an agent's wrap-up parks the card in Waiting on Kelly as
  * "ready for you" until she confirms. */
@@ -2354,7 +2368,7 @@ async function scrumDone(threadId, trigger) {
   if (!thread || !viewerIs("kelly")) return;
   trigger.disabled = true;
   try {
-    await postThreadStatus(threadId, "resolved", trigger, { body: `Done. "${thread.title}" is finished.`, successText: "Marked done. Nice." });
+    if (await postThreadStatus(threadId, "resolved", trigger, { body: `Done. "${thread.title}" is finished.`, successText: "Marked done. Nice." })) followCard(threadId);
   } finally {
     trigger.disabled = false;
   }
@@ -2365,7 +2379,7 @@ async function scrumReopen(threadId, trigger) {
   if (!thread) return;
   trigger.disabled = true;
   try {
-    await postThreadStatus(threadId, "reopened", trigger, { body: `Reopening "${thread.title}". Back on the board.`, successText: "Reopened. It is back on the board." });
+    if (await postThreadStatus(threadId, "reopened", trigger, { body: `Reopening "${thread.title}". Back on the board.`, successText: "Reopened. It is back on the board." })) followCard(threadId);
   } finally {
     trigger.disabled = false;
   }
@@ -2386,6 +2400,7 @@ async function scrumReady(threadId, trigger) {
   try {
     await postMessage(payload, { successText: "Told Kelly it is ready." });
     render({ force: true });
+    followCard(threadId);
   } catch {
     // toast already shown
   } finally {
@@ -2721,11 +2736,42 @@ byId("refreshButton").addEventListener("click", () => loadRoom());
 byId("viewContent").addEventListener("input", (event) => {
   if (event.target instanceof HTMLInputElement && event.target.matches("[data-find]")) setQuery(event.target.value);
 });
+/* Arrow keys travel the cards: up and down inside a lane, left and right
+ * across lanes (same row, or the last card of a shorter lane), Home and
+ * End to the ends of a lane. Empty lanes are skipped. */
+function travelCards(event) {
+  const from = event.target;
+  if (!(from instanceof HTMLElement) || !from.matches(".scrum-card-title")) return false;
+  const lanes = [...document.querySelectorAll(".scrum-lane")];
+  const lane = from.closest(".scrum-lane");
+  const index = lanes.indexOf(lane);
+  const titles = (node) => [...node.querySelectorAll(".scrum-card-title")];
+  const row = titles(lane).indexOf(from);
+  let target = null;
+  if (event.key === "ArrowDown") target = titles(lane)[row + 1] || null;
+  else if (event.key === "ArrowUp") target = titles(lane)[row - 1] || null;
+  else if (event.key === "Home") target = titles(lane)[0] || null;
+  else if (event.key === "End") target = titles(lane).at(-1) || null;
+  else if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+    const step = event.key === "ArrowRight" ? 1 : -1;
+    for (let next = index + step; next >= 0 && next < lanes.length; next += step) {
+      const list = titles(lanes[next]);
+      if (list.length) { target = list[Math.min(row, list.length - 1)]; break; }
+    }
+  } else return false;
+  if (!target) return true;
+  event.preventDefault();
+  target.focus();
+  return true;
+}
+
 byId("viewContent").addEventListener("keydown", (event) => {
   if (event.key === "Escape" && event.target instanceof HTMLInputElement && event.target.matches("[data-find]")) {
     event.target.value = "";
     setQuery("");
+    return;
   }
+  if (!event.metaKey && !event.ctrlKey && !event.altKey && travelCards(event)) event.preventDefault();
 });
 byId("retryButton").addEventListener("click", () => loadRoom());
 

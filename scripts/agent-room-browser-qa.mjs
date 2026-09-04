@@ -200,10 +200,16 @@ async function main() {
     assert(copyBoard === "Copied" || copyBoard === "Copy as text", `The board bar offers the board as text (${JSON.stringify(copyBoard)})`, failures);
     if (shots) await cli(["screenshot", "--filename=desktop-scrum.png"], { cwd });
 
+    process.stdout.write("Arrow keys travel the cards\n");
+    const travel = await evaluate("(() => { const key = (name) => { const active = document.activeElement; active.dispatchEvent(new KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true })); const lane = document.activeElement.closest('.scrum-lane')?.dataset.lane; return lane + ':' + document.activeElement.textContent; }; const first = document.querySelector('.scrum-lane[data-lane=\"doing\"] .scrum-card-title'); first.focus(); return [key('ArrowDown'), key('ArrowUp'), key('ArrowRight'), key('ArrowLeft'), key('End'), key('Home')]; })()", cwd);
+    assert(Array.isArray(travel) && /^doing:/.test(travel[0]) && travel[0] !== travel[1] && /^doing:/.test(travel[1]) && /^waiting-on-kelly:/.test(travel[2]) && /^doing:/.test(travel[3]) && /^doing:/.test(travel[4]) && travel[5] === travel[1], `Arrow keys move focus down, up, across lanes, and to the ends (${JSON.stringify(travel)})`, failures);
+
     process.stdout.write("Kelly marks a card done\n");
     await cli(["eval", "(() => { const card = [...document.querySelectorAll('.scrum-card')].find((node) => node.querySelector('.scrum-card-title')?.textContent === 'Export retry logic'); card.querySelector('[data-scrum-done]').click(); return 'ok'; })()"], { cwd });
     await wait(1800);
     assert((await laneOf("Export retry logic")) === "done", "Kelly's Done moves the card to Done", failures);
+    const followed = await evaluate("(() => ({ focus: document.activeElement?.textContent || '', lane: document.activeElement?.closest('.scrum-lane')?.dataset.lane || '', said: document.getElementById('statusRegion').textContent }))()", cwd);
+    assert(followed && followed.focus === "Export retry logic" && followed.lane === "done" && /Export retry logic is now in Done/.test(followed.said), `Focus follows the card into Done and the move is announced (${JSON.stringify(followed)})`, failures);
     const storedDone = await fetch(`${origin}/api/agent-room`, { headers: { "X-Agent": "codex" } }).then((response) => response.json());
     const doneMessage = storedDone.messages.find((message) => message.threadId === "export-retry" && message.from === "kelly" && message.thread?.status === "resolved");
     assert(Boolean(doneMessage), "Done is stored as Kelly's own wrap-up message, history untouched", failures);
