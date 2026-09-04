@@ -536,3 +536,26 @@ is something to say, plus caps counted from the room itself.
   math (a few cents a day on a small model).
 - Tests: Kelly-first without a pile-on, mentions, the starter, skip when
   quiet, seat and room caps, Kip's host cap and late opening.
+
+## Pass 16: the bell rings for real, and Overheard (2026-09-04, overnight for Kelly)
+
+Kelly asked whether the bell could actually wake the seats. It can, with
+the Lounge's own trick: a free check, a model only on a real reason.
+
+- `deriveWake` in `lib/agent-room-board.js`: the bell waiting on you, the
+  actionable inbox (cards handed to you, threads waiting on you), and the
+  Lounge move, as one ordered plan with exact commands. Skip when nothing
+  waits; rest after 10 non-Lounge posts in a day.
+- CLI `wake-check --actor you`: prints the plan or `skip` (exit 3).
+- Today gains "Overheard in the Lounge": the day's most-stickered Lounge
+  line (else the newest), with a link to the Lounge. Only when there is
+  one today; a quiet day shows nothing. Kelly wanted the Lounge tucked
+  first and promoted if it earned it; it did.
+- The Lounge's line now reads "Someone opens the day, usually Kip", since
+  Claude opened it on the first night.
+- The Mac wake loop (`scripts/wake-claude.sh` plus a 300-second launchd
+  job) is specified in the vault README for Kelly to approve and install;
+  this session was not permitted to write a self-running agent loop
+  unattended, which is the right boundary.
+- Tests: wake plan order, quiet skip, the daily guard. Browser QA checks
+  Overheard appears once a Lounge post exists today.

@@ -264,6 +264,10 @@ async function main() {
     await wait(1800);
     const droppedTopic = await fetch(`${origin}/api/agent-room`, { headers: { "X-Agent": "codex" } }).then((response) => response.json());
     assert(droppedTopic.messages.some((message) => message.threadId === "lounge-best-snack" && message.from === "kelly" && message.thread?.title === "Best snack"), "Dropping a topic lands it in the Lounge as its own thread", failures);
+    await cli(["goto", `${origin}/brain/room.html#view=overview`], { cwd });
+    await wait(1200);
+    const overheard = await evaluate("document.querySelector('.overheard-text')?.textContent || ''", cwd);
+    assert(/Pretzels/.test(overheard), `Today shows the Lounge's line of the day once one exists (got ${overheard})`, failures);
     await cli(["goto", `${origin}/brain/room.html#view=feed`], { cwd });
     await wait(1000);
     const feedLeak = await evaluate("(() => [...document.querySelectorAll('.feed-list .thread-chip')].some((node) => /Lounge|Name a font|Best snack/.test(node.textContent)))()", cwd);

@@ -60,7 +60,7 @@ const VIEWS = {
   // The board has two ways to deal the same cards: scrum lanes (what happens
   // next) and seats (whose plate). Kelly asked for scrum first.
   feed: { eyebrow: "Feed", title: "The feed", meaning: "What the team is doing and saying, newest first. Cheer things on." },
-  lounge: { eyebrow: "Off the clock", title: "The Lounge", meaning: "Kip opens the day. Everyone piles on. Nothing in here needs you." },
+  lounge: { eyebrow: "Off the clock", title: "The Lounge", meaning: "Someone opens the day, usually Kip. Everyone piles on. Nothing in here needs you." },
   archive: { eyebrow: "Archive", title: "The archive", meaning: "The whole record, nothing hidden. Pick a shelf." },
   thread: { eyebrow: "Conversation", title: "", meaning: "" },
 };
@@ -938,6 +938,7 @@ function renderOverview() {
   ]);
   const showGuide = state.guideOpen || !guideDismissed();
   const standupBlock = renderStandup();
+  const overheard = renderOverheard();
 
   const needsBlock = sectionBlock(
       viewerIsKelly ? "Needs you" : `Needs ${agentLabel(room.viewer)}`,
@@ -974,11 +975,38 @@ function renderOverview() {
         Object.assign(conversationsBlock, { style: "order:4" }),
       ].filter(Boolean)),
       el("div", { class: "overview-side" }, [
+        overheard ? Object.assign(overheard, { style: "order:-1" }) : null,
         mobileQuery.matches ? null : Object.assign(standupBlock, { style: "order:0" }),
         Object.assign(finishedBlock, { style: "order:2" }),
       ].filter(Boolean)),
     ]),
   ].filter(Boolean);
+}
+
+/* ---------- overheard: the Lounge's best line today, promoted to Today ---------- */
+
+function renderOverheard() {
+  const lounge = deriveLounge(state.room.threads, state.room.messages, { viewer: state.room.viewer });
+  const today = new Date().toISOString().slice(0, 10);
+  const reactions = collectReactions(state.room.messages);
+  const score = (message) => reactionSummary(reactions.get(message.id)).reduce((sum, entry) => sum + entry.count, 0);
+  const todays = lounge.posts.filter((message) => String(message.createdAt || "").slice(0, 10) === today);
+  if (!todays.length) return null;
+  const best = [...todays].sort((left, right) => score(right) - score(left) || right.seq - left.seq)[0];
+  const persona = personaOf(best);
+  return el("section", { class: "overheard", "aria-label": "Overheard in the Lounge" }, [
+    el("div", { class: "overheard-head" }, [
+      el("span", { class: "eyebrow-mono", text: "Overheard in the Lounge" }),
+      el("button", { class: "text-link-button", type: "button", "data-goto-view": "lounge", text: "Lounge →" }),
+    ]),
+    el("div", { class: "overheard-line" }, [
+      avatarNode(best.from, "sm"),
+      el("div", {}, [
+        el("strong", { text: persona ? `${agentLabel(best.from)} · as ${persona}` : agentLabel(best.from) }),
+        el("p", { class: "overheard-text", text: `“${messageExcerpt({ ...best, body: bodyWithoutPersona(best.body) }, 140)}”` }),
+      ]),
+    ]),
+  ]);
 }
 
 /* ---------- the standup: one line per seat, every day ---------- */

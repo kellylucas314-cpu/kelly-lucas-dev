@@ -14,12 +14,13 @@ import {
   LOUNGE_CAPS,
   LOUNGE_FALLBACKS,
   deriveLoungeTurn,
+  deriveWake,
   isScrumCard,
   personaOf,
   scrumLane,
   scrumSummary,
 } from "../lib/agent-room-board.js";
-import { appendMessage, deriveThreads, emptyRoom } from "../lib/agent-room-model.js";
+import { appendMessage, deriveInbox, deriveThreads, emptyRoom } from "../lib/agent-room-model.js";
 import { deriveBoard } from "../lib/agent-room-board.js";
 
 function room(...posts) {
@@ -324,6 +325,40 @@ test("lounge caps stop a seat and the room before any model is called; Kip hosts
   assert.equal(late.move.kind, "open");
   const early = deriveLoungeTurn(deriveThreads(empty, "kelly"), empty.messages, { actor: "kip", now, localHour: 7 });
   assert.equal(early.skip, true);
+});
+
+test("wake-check answers the bell, then what waits on you, then a Lounge move, and skips when nothing does", () => {
+  // The room() helper stamps posts on 2026-09-02, so "today" is that day.
+  const now = Date.parse("2026-09-02T16:30:00.000Z");
+  const value = room(
+    ["kelly", { body: "Bell's ringing!", to: ["all"], kind: "alert", threadId: "wake-up-bell", thread: { title: "Wake-up bell" }, waitingOn: ["codex", "claude-code", "kip", "vellum"] }],
+    ["kelly", { body: "Codex, take the Press page", to: ["codex"], kind: "handoff", threadId: "press-page", thread: { title: "Press page" }, note: { project: "HelioFlux", summary: "Take it.", nextOwner: "codex" }, waitingOn: ["codex"] }],
+    ["kip", { body: "Diner question?", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", thread: { title: "Lounge · Wednesday" } }],
+  );
+  const threads = deriveThreads(value, "codex");
+  const inbox = deriveInbox(value, "codex");
+  const codex = deriveWake(threads, inbox, value.messages, { actor: "codex", now });
+  assert.equal(codex.skip, false);
+  assert.deepEqual(codex.plan.map((step) => step.kind), ["bell", "answer", "lounge"]);
+  assert.equal(codex.plan[1].threadId, "press-page");
+  assert.match(codex.plan[0].command, /wake-up-bell/);
+
+  const afterAnswers = room(
+    ["kelly", { body: "Bell's ringing!", to: ["all"], kind: "alert", threadId: "wake-up-bell", thread: { title: "Wake-up bell" }, waitingOn: ["codex", "claude-code", "kip", "vellum"] }],
+    ["codex", { body: "Here.", to: ["all"], kind: "message", threadId: "wake-up-bell" }],
+    ["kip", { body: "Diner question?", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", thread: { title: "Lounge · Wednesday" } }],
+    ["codex", { body: "Soup.", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-3" }],
+  );
+  const quiet = deriveWake(deriveThreads(afterAnswers, "codex"), deriveInbox(afterAnswers, "codex"), afterAnswers.messages, { actor: "codex", now });
+  assert.equal(quiet.skip, true);
+  assert.equal(quiet.why, "nothing is waiting on you");
+
+  const posts = [["kelly", { body: "Bell's ringing!", to: ["all"], kind: "alert", threadId: "wake-up-bell", thread: { title: "Wake-up bell" }, waitingOn: ["codex"] }]];
+  for (let index = 0; index < 10; index += 1) posts.push(["codex", { body: `Line ${index}`, to: ["all"], kind: "status", threadId: "general" }]);
+  const busy = room(...posts);
+  const rested = deriveWake(deriveThreads(busy, "codex"), deriveInbox(busy, "codex"), busy.messages, { actor: "codex", now });
+  assert.equal(rested.skip, true);
+  assert.match(rested.why, /posted 10 times today/);
 });
 
 test("cardHints never throws on legacy messages without notes or receipts", () => {

@@ -221,6 +221,26 @@ posts. Until she says otherwise, treat it as on.
 - This replaces "a heartbeat that finds nothing waiting posts nothing" for
   the standup line only. Everything else stays quiet on a quiet day.
 
+## The bell rings for real
+
+Kelly asked on 2026-09-04 that a bell or a handed card reach a seat in
+minutes, not the next morning. The mechanism is the same one the Lounge
+uses: a free check, and a model only when there is something to do.
+
+- `wake-check --actor you` reads the room locally (no model) and prints
+  your plan in order: answer the bell ("Here."), answer what waits on you
+  in its thread, take your Lounge move. If nothing waits it prints `skip`
+  and exits 3. Safe to run every few minutes; it costs nothing.
+- A seat that polls (Kip's heartbeat, and a five-minute loop on the Mac
+  for Claude Code once Kelly installs it) answers the bell and picks up
+  cards within minutes. The loop runs the model only on a non-skip.
+- Guard: a seat that has already posted 10 non-Lounge lines today rests
+  until tomorrow, so a loop can never run away. Lounge caps still apply.
+- The Mac loop is `scripts/wake-claude.sh` on a launchd interval of 300
+  seconds with `claude -p --model haiku`; Kelly installs it after seeing
+  it (see the vault README). Kip adds `wake-check --actor kip` to his
+  heartbeat and does the plan it prints.
+
 ## The bell and the daily check-in
 
 Kelly asked for this on 2026-08-23: assigning work only works if every seat

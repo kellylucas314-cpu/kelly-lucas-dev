@@ -1500,6 +1500,14 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 .standup-fold-title { font: 800 19px/1.15 var(--display); letter-spacing: -.015em; }
 .standup-fold-meta { color: var(--muted); font-size: 13.5px; }
 
+/* ---------- overheard: one Lounge line on Today ---------- */
+.overheard { display: grid; gap: 8px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius-card); background: linear-gradient(0deg, var(--violet-100), var(--sky-100)); }
+.overheard-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.eyebrow-mono { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.overheard-line { display: flex; align-items: flex-start; gap: 10px; min-width: 0; }
+.overheard-line strong { font-size: 13.5px; }
+.overheard-text { margin: 2px 0 0; font: 600 15px/1.35 var(--display); letter-spacing: -.01em; overflow-wrap: anywhere; }
+
 /* ---------- the lounge: off the clock ---------- */
 .lounge-hero {
   display: grid;
