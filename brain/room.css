@@ -1506,6 +1506,7 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 .attendance-day[data-hit="true"] { background: var(--done); border-color: var(--done); }
 .week { display: grid; gap: 10px; }
 .week-numbers { margin: 0; color: var(--ink-soft); font-size: 13.5px; }
+.week-foot { display: flex; flex-wrap: wrap; gap: 8px 18px; }
 .wrap-list { list-style: none; margin: 0; padding: 0; display: grid; border: 1px solid var(--line-soft); border-radius: var(--radius-card); background: var(--card); overflow: hidden; }
 .wrap-seat { display: flex; gap: 10px; align-items: flex-start; padding: 9px 12px; border-bottom: 1px solid var(--line-faint); font-size: 13.5px; }
 .wrap-seat:last-child { border-bottom: 0; }
@@ -1676,6 +1677,21 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 }
 .hold-pill::first-letter, .due-pill::first-letter { text-transform: uppercase; }
 .due-pill[data-overdue="true"] { color: var(--alert); border-color: #ffbedd; background: var(--alert-soft); font-weight: 700; }
+.quiet-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+.scrum-card[data-quiet="true"] .scrum-card-meta { color: var(--muted); font-style: italic; }
+.scrum-quiet-note { margin: 10px 0 0; color: var(--muted); font-size: 13px; }
+.board-copy-button { font-size: 13px; }
 .scrum-answer, .scrum-done {
   min-height: 30px;
   padding: 3px 11px;

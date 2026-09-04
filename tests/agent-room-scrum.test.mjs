@@ -18,6 +18,11 @@ import {
   deriveWeek,
   deriveAttendance,
   weekStart,
+  weekMarkdown,
+  scrumMarkdown,
+  cardBits,
+  quietDays,
+  QUIET_AFTER_DAYS,
   isScrumCard,
   personaOf,
   scrumLane,
@@ -412,4 +417,54 @@ test("wake-check adds the standup line each morning and the wrap on Friday after
 test("cardHints never throws on legacy messages without notes or receipts", () => {
   assert.deepEqual(cardHints([{ body: "hello", kind: "message" }, { body: "", kind: "status" }]), { next: "", blocker: "", due: "", dueAt: null, hold: null, owner: "" });
   assert.deepEqual(cardHints(undefined).hold, null);
+});
+
+test("a Doing or Waiting card with no post for five days is quiet; held cards and fresh cards are not", () => {
+  const value = room(
+    ["kelly", { body: "Kip, take the deck", to: ["kip"], kind: "handoff", threadId: "deck", thread: { title: "Deck" }, note: { project: "HQ", summary: "Take it.", nextOwner: "kip" }, waitingOn: ["kip"] }],
+    ["kip", { body: "Heads up.", to: ["kelly"], kind: "alert", threadId: "gateway", thread: { title: "Gateway" }, waitingOn: ["kelly"] }],
+    ["vellum", { body: "Note: HQ\nLater.\nParked: after the launch", to: ["all"], kind: "note", threadId: "later", thread: { title: "Later" }, note: { project: "HQ", summary: "Later." } }],
+  );
+  const threads = deriveThreads(value, "kelly");
+  const sameDay = deriveScrum(threads, value.messages, { viewer: "kelly", now: Date.parse("2026-09-02T18:00:00.000Z") });
+  assert.equal(sameDay.quiet, 0);
+  assert.equal(sameDay.lanes.flatMap((lane) => lane.threads).every((card) => card.quiet === false), true);
+  const later = Date.parse("2026-09-09T12:00:00.000Z");
+  const scrum = deriveScrum(threads, value.messages, { viewer: "kelly", now: later });
+  const card = (id) => scrum.lanes.flatMap((lane) => lane.threads).find((entry) => entry.id === id);
+  assert.equal(quietDays({ lastAt: "2026-09-02T15:01:00.000Z" }, later), 6);
+  assert.equal(QUIET_AFTER_DAYS, 5);
+  assert.equal(card("deck").quiet, true);
+  assert.equal(card("deck").quietDays, 6);
+  assert.equal(card("gateway").quiet, true);
+  assert.equal(card("later").quiet, false, "a parked backlog card is quiet on purpose");
+  assert.equal(scrum.quiet, 2);
+  assert.match(scrumSummary(scrum), /2 quiet$/);
+  assert.ok(cardBits(card("deck")).includes("quiet 6d"));
+  assert.equal(cardBits(card("later")).includes("quiet 6d"), false);
+  assert.equal(quietDays({ lastAt: "" }), 0);
+});
+
+test("the board and the week print as Markdown for KIP", () => {
+  const now = Date.parse("2026-09-04T20:00:00.000Z");
+  const value = room(
+    ["kelly", { body: "Kip, take the deck", to: ["kip"], kind: "handoff", threadId: "deck", thread: { title: "Deck" }, note: { project: "HQ", summary: "Take it.", nextOwner: "kip" }, waitingOn: ["kip"] }],
+    ["kip", { body: "Draft is up.\nNext: Kelly reads it", to: ["kelly"], kind: "status", threadId: "deck", waitingOn: ["kelly"] }],
+    ["kelly", { body: "Done.", to: ["all"], kind: "status", threadId: "old", thread: { title: "Old thing", status: "resolved" } }],
+    ["codex", { body: "Standup line.", to: ["all"], kind: "status", threadId: "standup" }],
+    ["codex", { body: "As: Codex\nShipped the export.\nNext: the Press page.", to: ["all"], kind: "status", threadId: "friday-wrap", thread: { title: "Friday wrap" } }],
+  );
+  const threads = deriveThreads(value, "kelly");
+  const board = scrumMarkdown(deriveScrum(threads, value.messages, { viewer: "kelly", now }));
+  assert.match(board, /^# Agent Commons scrum · 2026-09-04\n/);
+  assert.match(board, /## Waiting on Kelly \(1\)\n\n- \*\*Deck\*\* · HQ · waiting on kelly · 1 unread/);
+  assert.match(board, /## Done \(1\)\n\n- Old thing · done 2026-09-02/);
+  assert.match(board, /## Backlog \(0\)\n\n- nothing/);
+  const week = weekMarkdown(deriveWeek(threads, value.messages, { now, viewer: "kelly" }), deriveAttendance(value.messages, { now }));
+  assert.match(week, /^# Agent Commons week from 2026-08-31\n/);
+  assert.match(week, /- Done: 1 card \(Old thing\)\n- Handoffs: 1\n/);
+  assert.match(week, /- Crown: nobody yet/);
+  assert.match(week, /- \*\*codex · Codex\*\*: Shipped the export\. Next: the Press page\./);
+  assert.match(week, /- \*\*kip\*\*: no wrap yet/);
+  assert.match(week, /## Attendance \(standup lines, last 7 days\)\n\n- kelly: · · · · · · · \(0\/7\)\n- codex: · · · · ■ · · \(1\/7\)/);
 });

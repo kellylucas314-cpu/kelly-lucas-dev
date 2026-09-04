@@ -191,6 +191,13 @@ async function main() {
     assert(datedCard && datedCard.due === "by Sep 15" && /research only/.test(datedCard.blocker) && /Draft the application/.test(datedCard.next), `A card shows next step, blocker, and due date from plain lines (${JSON.stringify(datedCard)})`, failures);
     const meaning = await evaluate("document.getElementById('viewMeaning').textContent", cwd);
     assert(/Only you mark Done/.test(meaning), `The board explains that only Kelly marks Done (got ${meaning})`, failures);
+    // The fixture is dated 2026-08-21, so against the real clock its live cards are quiet.
+    const quietCard = await evaluate("(() => { const card = [...document.querySelectorAll('.scrum-card')].find((node) => node.querySelector('.scrum-card-title')?.textContent === 'Founders week application'); return card ? { quiet: card.dataset.quiet, pill: card.querySelector('.quiet-pill')?.textContent || '', note: document.querySelector('.scrum-quiet-note')?.textContent || '' } : null; })()", cwd);
+    assert(quietCard && quietCard.quiet === "true" && /^quiet \d+d$/.test(quietCard.pill) && /quiet for five days/.test(quietCard.note), `A card with no post for five days wears a quiet pill and the board counts them (${JSON.stringify(quietCard)})`, failures);
+    const heldQuiet = await evaluate("(() => { const card = [...document.querySelectorAll('.scrum-card')].find((node) => node.querySelector('.scrum-card-title')?.textContent === 'Tape recap'); return card ? Boolean(card.querySelector('.quiet-pill')) : null; })()", cwd);
+    assert(heldQuiet === false, "A paused card is never flagged quiet", failures);
+    const copyBoard = await evaluate("(() => { const button = document.querySelector('[data-copy=\"scrum\"]'); if (!button) return null; window.prompt = () => null; button.click(); return button.textContent; })()", cwd);
+    assert(copyBoard === "Copied" || copyBoard === "Copy as text", `The board bar offers the board as text (${JSON.stringify(copyBoard)})`, failures);
     if (shots) await cli(["screenshot", "--filename=desktop-scrum.png"], { cwd });
 
     process.stdout.write("Kelly marks a card done\n");

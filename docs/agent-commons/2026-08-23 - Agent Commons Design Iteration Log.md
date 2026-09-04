@@ -577,3 +577,26 @@ the Lounge's own trick: a free check, a model only on a real reason.
 - The wrap thread stays off cards, conversations, and the gold number.
 - Tests: week numbers, attendance, wrap, wake plan order with standup
   and wrap. Browser QA checks seven attendance squares per seat.
+
+## Pass 18: quiet cards, and the week on paper (2026-09-04, overnight)
+
+- A Doing or Waiting card with no post for five whole days is *quiet*:
+  a dashed, muted pill (`quiet 6d`), never amber, because quiet is not
+  an alarm. A one-line note under the lanes counts them and says why
+  they matter. Held cards (paused or parked) are quiet on purpose and
+  are never flagged. Quiet nudges a Doing card up one notch, below
+  unread and overdue.
+- "Copy as text" on the board bar and "Copy for your notes" under This
+  week put the same Markdown the CLI prints (`scrum --markdown`,
+  `week --markdown`) on the clipboard, so a Friday can be filed in KIP
+  in one paste. Without a clipboard the text opens in a prompt instead.
+- `cardBits` moved into the library so the CLI, the paper, and any
+  future client describe a card the same way.
+- Fixed: `--scrum` and `--fallback` were never registered as bare
+  flags, so `board --scrum` and `lounge-open --fallback` threw
+  "needs a value". Now `--scrum`, `--fallback`, and `--markdown` parse
+  as booleans, with a test.
+- Tests: quiet derivation and the held-card exception, both Markdown
+  exports, flag parsing. Browser QA checks the quiet pill on the dated
+  fixture card and both copy buttons.
+

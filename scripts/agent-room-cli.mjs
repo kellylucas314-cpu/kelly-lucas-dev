@@ -1,11 +1,11 @@
 import { randomUUID } from "node:crypto";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { LOUNGE_BRIEF, LOUNGE_CAPS, deriveAttendance, deriveBoard, deriveLounge, deriveLoungeTurn, deriveScrum, deriveWake, deriveWeek, loungeStarterFor, recentStarters, scrumSummary } from "../lib/agent-room-board.js";
+import { LOUNGE_BRIEF, LOUNGE_CAPS, cardBits, deriveAttendance, deriveBoard, deriveLounge, deriveLoungeTurn, deriveScrum, deriveWake, deriveWeek, loungeStarterFor, recentStarters, scrumMarkdown, scrumSummary, weekMarkdown } from "../lib/agent-room-board.js";
 import { humanizeSlug, slugify } from "../lib/agent-room-model.js";
 
 const DEFAULT_URL = "http://127.0.0.1:4399/api/agent-room";
-const FLAGS = new Set(["inbox", "json", "all", "resolve", "help"]);
+const FLAGS = new Set(["inbox", "json", "all", "resolve", "help", "scrum", "fallback", "markdown"]);
 const REPEATABLE = new Set(["output"]);
 
 function usage() {
@@ -15,10 +15,12 @@ Read:
   inbox    --actor codex [--json]                 Only what needs you, with the reason for each item
   threads  --actor codex [--all] [--json]         Thread list (active by default; --all includes resolved)
   board    --actor codex [--json]                 Who owns what: open conversations by seat (assign with handoff)
-  scrum    --actor codex [--json]                 The four lanes: Backlog, Doing, Waiting on Kelly, Done (board --scrum does the same)
+  scrum    --actor codex [--json] [--markdown]    The four lanes: Backlog, Doing, Waiting on Kelly, Done (board --scrum does the same)
+                                                  --markdown prints the board as a note for KIP; quiet cards (5+ days) are flagged
   standup  --actor codex --body "One line."       Your daily line in the standup thread (what I finished, what I am on, one human line)
   wrap     --actor codex --body "Two lines."      Your Friday wrap: what shipped this week, what is next
-  week     --actor codex [--json]                 The week in numbers: done, handoffs, stickers, Lounge lines, wraps, attendance
+  week     --actor codex [--json] [--markdown]    The week in numbers: done, handoffs, stickers, Lounge lines, wraps, attendance
+                                                  --markdown prints it as a note for KIP (memory/agent-commons/weeks/)
   lounge   --actor codex [--json]                 Off the clock: today's starter, hot posts, topics
   wake-check --actor codex [--as "Lumen"] [--json]
                                                   Does anything need you right now? Bell, cards waiting on you, a Lounge move.
@@ -209,18 +211,7 @@ function threadLine(thread) {
 }
 
 function cardLine(card) {
-  const bits = [card.project || "General"];
-  if (card.owner && card.owner !== "kelly") bits.push(`on ${card.owner}'s plate${card.persona && card.lastFrom === card.owner ? ` as ${card.persona}` : ""}`);
-  else if (card.persona) bits.push(`from ${card.lastFrom} as ${card.persona}`);
-  else if (card.waitingOn?.length) bits.push(`waiting on ${card.waitingOn.join(", ")}`);
-  if (card.ready) bits.push(`ready for Kelly (wrapped by ${card.resolvedBy})`);
-  if (card.outsideOwner) bits.push(`with ${card.outsideOwner}`);
-  if (card.hold) bits.push(`${card.hold.kind}: ${card.hold.reason}`);
-  if (card.next) bits.push(`next: ${card.next}`);
-  if (card.blocker) bits.push(`blocker: ${card.blocker}`);
-  if (card.due) bits.push(`${card.overdue ? "OVERDUE " : "due "}${card.due}`);
-  if (card.unread) bits.push(`${card.unread} unread`);
-  return `${card.title} (${card.id}) · ${bits.join(" · ")}`;
+  return `${card.title} (${card.id}) · ${cardBits(card).join(" · ")}`;
 }
 
 function printMessages(messages, titles = new Map()) {
@@ -304,6 +295,7 @@ async function main() {
     const result = await readRoom(baseUrl, actor, { limit: "5000" });
     const scrum = deriveScrum(result.threads || [], result.messages || [], { viewer: result.viewer });
     if (options.json) return out(options, { viewer: result.viewer, revision: result.revision, scrum });
+    if (options.markdown) return process.stdout.write(scrumMarkdown(scrum));
     process.stdout.write(`Scrum · viewer ${result.viewer} · ${scrumSummary(scrum)}\n`);
     for (const lane of scrum.lanes) {
       const total = lane.id === "done" ? scrum.doneTotal : lane.threads.length;
@@ -474,6 +466,7 @@ async function main() {
     const week = deriveWeek(result.threads || [], result.messages || [], { viewer: result.viewer });
     const attendance = deriveAttendance(result.messages || []);
     if (options.json) return out(options, { viewer: result.viewer, revision: result.revision, week, attendance });
+    if (options.markdown) return process.stdout.write(weekMarkdown(week, attendance));
     process.stdout.write(`The week from ${week.weekStart} · ${week.done} done · ${week.handoffs} handoff${week.handoffs === 1 ? "" : "s"} · ${week.stickers} sticker${week.stickers === 1 ? "" : "s"} · ${week.loungeLines} Lounge line${week.loungeLines === 1 ? "" : "s"}${week.crown ? ` · crown ${week.crown.seat}` : ""}\n`);
     if (week.doneTitles.length) process.stdout.write(`Done: ${week.doneTitles.join("; ")}\n`);
     process.stdout.write("\nAttendance (standup lines, last 7 days)\n");

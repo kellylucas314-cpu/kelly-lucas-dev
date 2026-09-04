@@ -16,6 +16,8 @@ import {
   LOUNGE_CAPS,
   isLoungeThread,
   personaOf,
+  scrumMarkdown,
+  weekMarkdown,
 } from "/lib/agent-room-board.js";
 
 // On the Mac loopback service the page talks to the local proxy; on
@@ -1033,10 +1035,41 @@ function renderWeek() {
     ]),
   ])));
   const mine = week.wraps.find((entry) => entry.seat === state.room.viewer);
-  const foot = mine && !mine.body && week.isWrapTime
-    ? el("button", { class: "text-link-button", type: "button", "data-wrap": "true", text: viewerIs("kelly") ? "Add your wrap (optional)" : "Post your wrap" })
-    : null;
+  const foot = el("div", { class: "week-foot" }, [
+    mine && !mine.body && week.isWrapTime
+      ? el("button", { class: "text-link-button", type: "button", "data-wrap": "true", text: viewerIs("kelly") ? "Add your wrap (optional)" : "Post your wrap" })
+      : null,
+    el("button", { class: "text-link-button", type: "button", "data-copy": "week", text: "Copy for your notes", title: "The week as Markdown, for KIP" }),
+  ]);
   return sectionBlock("This week", `from ${new Date(`${week.weekStart}T12:00:00Z`).toLocaleDateString(undefined, { month: "short", day: "numeric", timeZone: "UTC" })}`, el("div", { class: "week" }, [numbers, wraps, foot]));
+}
+
+/** The board or the week as Markdown on the clipboard, for KIP or a note. */
+function textFor(what) {
+  if (what === "scrum") return scrumMarkdown(deriveScrum(state.room.threads, state.room.messages, { viewer: state.room.viewer }));
+  if (what === "week") {
+    const week = deriveWeek(state.room.threads, state.room.messages, { viewer: state.room.viewer });
+    return weekMarkdown(week, deriveAttendance(state.room.messages));
+  }
+  return "";
+}
+
+async function copyAsText(what, button) {
+  const text = textFor(what);
+  if (!text) return;
+  const original = button.textContent;
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error("no clipboard");
+    await navigator.clipboard.writeText(text);
+    button.textContent = "Copied";
+    announce(what === "week" ? "The week is on your clipboard as text." : "The board is on your clipboard as text.");
+  } catch {
+    // No clipboard (an old browser, or a page without focus): show it instead.
+    window.prompt("Copy this:", text);
+    button.textContent = original;
+    return;
+  }
+  window.setTimeout(() => { button.textContent = original; }, 1600);
 }
 
 function startWrap() {
@@ -1420,6 +1453,7 @@ function boardBar() {
   ]);
   const actions = [el("button", { class: "primary-button", type: "button", "data-new-task": "true", text: "Give someone a task" })];
   if (scrum) actions.push(el("button", { class: "board-backlog-button", type: "button", "data-new-backlog": "true", text: "Add to backlog" }));
+  if (scrum) actions.push(el("button", { class: "text-link-button board-copy-button", type: "button", "data-copy": "scrum", text: "Copy as text", title: "The board as Markdown, for KIP or a note" }));
   return el("div", { class: "board-bar" }, [switcher, el("span", { class: "board-bar-spacer", "aria-hidden": "true" }), ...actions]);
 }
 
@@ -1495,6 +1529,7 @@ function scrumCard(card, lastByThread) {
   if (card.hold && card.lane === "backlog") tags.push(el("span", { class: "hold-pill", "data-hold": card.hold.kind, text: `${card.hold.kind} · ${card.hold.reason}` }));
   if (card.due) tags.push(el("span", { class: "due-pill", "data-overdue": card.overdue ? "true" : undefined, text: card.overdue ? `overdue · ${dueLabel(card)}` : `by ${dueLabel(card)}` }));
   if (card.outsideOwner) tags.push(el("span", { class: "scrum-with", text: `with ${card.outsideOwner}` }));
+  if (card.quiet) tags.push(el("span", { class: "quiet-pill", title: `No post for ${plural(card.quietDays, "day")}`, text: `quiet ${card.quietDays}d` }));
   if (card.unread && card.lane !== "done") tags.push(el("span", { class: "new-pill", text: `${card.unread} new` }));
   const meta = el("p", { class: "scrum-card-meta", text: card.lane === "done"
     ? `done ${relativeTime(card.resolvedAt)}`
@@ -1513,6 +1548,7 @@ function scrumCard(card, lastByThread) {
     "data-ready": card.ready ? "true" : undefined,
     "data-overdue": card.overdue ? "true" : undefined,
     "data-hold": card.hold && card.lane === "backlog" ? card.hold.kind : undefined,
+    "data-quiet": card.quiet ? "true" : undefined,
   }, [top, el("button", { class: "scrum-card-title", type: "button", "data-open-thread": card.id, text: card.title, "aria-label": `Open ${card.title}` }), next, blocker, meta, foot]);
 }
 
@@ -1541,7 +1577,10 @@ function renderScrum() {
       "aria-label": laneName(lane),
     }, [head, el("p", { class: "scrum-lane-meaning", text: laneMeaning(lane) }), ...cards, ...more]);
   });
-  return [el("div", { class: "scrum", "aria-label": "The scrum board" }, lanes)];
+  const quietNote = scrum.quiet
+    ? el("p", { class: "scrum-quiet-note", text: `${plural(scrum.quiet, "card")} quiet for five days or more. A quiet card is not wrong, just easy to forget.` })
+    : null;
+  return [el("div", { class: "scrum", "aria-label": "The scrum board" }, lanes), quietNote];
 }
 
 function renderBoard() {
@@ -2492,6 +2531,11 @@ byId("viewContent").addEventListener("click", (event) => {
   }
   if (event.target.closest("[data-wrap]")) {
     startWrap();
+    return;
+  }
+  const copy = event.target.closest("[data-copy]");
+  if (copy) {
+    copyAsText(copy.dataset.copy, copy);
     return;
   }
   const loungeReply = event.target.closest("[data-lounge-reply]");

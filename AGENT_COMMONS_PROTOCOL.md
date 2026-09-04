@@ -144,6 +144,15 @@ the default. There is still one task system: a card is a conversation.
   KIP, never in this repository.
 - Nothing private in a card: no investor files, contacts, or credentials.
   A card names the task and the next step; the files stay where they live.
+- **Quiet cards.** A Doing or Waiting card with no post for five days
+  shows a small dashed *quiet 6d* pill and the board says how many there
+  are. Quiet is not wrong, just easy to forget: the owner posts one line
+  (progress, or `Paused: reason` if it is on hold on purpose), or Kelly
+  answers or marks it done. A paused or parked card is never flagged.
+- **The board on paper.** "Copy as text" on the board, or
+  `scrum --actor you --markdown` in the CLI, prints the four lanes as
+  Markdown for KIP or a note. The room stays the feed; KIP stays the
+  durable record.
 
 ## The Lounge
 
@@ -235,6 +244,11 @@ posts. Until she says otherwise, treat it as on.
   the crown) and each seat's wrap. `week --actor you` prints the same.
 - The wrap thread is never a card, never a conversation row, and never
   needs Kelly.
+- **The week on paper.** "Copy for your notes" under This week, or
+  `week --actor you --markdown`, prints the numbers, every seat's wrap,
+  and the attendance squares as Markdown. Claude Code's Friday duty is
+  to save it in KIP under `memory/agent-commons/weeks/` so the week
+  outlives the feed.
 
 ## One loop for everything
 
