@@ -18,6 +18,9 @@ import {
   personaOf,
   scrumMarkdown,
   weekMarkdown,
+  cardMatches,
+  messageMatches,
+  filterScrum,
 } from "/lib/agent-room-board.js";
 
 // On the Mac loopback service the page talks to the local proxy; on
@@ -143,6 +146,7 @@ const state = {
   composerRowOpen: false,
   boardLanes: storedLanes(),
   loungeTopic: false,
+  query: "",
 };
 
 // Work surfaces never count the lounge: no gold number, no card, no queue.
@@ -494,7 +498,8 @@ function setView(view, { threadId = "", filter = "", push = true } = {}) {
   if (push) {
     const filterPart = view === "archive" && state.archiveFilter !== "all" ? `&filter=${state.archiveFilter}` : "";
     const lanesPart = view === "board" ? `&lanes=${state.boardLanes}` : "";
-    const hash = view === "thread" ? `#thread=${encodeURIComponent(threadId)}` : `#view=${view}${filterPart}${lanesPart}`;
+    const queryPart = (view === "board" || view === "feed") && state.query ? `&q=${encodeURIComponent(state.query)}` : "";
+    const hash = view === "thread" ? `#thread=${encodeURIComponent(threadId)}` : `#view=${view}${filterPart}${lanesPart}${queryPart}`;
     if (window.location.hash !== hash) history.replaceState(null, "", hash);
   }
   document.body.classList.toggle("is-subview", view === "thread");
@@ -542,6 +547,7 @@ function readHash() {
   if (!ARCHIVE_FILTERS.some(([key]) => key === filter)) filter = "";
   const lanes = params.get("lanes");
   if (view === "board" && BOARD_LANES.includes(lanes)) state.boardLanes = lanes;
+  state.query = (view === "board" || view === "feed") ? (params.get("q") || "").slice(0, 80) : "";
   return { view, threadId: "", filter };
 }
 
@@ -1454,7 +1460,42 @@ function boardBar() {
   const actions = [el("button", { class: "primary-button", type: "button", "data-new-task": "true", text: "Give someone a task" })];
   if (scrum) actions.push(el("button", { class: "board-backlog-button", type: "button", "data-new-backlog": "true", text: "Add to backlog" }));
   if (scrum) actions.push(el("button", { class: "text-link-button board-copy-button", type: "button", "data-copy": "scrum", text: "Copy as text", title: "The board as Markdown, for KIP or a note" }));
-  return el("div", { class: "board-bar" }, [switcher, el("span", { class: "board-bar-spacer", "aria-hidden": "true" }), ...actions]);
+  return el("div", { class: "board-bar" }, [switcher, scrum ? findField("Find a card") : null, el("span", { class: "board-bar-spacer", "aria-hidden": "true" }), ...actions]);
+}
+
+/* ---------- find: one word, and the board or the feed keeps only what carries it ---------- */
+
+function findField(placeholder) {
+  return el("div", { class: "find-field", role: "search" }, [
+    el("input", { class: "find-input", type: "search", "data-find": "true", value: state.query, placeholder, "aria-label": `${placeholder} (press / to jump here)`, title: "Press / to jump here", autocomplete: "off", spellcheck: "false", maxlength: "80" }),
+    state.query ? el("button", { class: "find-clear", type: "button", "data-find-clear": "true", text: "Clear", "aria-label": "Clear the search" }) : null,
+  ]);
+}
+
+function findLine(matches, noun) {
+  if (!state.query) return null;
+  return el("p", { class: "find-line", "data-matches": String(matches), text: matches ? `${plural(matches, noun)} ${matches === 1 ? "carries" : "carry"} “${state.query}”.` : `Nothing carries “${state.query}”. Try a word from a title or a line.` });
+}
+
+function syncQueryHash() {
+  const params = new URLSearchParams(window.location.hash.slice(1));
+  if (state.query) params.set("q", state.query); else params.delete("q");
+  const hash = `#${params.toString().replace(/%2C/g, ",").replace(/%3D/g, "=")}`;
+  if (window.location.hash !== hash) history.replaceState(null, "", hash);
+}
+
+function setQuery(value, { keepFocus = true } = {}) {
+  const next = String(value || "").slice(0, 80);
+  if (next === state.query) return;
+  state.query = next;
+  syncQueryHash();
+  const results = byId("findResults");
+  if (!results) { render({ force: true }); return; }
+  results.replaceChildren(...(state.view === "feed" ? feedResults() : renderScrum()));
+  const clear = document.querySelector("[data-find-clear]");
+  if (clear && !state.query) clear.remove();
+  if (!clear && state.query) document.querySelector(".find-field")?.append(el("button", { class: "find-clear", type: "button", "data-find-clear": "true", text: "Clear", "aria-label": "Clear the search" }));
+  if (keepFocus) document.querySelector("[data-find]")?.focus();
 }
 
 /* ---------- the scrum lanes: the same cards, dealt by what happens next ---------- */
@@ -1553,7 +1594,7 @@ function scrumCard(card, lastByThread) {
 }
 
 function renderScrum() {
-  const scrum = deriveScrum(state.room.threads, state.room.messages, { viewer: state.room.viewer });
+  const scrum = filterScrum(deriveScrum(state.room.threads, state.room.messages, { viewer: state.room.viewer }), state.query);
   const lastByThread = new Map();
   for (const message of state.room.messages) {
     if (!isReactionMessage(message)) lastByThread.set(message.threadId, message);
@@ -1566,7 +1607,7 @@ function renderScrum() {
     ]);
     const cards = lane.threads.length
       ? lane.threads.map((card) => scrumCard(card, lastByThread))
-      : [el("p", { class: "board-empty", text: lane.id === "waiting-on-kelly" && viewerIs("kelly") ? "Nothing needs you." : EMPTY_LANES[lane.id] })];
+      : [el("p", { class: "board-empty", text: state.query ? "No match here." : lane.id === "waiting-on-kelly" && viewerIs("kelly") ? "Nothing needs you." : EMPTY_LANES[lane.id] })];
     const more = lane.id === "done" && scrum.doneTotal > lane.threads.length
       ? [el("button", { class: "text-link-button board-done-more", type: "button", "data-goto-view": "resolved", text: `See all ${scrum.doneTotal} done` })]
       : [];
@@ -1577,15 +1618,15 @@ function renderScrum() {
       "aria-label": laneName(lane),
     }, [head, el("p", { class: "scrum-lane-meaning", text: laneMeaning(lane) }), ...cards, ...more]);
   });
-  const quietNote = scrum.quiet
+  const quietNote = scrum.quiet && !state.query
     ? el("p", { class: "scrum-quiet-note", text: `${plural(scrum.quiet, "card")} quiet for five days or more. A quiet card is not wrong, just easy to forget.` })
     : null;
-  return [el("div", { class: "scrum", "aria-label": "The scrum board" }, lanes), quietNote];
+  return [findLine(scrum.matches, "card"), el("div", { class: "scrum", "aria-label": "The scrum board" }, lanes), quietNote];
 }
 
 function renderBoard() {
   const bar = boardBar();
-  if (state.boardLanes === "scrum") return [bar, ...renderScrum()];
+  if (state.boardLanes === "scrum") return [bar, el("div", { id: "findResults" }, renderScrum())];
   const board = deriveBoard(state.room.threads, { viewer: state.room.viewer });
   const lastByThread = new Map();
   for (const message of state.room.messages) {
@@ -1674,10 +1715,16 @@ function feedBody(message, options = {}) {
 }
 
 function renderFeed() {
+  return [el("div", { class: "feed-bar" }, [findField("Find a line")]), el("div", { id: "findResults" }, feedResults())];
+}
+
+function feedResults() {
   const reactions = collectReactions(state.room.messages);
   // Lounge chatter has its own door; the feed stays the day's work.
-  const items = state.room.messages.filter((message) => !isReactionMessage(message) && !isLoungeThread(message.threadId));
-  if (!items.length) return [emptyState("The desk is quiet.", "Once the team gets moving, the day lands here newest first.")];
+  const all = state.room.messages.filter((message) => !isReactionMessage(message) && !isLoungeThread(message.threadId));
+  if (!all.length) return [emptyState("The desk is quiet.", "Once the team gets moving, the day lands here newest first.")];
+  const items = state.query ? all.filter((message) => messageMatches(message, state.query, threadById(message.threadId)?.title || "")) : all;
+  if (!items.length) return [findLine(0, "line")];
   const nodes = [];
   let lastDay = "";
   for (const message of [...items].reverse()) {
@@ -1688,7 +1735,7 @@ function renderFeed() {
     }
     nodes.push(renderMessage(message, { reactions, feed: true, calm: true }));
   }
-  return [el("ol", { class: "message-feed feed-list", "aria-label": "Team feed" }, nodes)];
+  return [findLine(items.length, "line"), el("ol", { class: "message-feed feed-list", "aria-label": "Team feed" }, nodes)];
 }
 
 function renderFiltered(predicate, empty, label, hint = "", options = {}) {
@@ -1788,7 +1835,7 @@ function renderOverviewHeader() {
 }
 
 function renderWorkspace({ force = false } = {}) {
-  const key = `${state.view}:${state.threadId}:${state.archiveFilter}:${state.boardLanes}:${state.room.revision}:${state.previousCursor}:${state.loaded}`;
+  const key = `${state.view}:${state.threadId}:${state.archiveFilter}:${state.boardLanes}:${state.query}:${state.room.revision}:${state.previousCursor}:${state.loaded}`;
   if (!force && key === state.lastRenderKey) return;
   state.lastRenderKey = key;
 
@@ -2538,6 +2585,10 @@ byId("viewContent").addEventListener("click", (event) => {
     copyAsText(copy.dataset.copy, copy);
     return;
   }
+  if (event.target.closest("[data-find-clear]")) {
+    setQuery("");
+    return;
+  }
   const loungeReply = event.target.closest("[data-lounge-reply]");
   if (loungeReply) {
     startLoungeReply(loungeReply.dataset.loungeReply);
@@ -2667,6 +2718,15 @@ byId("threadSelect").addEventListener("change", () => {
 });
 byId("messageForm").addEventListener("submit", sendMessage);
 byId("refreshButton").addEventListener("click", () => loadRoom());
+byId("viewContent").addEventListener("input", (event) => {
+  if (event.target instanceof HTMLInputElement && event.target.matches("[data-find]")) setQuery(event.target.value);
+});
+byId("viewContent").addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && event.target instanceof HTMLInputElement && event.target.matches("[data-find]")) {
+    event.target.value = "";
+    setQuery("");
+  }
+});
 byId("retryButton").addEventListener("click", () => loadRoom());
 
 // The mark: five quick taps throws confetti.
@@ -2688,6 +2748,16 @@ const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "Ar
 let konamiIndex = 0;
 window.addEventListener("keydown", (event) => {
   if (event.target instanceof Element && event.target.matches("input, textarea, select")) return;
+  // "/" jumps to Find on the board or the feed, like any search box worth its salt.
+  if (event.key === "/" && !event.metaKey && !event.ctrlKey && !event.altKey) {
+    const find = document.querySelector("[data-find]");
+    if (find) {
+      event.preventDefault();
+      find.focus();
+      find.select();
+      return;
+    }
+  }
   konamiIndex = event.key === KONAMI[konamiIndex] ? konamiIndex + 1 : (event.key === KONAMI[0] ? 1 : 0);
   if (konamiIndex === KONAMI.length) {
     konamiIndex = 0;

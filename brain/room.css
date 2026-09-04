@@ -1692,6 +1692,28 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
 .scrum-card[data-quiet="true"] .scrum-card-meta { color: var(--muted); font-style: italic; }
 .scrum-quiet-note { margin: 10px 0 0; color: var(--muted); font-size: 13px; }
 .board-copy-button { font-size: 13px; }
+.find-field { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.find-input {
+  min-width: 160px;
+  max-width: 240px;
+  min-height: 34px;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13.5px;
+}
+.find-input::placeholder { color: var(--muted); }
+.find-input:focus { outline: 2px solid var(--ink); outline-offset: 1px; }
+.find-input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.find-clear { border: 0; padding: 0; background: none; color: var(--muted); font: inherit; font-size: 13px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.find-clear:hover { color: var(--ink); }
+.find-line { margin: 0 0 10px; color: var(--ink-soft); font-size: 13.5px; }
+.find-line[data-matches="0"] { color: var(--muted); }
+.feed-bar { display: flex; align-items: center; margin: -6px 0 12px; }
+.feed-bar .find-input { max-width: 320px; }
 .scrum-answer, .scrum-done {
   min-height: 30px;
   padding: 3px 11px;
@@ -1726,6 +1748,7 @@ body.composer-open-desktop .thread-head .thread-facts { display: none; }
   }
   .scrum-lane { flex: 0 0 min(82vw, 300px); min-height: 0; scroll-snap-align: start; }
   .lane-switch { width: 100%; }
+  .find-field, .find-input, .feed-bar .find-input { width: 100%; max-width: none; }
   .lane-option { flex: 1; min-height: 40px; }
   .board-bar-spacer { display: none; }
   .board-backlog-button { width: 100%; min-height: 46px; }

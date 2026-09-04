@@ -21,6 +21,9 @@ import {
   weekMarkdown,
   scrumMarkdown,
   cardBits,
+  cardMatches,
+  messageMatches,
+  filterScrum,
   quietDays,
   QUIET_AFTER_DAYS,
   isScrumCard,
@@ -467,4 +470,31 @@ test("the board and the week print as Markdown for KIP", () => {
   assert.match(week, /- \*\*codex · Codex\*\*: Shipped the export\. Next: the Press page\./);
   assert.match(week, /- \*\*kip\*\*: no wrap yet/);
   assert.match(week, /## Attendance \(standup lines, last 7 days\)\n\n- kelly: · · · · · · · \(0\/7\)\n- codex: · · · · ■ · · \(1\/7\)/);
+});
+
+test("find keeps the cards and lines that carry every word of the query, any case, and an empty query keeps everything", () => {
+  const value = room(
+    ["kelly", { body: "Kip, take the deck", to: ["kip"], kind: "handoff", threadId: "deck", thread: { title: "Investor deck" }, note: { project: "HelioFlux", summary: "Take it.", nextOwner: "kip", action: "Draft slide nine" }, waitingOn: ["kip"] }],
+    ["vellum", { body: "As: Lumen\nNote: Personal\nTape recap for the archive.", to: ["all"], kind: "note", threadId: "tape", thread: { title: "Tape recap" }, note: { project: "Personal", summary: "Tape recap for the archive." } }],
+  );
+  const threads = deriveThreads(value, "kelly");
+  const scrum = deriveScrum(threads, value.messages, { viewer: "kelly" });
+  const cards = scrum.lanes.flatMap((lane) => lane.threads);
+  const deck = cards.find((card) => card.id === "deck");
+  assert.equal(cardMatches(deck, "DECK"), true, "title, any case");
+  assert.equal(cardMatches(deck, "helioflux kip"), true, "project and seat, every word");
+  assert.equal(cardMatches(deck, "slide nine"), true, "the next step");
+  assert.equal(cardMatches(deck, "tape"), false);
+  assert.equal(cardMatches(deck, "   "), true);
+  const found = filterScrum(scrum, " Recap ");
+  assert.equal(found.matches, 1);
+  assert.equal(found.query, "recap");
+  assert.deepEqual(found.lanes.flatMap((lane) => lane.threads.map((card) => card.id)), ["tape"]);
+  assert.equal(filterScrum(scrum, "").matches, null);
+  assert.equal(filterScrum(scrum, "nothing-here").matches, 0);
+  const line = value.messages.find((message) => message.threadId === "tape");
+  assert.equal(messageMatches(line, "lumen"), true, "a persona counts");
+  assert.equal(messageMatches(line, "recap", "Tape recap"), true);
+  assert.equal(messageMatches(line, "investor", "Tape recap"), false);
+  assert.equal(messageMatches(line, "investor", "Investor deck"), true, "the thread title counts");
 });

@@ -281,6 +281,17 @@ async function main() {
     await wait(1000);
     const feedLeak = await evaluate("(() => [...document.querySelectorAll('.feed-list .thread-chip')].some((node) => /Lounge|Name a font|Best snack/.test(node.textContent)))()", cwd);
     assert(feedLeak === false, "Lounge chatter stays out of the work feed", failures);
+    process.stdout.write("Find\n");
+    const feedFind = await evaluate("(() => { const input = document.querySelector('.feed-bar [data-find]'); if (!input) return null; input.value = 'retry'; input.dispatchEvent(new Event('input', { bubbles: true })); return { lines: document.querySelectorAll('.feed-list .message-item').length, line: document.querySelector('.find-line')?.textContent || '', hash: location.hash, focused: document.activeElement === input }; })()", cwd);
+    assert(feedFind && feedFind.lines >= 1 && feedFind.lines < 10 && /carry “retry”/.test(feedFind.line) && /q=retry/.test(feedFind.hash) && feedFind.focused, `Typing a word keeps only the feed lines that carry it and the link remembers it (${JSON.stringify(feedFind)})`, failures);
+    await cli(["goto", `${origin}/brain/room.html#view=board&lanes=scrum&q=founders`], { cwd });
+    await wait(1000);
+    const boardFind = await evaluate("(() => ({ value: document.querySelector('.board-bar [data-find]')?.value, cards: [...document.querySelectorAll('.scrum-card-title')].map((node) => node.textContent), empties: [...document.querySelectorAll('.scrum-lane .board-empty')].map((node) => node.textContent), line: document.querySelector('.find-line')?.textContent || '' }))()", cwd);
+    assert(boardFind && boardFind.value === "founders" && boardFind.cards.join("|") === "Founders week application" && boardFind.empties.every((text) => text === "No match here.") && /^1 card carries/.test(boardFind.line), `A q= link opens the board on one card with the other lanes saying no match (${JSON.stringify(boardFind)})`, failures);
+    const cleared = await evaluate("(() => { document.querySelector('[data-find-clear]')?.click(); return { cards: document.querySelectorAll('.scrum-card').length, hash: location.hash, line: Boolean(document.querySelector('.find-line')) }; })()", cwd);
+    assert(cleared && cleared.cards > 5 && !/q=/.test(cleared.hash) && cleared.line === false, `Clear brings every card back and drops q= from the link (${JSON.stringify(cleared)})`, failures);
+    const slash = await evaluate("(() => { document.activeElement?.blur(); window.dispatchEvent(new KeyboardEvent('keydown', { key: '/', bubbles: true })); return document.activeElement?.matches('[data-find]') || false; })()", cwd);
+    assert(slash === true, "Pressing / jumps to Find", failures);
     await cli(["goto", `${origin}/brain/room.html#view=board&lanes=scrum`], { cwd });
     await wait(1000);
     const loungeCard = await evaluate("(() => [...document.querySelectorAll('.scrum-card-title')].some((node) => /Lounge|Name a font|Best snack/.test(node.textContent)))()", cwd);

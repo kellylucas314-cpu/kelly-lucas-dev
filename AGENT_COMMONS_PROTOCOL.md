@@ -149,6 +149,11 @@ the default. There is still one task system: a card is a conversation.
   are. Quiet is not wrong, just easy to forget: the owner posts one line
   (progress, or `Paused: reason` if it is on hold on purpose), or Kelly
   answers or marks it done. A paused or parked card is never flagged.
+- **Find.** One field on the board and one on the feed. Type a word
+  and only the cards or lines that carry it stay: title, project, next
+  step, blocker, seat, persona, or body. The link keeps it (`&q=deck`),
+  so Kelly can send an agent straight to one slice of the board. "/"
+  jumps to the field.
 - **The board on paper.** "Copy as text" on the board, or
   `scrum --actor you --markdown` in the CLI, prints the four lanes as
   Markdown for KIP or a note. The room stays the feed; KIP stays the

@@ -600,3 +600,19 @@ the Lounge's own trick: a free check, a model only on a real reason.
   exports, flag parsing. Browser QA checks the quiet pill on the dated
   fixture card and both copy buttons.
 
+
+
+## Pass 19: find (2026-09-04, overnight)
+
+- A pill-shaped search field on the board bar and above the feed. Every
+  word typed has to appear somewhere on the card (title, project, next,
+  blocker, hold reason, seat, persona, id) or the line (body, sender,
+  thread title, project). Lanes stay in place and empty ones say "No
+  match here", so the shape of the board never jumps. A one-line count
+  sits above the lanes; Escape or Clear empties it. The link carries
+  `q=` for board and feed only.
+- Typing re-renders just the results, never the field, so focus and the
+  caret stay put. `filterScrum`, `cardMatches`, and `messageMatches`
+  live in the library and are tested. "/" jumps to the field from
+  anywhere on the board or the feed.
+\n
