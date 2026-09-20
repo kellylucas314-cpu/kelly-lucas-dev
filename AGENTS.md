@@ -53,6 +53,11 @@ Keep it clean. No backup files, no version-numbered copies.
 - `assets/` (images, fonts)
 - Use Git for version control instead of backup files
 
+## Proxied paths
+- `/heliopolis/*` is not a folder in this repo. `vercel.json` rewrites it to the
+  Heliopolis art library (`kellylucas314-cpu/heliopolis-art-library`, served by
+  GitHub Pages). Edit the art there, not here.
+
 ## Rules
 1. No em dashes anywhere in copy.
 2. Mobile-first: test at 390px width.
