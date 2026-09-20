@@ -58,6 +58,17 @@ Keep it clean. No backup files, no version-numbered copies.
   Heliopolis art library (`kellylucas314-cpu/heliopolis-art-library`, served by
   GitHub Pages). Edit the art there, not here.
 
+## Private design library
+- `/brain/design-library.html` (short link `/design-library`) shows Kelly's private
+  design library behind the Magpie sign-in. The page in this repo is only a shell.
+- Never commit the collection here. This repo is public; the library is private and
+  holds other people's images that are not cleared for reuse. It lives in the
+  private Blob store under `design-library/`, and `api/magpie-design.js` serves it
+  to a signed-in session only.
+- To refresh it after the library changes, run
+  `npm run sync:design-library -- /path/to/a/clone` (add `--dry-run` to list what
+  would be sent, or `--out <folder>` to write the layout locally instead).
+
 ## Rules
 1. No em dashes anywhere in copy.
 2. Mobile-first: test at 390px width.

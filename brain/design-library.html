@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Design library</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='7' fill='%231e1e1e'/%3E%3Crect x='5' y='5' width='6' height='6' rx='1.5' fill='%239cdcff'/%3E%3Crect x='13' y='5' width='6' height='6' rx='1.5' fill='%2394f1cf'/%3E%3Crect x='5' y='13' width='6' height='6' rx='1.5' fill='%23f6ac3c'/%3E%3Crect x='13' y='13' width='6' height='6' rx='1.5' fill='%23d38df4'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/brain/tokens.css">
+  <link rel="stylesheet" href="/brain/design-library.css">
+</head>
+<body>
+  <a class="skip-link" href="#library">Skip to the library</a>
+
+  <header class="masthead">
+    <a class="desk-link" href="/brain/dashboard.html">
+      <span aria-hidden="true">←</span> Shared desk
+    </a>
+    <div class="masthead-actions">
+      <button class="text-button" id="guideButton" type="button">How this works</button>
+      <button class="text-button" id="lockButton" type="button">Lock</button>
+    </div>
+  </header>
+
+  <main id="library">
+    <section class="intro" aria-labelledby="pageTitle">
+      <p class="eyebrow">Private reference</p>
+      <h1 id="pageTitle">Design library</h1>
+      <p class="summary" id="summary">Opening the library…</p>
+    </section>
+
+    <aside class="guide" id="guide" aria-labelledby="guideTitle" hidden>
+      <h2 id="guideTitle">How this works</h2>
+      <ul>
+        <li>Everything is on this one page: inspiration from other sites, our own concepts, written ideas, and the design guide.</li>
+        <li>Search looks through every reference, concept and idea at once. The chips narrow the inspiration.</li>
+        <li>Choose any picture to see it large. The arrow keys move to the next one.</li>
+        <li>This page is private. Being in here does not mean a design was chosen, and other people's images are for reference only, not cleared for reuse.</li>
+      </ul>
+      <button class="solid-button" id="guideClose" type="button">Got it</button>
+    </aside>
+
+    <div class="toolbar" id="toolbar">
+      <label class="search">
+        <span class="visually-hidden">Search the whole library</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+        <input id="search" type="search" placeholder="Search everything" autocomplete="off" spellcheck="false">
+      </label>
+      <nav class="jump" aria-label="Sections">
+        <a href="#inspiration" data-section="inspiration">Inspiration <span id="countInspiration"></span></a>
+        <a href="#concepts" data-section="concepts">Our concepts <span id="countConcepts"></span></a>
+        <a href="#ideas" data-section="ideas">Ideas <span id="countIdeas"></span></a>
+        <a href="#guide-section" data-section="guide-section">Guide</a>
+      </nav>
+    </div>
+
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+    <div id="sections" hidden>
+      <section class="band" id="inspiration" aria-labelledby="inspirationTitle">
+        <header class="band-head">
+          <h2 id="inspirationTitle">Inspiration</h2>
+          <p>Sites and studies worth borrowing from. Other people's work, saved for reference only.</p>
+        </header>
+        <div class="chips" id="categoryChips" role="group" aria-label="Narrow the inspiration"></div>
+        <div class="grid" id="referenceGrid"></div>
+        <button class="more-button" id="referenceMore" type="button" hidden></button>
+        <p class="empty" id="referenceEmpty" hidden></p>
+      </section>
+
+      <section class="band" id="concepts" aria-labelledby="conceptsTitle">
+        <header class="band-head">
+          <h2 id="conceptsTitle">Our concepts</h2>
+          <p>Directions we explored ourselves, plus particle studies you can run. Explorations only: nothing here has been chosen.</p>
+        </header>
+        <div id="conceptGroups"></div>
+        <p class="empty" id="conceptEmpty" hidden></p>
+
+        <div class="studies" id="studies" aria-labelledby="studiesTitle">
+          <div class="studies-head">
+            <h3 id="studiesTitle">Particle studies you can run</h3>
+            <p>Five live animations. Each one opens in its own tab.</p>
+          </div>
+          <div class="study-row" id="studyRow"></div>
+        </div>
+      </section>
+
+      <section class="band" id="ideas" aria-labelledby="ideasTitle">
+        <header class="band-head">
+          <h2 id="ideasTitle">Ideas</h2>
+          <p>Compositions we wrote down but have not drawn yet.</p>
+        </header>
+        <div class="idea-grid" id="ideaGrid"></div>
+        <button class="more-button" id="ideaMore" type="button" hidden></button>
+        <p class="empty" id="ideaEmpty" hidden></p>
+      </section>
+
+      <section class="band" id="guide-section" aria-labelledby="guideSectionTitle">
+        <header class="band-head">
+          <h2 id="guideSectionTitle">Guide</h2>
+          <p>The visual rules we recorded, and where everything came from.</p>
+        </header>
+        <div class="guide-layout">
+          <a class="guide-cover" id="guideCover" target="_blank" rel="noopener noreferrer"></a>
+          <div class="prose" id="guideText"></div>
+        </div>
+        <details class="fold" id="notesFold">
+          <summary>Particle and microscopy notes</summary>
+          <div class="prose" id="notesText"></div>
+        </details>
+        <details class="fold" id="provenanceFold">
+          <summary>Where everything came from</summary>
+          <div class="prose" id="provenanceText"></div>
+        </details>
+        <details class="fold" id="collectionsFold">
+          <summary>The original interactive collections</summary>
+          <ul class="link-list" id="collectionList"></ul>
+        </details>
+      </section>
+    </div>
+  </main>
+
+  <footer class="colophon">
+    <span>Private workspace on kellylucas.dev</span>
+    <span id="sourceLine"></span>
+  </footer>
+
+  <dialog class="viewer" id="viewer" aria-labelledby="viewerTitle">
+    <div class="viewer-stage">
+      <img id="viewerImage" alt="">
+    </div>
+    <div class="viewer-side">
+      <p class="card-kicker" id="viewerKicker"></p>
+      <h2 id="viewerTitle"></h2>
+      <p id="viewerNote"></p>
+      <div class="card-actions" id="viewerActions"></div>
+      <p class="viewer-credit" id="viewerCredit"></p>
+      <div class="viewer-controls">
+        <button class="ghost-button" id="viewerPrev" type="button" aria-label="Previous picture">←</button>
+        <span id="viewerPosition"></span>
+        <button class="ghost-button" id="viewerNext" type="button" aria-label="Next picture">→</button>
+        <button class="solid-button" id="viewerClose" type="button">Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script type="module" src="/brain/design-library.js"></script>
+</body>
+</html>

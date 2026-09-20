@@ -167,12 +167,21 @@
       "source": "/heliopolis",
       "destination": "/heliopolis/index.html",
       "permanent": false
+    },
+    {
+      "source": "/design-library",
+      "destination": "/brain/design-library.html",
+      "permanent": false
     }
   ],
   "rewrites": [
     {
       "source": "/heliopolis/:path*",
       "destination": "https://kellylucas314-cpu.github.io/heliopolis-art-library/:path*"
+    },
+    {
+      "source": "/brain/design-library/files/:path*",
+      "destination": "/api/magpie-design?file=:path*"
     }
   ]
 }
