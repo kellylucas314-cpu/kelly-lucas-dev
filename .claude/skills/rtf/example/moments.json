@@ -1,0 +1,94 @@
+{
+  "count": 3,
+  "min_gap": 16.6,
+  "moments": [
+    {
+      "start": 38.32,
+      "end": 54.72,
+      "dur": 16.4,
+      "text": "everything is designed and tested with our most important element in mind the astronauts this is their deep space human-rated spacecraft called orion built in three parts the crew module where up to four astronauts will live and work throughout the flight the service module with",
+      "words": 46,
+      "signal_score": 4.5,
+      "on_screen_penalty": 0.0,
+      "on_screen_hits": 0,
+      "stillness": 0.688,
+      "score": 6.44,
+      "signals": [
+        {
+          "key": "list",
+          "label": "runs through a list",
+          "visual": "A list that builds one line at a time, in step with the words.",
+          "hits": 1,
+          "gain": 3.0
+        },
+        {
+          "key": "claim",
+          "label": "makes the point of the section",
+          "visual": "One line of text, held long enough to read twice.",
+          "hits": 1,
+          "gain": 1.5
+        }
+      ],
+      "rank": 1,
+      "tc_in": "00:38.320",
+      "tc_out": "00:54.720",
+      "link": "https://www.youtube.com/watch?v=_T8cn2J13-4&t=38s",
+      "suggestion": "A list that builds one line at a time, in step with the words.",
+      "thumb": "thumbs/moment-01.jpg"
+    },
+    {
+      "start": 85.36,
+      "end": 94.32,
+      "dur": 8.96,
+      "text": "sitting on the launch pad the entire rocket fully fueled weighs just over 6 million pounds 5.2 million of which is just the fuel once ignited",
+      "words": 26,
+      "signal_score": 3.75,
+      "on_screen_penalty": 0.0,
+      "on_screen_hits": 0,
+      "stillness": 0.944,
+      "score": 6.97,
+      "signals": [
+        {
+          "key": "stat",
+          "label": "states a figure",
+          "visual": "One number, held. The figure large, its unit next to it, and one line saying what it counts.",
+          "hits": 2,
+          "gain": 3.75
+        }
+      ],
+      "rank": 2,
+      "tc_in": "01:25.360",
+      "tc_out": "01:34.320",
+      "link": "https://www.youtube.com/watch?v=_T8cn2J13-4&t=85s",
+      "suggestion": "One number, held. The figure large, its unit next to it, and one line saying what it counts.",
+      "thumb": "thumbs/moment-02.jpg"
+    },
+    {
+      "start": 156.08,
+      "end": 171.44,
+      "dur": 15.36,
+      "text": "instead of requiring orion to serve as an expendable lunar command module or to carry a constrained lunar lander the artemis missions will take advantage of a different approach pre-staging everything needed for lunar missions will be positioned in advance by commercial and international partners",
+      "words": 45,
+      "signal_score": 3.0,
+      "on_screen_penalty": 0.0,
+      "on_screen_hits": 0,
+      "stillness": 0.903,
+      "score": 6.02,
+      "signals": [
+        {
+          "key": "comparison",
+          "label": "compares two things",
+          "visual": "Two panels side by side, the second landing when he names it.",
+          "hits": 1,
+          "gain": 3.0
+        }
+      ],
+      "rank": 3,
+      "tc_in": "02:36.080",
+      "tc_out": "02:51.440",
+      "link": "https://www.youtube.com/watch?v=_T8cn2J13-4&t=156s",
+      "suggestion": "Two panels side by side, the second landing when he names it.",
+      "thumb": "thumbs/moment-03.jpg"
+    }
+  ]
+}

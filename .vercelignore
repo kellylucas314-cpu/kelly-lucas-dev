@@ -15,3 +15,6 @@ launchd/
 output/
 assets/avatars/README.md
 assets/avatars/source/
+
+# Claude Code project skills: keep them in Git, keep them off the website
+.claude/
