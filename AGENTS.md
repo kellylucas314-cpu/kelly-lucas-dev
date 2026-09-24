@@ -62,8 +62,10 @@ Keep it clean. No backup files, no version-numbered copies.
 - `design.html` is the public swipe file. It renders `design-library.js`, a
   generated data file: `manual` entries are hand-written, `items` is rebuilt
   by `npm run sync:design` from desk-tagged Magpie clips (tag a clip `design`).
-  Video cards show takeaways from the clip's `## Notes` bullets, or an honest
-  "notes pending" state until those exist.
+  `systems` (one design system per site, with palette and rules) and
+  `libraries` (Kelly's own art and font libraries) are hand-written and pass
+  through the sync untouched. Video cards show takeaways from the clip's
+  `## Notes` bullets, or an honest "notes pending" state until those exist.
 
 ## Rules
 1. No em dashes anywhere in copy.

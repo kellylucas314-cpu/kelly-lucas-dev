@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Design Desk · Kelly Lucas</title>
-  <meta name="description" content="Kelly Lucas's design desk: a swipe file for UI, kept in public. Galleries, sites worth studying, videos to rewatch, and notebook pages." />
+  <meta name="description" content="Kelly Lucas's design desk: a swipe file for UI, kept in public. Design systems, art libraries, galleries, sites worth studying, videos to rewatch, and notebook pages." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='5' fill='%23b1d8b3' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -55,8 +55,9 @@
         <p class="scribble">(a swipe file, kept in public)</p>
         <p>
           I'm learning UI by paying attention. This is where I keep what I
-          notice: the galleries I raid, the sites I study, the videos I
-          rewatch, and the pages from my notebook.
+          notice: the systems behind my own sites, the libraries I'm building,
+          the galleries I raid, the videos I rewatch, and the pages from my
+          notebook.
         </p>
         <a href="#shelf" class="cta">
           <span class="cta__label">Browse the shelf</span>
@@ -142,6 +143,28 @@
           </div>
         </article>
       </div>
+    </section>
+
+    <!-- DESIGN SYSTEMS -->
+    <section class="block block--mint desk-systems">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>my systems</span>
+      </div>
+      <h2 class="display display--sm">One system per site</h2>
+      <p class="scribble">(the rules I keep writing down so I stop re-deciding them)</p>
+      <div class="system-grid" id="systemGrid"></div>
+    </section>
+
+    <!-- ART LIBRARIES -->
+    <section class="block block--cream desk-libraries">
+      <div class="dot-tag dot-tag--top-left">
+        <span class="dot-tag__dot"></span>
+        <span>my libraries</span>
+      </div>
+      <h2 class="display display--sm">Libraries I've been making</h2>
+      <p class="scribble">(art, fonts, references. the raw material for everything above.)</p>
+      <ul class="now-list library-list" id="libraryList"></ul>
     </section>
 
     <!-- THE SHELF -->

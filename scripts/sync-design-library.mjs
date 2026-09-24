@@ -5,7 +5,9 @@
    the Magpie half of it: every clip that carries a desk tag becomes a card.
    Entries in the file's `manual` list are kept exactly as written and win
    over the Magpie copy of the same URL, so a hand-written "why" is never
-   lost when the same page gets clipped later.
+   lost when the same page gets clipped later. The `systems` and
+   `libraries` lists (Kelly's own design systems and art libraries) are
+   hand-written and pass through untouched.
 
    usage:  npm run sync:design                        (default vault path)
            npm run sync:design -- /path/to/magpie     (another vault)
@@ -224,6 +226,10 @@ try {
   /* first run: nothing to keep */
 }
 const manual = Array.isArray(existing.manual) ? existing.manual : [];
+/* Kelly's own design systems and art libraries are hand-written too, and
+   never come from Magpie, so they pass through untouched. */
+const systems = Array.isArray(existing.systems) ? existing.systems : [];
+const libraries = Array.isArray(existing.libraries) ? existing.libraries : [];
 
 if (wantThumbs) await mkdir(thumbDir, { recursive: true });
 
@@ -274,6 +280,8 @@ const items = [...byId.values()].sort((a, b) =>
 
 const out = {
   updatedAt: new Date().toISOString().slice(0, 10),
+  systems,
+  libraries,
   manual,
   items,
 };

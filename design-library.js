@@ -3,6 +3,235 @@
    `items` is rebuilt from the Magpie vault on every run. */
 window.DESIGN_LIBRARY = {
   "updatedAt": "2026-09-24",
+  "systems": [
+    {
+      "name": "Kelly's lab",
+      "site": "kellylucas.dev",
+      "status": "live",
+      "palette": [
+        {
+          "name": "page",
+          "hex": "#f4f2ec"
+        },
+        {
+          "name": "mint",
+          "hex": "#c9e6c9"
+        },
+        {
+          "name": "cream",
+          "hex": "#f6f3e8"
+        },
+        {
+          "name": "lilac",
+          "hex": "#e3e3ee"
+        },
+        {
+          "name": "ink",
+          "hex": "#14201a"
+        }
+      ],
+      "type": "Heliora for everything, 300 to 700.",
+      "rules": [
+        "Stacked rounded slabs, 28px radius, a dot tag in every corner.",
+        "Lilac means unfinished. Say so on the page.",
+        "Motion is welcome, never blocks reading, respects reduced motion.",
+        "No em dashes. Lowercase-leaning, sentence case."
+      ],
+      "live": "https://kellylucas.dev",
+      "doc": "https://github.com/kellylucas314-cpu/kelly-lucas-dev/blob/main/CLAUDE.md",
+      "docLabel": "CLAUDE.md"
+    },
+    {
+      "name": "Pretzel Protocol",
+      "site": "pretzel.thetravelprotocol.com",
+      "status": "live",
+      "palette": [
+        {
+          "name": "paper",
+          "hex": "#faf9f5"
+        },
+        {
+          "name": "rail",
+          "hex": "#f3eee4"
+        },
+        {
+          "name": "band",
+          "hex": "#e4d7b8"
+        },
+        {
+          "name": "ink",
+          "hex": "#103044"
+        },
+        {
+          "name": "signal",
+          "hex": "#1a5c4a"
+        },
+        {
+          "name": "cranberry",
+          "hex": "#b84a45"
+        }
+      ],
+      "type": "Literata for headings, Hanken Grotesk for everything else.",
+      "rules": [
+        "Cranberry is the one attention color, and only ever a chip.",
+        "Delight budget of five. To add a sixth, remove one.",
+        "Nothing under 12px, inputs at 16px, touch targets 44px.",
+        "Anything a drawing sits on is the art's own cream."
+      ],
+      "live": "https://pretzel.thetravelprotocol.com",
+      "doc": "https://github.com/kellylucas314-cpu/pretzel-protocol/blob/main/DESIGN-SYSTEM.md",
+      "docLabel": "DESIGN-SYSTEM.md"
+    },
+    {
+      "name": "Heliopolis",
+      "site": "myheliopolis.com",
+      "status": "art direction",
+      "palette": [
+        {
+          "name": "cream",
+          "hex": "#FAF9F5"
+        },
+        {
+          "name": "navy",
+          "hex": "#103044"
+        },
+        {
+          "name": "lime",
+          "hex": "#DAEAAA"
+        }
+      ],
+      "type": "Fine navy outlines, flat fills, little shading.",
+      "rules": [
+        "One clear idea per image, with generous empty cream around it.",
+        "The arch and the sun carry the identity.",
+        "No cyan, pink, bright yellow, or any decorative palette.",
+        "Illustrations stay secondary to the task, the note, or the document."
+      ],
+      "live": "https://kellylucas.dev/heliopolis/",
+      "doc": "https://github.com/kellylucas314-cpu/heliopolis-art-library/blob/main/ART%20DIRECTION%20-%20ORIGINAL%20HELIOPOLIS.md",
+      "docLabel": "Art direction"
+    },
+    {
+      "name": "Agent Commons",
+      "site": "the brain room",
+      "status": "private",
+      "palette": [
+        {
+          "name": "page",
+          "hex": "#f7f7f7"
+        },
+        {
+          "name": "ink",
+          "hex": "#1e1e1e"
+        },
+        {
+          "name": "mint",
+          "hex": "#258360"
+        },
+        {
+          "name": "slate",
+          "hex": "#304a57"
+        },
+        {
+          "name": "violet",
+          "hex": "#652085"
+        },
+        {
+          "name": "sky",
+          "hex": "#367496"
+        },
+        {
+          "name": "amber",
+          "hex": "#8e4605"
+        }
+      ],
+      "type": "GC Protage for display, LeniaSans for body.",
+      "rules": [
+        "Outline, never elevation. No shadows anywhere.",
+        "Amber is reserved for the one thing that needs you.",
+        "Rounded corners with the bottom-left squared, on everything you can press.",
+        "One seat color per agent. Kelly is graphite because she is the constant."
+      ],
+      "doc": "https://github.com/kellylucas314-cpu/kelly-lucas-dev/blob/main/docs/agent-commons/DESIGN-SYSTEM.md",
+      "docLabel": "DESIGN-SYSTEM.md"
+    },
+    {
+      "name": "HelioFlux",
+      "site": "helioflux.co",
+      "status": "live",
+      "palette": [
+        {
+          "name": "navy",
+          "hex": "#092743"
+        },
+        {
+          "name": "slate",
+          "hex": "#2F4562"
+        },
+        {
+          "name": "cyan",
+          "hex": "#00A9D6"
+        },
+        {
+          "name": "amber",
+          "hex": "#E8A838"
+        },
+        {
+          "name": "coral",
+          "hex": "#E85A4F"
+        },
+        {
+          "name": "off-white",
+          "hex": "#ECF0FF"
+        }
+      ],
+      "type": "Plus Jakarta Sans for display, DM Sans for body.",
+      "rules": [
+        "Dark, cinematic, premium. Science that feels important.",
+        "Make them feel it before you explain it.",
+        "In-vitro results are in-vitro. Say so every time.",
+        "No startup clichés, no placeholder images, nothing that looks like a template."
+      ],
+      "live": "https://helioflux.co",
+      "doc": "https://github.com/kellylucas314-cpu/helioflux-website",
+      "docLabel": "Source"
+    }
+  ],
+  "libraries": [
+    {
+      "name": "Heliopolis art library",
+      "url": "https://kellylucas.dev/heliopolis/",
+      "what": "The original five, the 33 redraws, the style catalog, and art by subject. Cream, navy, lime, one idea per image.",
+      "count": "served from the heliopolis-art-library repo"
+    },
+    {
+      "name": "HelioFlux design library",
+      "url": "https://github.com/kellylucas314-cpu/helioflux-design-library",
+      "what": "Everything collected for the investor site: references, visual concepts, the Dala particle studies, written directions, and the seven-page design guide.",
+      "count": "60 references, 24 concepts, 5 studies, 13 ideas",
+      "private": true
+    },
+    {
+      "name": "Pretzel illustrations",
+      "url": "https://github.com/kellylucas314-cpu/pretzel-protocol/tree/main/assets",
+      "what": "My drawings for the family trip atlas: city chapters, each day, each stop, the welcome. Built onto cream by a script that refuses black backgrounds.",
+      "count": "source art in assets/, web copies built to public/art/",
+      "private": true
+    },
+    {
+      "name": "The audition room",
+      "url": "all-fonts.html",
+      "what": "Every font that walked into the lab, with the same test sentence. Heliora won.",
+      "count": "97 fonts auditioned"
+    },
+    {
+      "name": "The Magpie vault",
+      "url": "/brain/gallery.html",
+      "what": "Everything clipped, design or not. The desk is a view on the design half of this.",
+      "count": "279 clips at last count",
+      "private": true
+    }
+  ],
   "manual": [
     {
       "url": "https://www.isomorphiclabs.com/",
@@ -255,6 +484,58 @@ window.DESIGN_LIBRARY = {
         "motion",
         "animation"
       ]
+    },
+    {
+      "url": "https://recent.design/",
+      "title": "Recent",
+      "kind": "gallery",
+      "tags": [
+        "web-design"
+      ],
+      "why": "Godly's new home, per Jack Roberts' five shelves. Best of recent design, daily.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://noiced.com/",
+      "title": "Noiced",
+      "kind": "gallery",
+      "tags": [
+        "web-design"
+      ],
+      "why": "Daily web design inspiration. From Jack's shelf.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://landing.love/",
+      "title": "Landing.love",
+      "kind": "gallery",
+      "tags": [
+        "motion",
+        "landing-pages"
+      ],
+      "why": "2,000+ animation-heavy landing pages. Pairs with the pink notebook page.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://minimal.gallery/",
+      "title": "Minimal Gallery",
+      "kind": "gallery",
+      "tags": [
+        "web-design",
+        "minimal"
+      ],
+      "why": "Hand-picked minimal web design. For when the slab layout needs a diet.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://siteinspire.com/",
+      "title": "Siteinspire",
+      "kind": "gallery",
+      "tags": [
+        "web-design"
+      ],
+      "why": "Old-school, still one of the cleanest galleries.",
+      "added": "2026-09-24"
     }
   ],
   "items": [
@@ -425,6 +706,73 @@ window.DESIGN_LIBRARY = {
       "url": "http://animejs.com/",
       "title": "Anime.js",
       "why": "A lightweight animation library. Worth knowing next to GSAP.",
+      "added": "2026-09-24",
+      "source": "manual"
+    },
+    {
+      "id": "recent.design",
+      "domain": "recent.design",
+      "kind": "gallery",
+      "tags": [
+        "web-design"
+      ],
+      "url": "https://recent.design/",
+      "title": "Recent",
+      "why": "Godly's new home, per Jack Roberts' five shelves. Best of recent design, daily.",
+      "added": "2026-09-24",
+      "source": "manual"
+    },
+    {
+      "id": "noiced.com",
+      "domain": "noiced.com",
+      "kind": "gallery",
+      "tags": [
+        "web-design"
+      ],
+      "url": "https://noiced.com/",
+      "title": "Noiced",
+      "why": "Daily web design inspiration. From Jack's shelf.",
+      "added": "2026-09-24",
+      "source": "manual"
+    },
+    {
+      "id": "landing.love",
+      "domain": "landing.love",
+      "kind": "gallery",
+      "tags": [
+        "motion",
+        "landing-pages"
+      ],
+      "url": "https://landing.love/",
+      "title": "Landing.love",
+      "why": "2,000+ animation-heavy landing pages. Pairs with the pink notebook page.",
+      "added": "2026-09-24",
+      "source": "manual"
+    },
+    {
+      "id": "minimal.gallery",
+      "domain": "minimal.gallery",
+      "kind": "gallery",
+      "tags": [
+        "web-design",
+        "minimal"
+      ],
+      "url": "https://minimal.gallery/",
+      "title": "Minimal Gallery",
+      "why": "Hand-picked minimal web design. For when the slab layout needs a diet.",
+      "added": "2026-09-24",
+      "source": "manual"
+    },
+    {
+      "id": "siteinspire.com",
+      "domain": "siteinspire.com",
+      "kind": "gallery",
+      "tags": [
+        "web-design"
+      ],
+      "url": "https://siteinspire.com/",
+      "title": "Siteinspire",
+      "why": "Old-school, still one of the cleanest galleries.",
       "added": "2026-09-24",
       "source": "manual"
     },

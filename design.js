@@ -200,6 +200,84 @@
     }
   }
 
+  /* ---------- Design systems ---------- */
+  const systemGrid = document.getElementById("systemGrid");
+  const systems = library && Array.isArray(library.systems) ? library.systems : [];
+  if (systemGrid) {
+    if (!systems.length) {
+      systemGrid.appendChild(el("p", "desk-empty", "no systems written down yet."));
+    }
+    systems.forEach((system) => {
+      const card = el("article", "system-card");
+      card.appendChild(dotTag((system.status || "system") + (system.site ? " \u00b7 " + system.site : "")));
+      card.appendChild(el("h3", null, system.name || system.site || "untitled"));
+
+      const palette = Array.isArray(system.palette) ? system.palette : [];
+      if (palette.length) {
+        const row = el("div", "palette-row");
+        row.setAttribute("aria-label", "Palette");
+        palette.forEach((color) => {
+          const swatch = el("span", "tone");
+          const chip = el("span", "tone__chip");
+          chip.style.background = color.hex;
+          chip.title = (color.name ? color.name + " " : "") + color.hex;
+          swatch.appendChild(chip);
+          swatch.appendChild(el("span", null, color.name || color.hex));
+          row.appendChild(swatch);
+        });
+        card.appendChild(row);
+      }
+
+      if (system.type) {
+        const type = el("p", "system-card__type");
+        type.appendChild(el("b", null, "Type: "));
+        type.appendChild(document.createTextNode(system.type));
+        card.appendChild(type);
+      }
+
+      const rules = Array.isArray(system.rules) ? system.rules.filter(Boolean) : [];
+      if (rules.length) {
+        const list = el("ul", "system-rules");
+        rules.forEach((rule) => list.appendChild(el("li", null, rule)));
+        card.appendChild(list);
+      }
+
+      const links = el("div", "system-card__links");
+      if (system.live) links.appendChild(external(el("a", null, "Live"), system.live));
+      if (system.doc) links.appendChild(external(el("a", null, system.docLabel || "The rules"), system.doc));
+      if (links.childNodes.length) card.appendChild(links);
+
+      systemGrid.appendChild(card);
+    });
+  }
+
+  /* ---------- Art libraries ---------- */
+  const libraryList = document.getElementById("libraryList");
+  const libraries = library && Array.isArray(library.libraries) ? library.libraries : [];
+  if (libraryList) {
+    if (!libraries.length) {
+      const row = el("li");
+      row.appendChild(el("span", "now-label", "nothing yet"));
+      row.appendChild(el("span", "now-body", "no libraries listed yet."));
+      libraryList.appendChild(row);
+    }
+    libraries.forEach((entry) => {
+      const row = el("li");
+      const label = el("span", "now-label");
+      const link = el("a", null, entry.name || entry.url);
+      link.href = entry.url;
+      if (/^https?:\/\//.test(entry.url || "") && !/kellylucas\.dev/.test(entry.url)) external(link, entry.url);
+      label.appendChild(link);
+      row.appendChild(label);
+      const body = el("span", "now-body");
+      body.appendChild(document.createTextNode(entry.what || ""));
+      if (entry.count) body.appendChild(el("small", null, entry.count));
+      if (entry.private) body.appendChild(el("span", "private-pill", "private \u00b7 kelly only"));
+      row.appendChild(body);
+      libraryList.appendChild(row);
+    });
+  }
+
   /* ---------- Rewatch list ---------- */
   const videoGrid = document.getElementById("videoGrid");
   if (videoGrid) {
