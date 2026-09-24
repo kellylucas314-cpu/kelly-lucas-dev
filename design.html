@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design Desk · Kelly Lucas</title>
+  <meta name="description" content="Kelly Lucas's design desk: a swipe file for UI, kept in public. Galleries, sites worth studying, videos to rewatch, and notebook pages." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='5' fill='%23b1d8b3' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a href="index.html" class="logo">
+      <span class="logo-mark" id="logoMark"></span>
+      Kelly Lucas
+      <span class="version-pill" aria-hidden="true">v0.9</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="index.html#work">Work</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#now">Now</a>
+      <a href="all-fonts.html">Fonts</a>
+      <a href="quotes.html">Spark</a>
+      <a href="design.html" aria-current="page">Design</a>
+      <a href="/lab/">Lab</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="page">
+
+    <!-- HERO -->
+    <section class="block block--mint hero desk-hero">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>experiment 05 &middot; design desk</span>
+      </div>
+
+      <div class="sticker-shelf" id="stickerShelf">
+        <p class="scribble scribble--shelf">
+          drag these
+          <svg class="scribble-arrow" viewBox="0 0 60 40" aria-hidden="true">
+            <path d="M4 6 C 18 30, 38 34, 52 24 M 44 22 L 53 24 L 49 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </p>
+        <div class="sticker-row">
+          <span class="sticker sticker--mint" style="--tilt:-4deg">taste</span>
+          <span class="sticker sticker--lilac" style="--tilt:3deg">clarity</span>
+          <span class="sticker sticker--cream" style="--tilt:-2deg">flow</span>
+        </div>
+      </div>
+
+      <h1 class="display balance">Design<br />desk.</h1>
+      <div class="hero-aside">
+        <p class="scribble">(a swipe file, kept in public)</p>
+        <p>
+          I'm learning UI by paying attention. This is where I keep what I
+          notice: the galleries I raid, the sites I study, the videos I
+          rewatch, and the pages from my notebook.
+        </p>
+        <a href="#shelf" class="cta">
+          <span class="cta__label">Browse the shelf</span>
+          <span class="cta__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <!-- NOTEBOOK -->
+    <section class="block block--cream desk-notebook">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>from the notebook</span>
+      </div>
+      <h2 class="display display--sm">Three pages, transcribed</h2>
+      <p class="scribble">(red pen, blue pen, pink pen. in that order.)</p>
+
+      <div class="notebook-grid">
+        <article class="notepage" style="--tilt:-1deg">
+          <div class="dot-tag">
+            <span class="dot-tag__dot"></span>
+            <span>page 01 &middot; red pen</span>
+          </div>
+          <h3>Presentation of design</h3>
+          <ul class="notepage__list">
+            <li>The Dribbble trick for a main color: desaturate it, make it grayish, then add a faint shadow.</li>
+            <li>Dark mode is a super soft blur of color, not a black slab.</li>
+            <li>Bland background colors make the design pop.</li>
+            <li>Exploding an image: let the pattern extend off screen.</li>
+            <li>Mobbin for real product flows. Link it up.</li>
+            <li>Product mockups: try AI, try Pomelli.</li>
+          </ul>
+        </article>
+
+        <article class="notepage" style="--tilt:1deg">
+          <div class="dot-tag">
+            <span class="dot-tag__dot"></span>
+            <span>page 02 &middot; blue pen</span>
+          </div>
+          <h3>What makes Linear so good?</h3>
+          <p class="notepage__lede">Clarity.</p>
+          <ul class="notepage__list">
+            <li>Hover gives you context. A new project gets an empty state that guides you.</li>
+            <li><b>1.</b> Handle all the states: failure, empty, loading, success, and the rest.</li>
+            <li><b>2.</b> dub.co: the empty dashboard has an animation, a message, and a clear next step. Vercel: deploy, and the status shows immediately so you know it worked.</li>
+            <li><b>3.</b> Build for flow. Notion: new teamspace, add team members, or skip.</li>
+          </ul>
+        </article>
+
+        <article class="notepage" style="--tilt:-0.6deg">
+          <div class="dot-tag">
+            <span class="dot-tag__dot"></span>
+            <span>page 03 &middot; pink pen</span>
+          </div>
+          <h3>Fibonacci in design</h3>
+          <ul class="notepage__list">
+            <li>1.618 is the golden ratio. Its square root is 1.27. Its cube root is 1.17.</li>
+            <li>Paragraphs: line height 150%.</li>
+            <li>Preloader idea: lift the upper layer and the layer below at almost the same time.</li>
+            <li>Hover: a button that changes color and sort of flips up.</li>
+            <li>Scroll: highlight as you go. Loops: minimal and slow moving. A vertical marquee loop.</li>
+            <li>Mouse effects: the CTA comes forward.</li>
+          </ul>
+          <p class="scribble">(margin note: find the "5 trendy animations" video, give it to claude)</p>
+
+          <div class="scale-demo" id="scaleDemo">
+            <p class="scale-demo__label">try the ratios</p>
+            <div class="chip-row" role="group" aria-label="Type scale ratio">
+              <button type="button" class="chip" data-ratio="1.17" aria-pressed="false">1.17</button>
+              <button type="button" class="chip is-active" data-ratio="1.27" aria-pressed="true">1.27</button>
+              <button type="button" class="chip" data-ratio="1.618" aria-pressed="false">1.618</button>
+            </div>
+            <div class="scale-specimen" aria-live="polite">
+              <p class="scale-line scale-line--display" data-step="3"><span>Display</span><span class="scale-px"></span></p>
+              <p class="scale-line" data-step="2"><span>A heading</span><span class="scale-px"></span></p>
+              <p class="scale-line" data-step="0"><span>Body copy at 150% line height.</span><span class="scale-px"></span></p>
+              <p class="scale-line" data-step="-1"><span>small print</span><span class="scale-px"></span></p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- THE SHELF -->
+    <section id="shelf" class="block--bare desk-shelf">
+      <div class="three-up__head spark-head">
+        <div class="dot-tag">
+          <span class="dot-tag__dot"></span>
+          <span>the shelf</span>
+        </div>
+        <h2 class="display display--sm">Everything on the shelf</h2>
+        <p>Galleries I raid, sites I study, tools I reach for. Each one has a line on why it is here.</p>
+      </div>
+      <div class="desk-controls">
+        <div class="chip-row" id="shelfChips" role="group" aria-label="Filter the shelf"></div>
+        <label class="desk-search-wrap">
+          <span class="visually-hidden">Search the shelf</span>
+          <input type="search" class="desk-search" id="shelfSearch" placeholder="search the shelf" autocomplete="off" />
+        </label>
+      </div>
+      <p class="desk-count" id="shelfCount" aria-live="polite"></p>
+      <div class="desk-grid" id="shelfGrid"></div>
+      <p class="desk-empty" id="shelfEmpty" hidden></p>
+    </section>
+
+    <!-- REWATCH LIST -->
+    <section class="block block--lilac desk-rewatch">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>rewatch list &middot; in progress</span>
+      </div>
+      <h2 class="display display--sm">Videos I keep going back to</h2>
+      <p class="scribble">(lilac means unfinished. some of these notes are still cooking.)</p>
+      <div class="video-grid" id="videoGrid"></div>
+    </section>
+
+    <!-- HOW IT FILLS -->
+    <section class="block block--mint desk-how">
+      <div class="dot-tag dot-tag--top-left">
+        <span class="dot-tag__dot"></span>
+        <span>how it works</span>
+      </div>
+      <h2 class="display display--sm">How this page fills itself</h2>
+      <p class="scribble">(the chrome button already existed. it just needed a new job.)</p>
+      <ul class="now-list">
+        <li>
+          <span class="now-label">1. clip</span>
+          <span class="now-body">Hit the Magpie feather on any page, tag it <code>design</code>, and say why in one line.</span>
+        </li>
+        <li>
+          <span class="now-label">2. sync</span>
+          <span class="now-body"><code>npm run sync:design</code> pulls every desk-tagged clip into <code>design-library.js</code>.</span>
+        </li>
+        <li>
+          <span class="now-label">3. push</span>
+          <span class="now-body">Push to main. Vercel deploys, the shelf updates, and the video notes fill in.</span>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <span class="footer-tag">back to the lab</span>
+        <a class="footer-mail" href="index.html">kellylucas.dev</a>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-logo">Kelly Lucas</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="design.html" aria-current="page">Design</a>
+          <a href="quotes.html">Spark</a>
+          <a href="log.html">Log</a>
+          <a href="colophon.html">Colophon</a>
+          <a href="/lab/">Lab</a>
+        </nav>
+        <span class="footer-meta">&copy; <span id="year"></span> Kelly Lucas</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+
+  <script defer src="design-library.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+  <script defer src="script.js"></script>
+  <script defer src="design.js"></script>
+</body>
+</html>

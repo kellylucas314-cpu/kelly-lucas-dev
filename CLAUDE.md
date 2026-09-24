@@ -58,6 +58,13 @@ Keep it clean. No backup files, no version-numbered copies.
   Heliopolis art library (`kellylucas314-cpu/heliopolis-art-library`, served by
   GitHub Pages). Edit the art there, not here.
 
+## Design desk
+- `design.html` is the public swipe file. It renders `design-library.js`, a
+  generated data file: `manual` entries are hand-written, `items` is rebuilt
+  by `npm run sync:design` from desk-tagged Magpie clips (tag a clip `design`).
+  Video cards show takeaways from the clip's `## Notes` bullets, or an honest
+  "notes pending" state until those exist.
+
 ## Rules
 1. No em dashes anywhere in copy.
 2. Mobile-first: test at 390px width.
