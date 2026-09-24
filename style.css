@@ -2864,7 +2864,10 @@ html.fx-serious .site-footer {
 .doc-grid {
   margin-top: 18px;
   display: grid;
-  grid-template-columns: 1fr;
+  /* minmax(0, 1fr), not 1fr: the image strips are wide, and a plain 1fr
+     track grows to fit them (5000px on a phone) instead of letting them
+     scroll inside their card. */
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
   gap: 16px;
 }
@@ -2873,6 +2876,7 @@ html.fx-serious .site-footer {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  min-width: 0;
   padding: 18px;
   background: rgba(255, 255, 255, 0.45);
   border: 1px solid rgba(20, 32, 26, 0.14);
@@ -2922,6 +2926,10 @@ html.fx-serious .site-footer {
 }
 
 .doc-tile img {
+  /* Absolutely positioned, like the shelf tiles: a tall cover image must never
+     stretch the 4:3 tile to its own height. */
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -2965,6 +2973,7 @@ html.fx-serious .site-footer {
 .art-strip {
   display: flex;
   gap: 12px;
+  min-width: 0;
   overflow-x: auto;
   padding: 4px 2px 12px;
   scroll-snap-type: x proximity;
@@ -3015,12 +3024,12 @@ html.fx-serious .site-footer {
 
 @media (min-width: 760px) {
   .doc-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1100px) {
   .doc-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
