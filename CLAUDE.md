@@ -67,6 +67,15 @@ Keep it clean. No backup files, no version-numbered copies.
   through the sync untouched. Video cards show takeaways from the clip's
   `## Notes` bullets, or an honest "notes pending" state until those exist.
 
+## Skills in the lab
+- `.claude/skills/` holds Claude Code skills from Jack Roberts' design loop, kept
+  off the Vercel deploy: `rtf` (YouTube URL to word-level transcript and
+  graphic moments; needs yt-dlp and ffmpeg), `design-teardown` (measure two
+  sites, diff nine dimensions, build an interactive spec; the first run lives in
+  `docs/design/`), and `site-blueprint` (scrape a niche's top homepages with
+  Firecrawl and derive the section order). All three need the open web, so run
+  them from the Mac or from a session whose network allows the target hosts.
+
 ## Rules
 1. No em dashes anywhere in copy.
 2. Mobile-first: test at 390px width.
