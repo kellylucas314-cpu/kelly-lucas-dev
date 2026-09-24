@@ -341,17 +341,47 @@ window.DESIGN_LIBRARY = {
     },
     {
       "url": "https://youtu.be/ZsP20PN14O0",
+      "title": "5 Trendy Animations to Steal for Your Next Web Design",
+      "author": "Kole Jain",
       "kind": "video",
+      "takeaways": [
+        "Five buckets cover almost all site motion: entrance, hover or click, scroll, looped, and mouse. Name which one you are building before you build it.",
+        "Subtle and classy beats big and flashy. Big animations slow the site down and overwhelm people, which is the opposite of premium.",
+        "Preloaders: keep them short, and move the layer underneath as the loader lifts. A frozen page under a moving loader looks broken.",
+        "Highlight on scroll is just a two color gradient, almost stacked, masked by the text and slid along with scroll position. Stagger it across lines.",
+        "Loops earn their place only when they are slow and minimal. A marquee you can actually read adds to the design. A fast one is noise.",
+        "Mouse effects: the CTA that comes to your cursor is the best use. Keep them rare, and have a fallback because tablet and mobile have no cursor."
+      ],
       "added": "2026-09-24"
     },
     {
       "url": "https://youtu.be/ADaQuZS04Rc",
+      "title": "Stop Making Pretty UIs. Think Like a Product Designer",
+      "author": "Kole Jain",
       "kind": "video",
+      "takeaways": [
+        "UI design decorates one room. Product design plans the whole house: the flow, the function, the wiring, and how it all connects.",
+        "Do not just design the happy path. Empty, loading, success, and error states are the tiny moments that make or break the experience.",
+        "Think in screens and sequences, not sections. For every screen ask how the user got here and what they need next.",
+        "Chain the small decisions. Notion makes a teamspace, then immediately asks you to add people, with a skip. Three tiny choices, one natural flow.",
+        "Consistency builds trust. The primary color in a Mac dialog is always the safe action, so you stop reading and just click.",
+        "A design system is a decision you can stick to, not hundreds of components. Same buttons, spacing, and type everywhere, so every new screen feels familiar."
+      ],
       "added": "2026-09-24"
     },
     {
       "url": "https://youtu.be/7sUUzOCv47U",
+      "title": "Mathematically Perfect Typography for Web Design",
+      "author": "Kole Jain",
       "kind": "video",
+      "takeaways": [
+        "One font is fine and two is plenty. Three is pushing it, four is asking for problems. Never set paragraphs in a display or handwritten font.",
+        "At small sizes a thinner weight and a lighter color look the same. Use either to build hierarchy. Body stays at 100%, secondary text sits around 40 to 70%.",
+        "Size already gives the heading its attention, so leave it plain. Bold the subheadings so they scan. Do not make the smallest text the faintest too.",
+        "Scale type from a 16px base by 1.27, the square root of the golden ratio. Use 1.17, the cube root, for dense screens like dashboards and mobile. Straight 1.62 gets huge too fast.",
+        "Fluid sizing: one line of CSS slides between the 320px size and the 1920px size, clamped with min and max. No breakpoints.",
+        "Line height: about 150% for paragraphs, 110 to 130% for headings. Smaller text and longer lines want more. Auto falls apart at display sizes."
+      ],
       "added": "2026-09-24"
     },
     {
@@ -739,6 +769,16 @@ window.DESIGN_LIBRARY = {
       "kind": "video",
       "tags": [],
       "url": "https://youtu.be/ZsP20PN14O0",
+      "title": "5 Trendy Animations to Steal for Your Next Web Design",
+      "author": "Kole Jain",
+      "takeaways": [
+        "Five buckets cover almost all site motion: entrance, hover or click, scroll, looped, and mouse. Name which one you are building before you build it.",
+        "Subtle and classy beats big and flashy. Big animations slow the site down and overwhelm people, which is the opposite of premium.",
+        "Preloaders: keep them short, and move the layer underneath as the loader lifts. A frozen page under a moving loader looks broken.",
+        "Highlight on scroll is just a two color gradient, almost stacked, masked by the text and slid along with scroll position. Stagger it across lines.",
+        "Loops earn their place only when they are slow and minimal. A marquee you can actually read adds to the design. A fast one is noise.",
+        "Mouse effects: the CTA that comes to your cursor is the best use. Keep them rare, and have a fallback because tablet and mobile have no cursor."
+      ],
       "added": "2026-09-24",
       "source": "manual"
     },
@@ -748,6 +788,16 @@ window.DESIGN_LIBRARY = {
       "kind": "video",
       "tags": [],
       "url": "https://youtu.be/ADaQuZS04Rc",
+      "title": "Stop Making Pretty UIs. Think Like a Product Designer",
+      "author": "Kole Jain",
+      "takeaways": [
+        "UI design decorates one room. Product design plans the whole house: the flow, the function, the wiring, and how it all connects.",
+        "Do not just design the happy path. Empty, loading, success, and error states are the tiny moments that make or break the experience.",
+        "Think in screens and sequences, not sections. For every screen ask how the user got here and what they need next.",
+        "Chain the small decisions. Notion makes a teamspace, then immediately asks you to add people, with a skip. Three tiny choices, one natural flow.",
+        "Consistency builds trust. The primary color in a Mac dialog is always the safe action, so you stop reading and just click.",
+        "A design system is a decision you can stick to, not hundreds of components. Same buttons, spacing, and type everywhere, so every new screen feels familiar."
+      ],
       "added": "2026-09-24",
       "source": "manual"
     },
@@ -757,6 +807,16 @@ window.DESIGN_LIBRARY = {
       "kind": "video",
       "tags": [],
       "url": "https://youtu.be/7sUUzOCv47U",
+      "title": "Mathematically Perfect Typography for Web Design",
+      "author": "Kole Jain",
+      "takeaways": [
+        "One font is fine and two is plenty. Three is pushing it, four is asking for problems. Never set paragraphs in a display or handwritten font.",
+        "At small sizes a thinner weight and a lighter color look the same. Use either to build hierarchy. Body stays at 100%, secondary text sits around 40 to 70%.",
+        "Size already gives the heading its attention, so leave it plain. Bold the subheadings so they scan. Do not make the smallest text the faintest too.",
+        "Scale type from a 16px base by 1.27, the square root of the golden ratio. Use 1.17, the cube root, for dense screens like dashboards and mobile. Straight 1.62 gets huge too fast.",
+        "Fluid sizing: one line of CSS slides between the 320px size and the 1920px size, clamped with min and max. No breakpoints.",
+        "Line height: about 150% for paragraphs, 110 to 130% for headings. Smaller text and longer lines want more. Auto falls apart at display sizes."
+      ],
       "added": "2026-09-24",
       "source": "manual"
     },

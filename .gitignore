@@ -22,3 +22,8 @@ output/playwright/
 
 # Loopback-only Agent Commons room state
 .agent-room-local/
+
+# rtf skill output (transcripts, reports) and Python bytecode
+rtf-*/
+.rtf-staging/
+__pycache__/
