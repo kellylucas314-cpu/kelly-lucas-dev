@@ -2781,3 +2781,246 @@ html.fx-serious .site-footer {
   font-weight: 500;
   color: var(--ink-soft);
 }
+
+/* The five piles (design.html) */
+.desk-section {
+  padding-top: clamp(72px, 9vw, 120px);
+}
+
+.desk-section .scribble {
+  margin-top: 12px;
+}
+
+.desk-nav {
+  margin-top: 26px;
+}
+
+.desk-nav .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.desk-nav .chip b {
+  font-weight: 500;
+  opacity: 0.55;
+}
+
+.desk-part {
+  margin-top: clamp(32px, 5vw, 52px);
+}
+
+.desk-part[hidden] {
+  display: none;
+}
+
+.desk-sub {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ink-mute);
+}
+
+.desk-sub::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(20, 32, 26, 0.2);
+}
+
+.desk-part .system-grid,
+.desk-part .desk-grid,
+.desk-part .library-list {
+  margin-top: 18px;
+}
+
+.desk-grid--tight .desk-card {
+  min-height: 0;
+}
+
+.desk-grid[hidden] {
+  display: none;
+}
+
+.desk-count--inline {
+  padding: 0;
+  margin-top: 10px;
+}
+
+.desk-count--inline:empty {
+  display: none;
+}
+
+.desk-fold {
+  margin-top: 18px;
+}
+
+/* Documents: PDFs, boards, pages, and strips of images */
+.doc-grid {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 16px;
+}
+
+.doc-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(20, 32, 26, 0.14);
+  border-radius: var(--radius-card);
+}
+
+.doc-card--wide {
+  grid-column: 1 / -1;
+}
+
+.doc-card h3 {
+  font-size: clamp(19px, 1.9vw, 24px);
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.doc-card h3 a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+
+.doc-card p {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.doc-card .cta {
+  margin-top: auto;
+}
+
+.doc-card .private-pill {
+  align-self: flex-start;
+}
+
+.doc-tile {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(20, 32, 26, 0.2);
+  background: var(--cream);
+}
+
+.doc-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transition: transform 0.4s ease;
+}
+
+.doc-card:hover .doc-tile img {
+  transform: scale(1.02);
+}
+
+.doc-tile__mark {
+  position: absolute;
+  left: 16px;
+  bottom: 12px;
+  font-family: var(--font-display);
+  font-size: clamp(40px, 4vw, 56px);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+
+.doc-tile__badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: rgba(244, 242, 236, 0.92);
+  padding: 5px 10px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.doc-tile:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.art-strip {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 2px 12px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.art-strip a {
+  flex: 0 0 auto;
+  width: 188px;
+  scroll-snap-align: start;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(20, 32, 26, 0.2);
+  background: #fff;
+}
+
+.art-strip a:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.art-strip figure {
+  margin: 0;
+}
+
+.art-strip img {
+  display: block;
+  width: 100%;
+  height: 132px;
+  object-fit: cover;
+  object-position: top;
+}
+
+.art-strip--tall img {
+  object-fit: contain;
+  background: #faf9f5;
+}
+
+.art-strip figcaption {
+  padding: 7px 9px;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--ink-mute);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 760px) {
+  .doc-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .doc-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
