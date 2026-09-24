@@ -536,6 +536,71 @@ window.DESIGN_LIBRARY = {
       ],
       "why": "Old-school, still one of the cleanest galleries.",
       "added": "2026-09-24"
+    },
+    {
+      "url": "https://app.notion.com/p/The-Design-Loop-Free-Guide-3b8e8d6bd13781ff8bf2fc06fd5d0aac",
+      "title": "The Design Loop",
+      "kind": "reading",
+      "tags": [
+        "jack-roberts",
+        "method"
+      ],
+      "why": "Jack Roberts' free guide behind the rtf and design-teardown skills now installed in this repo. Curate, measure, fix, repeat.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://app.notion.com/p/The-Brand-Asset-Machine-3b3e8d6bd13781909d92c4d0cafc7c77",
+      "title": "The Brand Asset Machine",
+      "kind": "reading",
+      "tags": [
+        "jack-roberts",
+        "brand"
+      ],
+      "why": "Jack's guide to generating a brand's asset set with AI. Saved to read against the Heliopolis art direction.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://app.notion.com/p/5-Questions-to-Answer-Before-You-Build-Any-Website-339e8d6bd1378133800bd681d1d24dfe",
+      "title": "5 Questions to Answer Before You Build Any Website",
+      "kind": "reading",
+      "tags": [
+        "jack-roberts",
+        "method"
+      ],
+      "why": "Read before the next HelioFlux or Heliopolis page. Five questions first, then pixels.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://app.notion.com/p/Claude-Fable-5-Website-Design-Prompts-3-Levels-37ee8d6bd1378142b27be3a1480dd0d5",
+      "title": "Website Design Prompts, 3 Levels",
+      "kind": "reading",
+      "tags": [
+        "jack-roberts",
+        "prompts"
+      ],
+      "why": "Jack's three prompt levels for website design. Whatever they produce goes through the teardown probe before it ships.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://app.notion.com/p/The-AI-Native-Client-CMS-Free-Build-Blueprint-374e8d6bd13781559214ffd5ac6041f6",
+      "title": "The AI-Native Client CMS Build Blueprint",
+      "kind": "reading",
+      "tags": [
+        "jack-roberts",
+        "cms"
+      ],
+      "why": "A blueprint for a client-facing CMS built AI-first. Filed for the day the lab needs an editor.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://easywebsitebuilder.tech/",
+      "title": "Easy Website Builder",
+      "kind": "tool",
+      "tags": [
+        "jack-roberts"
+      ],
+      "why": "Jack's website builder. Saved to try, not yet opened.",
+      "added": "2026-09-24"
     }
   ],
   "items": [
@@ -773,6 +838,89 @@ window.DESIGN_LIBRARY = {
       "url": "https://siteinspire.com/",
       "title": "Siteinspire",
       "why": "Old-school, still one of the cleanest galleries.",
+      "added": "2026-09-24",
+      "source": "manual"
+    },
+    {
+      "id": "app.notion.com/p/the-design-loop-free-guide-3b8e8d6bd13781ff8bf2fc06fd5d0aac",
+      "domain": "app.notion.com",
+      "kind": "reading",
+      "tags": [
+        "jack-roberts",
+        "method"
+      ],
+      "url": "https://app.notion.com/p/The-Design-Loop-Free-Guide-3b8e8d6bd13781ff8bf2fc06fd5d0aac",
+      "title": "The Design Loop",
+      "why": "Jack Roberts' free guide behind the rtf and design-teardown skills now installed in this repo. Curate, measure, fix, repeat.",
+      "added": "2026-09-24",
+      "source": "manual"
+    },
+    {
+      "id": "app.notion.com/p/the-brand-asset-machine-3b3e8d6bd13781909d92c4d0cafc7c77",
+      "domain": "app.notion.com",
+      "kind": "reading",
+      "tags": [
+        "jack-roberts",
+        "brand"
+      ],
+      "url": "https://app.notion.com/p/The-Brand-Asset-Machine-3b3e8d6bd13781909d92c4d0cafc7c77",
+      "title": "The Brand Asset Machine",
+      "why": "Jack's guide to generating a brand's asset set with AI. Saved to read against the Heliopolis art direction.",
+      "added": "2026-09-24",
+      "source": "manual"
+    },
+    {
+      "id": "app.notion.com/p/5-questions-to-answer-before-you-build-any-website-339e8d6bd1378133800bd681d1d24dfe",
+      "domain": "app.notion.com",
+      "kind": "reading",
+      "tags": [
+        "jack-roberts",
+        "method"
+      ],
+      "url": "https://app.notion.com/p/5-Questions-to-Answer-Before-You-Build-Any-Website-339e8d6bd1378133800bd681d1d24dfe",
+      "title": "5 Questions to Answer Before You Build Any Website",
+      "why": "Read before the next HelioFlux or Heliopolis page. Five questions first, then pixels.",
+      "added": "2026-09-24",
+      "source": "manual"
+    },
+    {
+      "id": "app.notion.com/p/claude-fable-5-website-design-prompts-3-levels-37ee8d6bd1378142b27be3a1480dd0d5",
+      "domain": "app.notion.com",
+      "kind": "reading",
+      "tags": [
+        "jack-roberts",
+        "prompts"
+      ],
+      "url": "https://app.notion.com/p/Claude-Fable-5-Website-Design-Prompts-3-Levels-37ee8d6bd1378142b27be3a1480dd0d5",
+      "title": "Website Design Prompts, 3 Levels",
+      "why": "Jack's three prompt levels for website design. Whatever they produce goes through the teardown probe before it ships.",
+      "added": "2026-09-24",
+      "source": "manual"
+    },
+    {
+      "id": "app.notion.com/p/the-ai-native-client-cms-free-build-blueprint-374e8d6bd13781559214ffd5ac6041f6",
+      "domain": "app.notion.com",
+      "kind": "reading",
+      "tags": [
+        "jack-roberts",
+        "cms"
+      ],
+      "url": "https://app.notion.com/p/The-AI-Native-Client-CMS-Free-Build-Blueprint-374e8d6bd13781559214ffd5ac6041f6",
+      "title": "The AI-Native Client CMS Build Blueprint",
+      "why": "A blueprint for a client-facing CMS built AI-first. Filed for the day the lab needs an editor.",
+      "added": "2026-09-24",
+      "source": "manual"
+    },
+    {
+      "id": "easywebsitebuilder.tech",
+      "domain": "easywebsitebuilder.tech",
+      "kind": "tool",
+      "tags": [
+        "jack-roberts"
+      ],
+      "url": "https://easywebsitebuilder.tech/",
+      "title": "Easy Website Builder",
+      "why": "Jack's website builder. Saved to try, not yet opened.",
       "added": "2026-09-24",
       "source": "manual"
     },
