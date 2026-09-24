@@ -545,7 +545,7 @@ window.DESIGN_LIBRARY = {
         "jack-roberts",
         "method"
       ],
-      "why": "Jack Roberts' free guide behind the rtf and design-teardown skills now installed in this repo. Curate, measure, fix, repeat.",
+      "why": "Interview, preflight, teardown, loop. Name a specific bar, write mechanisms not adjectives, then let three fresh critics judge the render until all three pass. Installed as /design-loop in this repo.",
       "added": "2026-09-24"
     },
     {
@@ -556,7 +556,7 @@ window.DESIGN_LIBRARY = {
         "jack-roberts",
         "brand"
       ],
-      "why": "Jack's guide to generating a brand's asset set with AI. Saved to read against the Heliopolis art direction.",
+      "why": "A skill that interviews you, fixes a palette, then generates a brand's logo, photography, one motion loop and a texture pack, all inside that palette. Three rules: one product build everywhere, no text in photos, approve the extras.",
       "added": "2026-09-24"
     },
     {
@@ -567,7 +567,7 @@ window.DESIGN_LIBRARY = {
         "jack-roberts",
         "method"
       ],
-      "why": "Read before the next HelioFlux or Heliopolis page. Five questions first, then pixels.",
+      "why": "Who is the visitor, what is the one action, which objections need a section, what is the vibe in one word, and do brand assets exist yet. Answer these before the next HelioFlux or Heliopolis page.",
       "added": "2026-09-24"
     },
     {
@@ -578,7 +578,7 @@ window.DESIGN_LIBRARY = {
         "jack-roberts",
         "prompts"
       ],
-      "why": "Jack's three prompt levels for website design. Whatever they produce goes through the teardown probe before it ships.",
+      "why": "Level one describes a site in a line, level two recreates a reference, level three extracts a site's design DNA and rebuilds something original. Level three is the one that matches how this desk works.",
       "added": "2026-09-24"
     },
     {
@@ -589,7 +589,7 @@ window.DESIGN_LIBRARY = {
         "jack-roberts",
         "cms"
       ],
-      "why": "A blueprint for a client-facing CMS built AI-first. Filed for the day the lab needs an editor.",
+      "why": "Ingest a site, freeze the design as a template, expose only content slots, and run every change through a deterministic validator so a client cannot break the layout. Filed for the day the lab needs an editor.",
       "added": "2026-09-24"
     },
     {
@@ -601,6 +601,31 @@ window.DESIGN_LIBRARY = {
       ],
       "why": "Jack's website builder. Saved to try, not yet opened.",
       "added": "2026-09-24"
+    },
+    {
+      "url": "https://app.notion.com/p/GPT-6-Astra-Is-Here-5-Things-You-NEED-to-Do-With-It-3d2e8d6bd137819f99b2f35862af517b",
+      "title": "Five real jobs for a new model",
+      "kind": "reading",
+      "tags": [
+        "jack-roberts",
+        "method"
+      ],
+      "why": "Five prompts with a way to check each: find the bottleneck, a one-screen business dashboard, build with the design loop then test like a first-time customer, a filmable UI system from one reference, and a money-leak audit with receipts.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=2ZwO6LhC0SU",
+      "kind": "video",
+      "title": "Website design in three levels, with Jack Roberts",
+      "author": "AI Automations with Jack",
+      "added": "2026-09-24",
+      "takeaways": [
+        "Level one: describe the site in plain words and let the model one-shot it. Fast, and it looks like everyone else's.",
+        "Level two: hand over a reference you love and ask for a recreation. Hard mode, and it copies more than it should.",
+        "Level three: extract the reference's design DNA, typography, colour, spacing, layout, ratios, then rebuild something original from that blueprint. This is the one that matches the desk.",
+        "Open on max effort for the first build, then drop to medium for everything after. Design judgment is where the effort dial matters.",
+        "Awwwards is the place he finds references. Higgsfield or Kie.ai when the hero needs a video."
+      ]
     }
   ],
   "items": [
@@ -851,7 +876,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://app.notion.com/p/The-Design-Loop-Free-Guide-3b8e8d6bd13781ff8bf2fc06fd5d0aac",
       "title": "The Design Loop",
-      "why": "Jack Roberts' free guide behind the rtf and design-teardown skills now installed in this repo. Curate, measure, fix, repeat.",
+      "why": "Interview, preflight, teardown, loop. Name a specific bar, write mechanisms not adjectives, then let three fresh critics judge the render until all three pass. Installed as /design-loop in this repo.",
       "added": "2026-09-24",
       "source": "manual"
     },
@@ -865,7 +890,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://app.notion.com/p/The-Brand-Asset-Machine-3b3e8d6bd13781909d92c4d0cafc7c77",
       "title": "The Brand Asset Machine",
-      "why": "Jack's guide to generating a brand's asset set with AI. Saved to read against the Heliopolis art direction.",
+      "why": "A skill that interviews you, fixes a palette, then generates a brand's logo, photography, one motion loop and a texture pack, all inside that palette. Three rules: one product build everywhere, no text in photos, approve the extras.",
       "added": "2026-09-24",
       "source": "manual"
     },
@@ -879,7 +904,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://app.notion.com/p/5-Questions-to-Answer-Before-You-Build-Any-Website-339e8d6bd1378133800bd681d1d24dfe",
       "title": "5 Questions to Answer Before You Build Any Website",
-      "why": "Read before the next HelioFlux or Heliopolis page. Five questions first, then pixels.",
+      "why": "Who is the visitor, what is the one action, which objections need a section, what is the vibe in one word, and do brand assets exist yet. Answer these before the next HelioFlux or Heliopolis page.",
       "added": "2026-09-24",
       "source": "manual"
     },
@@ -893,7 +918,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://app.notion.com/p/Claude-Fable-5-Website-Design-Prompts-3-Levels-37ee8d6bd1378142b27be3a1480dd0d5",
       "title": "Website Design Prompts, 3 Levels",
-      "why": "Jack's three prompt levels for website design. Whatever they produce goes through the teardown probe before it ships.",
+      "why": "Level one describes a site in a line, level two recreates a reference, level three extracts a site's design DNA and rebuilds something original. Level three is the one that matches how this desk works.",
       "added": "2026-09-24",
       "source": "manual"
     },
@@ -907,7 +932,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://app.notion.com/p/The-AI-Native-Client-CMS-Free-Build-Blueprint-374e8d6bd13781559214ffd5ac6041f6",
       "title": "The AI-Native Client CMS Build Blueprint",
-      "why": "A blueprint for a client-facing CMS built AI-first. Filed for the day the lab needs an editor.",
+      "why": "Ingest a site, freeze the design as a template, expose only content slots, and run every change through a deterministic validator so a client cannot break the layout. Filed for the day the lab needs an editor.",
       "added": "2026-09-24",
       "source": "manual"
     },
@@ -922,6 +947,38 @@ window.DESIGN_LIBRARY = {
       "title": "Easy Website Builder",
       "why": "Jack's website builder. Saved to try, not yet opened.",
       "added": "2026-09-24",
+      "source": "manual"
+    },
+    {
+      "id": "app.notion.com/p/gpt-6-astra-is-here-5-things-you-need-to-do-with-it-3d2e8d6bd137819f99b2f35862af517b",
+      "domain": "app.notion.com",
+      "kind": "reading",
+      "tags": [
+        "jack-roberts",
+        "method"
+      ],
+      "url": "https://app.notion.com/p/GPT-6-Astra-Is-Here-5-Things-You-NEED-to-Do-With-It-3d2e8d6bd137819f99b2f35862af517b",
+      "title": "Five real jobs for a new model",
+      "why": "Five prompts with a way to check each: find the bottleneck, a one-screen business dashboard, build with the design loop then test like a first-time customer, a filmable UI system from one reference, and a money-leak audit with receipts.",
+      "added": "2026-09-24",
+      "source": "manual"
+    },
+    {
+      "id": "youtube:2ZwO6LhC0SU",
+      "domain": "youtube.com",
+      "kind": "video",
+      "tags": [],
+      "url": "https://www.youtube.com/watch?v=2ZwO6LhC0SU",
+      "title": "Website design in three levels, with Jack Roberts",
+      "author": "AI Automations with Jack",
+      "added": "2026-09-24",
+      "takeaways": [
+        "Level one: describe the site in plain words and let the model one-shot it. Fast, and it looks like everyone else's.",
+        "Level two: hand over a reference you love and ask for a recreation. Hard mode, and it copies more than it should.",
+        "Level three: extract the reference's design DNA, typography, colour, spacing, layout, ratios, then rebuild something original from that blueprint. This is the one that matches the desk.",
+        "Open on max effort for the first build, then drop to medium for everything after. Design judgment is where the effort dial matters.",
+        "Awwwards is the place he finds references. Higgsfield or Kie.ai when the hero needs a video."
+      ],
       "source": "manual"
     },
     {

@@ -69,12 +69,20 @@ Keep it clean. No backup files, no version-numbered copies.
 
 ## Skills in the lab
 - `.claude/skills/` holds Claude Code skills from Jack Roberts' design loop, kept
-  off the Vercel deploy: `rtf` (YouTube URL to word-level transcript and
-  graphic moments; needs yt-dlp and ffmpeg), `design-teardown` (measure two
-  sites, diff nine dimensions, build an interactive spec; the first run lives in
-  `docs/design/`), and `site-blueprint` (scrape a niche's top homepages with
-  Firecrawl and derive the section order). All three need the open web, so run
+  off the Vercel deploy. All of them need the open web or local tools, so run
   them from the Mac or from a session whose network allows the target hosts.
+  - `design-loop`: interview, preflight, teardown, then a builder and three
+    fresh-context critics until all three pass. Uses CLAUDE.md as the system doc.
+  - `design-teardown`: measure two sites, diff nine dimensions, build an
+    interactive spec. The first run lives in `docs/design/`.
+  - `rtf`: YouTube URL to word-level transcript and graphic moments; needs
+    yt-dlp and ffmpeg.
+  - `site-blueprint`: scrape a niche's top homepages with Firecrawl and derive
+    the section order.
+  - `website-intelligence`: scrape a client site, score competitors, write the
+    analysis, then build; Firecrawl with a WebFetch fallback.
+  - `3d-animation-creator`: a short video becomes a scroll-scrubbed page;
+    needs ffmpeg. Its default styling is not the lab's.
 
 ## Rules
 1. No em dashes anywhere in copy.

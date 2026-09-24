@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Builder — Process Overview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --ink: #0a0a0a;
+            --paper: #f6f4f0;
+            --accent: #c45d3e;
+            --accent-light: #e8a48e;
+            --muted: #8a8580;
+            --divider: #d6d2cc;
+            --card: #fffefa;
+            --shadow: rgba(10, 10, 10, 0.06);
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Grain overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero */
+        header {
+            padding: 6rem 0 4rem;
+            text-align: center;
+            position: relative;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 80px;
+            background: linear-gradient(to bottom, transparent, var(--accent));
+        }
+
+        .eyebrow {
+            font-size: 0.7rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.3s;
+        }
+
+        h1 {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(2.8rem, 6vw, 4.5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.5s;
+        }
+
+        h1 em {
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        .subtitle {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 540px;
+            margin: 0 auto;
+            line-height: 1.7;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.7s;
+        }
+
+        /* Divider */
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: var(--accent);
+            margin: 4rem auto;
+            opacity: 0;
+            animation: scaleIn 0.6s ease forwards 0.9s;
+        }
+
+        /* Phase cards */
+        .phases {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding-bottom: 6rem;
+        }
+
+        .phase {
+            background: var(--card);
+            border: 1px solid var(--divider);
+            border-radius: 16px;
+            padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .phase:hover {
+            box-shadow: 0 12px 40px var(--shadow);
+        }
+
+        .phase:nth-child(1) { animation: fadeUp 0.7s ease forwards 1.0s; }
+        .phase:nth-child(2) { animation: fadeUp 0.7s ease forwards 1.15s; }
+        .phase:nth-child(3) { animation: fadeUp 0.7s ease forwards 1.3s; }
+        .phase:nth-child(4) { animation: fadeUp 0.7s ease forwards 1.45s; }
+        .phase:nth-child(5) { animation: fadeUp 0.7s ease forwards 1.6s; }
+
+        .phase::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent), var(--accent-light));
+            border-radius: 4px 0 0 4px;
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .phase-number {
+            font-family: 'Instrument Serif', serif;
+            font-size: 3rem;
+            color: var(--accent);
+            line-height: 1;
+            opacity: 0.3;
+            flex-shrink: 0;
+        }
+
+        .phase-title {
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.6rem;
+            font-weight: 400;
+            line-height: 1.2;
+        }
+
+        .phase-body {
+            padding-left: 0;
+            color: #3a3835;
+            font-size: 0.92rem;
+            line-height: 1.75;
+        }
+
+        .phase-body p {
+            margin-bottom: 0.75rem;
+        }
+
+        .phase-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .bullet-list {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0 0;
+        }
+
+        .bullet-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.65rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: #3a3835;
+        }
+
+        .bullet-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .bullet-emoji {
+            flex-shrink: 0;
+            font-size: 1.05rem;
+            line-height: 1.5;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1.25rem;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.35rem 0.85rem;
+            border-radius: 100px;
+            background: var(--paper);
+            border: 1px solid var(--divider);
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        /* Checkpoint callout */
+        .checkpoint {
+            background: linear-gradient(135deg, #fdf6f3, #fef9f6);
+            border: 1px dashed var(--accent-light);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin-top: 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .checkpoint-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+
+        .checkpoint p {
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 0 4rem;
+            border-top: 1px solid var(--divider);
+        }
+
+        footer p {
+            font-size: 0.75rem;
+            color: var(--muted);
+            letter-spacing: 0.05em;
+        }
+
+        /* Flow connector */
+        .flow-connector {
+            display: flex;
+            justify-content: center;
+            padding: 0.25rem 0;
+        }
+
+        .flow-connector svg {
+            color: var(--divider);
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scaleX(0); }
+            to { opacity: 1; transform: scaleX(1); }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            header { padding: 4rem 0 3rem; }
+            .phase { padding: 2rem 1.5rem; }
+            .phase-number { font-size: 2.2rem; }
+            .phase-title { font-size: 1.3rem; }
+        }
+
+        /* Print */
+        @media print {
+            body::after { display: none; }
+            .phase { break-inside: avoid; box-shadow: none; }
+            header::before { display: none; }
+            .phase, .eyebrow, .subtitle, h1, .divider { opacity: 1 !important; transform: none !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <p class="eyebrow">Process Overview</p>
+            <h1>Website Intelligence<br><em>by Research</em></h1>
+            <p class="subtitle">A five-phase process that studies your market, learns from the winners, and builds a website grounded in competitive intelligence — not guesswork.</p>
+        </header>
+
+        <div class="divider"></div>
+
+        <div class="phases">
+
+            <!-- Phase 1 -->
+            <div class="phase">
+                <div class="phase-header">
+                    <span class="phase-number">01</span>
+                    <h2 class="phase-title">Gather &amp; Understand</h2>
+                </div>
+                <div class="phase-body">
+                    <ul class="bullet-list">
+                        <li><span class="bullet-emoji">&#128269;</span>Scrape your entire existing website with the FireCrawl API — every word, image, and structural choice captured</li>
+                        <li><span class="bullet-emoji">&#129513;</span>Build a full picture of your business — what you sell, who you serve, and where you operate</li>
+                        <li><span class="bullet-emoji">&#128203;</span>Audit your current messaging, strengths, and gaps so we know exactly what to improve</li>
+                    </ul>
+                    <div class="tag-row">
+                        <span class="tag">FireCrawl API</span>
+                        <span class="tag">Content Extraction</span>
+                        <span class="tag">Business Analysis</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-connector">
+                <svg width="2" height="24" viewBox="0 0 2 24" fill="none"><line x1="1" y1="0" x2="1" y2="24" stroke="currentColor" stroke-dasharray="3 3"/></svg>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="phase">
+                <div class="phase-header">
+                    <span class="phase-number">02</span>
+                    <h2 class="phase-title">Competitive Research</h2>
+                </div>
+                <div class="phase-body">
+                    <ul class="bullet-list">
+                        <li><span class="bullet-emoji">&#127942;</span>Find the top 5 competitors ranked by Google reviews, Trustpilot, and search visibility</li>
+                        <li><span class="bullet-emoji">&#128373;&#65039;</span>Scrape each competitor — design, content, branding, logos, SEO, and trust signals</li>
+                        <li><span class="bullet-emoji">&#9889;</span>Synthesize what all five winners share — the blueprint of what actually works in your market</li>
+                    </ul>
+                    <div class="tag-row">
+                        <span class="tag">Top 5 Competitors</span>
+                        <span class="tag">SEO Analysis</span>
+                        <span class="tag">Brand Extraction</span>
+                        <span class="tag">Pattern Synthesis</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-connector">
+                <svg width="2" height="24" viewBox="0 0 2 24" fill="none"><line x1="1" y1="0" x2="1" y2="24" stroke="currentColor" stroke-dasharray="3 3"/></svg>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="phase">
+                <div class="phase-header">
+                    <span class="phase-number">03</span>
+                    <h2 class="phase-title">Analysis Report</h2>
+                </div>
+                <div class="phase-body">
+                    <ul class="bullet-list">
+                        <li><span class="bullet-emoji">&#128202;</span>Beautiful, print-ready report with competitor profiles, logos, and brand colors side by side</li>
+                        <li><span class="bullet-emoji">&#127919;</span>SEO landscape, keyword gaps, and strategic recommendations backed by real data</li>
+                        <li><span class="bullet-emoji">&#129309;</span>A polished deliverable you can hand directly to your client, team, or stakeholders</li>
+                    </ul>
+                    <div class="tag-row">
+                        <span class="tag">PDF-Ready Report</span>
+                        <span class="tag">Client Deliverable</span>
+                        <span class="tag">Visual Competitor Profiles</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-connector">
+                <svg width="2" height="24" viewBox="0 0 2 24" fill="none"><line x1="1" y1="0" x2="1" y2="24" stroke="currentColor" stroke-dasharray="3 3"/></svg>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="phase">
+                <div class="phase-header">
+                    <span class="phase-number">04</span>
+                    <h2 class="phase-title">Plan &amp; Approve</h2>
+                </div>
+                <div class="phase-body">
+                    <ul class="bullet-list">
+                        <li><span class="bullet-emoji">&#128506;&#65039;</span>Full website plan — pages, content strategy, design direction, and tech stack laid out</li>
+                        <li><span class="bullet-emoji">&#127916;</span>Hero section mapped for your 3D scroll-triggered animation with integration notes</li>
+                        <li><span class="bullet-emoji">&#9989;</span>Every decision informed by research, not guesswork — you review and approve before we build</li>
+                    </ul>
+                    <div class="checkpoint">
+                        <span class="checkpoint-icon">&#9995;</span>
+                        <p>Hard stop here. Nothing gets built until you say go. This is your chance to reshape the direction before we commit to code.</p>
+                    </div>
+                    <div class="tag-row">
+                        <span class="tag">Full Website Plan</span>
+                        <span class="tag">3D Hero Placeholder</span>
+                        <span class="tag">Your Approval Required</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-connector">
+                <svg width="2" height="24" viewBox="0 0 2 24" fill="none"><line x1="1" y1="0" x2="1" y2="24" stroke="currentColor" stroke-dasharray="3 3"/></svg>
+            </div>
+
+            <!-- Phase 5 -->
+            <div class="phase">
+                <div class="phase-header">
+                    <span class="phase-number">05</span>
+                    <h2 class="phase-title">Build</h2>
+                </div>
+                <div class="phase-body">
+                    <ul class="bullet-list">
+                        <li><span class="bullet-emoji">&#128640;</span>Production-grade website built with HTML, GSAP, and ScrollTrigger — no templates</li>
+                        <li><span class="bullet-emoji">&#127744;</span>3D-ready hero zone wired for your scroll-triggered animation — just drop in your asset</li>
+                        <li><span class="bullet-emoji">&#128142;</span>Your own content restructured and elevated by competitor intelligence, designed to convert</li>
+                    </ul>
+                    <div class="tag-row">
+                        <span class="tag">Production-Grade</span>
+                        <span class="tag">Fully Responsive</span>
+                        <span class="tag">Modern Stack</span>
+                        <span class="tag">3D-Ready Hero</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>WEBSITE INTELLIGENCE &mdash; RESEARCH-DRIVEN DESIGN</p>
+        </footer>
+    </div>
+
+</body>
+</html>
