@@ -6,6 +6,9 @@
 <title>kellylucas.dev measured against Isomorphic Labs</title>
 <meta name="robots" content="noindex">
 <style>
+  /* The subject's own typeface, from the repo, so the tracking demo measures the real thing. */
+  @font-face{font-family:"Heliora";src:url("../../assets/fonts/Heliora-Regular.ttf") format("truetype");font-weight:400;font-display:swap}
+  @font-face{font-family:"Heliora";src:url("../../assets/fonts/Heliora-Medium.ttf") format("truetype");font-weight:500;font-display:swap}
   :root{
     --void:#08090a; --carbon:#0f1011; --obsidian:#161718; --graphite:#23252a; --smoke:#383b3f;
     --ash:#62666d; --fog:#8a8f98; --mist:#d0d6e0; --paper:#ffffff;
@@ -55,7 +58,7 @@
   #master button{position:relative;z-index:1}
   #master button.on{background:transparent}
   input[type=range]{width:100%;accent-color:var(--accent);margin:14px 0 6px}
-  .demo-light{background:#f4f2ec;color:#14201a;border-radius:12px;padding:28px;box-shadow:inset 0 0 0 1px var(--graphite)}
+  .demo-light{font-family:"Heliora",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f4f2ec;color:#14201a;border-radius:12px;padding:28px;box-shadow:inset 0 0 0 1px var(--graphite)}
   .demo-light .big{font-size:56px;line-height:.95;font-weight:500;letter-spacing:-.005em;transition:letter-spacing .2s ease}
   .demo-light .small{margin-top:14px;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#6c766f}
   .lines{display:grid;gap:14px;margin-top:8px}
@@ -67,7 +70,7 @@
   .radii{display:flex;flex-wrap:wrap;gap:10px;padding:16px 0}
   .rchip{width:64px;height:64px;background:#f6f3e8;box-shadow:inset 0 0 0 1px #14201a;display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:#14201a;transition:opacity .2s}
   .rchip.gone{opacity:.18}
-  .mockwrap{padding:36px;border-radius:12px;background:#f4f2ec;transition:background .3s}
+  .mockwrap{font-family:"Heliora",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:36px;border-radius:12px;background:#f4f2ec;transition:background .3s}
   .mock{width:280px;margin:0 auto;background:#f6f3e8;border-radius:20px;padding:22px;color:#14201a;box-shadow:inset 0 0 0 1px rgba(20,32,26,.14);transition:box-shadow .3s,transform .3s,background .3s}
   .mock.drop{transform:translateY(-6px) rotate(-.4deg);box-shadow:0 16px 32px rgba(20,32,26,.08),inset 0 0 0 1px rgba(20,32,26,.14)}
   .mock.hair{transform:translateY(-2px);background:#efece2;box-shadow:inset 0 0 0 1px #14201a}
