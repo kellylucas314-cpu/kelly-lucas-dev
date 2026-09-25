@@ -1243,6 +1243,355 @@ window.DESIGN_LIBRARY = {
       ],
       "why": "AI images and video by API. The other generator Jack plugs in for hero videos.",
       "added": "2026-09-24"
+    },
+    {
+      "url": "https://muz.li/",
+      "title": "Muzli",
+      "kind": "gallery",
+      "tags": [
+        "design-inspiration"
+      ],
+      "why": "Design inspiration hub, and a browser extension that turns every new tab into a feed of design news.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://medium.muz.li/design-inspiration-resources-2019-1cce24b256e5",
+      "title": "Design inspiration resources, by Muzli",
+      "kind": "reading",
+      "tags": [
+        "design-inspiration",
+        "lists"
+      ],
+      "why": "Muzli's long list of inspiration sites. From 2019, so expect a few dead links, but the good ones are still good.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://docs.google.com/spreadsheets/d/13GStMRQfbn5glWVkUPqFtW1oovyKhMDdRKD3m5cstBg/edit?gid=76987904#gid=76987904",
+      "title": "The People's Design Library",
+      "kind": "reading",
+      "tags": [
+        "design-inspiration",
+        "lists"
+      ],
+      "why": "A shared Google Sheet of design resources, kept by the community. Tabs for tools, learning, inspiration.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://10015.io/",
+      "title": "10015 Tools",
+      "kind": "tool",
+      "tags": [
+        "tools",
+        "color",
+        "css"
+      ],
+      "why": "Small online tools in one box: color, CSS, image and text utilities, no sign-up.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://thecreativecheatsheet.com/designinspo/",
+      "title": "The Creative Cheat Sheet: design inspo",
+      "kind": "gallery",
+      "tags": [
+        "design-inspiration",
+        "lists"
+      ],
+      "why": "A curated list of places to look when the well runs dry.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://www.reddit.com/r/graphic_design/wiki/index/",
+      "title": "r/graphic_design wiki",
+      "kind": "reading",
+      "tags": [
+        "research",
+        "graphic-design"
+      ],
+      "why": "The subreddit's index: resources, tutorials, and the answers to the questions everyone asks first.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://www.cosmos.so/explore",
+      "title": "Cosmos",
+      "kind": "gallery",
+      "tags": [
+        "visual-inspiration"
+      ],
+      "why": "A visual bookmarking network. Explore is the public feed of what people are saving.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://designresourc.es/",
+      "title": "Design Resources",
+      "kind": "gallery",
+      "tags": [
+        "design-inspiration",
+        "tools",
+        "lists"
+      ],
+      "why": "A curated directory of design tools and resources by category. Half the tabs on this shelf came from a browse through it.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://www.checklist.design/skill",
+      "title": "The Checklist Design skill",
+      "kind": "tool",
+      "tags": [
+        "ai-design",
+        "checklists",
+        "agent-skills"
+      ],
+      "why": "Checklist Design's hundred-plus checklists as an agent skill: design feedback inside Claude Code, item by item. Available here as /checklist-design.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://github.com/Checklist-Design/skills",
+      "title": "Checklist-Design/skills",
+      "kind": "repo",
+      "tags": [
+        "ai-design",
+        "checklists",
+        "agent-skills"
+      ],
+      "why": "The source for the Checklist Design skill.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://www.cpgd.xyz/",
+      "title": "CPGD",
+      "kind": "gallery",
+      "tags": [
+        "brand",
+        "packaging"
+      ],
+      "why": "The Consumer Packaged Goods Directory. Packaging and brand design, one product at a time.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://theindex.website/",
+      "title": "The Index",
+      "kind": "gallery",
+      "tags": [
+        "web-design",
+        "design-inspiration"
+      ],
+      "why": "A curated index of well-made websites.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://museumdepartment.com/type-foundries",
+      "title": "Museum Department: type foundries",
+      "kind": "gallery",
+      "tags": [
+        "fonts",
+        "typography"
+      ],
+      "why": "An archive of fonts and the foundries that make them.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://www.recentwork.com/",
+      "title": "Recent Work",
+      "kind": "gallery",
+      "tags": [
+        "design-inspiration"
+      ],
+      "why": "A feed of recent work from studios and independents.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://www.hexagonbio.com/science/",
+      "title": "Hexagon Bio",
+      "kind": "site",
+      "tags": [
+        "biotech",
+        "science-site"
+      ],
+      "why": "A platform biotech's science page. How it explains the technology in one scroll.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://fonts.adobe.com/",
+      "title": "Adobe Fonts",
+      "kind": "tool",
+      "tags": [
+        "fonts",
+        "typography"
+      ],
+      "why": "Unlimited fonts with a Creative Cloud plan. The foundries page is the way to browse by maker.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://www.connorlyon.co/tools-resources/50-type-foundries-you-should-bookmark",
+      "title": "50 type foundries you should bookmark",
+      "kind": "reading",
+      "tags": [
+        "fonts",
+        "typography",
+        "lists"
+      ],
+      "why": "Connor Lyon's list of independent foundries, for when Google Fonts is not enough.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://lineto.com/features/schema-edition",
+      "title": "Lineto: Schema Edition",
+      "kind": "tool",
+      "tags": [
+        "fonts",
+        "typography"
+      ],
+      "why": "A Swiss foundry's feature on one typeface family. Worth it for how they present type.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://huemint.com/brand-intersection/",
+      "title": "Huemint",
+      "kind": "tool",
+      "tags": [
+        "color",
+        "brand"
+      ],
+      "why": "Machine-made color palettes for brands, sites and graphics. Brand intersection mode finds the colors two brands share.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://coolors.co/daeaaa-587d71-000022-ffa630-bedcfe",
+      "title": "A Coolors palette",
+      "kind": "tool",
+      "tags": [
+        "color",
+        "palette"
+      ],
+      "why": "Five colors saved on Coolors: pale lime, sage, ink navy, amber, powder blue.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://colors.eva.design/",
+      "title": "Eva Design System colors",
+      "kind": "tool",
+      "tags": [
+        "color",
+        "design-systems"
+      ],
+      "why": "Give it one brand color and it generates the semantic set: success, info, warning, danger.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://designresourc.es/inspiration/daniel-sun",
+      "title": "Daniel Sun",
+      "kind": "gallery",
+      "tags": [
+        "design-inspiration"
+      ],
+      "why": "A designer's work, as listed on Design Resources.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://colorhunt.co/",
+      "title": "Color Hunt",
+      "kind": "tool",
+      "tags": [
+        "color",
+        "palette"
+      ],
+      "why": "Palettes for designers and artists, new ones daily. Sort by popular when in doubt.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://color.adobe.com/explore",
+      "title": "Adobe Color",
+      "kind": "tool",
+      "tags": [
+        "color",
+        "palette"
+      ],
+      "why": "Explore palettes and gradients, or extract a palette from a photo.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://sidebar.io/",
+      "title": "Sidebar",
+      "kind": "reading",
+      "tags": [
+        "design-inspiration",
+        "newsletter"
+      ],
+      "why": "Five design links a day, picked by hand.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://www.sketch.com/",
+      "title": "Sketch",
+      "kind": "tool",
+      "tags": [
+        "design-tools"
+      ],
+      "why": "The Mac design tool: design, prototype, collaborate, hand off.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://www.interfacecraft.dev/",
+      "title": "Interface Craft",
+      "kind": "gallery",
+      "tags": [
+        "ui-ux",
+        "craft"
+      ],
+      "why": "A working library for people designing with uncommon care.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://screensdesign.com/",
+      "title": "ScreensDesign",
+      "kind": "gallery",
+      "tags": [
+        "ui-ux",
+        "ai-design"
+      ],
+      "why": "An app design library, with an AI screen generator on the side.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://duo.alexpate.com/",
+      "title": "Duo",
+      "kind": "tool",
+      "tags": [
+        "color"
+      ],
+      "why": "Colour pairings by Alex Pate, two at a time, each checked for contrast.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://unsplash.com/",
+      "title": "Unsplash",
+      "kind": "tool",
+      "tags": [
+        "photos"
+      ],
+      "why": "Free high-resolution photos.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://curated.design/",
+      "title": "Curated",
+      "kind": "gallery",
+      "tags": [
+        "web-design",
+        "design-inspiration"
+      ],
+      "why": "Web design inspiration from real, live websites, filterable by category.",
+      "added": "2026-09-25"
+    },
+    {
+      "url": "https://zoah.com/",
+      "title": "Zoah",
+      "kind": "tool",
+      "tags": [
+        "dev-tools"
+      ],
+      "why": "Calls itself the future of software development. Parked here from a tab, not tried yet.",
+      "added": "2026-09-25"
     }
   ],
   "items": [
@@ -1281,6 +1630,515 @@ window.DESIGN_LIBRARY = {
       "source": "manual",
       "thumb": "assets/design/thumbs/linear.app.jpg",
       "section": "examples"
+    },
+    {
+      "id": "muz.li",
+      "domain": "muz.li",
+      "kind": "gallery",
+      "tags": [
+        "design-inspiration"
+      ],
+      "url": "https://muz.li/",
+      "title": "Muzli",
+      "why": "Design inspiration hub, and a browser extension that turns every new tab into a feed of design news.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/muz.li.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "medium.muz.li/design-inspiration-resources-2019-1cce24b256e5",
+      "domain": "medium.muz.li",
+      "kind": "reading",
+      "tags": [
+        "design-inspiration",
+        "lists"
+      ],
+      "url": "https://medium.muz.li/design-inspiration-resources-2019-1cce24b256e5",
+      "title": "Design inspiration resources, by Muzli",
+      "why": "Muzli's long list of inspiration sites. From 2019, so expect a few dead links, but the good ones are still good.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/medium.muz.li-design-inspiration-resources-2019-1cce24b256e5.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "docs.google.com/spreadsheets/d/13gstmrqfbn5glwvkupqftw1oovykhmddrkd3m5cstbg/edit",
+      "domain": "docs.google.com",
+      "kind": "reading",
+      "tags": [
+        "design-inspiration",
+        "lists"
+      ],
+      "url": "https://docs.google.com/spreadsheets/d/13GStMRQfbn5glWVkUPqFtW1oovyKhMDdRKD3m5cstBg/edit?gid=76987904#gid=76987904",
+      "title": "The People's Design Library",
+      "why": "A shared Google Sheet of design resources, kept by the community. Tabs for tools, learning, inspiration.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "",
+      "section": "resources"
+    },
+    {
+      "id": "10015.io",
+      "domain": "10015.io",
+      "kind": "tool",
+      "tags": [
+        "tools",
+        "color",
+        "css"
+      ],
+      "url": "https://10015.io/",
+      "title": "10015 Tools",
+      "why": "Small online tools in one box: color, CSS, image and text utilities, no sign-up.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/10015.io.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "thecreativecheatsheet.com/designinspo",
+      "domain": "thecreativecheatsheet.com",
+      "kind": "gallery",
+      "tags": [
+        "design-inspiration",
+        "lists"
+      ],
+      "url": "https://thecreativecheatsheet.com/designinspo/",
+      "title": "The Creative Cheat Sheet: design inspo",
+      "why": "A curated list of places to look when the well runs dry.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/thecreativecheatsheet.com-designinspo.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "reddit.com/r/graphic_design/wiki/index",
+      "domain": "reddit.com",
+      "kind": "reading",
+      "tags": [
+        "research",
+        "graphic-design"
+      ],
+      "url": "https://www.reddit.com/r/graphic_design/wiki/index/",
+      "title": "r/graphic_design wiki",
+      "why": "The subreddit's index: resources, tutorials, and the answers to the questions everyone asks first.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/reddit.com-r-graphic-design-wiki-index.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "cosmos.so/explore",
+      "domain": "cosmos.so",
+      "kind": "gallery",
+      "tags": [
+        "visual-inspiration"
+      ],
+      "url": "https://www.cosmos.so/explore",
+      "title": "Cosmos",
+      "why": "A visual bookmarking network. Explore is the public feed of what people are saving.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/cosmos.so-explore.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "designresourc.es",
+      "domain": "designresourc.es",
+      "kind": "gallery",
+      "tags": [
+        "design-inspiration",
+        "tools",
+        "lists"
+      ],
+      "url": "https://designresourc.es/",
+      "title": "Design Resources",
+      "why": "A curated directory of design tools and resources by category. Half the tabs on this shelf came from a browse through it.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/designresourc.es.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "checklist.design/skill",
+      "domain": "checklist.design",
+      "kind": "tool",
+      "tags": [
+        "ai-design",
+        "checklists",
+        "agent-skills"
+      ],
+      "url": "https://www.checklist.design/skill",
+      "title": "The Checklist Design skill",
+      "why": "Checklist Design's hundred-plus checklists as an agent skill: design feedback inside Claude Code, item by item. Available here as /checklist-design.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/checklist.design-skill.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "github.com/checklist-design/skills",
+      "domain": "github.com",
+      "kind": "repo",
+      "tags": [
+        "ai-design",
+        "checklists",
+        "agent-skills"
+      ],
+      "url": "https://github.com/Checklist-Design/skills",
+      "title": "Checklist-Design/skills",
+      "why": "The source for the Checklist Design skill.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/github.com-checklist-design-skills.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "cpgd.xyz",
+      "domain": "cpgd.xyz",
+      "kind": "gallery",
+      "tags": [
+        "brand",
+        "packaging"
+      ],
+      "url": "https://www.cpgd.xyz/",
+      "title": "CPGD",
+      "why": "The Consumer Packaged Goods Directory. Packaging and brand design, one product at a time.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/cpgd.xyz.jpg",
+      "section": "examples"
+    },
+    {
+      "id": "theindex.website",
+      "domain": "theindex.website",
+      "kind": "gallery",
+      "tags": [
+        "web-design",
+        "design-inspiration"
+      ],
+      "url": "https://theindex.website/",
+      "title": "The Index",
+      "why": "A curated index of well-made websites.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/theindex.website.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "museumdepartment.com/type-foundries",
+      "domain": "museumdepartment.com",
+      "kind": "gallery",
+      "tags": [
+        "fonts",
+        "typography"
+      ],
+      "url": "https://museumdepartment.com/type-foundries",
+      "title": "Museum Department: type foundries",
+      "why": "An archive of fonts and the foundries that make them.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "",
+      "section": "resources"
+    },
+    {
+      "id": "recentwork.com",
+      "domain": "recentwork.com",
+      "kind": "gallery",
+      "tags": [
+        "design-inspiration"
+      ],
+      "url": "https://www.recentwork.com/",
+      "title": "Recent Work",
+      "why": "A feed of recent work from studios and independents.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/recentwork.com.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "hexagonbio.com/science",
+      "domain": "hexagonbio.com",
+      "kind": "site",
+      "tags": [
+        "biotech",
+        "science-site"
+      ],
+      "url": "https://www.hexagonbio.com/science/",
+      "title": "Hexagon Bio",
+      "why": "A platform biotech's science page. How it explains the technology in one scroll.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/hexagonbio.com-science.jpg",
+      "section": "examples"
+    },
+    {
+      "id": "fonts.adobe.com",
+      "domain": "fonts.adobe.com",
+      "kind": "tool",
+      "tags": [
+        "fonts",
+        "typography"
+      ],
+      "url": "https://fonts.adobe.com/",
+      "title": "Adobe Fonts",
+      "why": "Unlimited fonts with a Creative Cloud plan. The foundries page is the way to browse by maker.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/fonts.adobe.com.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "connorlyon.co/tools-resources/50-type-foundries-you-should-bookmark",
+      "domain": "connorlyon.co",
+      "kind": "reading",
+      "tags": [
+        "fonts",
+        "typography",
+        "lists"
+      ],
+      "url": "https://www.connorlyon.co/tools-resources/50-type-foundries-you-should-bookmark",
+      "title": "50 type foundries you should bookmark",
+      "why": "Connor Lyon's list of independent foundries, for when Google Fonts is not enough.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/connorlyon.co-tools-resources-50-type-foundries-you-should-bookmark.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "lineto.com/features/schema-edition",
+      "domain": "lineto.com",
+      "kind": "tool",
+      "tags": [
+        "fonts",
+        "typography"
+      ],
+      "url": "https://lineto.com/features/schema-edition",
+      "title": "Lineto: Schema Edition",
+      "why": "A Swiss foundry's feature on one typeface family. Worth it for how they present type.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/lineto.com-features-schema-edition.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "huemint.com/brand-intersection",
+      "domain": "huemint.com",
+      "kind": "tool",
+      "tags": [
+        "color",
+        "brand"
+      ],
+      "url": "https://huemint.com/brand-intersection/",
+      "title": "Huemint",
+      "why": "Machine-made color palettes for brands, sites and graphics. Brand intersection mode finds the colors two brands share.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/huemint.com-brand-intersection.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "coolors.co/daeaaa-587d71-000022-ffa630-bedcfe",
+      "domain": "coolors.co",
+      "kind": "tool",
+      "tags": [
+        "color",
+        "palette"
+      ],
+      "url": "https://coolors.co/daeaaa-587d71-000022-ffa630-bedcfe",
+      "title": "A Coolors palette",
+      "why": "Five colors saved on Coolors: pale lime, sage, ink navy, amber, powder blue.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/coolors.co-daeaaa-587d71-000022-ffa630-bedcfe.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "colors.eva.design",
+      "domain": "colors.eva.design",
+      "kind": "tool",
+      "tags": [
+        "color",
+        "design-systems"
+      ],
+      "url": "https://colors.eva.design/",
+      "title": "Eva Design System colors",
+      "why": "Give it one brand color and it generates the semantic set: success, info, warning, danger.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/colors.eva.design.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "designresourc.es/inspiration/daniel-sun",
+      "domain": "designresourc.es",
+      "kind": "gallery",
+      "tags": [
+        "design-inspiration"
+      ],
+      "url": "https://designresourc.es/inspiration/daniel-sun",
+      "title": "Daniel Sun",
+      "why": "A designer's work, as listed on Design Resources.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/designresourc.es-inspiration-daniel-sun.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "colorhunt.co",
+      "domain": "colorhunt.co",
+      "kind": "tool",
+      "tags": [
+        "color",
+        "palette"
+      ],
+      "url": "https://colorhunt.co/",
+      "title": "Color Hunt",
+      "why": "Palettes for designers and artists, new ones daily. Sort by popular when in doubt.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/colorhunt.co.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "color.adobe.com/explore",
+      "domain": "color.adobe.com",
+      "kind": "tool",
+      "tags": [
+        "color",
+        "palette"
+      ],
+      "url": "https://color.adobe.com/explore",
+      "title": "Adobe Color",
+      "why": "Explore palettes and gradients, or extract a palette from a photo.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/color.adobe.com-explore.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "sidebar.io",
+      "domain": "sidebar.io",
+      "kind": "reading",
+      "tags": [
+        "design-inspiration",
+        "newsletter"
+      ],
+      "url": "https://sidebar.io/",
+      "title": "Sidebar",
+      "why": "Five design links a day, picked by hand.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/sidebar.io.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "sketch.com",
+      "domain": "sketch.com",
+      "kind": "tool",
+      "tags": [
+        "design-tools"
+      ],
+      "url": "https://www.sketch.com/",
+      "title": "Sketch",
+      "why": "The Mac design tool: design, prototype, collaborate, hand off.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/sketch.com.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "interfacecraft.dev",
+      "domain": "interfacecraft.dev",
+      "kind": "gallery",
+      "tags": [
+        "ui-ux",
+        "craft"
+      ],
+      "url": "https://www.interfacecraft.dev/",
+      "title": "Interface Craft",
+      "why": "A working library for people designing with uncommon care.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/interfacecraft.dev.jpg",
+      "section": "examples"
+    },
+    {
+      "id": "screensdesign.com",
+      "domain": "screensdesign.com",
+      "kind": "gallery",
+      "tags": [
+        "ui-ux",
+        "ai-design"
+      ],
+      "url": "https://screensdesign.com/",
+      "title": "ScreensDesign",
+      "why": "An app design library, with an AI screen generator on the side.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/screensdesign.com.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "duo.alexpate.com",
+      "domain": "duo.alexpate.com",
+      "kind": "tool",
+      "tags": [
+        "color"
+      ],
+      "url": "https://duo.alexpate.com/",
+      "title": "Duo",
+      "why": "Colour pairings by Alex Pate, two at a time, each checked for contrast.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/duo.alexpate.com.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "unsplash.com",
+      "domain": "unsplash.com",
+      "kind": "tool",
+      "tags": [
+        "photos"
+      ],
+      "url": "https://unsplash.com/",
+      "title": "Unsplash",
+      "why": "Free high-resolution photos.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/unsplash.com.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "curated.design",
+      "domain": "curated.design",
+      "kind": "gallery",
+      "tags": [
+        "web-design",
+        "design-inspiration"
+      ],
+      "url": "https://curated.design/",
+      "title": "Curated",
+      "why": "Web design inspiration from real, live websites, filterable by category.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/curated.design.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "zoah.com",
+      "domain": "zoah.com",
+      "kind": "tool",
+      "tags": [
+        "dev-tools"
+      ],
+      "url": "https://zoah.com/",
+      "title": "Zoah",
+      "why": "Calls itself the future of software development. Parked here from a tab, not tried yet.",
+      "added": "2026-09-25",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/zoah.com.jpg",
+      "section": "resources"
     },
     {
       "id": "dub.co",
