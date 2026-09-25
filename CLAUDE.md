@@ -84,6 +84,11 @@ Keep it clean. No backup files, no version-numbered copies.
   `assets/design/thumbs/<card id>.jpg`; run `npm run sync:design` after.
   Videos use their YouTube frame. A card with no picture shows initials,
   which is the honest state.
+- Cards are picture first, like a database's gallery view: the whole card
+  is one link; a 16:10 tile, a kind pill in the lab's tints (gallery mint,
+  tool lilac, reading cream, site outline, repo ink), the title, and the why
+  clamped to two or three lines. Four across on desktop, two on a phone.
+  Filter chips carry counts. No OPEN buttons on cards, no ruled cells.
 
 ## Skills in the lab
 - `.claude/skills/` holds Claude Code skills from Jack Roberts' design loop, kept

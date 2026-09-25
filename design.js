@@ -104,20 +104,24 @@
   function buildCard(item, index) {
     const domain = item.domain || domainOf(item.url);
     const title = item.title || domain || item.url;
+    const kind = item.kind || "site";
     const card = el("article", "desk-card");
-    card.dataset.kind = item.kind || "site";
+    card.dataset.kind = kind;
     card.dataset.search = [title, domain, item.why, item.summary, (item.tags || []).join(" ")]
       .join(" ")
       .toLowerCase();
 
-    const tile = external(el("a", "desk-tile desk-tile--" + TINTS[index % TINTS.length]), item.url);
-    tile.setAttribute("aria-label", "Open " + title);
-    const ytId = item.kind === "video" ? youtubeId(item.url) : "";
+    /* One link per card: the whole card is the target, the picture is the face. */
+    const face = external(el("a", "desk-card__link"), item.url);
+
+    const tile = el("div", "desk-tile desk-tile--" + TINTS[index % TINTS.length]);
+    const ytId = kind === "video" ? youtubeId(item.url) : "";
     if (item.thumb || ytId) {
       const img = el("img");
       img.src = item.thumb || "https://i.ytimg.com/vi/" + ytId + "/hqdefault.jpg";
       img.alt = "";
       img.loading = "lazy";
+      img.decoding = "async";
       img.addEventListener("error", () => img.remove());
       tile.appendChild(img);
     } else {
@@ -125,20 +129,18 @@
       tile.appendChild(el("span", "desk-tile__domain", domain));
     }
 
-    const top = el("div", "desk-card__top");
-    top.appendChild(dotTag((item.kind || "site") + " · " + domain));
-    const heading = el("h3", "desk-card__title");
-    heading.appendChild(external(el("a", null, title), item.url));
-    top.appendChild(heading);
+    const body = el("div", "desk-card__body");
+    const meta = el("div", "desk-card__meta");
+    meta.appendChild(el("span", "kind-pill kind-pill--" + kind, kind));
+    meta.appendChild(el("span", "desk-card__domain", domain));
+    body.appendChild(meta);
+    body.appendChild(el("h3", "desk-card__title", title));
     const why = String(item.why || item.summary || "").trim();
-    if (why) top.appendChild(el("p", "desk-card__why", why));
-    if (item.tags && item.tags.length) {
-      top.appendChild(el("p", "desk-tags", item.tags.join(" · ")));
-    }
+    if (why) body.appendChild(el("p", "desk-card__why", why));
 
-    card.appendChild(tile);
-    card.appendChild(top);
-    card.appendChild(cta(item.url, item.kind === "video" ? "Watch" : "Open"));
+    face.appendChild(tile);
+    face.appendChild(body);
+    card.appendChild(face);
     return card;
   }
 
@@ -446,7 +448,10 @@
     if (chipRow) {
       const kinds = KIND_ORDER.filter((kind) => shelf.some((item) => item.kind === kind));
       ["all"].concat(kinds).forEach((kind) => {
-        const chip = el("button", "chip" + (kind === "all" ? " is-active" : ""), kind === "all" ? "all" : KIND_PLURAL[kind]);
+        const total = kind === "all" ? shelf.length : shelf.filter((item) => item.kind === kind).length;
+        const chip = el("button", "chip" + (kind === "all" ? " is-active" : ""));
+        chip.appendChild(el("span", null, kind === "all" ? "all" : KIND_PLURAL[kind]));
+        chip.appendChild(el("span", "chip__count", String(total)));
         chip.type = "button";
         chip.dataset.kind = kind;
         chip.setAttribute("aria-pressed", String(kind === "all"));
