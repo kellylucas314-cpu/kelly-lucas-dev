@@ -59,13 +59,25 @@ Keep it clean. No backup files, no version-numbered copies.
   GitHub Pages). Edit the art there, not here.
 
 ## Design desk
-- `design.html` is the public swipe file. It renders `design-library.js`, a
+- `design.html` is the public swipe file, in five piles: the HelioFlux
+  website, Heliopolis, Pretzel Protocol, resources, examples (plus "the lab
+  itself" for this site's own rules). It renders `design-library.js`, a
   generated data file: `manual` entries are hand-written, `items` is rebuilt
-  by `npm run sync:design` from desk-tagged Magpie clips (tag a clip `design`).
-  `systems` (one design system per site, with palette and rules) and
-  `libraries` (Kelly's own art and font libraries) are hand-written and pass
-  through the sync untouched. Video cards show takeaways from the clip's
-  `## Notes` bullets, or an honest "notes pending" state until those exist.
+  by `npm run sync:design` from the Magpie vault. `systems` (one design system
+  per site, with palette and rules), `libraries` (Kelly's own art and font
+  libraries) and `docs` (style PDFs, boards, image strips; files live under
+  `assets/design/<pile>/`) are hand-written and pass through the sync
+  untouched. Every entry carries a `section`.
+- Where a clip lands is decided once, in `lib/desk-sort.mjs` from
+  `lib/desk-rules.json`: Kelly's own sites go to their pile; sites tagged or
+  described for a project go there; anything with a design signal is a
+  resource (gallery, tool, repo, reading, video) or an example (a site); the
+  rest stays in the vault. A `desk:<section>` tag on the clip wins and
+  `desk:none` keeps it off. The sync copies the rules into the vault
+  (`magpie/desk-rules.json`) so the Magpie server and the Chrome clipper
+  (which shows the guess in its popup) sort the same way. Tests:
+  `npm run test:design`. Video cards show takeaways from the clip's `## Notes`
+  bullets, or an honest "notes pending" state until those exist.
 
 ## Skills in the lab
 - `.claude/skills/` holds Claude Code skills from Jack Roberts' design loop, kept

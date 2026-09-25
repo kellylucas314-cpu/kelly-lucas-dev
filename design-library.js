@@ -39,7 +39,8 @@ window.DESIGN_LIBRARY = {
       ],
       "live": "https://kellylucas.dev",
       "doc": "https://github.com/kellylucas314-cpu/kelly-lucas-dev/blob/main/CLAUDE.md",
-      "docLabel": "CLAUDE.md"
+      "docLabel": "CLAUDE.md",
+      "section": "lab"
     },
     {
       "name": "Pretzel Protocol",
@@ -80,12 +81,13 @@ window.DESIGN_LIBRARY = {
       ],
       "live": "https://pretzel.thetravelprotocol.com",
       "doc": "https://github.com/kellylucas314-cpu/pretzel-protocol/blob/main/DESIGN-SYSTEM.md",
-      "docLabel": "DESIGN-SYSTEM.md"
+      "docLabel": "DESIGN-SYSTEM.md",
+      "section": "pretzel"
     },
     {
       "name": "Heliopolis",
       "site": "myheliopolis.com",
-      "status": "art direction",
+      "status": "live, private",
       "palette": [
         {
           "name": "cream",
@@ -98,18 +100,29 @@ window.DESIGN_LIBRARY = {
         {
           "name": "lime",
           "hex": "#DAEAAA"
+        },
+        {
+          "name": "muted",
+          "hex": "#526879"
+        },
+        {
+          "name": "rule",
+          "hex": "#DEDFD9"
         }
       ],
-      "type": "Fine navy outlines, flat fills, little shading.",
+      "type": "Lato from the site's own files. Page titles at weight 400 with no tight tracking; 10px uppercase labels.",
       "rules": [
-        "One clear idea per image, with generous empty cream around it.",
-        "The arch and the sun carry the identity.",
-        "No cyan, pink, bright yellow, or any decorative palette.",
-        "Illustrations stay secondary to the task, the note, or the document."
+        "One drawing per page, large, uncropped, with clear space around it. Kelly's drawings are never redrawn or recoloured.",
+        "Fine navy outlines, flat fills, little shading. No cyan, pink, bright yellow, or any decorative palette.",
+        "Lime means one thing: someone is needed. At zero it turns pale.",
+        "Boxes are flat and drawn with the same pen as the pictures. No shadows anywhere.",
+        "Four destinations. Home fits one laptop screen; if something new wants in, something leaves."
       ],
-      "live": "https://kellylucas.dev/heliopolis/",
-      "doc": "https://github.com/kellylucas314-cpu/heliopolis-art-library/blob/main/ART%20DIRECTION%20-%20ORIGINAL%20HELIOPOLIS.md",
-      "docLabel": "Art direction"
+      "live": "https://myheliopolis.com/",
+      "doc": "/heliopolis/index.html",
+      "docLabel": "The art library",
+      "section": "heliopolis",
+      "liveLabel": "The site (sign-in)"
     },
     {
       "name": "Agent Commons",
@@ -153,12 +166,13 @@ window.DESIGN_LIBRARY = {
         "One seat color per agent. Kelly is graphite because she is the constant."
       ],
       "doc": "https://github.com/kellylucas314-cpu/kelly-lucas-dev/blob/main/docs/agent-commons/DESIGN-SYSTEM.md",
-      "docLabel": "DESIGN-SYSTEM.md"
+      "docLabel": "DESIGN-SYSTEM.md",
+      "section": "lab"
     },
     {
       "name": "HelioFlux",
       "site": "helioflux.co",
-      "status": "live",
+      "status": "live today",
       "palette": [
         {
           "name": "navy",
@@ -194,42 +208,401 @@ window.DESIGN_LIBRARY = {
       ],
       "live": "https://helioflux.co",
       "doc": "https://github.com/kellylucas314-cpu/helioflux-website",
-      "docLabel": "Source"
+      "docLabel": "Source",
+      "section": "website"
+    },
+    {
+      "name": "HelioFlux, the next look",
+      "section": "website",
+      "site": "helioflux.co · playground",
+      "status": "in the playground",
+      "palette": [
+        {
+          "name": "paper",
+          "hex": "#FFFFFF"
+        },
+        {
+          "name": "quiet band",
+          "hex": "#F5F7F3"
+        },
+        {
+          "name": "ink",
+          "hex": "#112751"
+        },
+        {
+          "name": "teal",
+          "hex": "#0A6F7E"
+        },
+        {
+          "name": "sage wash",
+          "hex": "#E4EACE"
+        },
+        {
+          "name": "night",
+          "hex": "#082332"
+        },
+        {
+          "name": "coral",
+          "hex": "#C8553D"
+        }
+      ],
+      "type": "Plus Jakarta Sans 500 for the claims, DM Sans for the reading. No serifs, never bold.",
+      "rules": [
+        "White paper, one navy ink for words and drawings alike, teal for the one thing that matters.",
+        "Flat: 6px controls, 8px images, hairlines instead of boxes. No shadows, gradients or glow.",
+        "The drawing leads. Give it room, never crop it, put the labels on the picture.",
+        "One dark room per page at most. Headlines are claims that tell the story on their own."
+      ],
+      "doc": "assets/design/website/HOUSE-STYLE.pdf",
+      "docLabel": "The house style (PDF)"
     }
   ],
   "libraries": [
     {
       "name": "Heliopolis art library",
-      "url": "https://kellylucas.dev/heliopolis/",
+      "url": "/heliopolis/index.html",
       "what": "The original five, the 33 redraws, the style catalog, and art by subject. Cream, navy, lime, one idea per image.",
-      "count": "served from the heliopolis-art-library repo"
+      "count": "served from the heliopolis-art-library repo",
+      "section": "heliopolis"
     },
     {
       "name": "HelioFlux design library",
       "url": "https://github.com/kellylucas314-cpu/helioflux-design-library",
       "what": "Everything collected for the investor site: references, visual concepts, the Dala particle studies, written directions, and the seven-page design guide.",
       "count": "60 references, 24 concepts, 5 studies, 13 ideas",
-      "private": true
+      "private": true,
+      "section": "website"
     },
     {
       "name": "Pretzel illustrations",
       "url": "https://github.com/kellylucas314-cpu/pretzel-protocol/tree/main/assets",
       "what": "My drawings for the family trip atlas: city chapters, each day, each stop, the welcome. Built onto cream by a script that refuses black backgrounds.",
       "count": "source art in assets/, web copies built to public/art/",
-      "private": true
+      "private": true,
+      "section": "pretzel"
     },
     {
       "name": "The audition room",
       "url": "all-fonts.html",
       "what": "Every font that walked into the lab, with the same test sentence. Heliora won.",
-      "count": "97 fonts auditioned"
+      "count": "97 fonts auditioned",
+      "section": "lab"
     },
     {
       "name": "The Magpie vault",
       "url": "/brain/gallery.html",
       "what": "Everything clipped, design or not. The desk is a view on the design half of this.",
       "count": "279 clips at last count",
-      "private": true
+      "private": true,
+      "section": "lab"
+    }
+  ],
+  "docs": [
+    {
+      "section": "website",
+      "kind": "pdf",
+      "title": "The house style",
+      "href": "assets/design/website/HOUSE-STYLE.pdf",
+      "thumb": "assets/design/website/house-style-cover.jpg",
+      "meta": "8 pages",
+      "what": "Colors, type, shapes and the plate drawings behind the new Science page, the timeline and the recolored Home, with the prompt for drawing new plates."
+    },
+    {
+      "section": "website",
+      "kind": "pdf",
+      "title": "Style pack contact sheet",
+      "href": "assets/design/website/contact-sheet.pdf",
+      "thumb": "assets/design/website/contact-sheet-cover.jpg",
+      "meta": "5 pages",
+      "what": "All 25 files of the style pack on five sheets: the whole pages in strips, the screens, the phone views, the plates."
+    },
+    {
+      "section": "website",
+      "kind": "board",
+      "title": "Four hero options",
+      "href": "assets/design/website/hero-options-desktop.jpg",
+      "thumb": "assets/design/website/hero-options-desktop.jpg",
+      "meta": "board",
+      "what": "Paper plate, dark room, photon by photon, living light. Today's hero stays until one is picked."
+    },
+    {
+      "section": "website",
+      "kind": "board",
+      "title": "The growth story, re-inked",
+      "href": "assets/design/website/tumor-before-after.jpg",
+      "thumb": "assets/design/website/tumor-before-after.jpg",
+      "meta": "before and after",
+      "what": "The tumor sequence with its ink moved from blue-violet to the plate navy. The vessels stay coral."
+    },
+    {
+      "section": "website",
+      "kind": "page",
+      "title": "The new Science page and timeline",
+      "href": "https://myheliopolis.com/science-preview/science.html",
+      "thumb": "assets/design/website/style-pack/science-screen-00.jpg",
+      "meta": "preview",
+      "private": true,
+      "what": "The draft pages, behind the Heliopolis sign-in for review."
+    },
+    {
+      "section": "website",
+      "kind": "images",
+      "meta": "25 files",
+      "title": "The style pack",
+      "what": "Screenshots and plates for redraws. Hand a few of these and the prompt in the house style to an image model.",
+      "href": "assets/design/website/contact-sheet.pdf",
+      "cta": "Open the contact sheet",
+      "images": [
+        {
+          "src": "assets/design/website/style-pack/plate-1923-onion-roots.jpg",
+          "caption": "plate-1923-onion-roots.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/plate-1934-detector-tests.jpg",
+          "caption": "plate-1934-detector-tests.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/plate-1954-seedlings.jpg",
+          "caption": "plate-1954-seedlings.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/plate-1989-plant-imaging.jpg",
+          "caption": "plate-1989-plant-imaging.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/plate-2004-mouse-imaging.jpg",
+          "caption": "plate-2004-mouse-imaging.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/plate-2017-oxidative-cells.jpg",
+          "caption": "plate-2017-oxidative-cells.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/plate-2018-cell-study.jpg",
+          "caption": "plate-2018-cell-study.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/plate-2025-human-head.jpg",
+          "caption": "plate-2025-human-head.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/plate-living-light-hand-cell-seedling.jpg",
+          "caption": "plate-living-light-hand-cell-seedling.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/growth-story-frame-navy.jpg",
+          "caption": "growth-story-frame-navy.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/night-cell-and-detector-hero.jpg",
+          "caption": "night-cell-and-detector-hero.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/paper-cell-and-detector.jpg",
+          "caption": "paper-cell-and-detector.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/science-screen-00.jpg",
+          "caption": "science-screen-00.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/science-screen-01.jpg",
+          "caption": "science-screen-01.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/science-screen-02.jpg",
+          "caption": "science-screen-02.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/timeline-screen-00.jpg",
+          "caption": "timeline-screen-00.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/timeline-screen-01.jpg",
+          "caption": "timeline-screen-01.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/timeline-screen-02.jpg",
+          "caption": "timeline-screen-02.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/timeline-screen-03.jpg",
+          "caption": "timeline-screen-03.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/timeline-phone-00.jpg",
+          "caption": "timeline-phone-00.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/timeline-phone-01.jpg",
+          "caption": "timeline-phone-01.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/timeline-phone-02.jpg",
+          "caption": "timeline-phone-02.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/home-full-full.jpg",
+          "caption": "home-full-full.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/science-full-full.jpg",
+          "caption": "science-full-full.jpg"
+        },
+        {
+          "src": "assets/design/website/style-pack/timeline-full-full.jpg",
+          "caption": "timeline-full-full.jpg"
+        }
+      ]
+    },
+    {
+      "section": "heliopolis",
+      "kind": "page",
+      "title": "The art library",
+      "href": "/heliopolis/index.html",
+      "thumb": "assets/design/heliopolis/courtyard.jpg",
+      "meta": "kellylucas.dev/heliopolis",
+      "what": "The original five, the 33 redraws, the style catalog, and art by subject. Cream, navy, lime, one idea per image."
+    },
+    {
+      "section": "heliopolis",
+      "kind": "page",
+      "title": "Art by subject",
+      "href": "/heliopolis/art-by-subject.html",
+      "thumb": "assets/design/heliopolis/library.jpg",
+      "meta": "catalog",
+      "what": "Every drawing filed by what it shows, so a page can borrow the nearest fit."
+    },
+    {
+      "section": "heliopolis",
+      "kind": "images",
+      "meta": "the references",
+      "title": "The look, in nine drawings",
+      "tall": true,
+      "what": "The style references every Heliopolis drawing is checked against: fine navy outlines, flat fills, one idea per image, cream all around.",
+      "href": "/heliopolis/index.html",
+      "cta": "Open the library",
+      "images": [
+        {
+          "src": "assets/design/heliopolis/courtyard.jpg",
+          "full": "/heliopolis/heliopolis-courtyard-v1.png",
+          "caption": "Courtyard"
+        },
+        {
+          "src": "assets/design/heliopolis/library.jpg",
+          "full": "/heliopolis/heliopolis-library-v1.png",
+          "caption": "Library"
+        },
+        {
+          "src": "assets/design/heliopolis/library-entrance.jpg",
+          "full": "/heliopolis/heliopolis-library-entrance-v1.png",
+          "caption": "Library entrance"
+        },
+        {
+          "src": "assets/design/heliopolis/garden-courtyard.jpg",
+          "full": "/heliopolis/heliopolis-garden-courtyard-v1.png",
+          "caption": "Garden courtyard"
+        },
+        {
+          "src": "assets/design/heliopolis/civic-square.jpg",
+          "full": "/heliopolis/heliopolis-civic-square-v1.png",
+          "caption": "Civic square"
+        },
+        {
+          "src": "assets/design/heliopolis/arcade-walk.jpg",
+          "full": "/heliopolis/heliopolis-arcade-walk-v1.png",
+          "caption": "Arcade walk"
+        },
+        {
+          "src": "assets/design/heliopolis/plant-books.jpg",
+          "full": "/heliopolis/heliopolis-plant-books-v1.png",
+          "caption": "Plant and books"
+        },
+        {
+          "src": "assets/design/heliopolis/icon.jpg",
+          "full": "/heliopolis/heliopolis-icon-v1.png",
+          "caption": "Icon"
+        },
+        {
+          "src": "assets/design/heliopolis/wordmark.jpg",
+          "full": "/heliopolis/heliopolis-wordmark-v1.png",
+          "caption": "Wordmark"
+        }
+      ]
+    },
+    {
+      "section": "pretzel",
+      "kind": "page",
+      "title": "The atlas, live",
+      "href": "https://pretzel.thetravelprotocol.com/",
+      "thumb": "assets/design/pretzel/welcome.jpg",
+      "meta": "live",
+      "what": "Berlin, Munich, Prague, for four people on their phones. Correctness and thumbs come first."
+    },
+    {
+      "section": "pretzel",
+      "kind": "page",
+      "title": "The art library",
+      "href": "https://pretzel-protocol-art-library.kellylucas314.workers.dev/",
+      "thumb": "assets/design/pretzel/city-prague.jpg",
+      "meta": "gallery",
+      "what": "Every candidate drawing for the trip, thumbnails on cream, with a downloadable file list."
+    },
+    {
+      "section": "pretzel",
+      "kind": "page",
+      "title": "DESIGN-SYSTEM.md",
+      "href": "https://github.com/kellylucas314-cpu/pretzel-protocol/blob/main/DESIGN-SYSTEM.md",
+      "meta": "the rules",
+      "private": true,
+      "what": "Identity, house rules, components and the illustration pipeline. Made the usual way: screenshot, name the five biggest weaknesses, fix them, repeat."
+    },
+    {
+      "section": "pretzel",
+      "kind": "images",
+      "meta": "seven drawings",
+      "title": "Four cities and a few days",
+      "tall": true,
+      "what": "Kelly's own drawings for the atlas, built onto cream by a script that refuses black backgrounds.",
+      "href": "https://pretzel-protocol-art-library.kellylucas314.workers.dev/",
+      "cta": "Open the art library",
+      "images": [
+        {
+          "src": "assets/design/pretzel/city-berlin.jpg",
+          "full": "https://pretzel.thetravelprotocol.com/art/city-berlin.webp",
+          "caption": "Berlin"
+        },
+        {
+          "src": "assets/design/pretzel/city-munich.jpg",
+          "full": "https://pretzel.thetravelprotocol.com/art/city-munich.webp",
+          "caption": "Munich"
+        },
+        {
+          "src": "assets/design/pretzel/city-prague.jpg",
+          "full": "https://pretzel.thetravelprotocol.com/art/city-prague.webp",
+          "caption": "Prague"
+        },
+        {
+          "src": "assets/design/pretzel/city-amsterdam.jpg",
+          "full": "https://pretzel.thetravelprotocol.com/art/city-amsterdam.webp",
+          "caption": "Amsterdam"
+        },
+        {
+          "src": "assets/design/pretzel/welcome.jpg",
+          "full": "https://pretzel.thetravelprotocol.com/art/welcome.webp",
+          "caption": "Welcome"
+        },
+        {
+          "src": "assets/design/pretzel/day-1.jpg",
+          "full": "https://pretzel.thetravelprotocol.com/art/day-1.webp",
+          "caption": "Day 1"
+        },
+        {
+          "src": "assets/design/pretzel/day-3.jpg",
+          "full": "https://pretzel.thetravelprotocol.com/art/day-3.webp",
+          "caption": "Day 3"
+        }
+      ]
     }
   ],
   "manual": [
@@ -656,6 +1029,137 @@ window.DESIGN_LIBRARY = {
         "Open on max effort for the first build, then drop to medium for everything after. Design judgment is where the effort dial matters.",
         "Awwwards is the place he finds references. Higgsfield or Kie.ai when the hero needs a video."
       ]
+    },
+    {
+      "url": "https://www.nngroup.com/articles/",
+      "title": "Nielsen Norman Group",
+      "kind": "reading",
+      "tags": [
+        "usability",
+        "research"
+      ],
+      "why": "The research-backed canon of usability: heuristics, studies, patterns.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://lawsofux.com/",
+      "title": "Laws of UX",
+      "kind": "reading",
+      "tags": [
+        "psychology",
+        "principles"
+      ],
+      "why": "One-page summaries of the psychology behind fewer choices, bigger targets, less to remember: Hick, Fitts, Miller.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://www.figma.com/resource-library/ui-design-principles/",
+      "title": "Figma's UI design principles",
+      "kind": "reading",
+      "tags": [
+        "principles"
+      ],
+      "why": "A friendly modern overview. Good shared vocabulary.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://baymard.com/",
+      "title": "Baymard Institute",
+      "kind": "reading",
+      "tags": [
+        "research",
+        "forms"
+      ],
+      "why": "A huge evidence-based UX research library, strongest on e-commerce and forms.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://www.pttrns.com/",
+      "title": "Pttrns",
+      "kind": "gallery",
+      "tags": [
+        "mobile",
+        "patterns"
+      ],
+      "why": "Mobile UI pattern screenshots by category.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://designsystemsrepo.com/",
+      "title": "Design Systems Repo",
+      "kind": "gallery",
+      "tags": [
+        "design-systems"
+      ],
+      "why": "A directory of public design systems: how big teams codify all of this.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://uxcellence.com/2017/design-systems-style-guides-pattern-libraries",
+      "title": "UXcellence on design systems",
+      "kind": "reading",
+      "tags": [
+        "design-systems",
+        "vocabulary"
+      ],
+      "why": "What a design system, a style guide and a pattern library actually are, with examples. Their whole library of UX tools is at uxcellence.com/library.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://atomicdesign.bradfrost.com/",
+      "title": "Atomic Design",
+      "kind": "reading",
+      "tags": [
+        "design-systems",
+        "book"
+      ],
+      "why": "Brad Frost's free full book behind modern design systems: atoms to molecules to organisms to pages.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://patternlab.io/",
+      "title": "Pattern Lab",
+      "kind": "tool",
+      "tags": [
+        "design-systems"
+      ],
+      "why": "Atomic Design in practice: a living workshop where the reusable pieces get built, viewed and tested. Click around demo.patternlab.io.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "http://styleguides.io/",
+      "title": "Styleguides.io",
+      "kind": "gallery",
+      "tags": [
+        "style-guides"
+      ],
+      "why": "Real style guides plus the articles, books and talks about making one.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://www.reddit.com/r/UXDesign/",
+      "title": "r/UXDesign",
+      "kind": "reading",
+      "tags": [
+        "community"
+      ],
+      "why": "Practitioner discussion. The thread on standardized best practices is a good index.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://www.earli.com/Relevant",
+      "title": "Earli",
+      "kind": "site",
+      "why": "Early cancer detection, told plainly. A neighbor on the same shelf as HelioFlux.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://21st.dev/community/components/s/ui",
+      "hidden": true
+    },
+    {
+      "url": "https://work-in-progress.openai.chatgpt.site/",
+      "hidden": true
     }
   ],
   "items": [
@@ -673,7 +1177,8 @@ window.DESIGN_LIBRARY = {
       "pinned": true,
       "why": "The north star for this whole site. Stacked slabs, dot tags, huge quiet type. Deep science that never looks like a hospital.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "linear.app",
@@ -689,7 +1194,8 @@ window.DESIGN_LIBRARY = {
       "pinned": true,
       "why": "Clarity. Hover gives you context. A new project greets you with an empty state that guides you instead of a blank screen.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "examples"
     },
     {
       "id": "dub.co",
@@ -703,7 +1209,8 @@ window.DESIGN_LIBRARY = {
       "title": "dub.co",
       "why": "The empty dashboard has an animation, a message, and one clear next step. That is the whole lesson on empty states.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "examples"
     },
     {
       "id": "vercel.com",
@@ -717,7 +1224,8 @@ window.DESIGN_LIBRARY = {
       "title": "Vercel",
       "why": "Deploy, and the status shows up immediately so you know it worked. Success states matter as much as empty ones.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "examples"
     },
     {
       "id": "notion.so",
@@ -731,7 +1239,8 @@ window.DESIGN_LIBRARY = {
       "title": "Notion",
       "why": "Built for flow. New teamspace, add your team, or skip. It never traps you in a step.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "examples"
     },
     {
       "id": "godly.website",
@@ -745,21 +1254,8 @@ window.DESIGN_LIBRARY = {
       "title": "Godly",
       "why": "Premium web design examples, for when Dribbble starts to feel like a wall of shots.",
       "added": "2026-09-24",
-      "source": "manual"
-    },
-    {
-      "id": "land-book.com",
-      "domain": "land-book.com",
-      "kind": "gallery",
-      "tags": [
-        "landing-pages",
-        "web-design"
-      ],
-      "url": "https://land-book.com/",
-      "title": "Land-book",
-      "why": "Landing page and startup site gallery. Good for studying section order before writing a line of code.",
-      "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "coolors.co",
@@ -772,7 +1268,8 @@ window.DESIGN_LIBRARY = {
       "title": "Coolors",
       "why": "Palette generator. Press space until something feels right, then desaturate it a little.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "gsap.com/docs/v3",
@@ -786,7 +1283,8 @@ window.DESIGN_LIBRARY = {
       "title": "GSAP docs",
       "why": "The motion library this site runs on. Reading it one plugin at a time.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "youtube:zsp20pn14o0",
@@ -805,7 +1303,8 @@ window.DESIGN_LIBRARY = {
         "Mouse effects: the CTA that comes to your cursor is the best use. Keep them rare, and have a fallback because tablet and mobile have no cursor."
       ],
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "youtube:adaquzs04rc",
@@ -824,7 +1323,8 @@ window.DESIGN_LIBRARY = {
         "A design system is a decision you can stick to, not hundreds of components. Same buttons, spacing, and type everywhere, so every new screen feels familiar."
       ],
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "youtube:7suuzocv47u",
@@ -843,21 +1343,8 @@ window.DESIGN_LIBRARY = {
         "Line height: about 150% for paragraphs, 110 to 130% for headings. Smaller text and longer lines want more. Auto falls apart at display sizes."
       ],
       "added": "2026-09-24",
-      "source": "manual"
-    },
-    {
-      "id": "animejs.com",
-      "domain": "animejs.com",
-      "kind": "tool",
-      "tags": [
-        "motion",
-        "animation"
-      ],
-      "url": "http://animejs.com/",
-      "title": "Anime.js",
-      "why": "A lightweight animation library. Worth knowing next to GSAP.",
-      "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "recent.design",
@@ -870,7 +1357,8 @@ window.DESIGN_LIBRARY = {
       "title": "Recent",
       "why": "Godly's new home, per Jack Roberts' five shelves. Best of recent design, daily.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "noiced.com",
@@ -883,7 +1371,8 @@ window.DESIGN_LIBRARY = {
       "title": "Noiced",
       "why": "Daily web design inspiration. From Jack's shelf.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "landing.love",
@@ -897,7 +1386,8 @@ window.DESIGN_LIBRARY = {
       "title": "Landing.love",
       "why": "2,000+ animation-heavy landing pages. Pairs with the pink notebook page.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "minimal.gallery",
@@ -911,7 +1401,8 @@ window.DESIGN_LIBRARY = {
       "title": "Minimal Gallery",
       "why": "Hand-picked minimal web design. For when the slab layout needs a diet.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "siteinspire.com",
@@ -924,7 +1415,8 @@ window.DESIGN_LIBRARY = {
       "title": "Siteinspire",
       "why": "Old-school, still one of the cleanest galleries.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "app.notion.com/p/the-design-loop-free-guide-3b8e8d6bd13781ff8bf2fc06fd5d0aac",
@@ -938,7 +1430,8 @@ window.DESIGN_LIBRARY = {
       "title": "The Design Loop",
       "why": "Interview, preflight, teardown, loop. Name a specific bar, write mechanisms not adjectives, then let three fresh critics judge the render until all three pass. Installed as /design-loop in this repo.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "app.notion.com/p/the-brand-asset-machine-3b3e8d6bd13781909d92c4d0cafc7c77",
@@ -952,7 +1445,8 @@ window.DESIGN_LIBRARY = {
       "title": "The Brand Asset Machine",
       "why": "A skill that interviews you, fixes a palette, then generates a brand's logo, photography, one motion loop and a texture pack, all inside that palette. Three rules: one product build everywhere, no text in photos, approve the extras.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "app.notion.com/p/5-questions-to-answer-before-you-build-any-website-339e8d6bd1378133800bd681d1d24dfe",
@@ -966,7 +1460,8 @@ window.DESIGN_LIBRARY = {
       "title": "5 Questions to Answer Before You Build Any Website",
       "why": "Who is the visitor, what is the one action, which objections need a section, what is the vibe in one word, and do brand assets exist yet. Answer these before the next HelioFlux or Heliopolis page.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "app.notion.com/p/claude-fable-5-website-design-prompts-3-levels-37ee8d6bd1378142b27be3a1480dd0d5",
@@ -980,7 +1475,8 @@ window.DESIGN_LIBRARY = {
       "title": "Website Design Prompts, 3 Levels",
       "why": "Level one describes a site in a line, level two recreates a reference, level three extracts a site's design DNA and rebuilds something original. Level three is the one that matches how this desk works.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "app.notion.com/p/the-ai-native-client-cms-free-build-blueprint-374e8d6bd13781559214ffd5ac6041f6",
@@ -994,7 +1490,8 @@ window.DESIGN_LIBRARY = {
       "title": "The AI-Native Client CMS Build Blueprint",
       "why": "Ingest a site, freeze the design as a template, expose only content slots, and run every change through a deterministic validator so a client cannot break the layout. Filed for the day the lab needs an editor.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "easywebsitebuilder.tech",
@@ -1007,7 +1504,8 @@ window.DESIGN_LIBRARY = {
       "title": "Easy Website Builder",
       "why": "Jack's website builder. Saved to try, not yet opened.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "app.notion.com/p/gpt-6-astra-is-here-5-things-you-need-to-do-with-it-3d2e8d6bd137819f99b2f35862af517b",
@@ -1021,7 +1519,8 @@ window.DESIGN_LIBRARY = {
       "title": "Five real jobs for a new model",
       "why": "Five prompts with a way to check each: find the bottleneck, a one-screen business dashboard, build with the design loop then test like a first-time customer, a filmable UI system from one reference, and a money-leak audit with receipts.",
       "added": "2026-09-24",
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "youtube:2ZwO6LhC0SU",
@@ -1039,7 +1538,168 @@ window.DESIGN_LIBRARY = {
         "Open on max effort for the first build, then drop to medium for everything after. Design judgment is where the effort dial matters.",
         "Awwwards is the place he finds references. Higgsfield or Kie.ai when the hero needs a video."
       ],
-      "source": "manual"
+      "source": "manual",
+      "section": "resources"
+    },
+    {
+      "id": "nngroup.com/articles",
+      "domain": "nngroup.com",
+      "kind": "reading",
+      "tags": [
+        "usability",
+        "research"
+      ],
+      "url": "https://www.nngroup.com/articles/",
+      "title": "Nielsen Norman Group",
+      "why": "The research-backed canon of usability: heuristics, studies, patterns.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "section": "resources"
+    },
+    {
+      "id": "lawsofux.com",
+      "domain": "lawsofux.com",
+      "kind": "reading",
+      "tags": [
+        "psychology",
+        "principles"
+      ],
+      "url": "https://lawsofux.com/",
+      "title": "Laws of UX",
+      "why": "One-page summaries of the psychology behind fewer choices, bigger targets, less to remember: Hick, Fitts, Miller.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "section": "resources"
+    },
+    {
+      "id": "figma.com/resource-library/ui-design-principles",
+      "domain": "figma.com",
+      "kind": "reading",
+      "tags": [
+        "principles"
+      ],
+      "url": "https://www.figma.com/resource-library/ui-design-principles/",
+      "title": "Figma's UI design principles",
+      "why": "A friendly modern overview. Good shared vocabulary.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "section": "resources"
+    },
+    {
+      "id": "baymard.com",
+      "domain": "baymard.com",
+      "kind": "reading",
+      "tags": [
+        "research",
+        "forms"
+      ],
+      "url": "https://baymard.com/",
+      "title": "Baymard Institute",
+      "why": "A huge evidence-based UX research library, strongest on e-commerce and forms.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "section": "resources"
+    },
+    {
+      "id": "pttrns.com",
+      "domain": "pttrns.com",
+      "kind": "gallery",
+      "tags": [
+        "mobile",
+        "patterns"
+      ],
+      "url": "https://www.pttrns.com/",
+      "title": "Pttrns",
+      "why": "Mobile UI pattern screenshots by category.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "section": "resources"
+    },
+    {
+      "id": "designsystemsrepo.com",
+      "domain": "designsystemsrepo.com",
+      "kind": "gallery",
+      "tags": [
+        "design-systems"
+      ],
+      "url": "https://designsystemsrepo.com/",
+      "title": "Design Systems Repo",
+      "why": "A directory of public design systems: how big teams codify all of this.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "section": "resources"
+    },
+    {
+      "id": "uxcellence.com/2017/design-systems-style-guides-pattern-libraries",
+      "domain": "uxcellence.com",
+      "kind": "reading",
+      "tags": [
+        "design-systems",
+        "vocabulary"
+      ],
+      "url": "https://uxcellence.com/2017/design-systems-style-guides-pattern-libraries",
+      "title": "UXcellence on design systems",
+      "why": "What a design system, a style guide and a pattern library actually are, with examples. Their whole library of UX tools is at uxcellence.com/library.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "section": "resources"
+    },
+    {
+      "id": "atomicdesign.bradfrost.com",
+      "domain": "atomicdesign.bradfrost.com",
+      "kind": "reading",
+      "tags": [
+        "design-systems",
+        "book"
+      ],
+      "url": "https://atomicdesign.bradfrost.com/",
+      "title": "Atomic Design",
+      "why": "Brad Frost's free full book behind modern design systems: atoms to molecules to organisms to pages.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "section": "resources"
+    },
+    {
+      "id": "patternlab.io",
+      "domain": "patternlab.io",
+      "kind": "tool",
+      "tags": [
+        "design-systems"
+      ],
+      "url": "https://patternlab.io/",
+      "title": "Pattern Lab",
+      "why": "Atomic Design in practice: a living workshop where the reusable pieces get built, viewed and tested. Click around demo.patternlab.io.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "section": "resources"
+    },
+    {
+      "id": "styleguides.io",
+      "domain": "styleguides.io",
+      "kind": "gallery",
+      "tags": [
+        "style-guides"
+      ],
+      "url": "http://styleguides.io/",
+      "title": "Styleguides.io",
+      "why": "Real style guides plus the articles, books and talks about making one.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "section": "resources"
+    },
+    {
+      "id": "reddit.com/r/uxdesign",
+      "domain": "reddit.com",
+      "kind": "reading",
+      "tags": [
+        "community"
+      ],
+      "url": "https://www.reddit.com/r/UXDesign/",
+      "title": "r/UXDesign",
+      "why": "Practitioner discussion. The thread on standardized best practices is a good index.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "section": "resources"
     },
     {
       "id": "emilkowal.ski/skill",
@@ -1048,6 +1708,7 @@ window.DESIGN_LIBRARY = {
       "domain": "emilkowal.ski",
       "author": "Emil Kowalski",
       "kind": "tool",
+      "section": "resources",
       "tags": [
         "design-engineering",
         "animation",
@@ -1075,6 +1736,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://savee.com",
       "domain": "savee.com",
       "kind": "gallery",
+      "section": "resources",
       "tags": [
         "visual-inspiration",
         "references",
@@ -1100,6 +1762,7 @@ window.DESIGN_LIBRARY = {
       "domain": "youtube.com",
       "author": "Chase AI",
       "kind": "video",
+      "section": "resources",
       "tags": [
         "ai-design",
         "web-design",
@@ -1118,11 +1781,113 @@ window.DESIGN_LIBRARY = {
       "source": "magpie"
     },
     {
+      "id": "thenounproject.com/icons",
+      "title": "Noun Project",
+      "url": "https://thenounproject.com/icons/",
+      "domain": "thenounproject.com",
+      "kind": "tool",
+      "section": "resources",
+      "summary": "🎨 Find & download nearly 10M SVG & PNG icons from the web's most diverse collection. Noun Project offers both free options & unlimited access with Icon Pro.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T13:07:58.956Z",
+      "source": "magpie"
+    },
+    {
+      "id": "picardlab.org",
+      "title": "Mitochondrial Psychobiology Lab",
+      "url": "https://www.picardlab.org/",
+      "domain": "picardlab.org",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "Picard Lab - Home",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:30:02.517Z",
+      "source": "magpie"
+    },
+    {
+      "id": "pacb.com",
+      "title": "PacBio",
+      "url": "https://www.pacb.com/",
+      "domain": "pacb.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "PacBio highly accurate long-read sequencing provides the most comprehensive view of genomes, transcriptomes, and epigenomes.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:30:00.972Z",
+      "source": "magpie"
+    },
+    {
+      "id": "bioaffinitytech.com",
+      "title": "bioAffinity",
+      "url": "https://bioaffinitytech.com/",
+      "domain": "bioaffinitytech.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:29:55.326Z",
+      "source": "magpie"
+    },
+    {
+      "id": "butterflynetwork.com",
+      "title": "The clear answer in point-of-care ultrasound",
+      "url": "https://www.butterflynetwork.com/",
+      "domain": "butterflynetwork.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "health-tech"
+      ],
+      "summary": "Welcome to connected medicine. Butterfly brings the power of ultrasound into your assessment, diagnosis and treatment process. One probe. Whole-body imaging. For any medical system.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:29:50.080Z",
+      "source": "magpie"
+    },
+    {
+      "id": "seer.bio",
+      "title": "Seer",
+      "url": "https://seer.bio/",
+      "domain": "seer.bio",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "Unlock deep, unbiased proteomics insights at scale with Seer’s Proteograph® platform, accelerating biological discovery across diverse sample types.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:29:45.956Z",
+      "source": "magpie"
+    },
+    {
+      "id": "lumicks.com",
+      "title": "LUMICKS",
+      "url": "https://www.lumicks.com/",
+      "domain": "lumicks.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "com - Revealing mechanism of action at the single-molecule and single-cell level.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:29:43.199Z",
+      "source": "magpie"
+    },
+    {
       "id": "happyhues.co",
       "title": "Happy Hues",
       "url": "https://www.happyhues.co/",
       "domain": "happyhues.co",
       "kind": "tool",
+      "section": "resources",
       "tags": [
         "design-inspiration",
         "color",
@@ -1140,6 +1905,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://fonts.google.com/",
       "domain": "fonts.google.com",
       "kind": "tool",
+      "section": "resources",
       "tags": [
         "design-inspiration",
         "typography",
@@ -1157,6 +1923,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://mobbin.com/",
       "domain": "mobbin.com",
       "kind": "gallery",
+      "section": "resources",
       "tags": [
         "design-inspiration",
         "ui-ux",
@@ -1175,6 +1942,7 @@ window.DESIGN_LIBRARY = {
       "domain": "behance.net",
       "author": "Behance",
       "kind": "gallery",
+      "section": "resources",
       "tags": [
         "design-inspiration",
         "visual-inspiration"
@@ -1191,6 +1959,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://dribbble.com/",
       "domain": "dribbble.com",
       "kind": "gallery",
+      "section": "resources",
       "tags": [
         "design-inspiration",
         "visual-inspiration"
@@ -1207,6 +1976,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://www.pinterest.com/",
       "domain": "pinterest.com",
       "kind": "gallery",
+      "section": "resources",
       "tags": [
         "design-inspiration",
         "visual-inspiration"
@@ -1223,6 +1993,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://pageflows.com/",
       "domain": "pageflows.com",
       "kind": "gallery",
+      "section": "resources",
       "tags": [
         "design-inspiration",
         "ui-ux",
@@ -1240,6 +2011,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://refero.design/",
       "domain": "refero.design",
       "kind": "gallery",
+      "section": "resources",
       "tags": [
         "design-inspiration",
         "web-design",
@@ -1259,6 +2031,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://www.lapa.ninja/",
       "domain": "lapa.ninja",
       "kind": "gallery",
+      "section": "resources",
       "tags": [
         "design-inspiration",
         "web-design",
@@ -1277,6 +2050,7 @@ window.DESIGN_LIBRARY = {
       "domain": "onepagelove.com",
       "author": "Rob Hope, @robhope",
       "kind": "gallery",
+      "section": "resources",
       "tags": [
         "design-inspiration",
         "web-design",
@@ -1294,6 +2068,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://21st.dev",
       "domain": "21st.dev",
       "kind": "tool",
+      "section": "resources",
       "tags": [
         "design-inspiration",
         "ui-ux",
@@ -1310,6 +2085,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://www.awwwards.com/",
       "domain": "awwwards.com",
       "kind": "gallery",
+      "section": "resources",
       "tags": [
         "design-inspiration",
         "web-design",
@@ -1322,11 +2098,103 @@ window.DESIGN_LIBRARY = {
       "why": "Best for high-polish website benchmarks. Start here when a build begins from style uncertainty."
     },
     {
+      "id": "corticallabs.com",
+      "title": "Cortical Labs",
+      "url": "https://corticallabs.com",
+      "domain": "corticallabs.com",
+      "author": "Cortical Labs P/L",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "We've combined lab-grown neurons with silicon chips and made it available to anyone, for first time ever..",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:28:47.328Z",
+      "source": "magpie"
+    },
+    {
+      "id": "cambrianbio.com",
+      "title": "Cambrian Bio",
+      "url": "https://www.cambrianbio.com/",
+      "domain": "cambrianbio.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "Cambrian Bio is a clinical-stage drug development company developing therapeutics that will redefine healthcare in the 21st century.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:28:45.425Z",
+      "source": "magpie"
+    },
+    {
+      "id": "cardiatec.ai",
+      "title": "CardiaTec Biosciences",
+      "url": "https://cardiatec.ai/",
+      "domain": "cardiatec.ai",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "CardiaTec is a TechBio company leveraging large scale multiomics data to discover novel cardiovascular therapeutics.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:28:37.380Z",
+      "source": "magpie"
+    },
+    {
+      "id": "functionhealth.com/bf",
+      "title": "Function",
+      "url": "https://www.functionhealth.com/bf",
+      "domain": "functionhealth.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "health-tech"
+      ],
+      "summary": "Put yourself on a new path with testing for 100+ biomarkers, clinician-backed results, and follow-up testing that helps you decide what to do next.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:28:29.174Z",
+      "source": "magpie"
+    },
+    {
+      "id": "functionhealth.com",
+      "title": "Function Health",
+      "url": "https://www.functionhealth.com/",
+      "domain": "functionhealth.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "health-tech"
+      ],
+      "summary": "It’s time you own your health. Function includes 160+ lab tests and personalized protocols for instant action. Tracked over time in one secure place.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:28:27.821Z",
+      "source": "magpie"
+    },
+    {
+      "id": "helioflux.co",
+      "title": "HelioFlux",
+      "url": "https://helioflux.co/",
+      "domain": "helioflux.co",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "website-reference"
+      ],
+      "summary": "A non-invasive biophotonic platform designed to detect cancer earlier than conventional imaging. No blood draw. No biopsy. No radiation.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:28:24.368Z",
+      "source": "magpie"
+    },
+    {
       "id": "stitch.withgoogle.com",
       "title": "Stitch",
       "url": "https://stitch.withgoogle.com",
       "domain": "stitch.withgoogle.com",
       "kind": "tool",
+      "section": "resources",
       "tags": [
         "design-inspiration",
         "design-tool",
@@ -1340,11 +2208,205 @@ window.DESIGN_LIBRARY = {
       "why": "Google's AI UI ideation tool. Treat the output as a sketch, not a spec."
     },
     {
+      "id": "phathompharma.com",
+      "title": "Phathom Pharmaceuticals",
+      "url": "https://www.phathompharma.com/",
+      "domain": "phathompharma.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "A late clinical-stage biopharmaceutical company committed to transforming the treatment landscape for people suffering from GI diseases related to acid.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:27:59.002Z",
+      "source": "magpie"
+    },
+    {
+      "id": "bicara.com",
+      "title": "Bicara Therapeutics",
+      "url": "https://www.bicara.com/",
+      "domain": "bicara.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "At Bicara, we are attacking cancer head-on by combining the precision of targeted therapies with the power of tumor-microenvironment modulators to create better medicines for patients.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:27:55.922Z",
+      "source": "magpie"
+    },
+    {
+      "id": "allaytx.com",
+      "title": "Home • Allay Therapeutics",
+      "url": "https://www.allaytx.com/",
+      "domain": "allaytx.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "SUPPORTING PATIENTS THROUGH EVERY PHASE OF RECUPERATION The first technology designed to deliver weeks of localized pain management",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:27:54.474Z",
+      "source": "magpie"
+    },
+    {
+      "id": "prenuvo.com",
+      "title": "Prenuvo",
+      "url": "https://prenuvo.com/",
+      "domain": "prenuvo.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "health-tech"
+      ],
+      "summary": "Proactive health memberships combining Whole Body MRI, advanced blood biomarker testing, and ongoing clinical guidance, designed to help you track your health year over year.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:27:49.841Z",
+      "source": "magpie"
+    },
+    {
+      "id": "recursion.com",
+      "title": "Recursion",
+      "url": "https://www.recursion.com/",
+      "domain": "recursion.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "Dive into Recursion's innovative approach to decoding biology. Join our mission & explore what AI drug discovery companies can do. Contact us today!",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:25:38.400Z",
+      "source": "magpie"
+    },
+    {
+      "id": "earli.com/relevant",
+      "title": "Earli",
+      "url": "https://www.earli.com/Relevant",
+      "domain": "earli.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:25:36.794Z",
+      "source": "magpie+manual",
+      "why": "Early cancer detection, told plainly. A neighbor on the same shelf as HelioFlux.",
+      "added": "2026-09-24"
+    },
+    {
+      "id": "ozette.com",
+      "title": "Ozette",
+      "url": "https://ozette.com/",
+      "domain": "ozette.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "Ozette automates flow and spectral cytometry analysis for clinical trials, end to end, from sample to reproducible biomarker endpoints, under a validated quality system, so your team gets answers at…",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:25:35.205Z",
+      "source": "magpie"
+    },
+    {
+      "id": "cradle.bio",
+      "title": "Cradle",
+      "url": "https://www.cradle.bio/",
+      "domain": "cradle.bio",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "Protein engineering AI, built for scientists. Leverage AI to generate protein candidates and improve their properties. More breakthroughs in fewer experiments, guided by your own experimental data.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:25:33.979Z",
+      "source": "magpie"
+    },
+    {
+      "id": "insitro.com",
+      "title": "insitro",
+      "url": "https://www.insitro.com/",
+      "domain": "insitro.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "At insitro, we are building a different kind of drug company to bring better drugs faster to the patients who can benefit most.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:25:31.638Z",
+      "source": "magpie"
+    },
+    {
+      "id": "xaira.com",
+      "title": "Xaira Therapeutics",
+      "url": "https://www.xaira.com/",
+      "domain": "xaira.com",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "We’re pioneering the discovery and development of life-changing medicines through the transformative power of artificial intelligence.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:25:30.623Z",
+      "source": "magpie"
+    },
+    {
+      "id": "nabla.bio",
+      "title": "Nabla",
+      "url": "https://www.nabla.bio",
+      "domain": "nabla.bio",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:25:29.830Z",
+      "source": "magpie"
+    },
+    {
+      "id": "manifold.bio",
+      "title": "Manifold Bio",
+      "url": "https://www.manifold.bio/",
+      "domain": "manifold.bio",
+      "kind": "site",
+      "section": "website",
+      "tags": [
+        "biotech"
+      ],
+      "summary": "Manifold Bio has built the first high-throughput in vivo (HTV) discovery engine, combining massively multiplexed in vivo screening and AI-powered design to create targeted biologics.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-25T12:25:28.793Z",
+      "source": "magpie"
+    },
+    {
+      "id": "github.com/agents365-ai/drawio-skill",
+      "title": "Agents365-ai/drawio-skill: Generate draw.io diagrams from natural language",
+      "url": "https://github.com/Agents365-ai/drawio-skill",
+      "domain": "github.com",
+      "author": "Agents365-ai",
+      "kind": "repo",
+      "section": "resources",
+      "summary": "Generate draw.io diagrams from natural language, 11 presets (UML, SysML/MBSE, BPMN, network, C4…), 36 tools: codebase/CI/infra-to-diagram, image→editable diagram, mind maps, build-up animation, ex...",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-24T05:28:24.406Z",
+      "source": "magpie"
+    },
+    {
       "id": "github.com/leonxlnx/taste-skill",
       "title": "Taste Skill",
       "url": "https://github.com/Leonxlnx/taste-skill",
       "domain": "github.com",
       "kind": "repo",
+      "section": "resources",
       "tags": [
         "skills",
         "design-tools",
@@ -1361,6 +2423,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://github.com/goabstract/Awesome-Design-Tools",
       "domain": "github.com",
       "kind": "repo",
+      "section": "resources",
       "tags": [
         "design-tools",
         "brand",
@@ -1373,11 +2436,30 @@ window.DESIGN_LIBRARY = {
       "source": "magpie"
     },
     {
+      "id": "land-book.com",
+      "title": "Land-book",
+      "url": "https://land-book.com/",
+      "domain": "land-book.com",
+      "kind": "gallery",
+      "section": "resources",
+      "summary": "Find the best hand-picked website design inspiration. We're a curated website design gallery for Creatives, updated daily.",
+      "hasTranscript": false,
+      "clippedAt": "2026-07-03T00:37:31.305000+00:00",
+      "source": "magpie+manual",
+      "tags": [
+        "landing-pages",
+        "web-design"
+      ],
+      "why": "Landing page and startup site gallery. Good for studying section order before writing a line of code.",
+      "added": "2026-09-24"
+    },
+    {
       "id": "principles.design",
       "title": "Principles.design",
       "url": "https://principles.design/",
       "domain": "principles.design",
       "kind": "gallery",
+      "section": "resources",
       "tags": [
         "inspiration",
         "web-design"
@@ -1393,6 +2475,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://motionsites.ai/",
       "domain": "motionsites.ai",
       "kind": "gallery",
+      "section": "resources",
       "tags": [
         "inspiration",
         "web-design"
@@ -1408,6 +2491,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://ciechanow.ski/mechanical-watch/",
       "domain": "ciechanow.ski",
       "kind": "site",
+      "section": "examples",
       "tags": [
         "educational",
         "interactive"
@@ -1423,6 +2507,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://bruno-simon.com/",
       "domain": "bruno-simon.com",
       "kind": "site",
+      "section": "examples",
       "tags": [
         "portfolio",
         "3d",
@@ -1439,6 +2524,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://codingfont.com",
       "domain": "codingfont.com",
       "kind": "tool",
+      "section": "resources",
       "tags": [
         "tools",
         "dev",
@@ -1455,6 +2541,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://skins.webamp.org/index.html",
       "domain": "skins.webamp.org",
       "kind": "site",
+      "section": "examples",
       "tags": [
         "nostalgia",
         "music"
@@ -1465,11 +2552,29 @@ window.DESIGN_LIBRARY = {
       "why": "A museum of Winamp skins. Nostalgia as a lesson in personality over polish."
     },
     {
+      "id": "animejs.com",
+      "title": "Anime.js",
+      "url": "http://animejs.com/",
+      "domain": "animejs.com",
+      "kind": "tool",
+      "section": "resources",
+      "tags": [
+        "motion",
+        "animation"
+      ],
+      "hasTranscript": false,
+      "clippedAt": "2026-02-24T00:00:00Z",
+      "source": "magpie+manual",
+      "why": "A lightweight animation library. Worth knowing next to GSAP.",
+      "added": "2026-09-24"
+    },
+    {
       "id": "igloo.inc",
       "title": "Igloo Inc",
       "url": "https://igloo.inc",
       "domain": "igloo.inc",
       "kind": "site",
+      "section": "examples",
       "tags": [
         "cool"
       ],
@@ -1484,6 +2589,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://fontsinuse.com/",
       "domain": "fontsinuse.com",
       "kind": "tool",
+      "section": "resources",
       "tags": [
         "fonts",
         "typography",
