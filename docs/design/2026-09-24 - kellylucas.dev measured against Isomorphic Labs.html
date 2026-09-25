@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kellylucas.dev measured against Isomorphic Labs</title>
+<meta name="robots" content="noindex">
+<style>
+  /* The subject's own typeface, from the repo, so the tracking demo measures the real thing. */
+  @font-face{font-family:"Heliora";src:url("../../assets/fonts/Heliora-Regular.ttf") format("truetype");font-weight:400;font-display:swap}
+  @font-face{font-family:"Heliora";src:url("../../assets/fonts/Heliora-Medium.ttf") format("truetype");font-weight:500;font-display:swap}
+  :root{
+    --void:#08090a; --carbon:#0f1011; --obsidian:#161718; --graphite:#23252a; --smoke:#383b3f;
+    --ash:#62666d; --fog:#8a8f98; --mist:#d0d6e0; --paper:#ffffff;
+    --accent:#b1d8b3; /* the subject's own mint, used for the rail, the bar, the eyebrow dot, the slider thumb, positive verdicts */
+    --red:#eb5757; --green:#27a644; --amber:#f5b23e;
+    --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--void);color:var(--fog);font:400 15px/1.6 -apple-system,BlinkMacSystemFont,"Inter","Segoe UI",sans-serif;letter-spacing:-.011em;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{color:var(--paper);margin:0;font-weight:600}
+  h1{font-size:54px;line-height:1.04;letter-spacing:-.022em}
+  h2{font-size:30px;line-height:1.12;letter-spacing:-.022em}
+  h3{font-size:17px;line-height:1.3;letter-spacing:-.016em}
+  p{margin:0}
+  a{color:var(--mist)}
+  code{font-family:var(--mono);font-size:12.5px;letter-spacing:-.013em;color:var(--mist);background:var(--carbon);padding:1px 6px;border-radius:4px;box-shadow:inset 0 0 0 1px var(--graphite)}
+  .lede{font-size:19px;line-height:1.5;letter-spacing:-.014em;color:var(--mist)}
+  .dim{font-size:14px;color:var(--ash)}
+  .eye{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ash);display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .eye::before{content:"";width:6px;height:6px;border-radius:9999px;background:var(--accent)}
+  #bar{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:9}
+  .shell{max-width:1220px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:190px 1fr;gap:56px}
+  .rail{position:sticky;top:0;align-self:start;height:100vh;padding:40px 0;display:flex;flex-direction:column;gap:6px}
+  .rail a{font-size:14px;color:var(--ash);text-decoration:none;padding:4px 0;border-left:1px solid transparent;padding-left:12px;margin-left:-13px}
+  .rail a.act{color:var(--paper);border-left-color:var(--accent)}
+  .rail .kb{margin-top:auto;font-family:var(--mono);font-size:12.5px;color:var(--ash)}
+  .key{display:inline-block;min-width:22px;text-align:center;padding:2px 6px;border-radius:4px;box-shadow:inset 0 0 0 1px var(--graphite);color:var(--mist);margin-right:6px}
+  main{min-width:0}
+  section{padding:76px 0;border-bottom:1px solid var(--graphite)}
+  section:first-child{padding-top:64px}
+  .rv{opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease}
+  .rv.in{opacity:1;transform:none}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:32px}
+  .stat{background:var(--carbon);box-shadow:inset 0 0 0 1px var(--graphite);border-radius:12px;padding:18px}
+  .stat b{display:block;color:var(--paper);font-size:26px;letter-spacing:-.022em;font-weight:600;line-height:1.1}
+  .stat span{display:block;margin-top:6px;font-size:14px;color:var(--ash)}
+  .card{background:var(--carbon);box-shadow:inset 0 0 0 1px var(--graphite);border-radius:12px;padding:24px;margin-top:24px}
+  .seg{display:inline-flex;background:var(--obsidian);border-radius:9999px;padding:3px;box-shadow:inset 0 0 0 1px var(--graphite);gap:2px}
+  .seg button{border:0;background:transparent;color:var(--ash);font:inherit;font-size:13px;padding:6px 14px;border-radius:9999px;cursor:pointer}
+  .seg button.on{background:var(--graphite);color:var(--paper)}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+  .readout{font-family:var(--mono);font-size:12.5px;color:var(--mist)}
+  .verdict{font-size:14px;margin-top:10px}
+  #master{position:relative}
+  #knob{position:absolute;top:3px;height:calc(100% - 6px);background:var(--graphite);border-radius:9999px;transition:left .2s ease,width .2s ease;z-index:0}
+  #master button{position:relative;z-index:1}
+  #master button.on{background:transparent}
+  input[type=range]{width:100%;accent-color:var(--accent);margin:14px 0 6px}
+  .demo-light{font-family:"Heliora",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f4f2ec;color:#14201a;border-radius:12px;padding:28px;box-shadow:inset 0 0 0 1px var(--graphite)}
+  .demo-light .big{font-size:56px;line-height:.95;font-weight:500;letter-spacing:-.005em;transition:letter-spacing .2s ease}
+  .demo-light .small{margin-top:14px;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#6c766f}
+  .lines{display:grid;gap:14px;margin-top:8px}
+  .line{height:0;border-top:1px solid;position:relative}
+  .line span{position:absolute;right:0;top:4px;font-family:var(--mono);font-size:11px;color:#6c766f}
+  .scale{display:grid;gap:6px}
+  .scale div{display:flex;align-items:baseline;justify-content:space-between;gap:12px;color:#14201a;line-height:1.3}
+  .scale div span{font-family:var(--mono);font-size:11px;color:#6c766f;flex:0 0 auto}
+  .radii{display:flex;flex-wrap:wrap;gap:10px;padding:16px 0}
+  .rchip{width:64px;height:64px;background:#f6f3e8;box-shadow:inset 0 0 0 1px #14201a;display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:#14201a;transition:opacity .2s}
+  .rchip.gone{opacity:.18}
+  .mockwrap{font-family:"Heliora",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:36px;border-radius:12px;background:#f4f2ec;transition:background .3s}
+  .mock{width:280px;margin:0 auto;background:#f6f3e8;border-radius:20px;padding:22px;color:#14201a;box-shadow:inset 0 0 0 1px rgba(20,32,26,.14);transition:box-shadow .3s,transform .3s,background .3s}
+  .mock.drop{transform:translateY(-6px) rotate(-.4deg);box-shadow:0 16px 32px rgba(20,32,26,.08),inset 0 0 0 1px rgba(20,32,26,.14)}
+  .mock.hair{transform:translateY(-2px);background:#efece2;box-shadow:inset 0 0 0 1px #14201a}
+  .mock b{display:block;font-size:20px;letter-spacing:-.02em;line-height:1.1;margin:10px 0 8px;font-weight:500}
+  .mock small{font-size:13px;color:#3b4842;display:block}
+  .tag{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-left:8px;vertical-align:middle}
+  .tag.bad{color:var(--red);box-shadow:inset 0 0 0 1px rgba(235,87,87,.4)}
+  .tag.ok{color:var(--green);box-shadow:inset 0 0 0 1px rgba(39,166,68,.4)}
+  .tag.mid{color:var(--amber);box-shadow:inset 0 0 0 1px rgba(245,178,62,.4)}
+  table{width:100%;border-collapse:collapse;margin-top:24px;font-size:14px}
+  th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--graphite);vertical-align:top}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ash);font-weight:400}
+  td:first-child{color:var(--mist)}
+  td.them{color:var(--ash)}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px}
+  ul.list{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:8px}
+  ul.list li{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;background:var(--carbon);border-radius:6px;box-shadow:inset 0 0 0 1px var(--graphite)}
+  .tick{flex:0 0 18px;height:18px;border-radius:4px;background:var(--accent);display:grid;place-items:center;margin-top:2px}
+  .lbl{flex:1;color:var(--mist)}
+  .eff{font-family:var(--mono);font-size:12.5px;color:var(--ash);white-space:nowrap}
+  pre{background:var(--carbon);box-shadow:inset 0 0 0 1px var(--graphite);border-radius:12px;padding:20px 22px;overflow:auto;font-family:var(--mono);font-size:12.5px;line-height:1.55;color:var(--mist);margin-top:20px}
+  pre .c{color:var(--ash)}
+  #toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,12px);background:var(--obsidian);color:var(--paper);padding:10px 16px;border-radius:9999px;font-size:13px;opacity:0;transition:opacity .2s,transform .2s;box-shadow:inset 0 0 0 1px var(--smoke);pointer-events:none}
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+  @media (max-width:900px){.shell{grid-template-columns:1fr;gap:0}.rail{position:static;height:auto;flex-direction:row;flex-wrap:wrap;gap:4px 14px;padding:24px 0 0}.rail .kb{display:none}.stats{grid-template-columns:1fr 1fr}.cols{grid-template-columns:1fr}h1{font-size:38px}}
+  @media (prefers-reduced-motion:reduce){.rv{transition:none;opacity:1;transform:none}*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div class="shell">
+  <nav class="rail">
+    <a href="#overview">Overview</a>
+    <a href="#tracking">Letter spacing</a>
+    <a href="#hairlines">Hairlines</a>
+    <a href="#type">Type scale</a>
+    <a href="#radii">Border radius</a>
+    <a href="#elevation">Elevation</a>
+    <a href="#accent">Accent</a>
+    <a href="#diff">The diff</a>
+    <a href="#fixes">The fixes</a>
+    <a href="#patch">The patch</a>
+    <div class="kb"><span class="key">B</span> flip every demo &nbsp;<span class="key">&larr;</span><span class="key">&rarr;</span> tracking</div>
+  </nav>
+  <main>
+
+<section id="overview" class="rv">
+  <p class="eye">Design teardown · 2026-09-24</p>
+  <h1>kellylucas.dev measured against Isomorphic Labs</h1>
+  <p class="lede" style="margin-top:18px">The lab already runs the Isomorphic architecture: pale fields, near black hairlines, uppercase tags, big quiet whitespace. The difference is discipline, and it lives in four places: display tracking, the number of hairline values, the number of type sizes, and how a card lifts on hover. None of it is a redesign.</p>
+  <div class="row" style="margin-top:28px">
+    <span class="seg" id="master"><span id="knob"></span><button data-m="before" class="on">As measured</button><button data-m="after">Adjusted</button></span>
+    <span class="readout">press B to flip</span>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>0.005 &rarr; 0.030</b><span>h1 display tracking (negative em)</span></div>
+    <div class="stat"><b>8 &rarr; 2</b><span>hairline values on the homepage</span></div>
+    <div class="stat"><b>15 &rarr; 9</b><span>rendered type sizes</span></div>
+    <div class="stat"><b>5</b><span>border radii, already the right number</span></div>
+  </div>
+  <p class="dim" style="margin-top:22px">Subject values were read from live computed CSS on the homepage at 1440 × 900 on 2026-09-24. Reference values come from the measured Isomorphic Labs package in Kelly's vault (live site at 1424 × 853 plus the public stylesheet, inspected 2026-08-23). The live reference could not be reached from this session, so those numbers are a month old. Re-run the probe before treating any of them as current.</p>
+</section>
+
+<section id="tracking" class="rv">
+  <p class="eye">1 · Letter spacing</p>
+  <h2>The biggest headline is the loosest one</h2>
+  <p class="dim" style="margin-top:12px;max-width:640px">The hero h1 renders at 151px with <code>-0.005em</code>, which is <code>-0.76px</code>. Every other display size on the page tracks at <code>-0.035em</code> to <code>-0.040em</code>, and CLAUDE.md asks for <code>-0.04em</code>. Isomorphic sets its largest display at <code>-1.7px</code> on 56px, which is <code>-0.030em</code>. The one headline people see first is the only one not following the site's own rule.</p>
+  <div class="card">
+    <div class="row"><span class="readout">letter-spacing <b id="trackOut" style="color:var(--paper)">-0.005em</b></span><span class="readout">-0.005em (h1 today) &larr;&rarr; -0.040em (h2 today)</span></div>
+    <input type="range" id="trackRange" min="-40" max="-5" step="1" value="-5" aria-label="Letter spacing in thousandths of an em">
+    <div class="demo-light"><div class="big" id="trackDemo">Welcome to<br>the lab.</div><div class="small" id="trackSmall">see the experiments</div></div>
+    <p class="verdict" id="trackVerdict"></p>
+  </div>
+</section>
+
+<section id="hairlines" class="rv">
+  <p class="eye">2 · Hairlines</p>
+  <h2>Eight border values doing two jobs</h2>
+  <p class="dim" style="margin-top:12px;max-width:640px">The homepage draws hairlines at full ink and at alphas of 0.10, 0.12, 0.18, 0.25 and 0.35, plus two more in the tail. Isomorphic uses exactly two: <code>1px #1E1E1E</code> for structure and <code>1px #D8D8D8</code> for everything soft. The eye reads six near identical greys as slightly wrong rather than as a system.</p>
+  <div class="card">
+    <div class="row"><span class="seg" id="hairSeg"><button data-h="all" class="on">As measured, 8 values</button><button data-h="two">Two values</button></span><span class="readout" id="hairCount"></span></div>
+    <div class="demo-light"><div class="lines" id="hairLines"></div></div>
+    <p class="verdict" id="hairNote"></p>
+  </div>
+</section>
+
+<section id="type" class="rv">
+  <p class="eye">3 · Type scale</p>
+  <h2>Fifteen sizes where nine would do</h2>
+  <p class="dim" style="margin-top:12px;max-width:640px">The homepage renders 10, 12, 13, 14, 15, 16, 17, 28, 32, 38, 56, 79, 108, 151 and one more. Six of those sit between 12 and 17 pixels. Isomorphic runs seven desktop roles. The notebook page on the golden ratio is the fix: 1.27 steps from 11px land on 11, 13, 17, 22, 28, 36, 45, 56, then the display clamps. Nine steps, each with a job.</p>
+  <div class="card">
+    <div class="row"><span class="seg" id="typeSeg"><button data-t="all" class="on">As measured, 15 sizes</button><button data-t="nine">Nine steps</button></span><span class="readout" id="typeCount"></span></div>
+    <div class="demo-light"><div class="scale" id="typeScale"></div></div>
+    <p class="verdict" id="typeNote"></p>
+  </div>
+</section>
+
+<section id="radii" class="rv">
+  <p class="eye">4 · Border radius</p>
+  <h2>Five radii. Hold the line.</h2>
+  <p class="dim" style="margin-top:12px;max-width:640px">The homepage ships five: the pill, the 1.5px dot, the 28px slab, the 4px mark and the 14px media frame. Isomorphic ships five too. This is the one dimension where the lab already has the discipline, so the job is to keep new pages from adding a sixth. The design desk added 9px and 6px today before this probe caught it; both are gone.</p>
+  <div class="card">
+    <div class="row"><span class="seg" id="radSeg"><button data-r="all" class="on">Homepage vocabulary</button><button data-r="drift">With today's drift</button></span><span class="readout" id="radCount"></span></div>
+    <div class="demo-light"><div class="radii" id="radiiRow"></div></div>
+    <p class="verdict" id="radNote"></p>
+  </div>
+</section>
+
+<section id="elevation" class="rv">
+  <p class="eye">5 · Elevation</p>
+  <h2>Cards hover with a shadow the system never uses</h2>
+  <p class="dim" style="margin-top:12px;max-width:640px">At rest the homepage is honest: the only shadows are the stickers' 2px paper edge and one media frame. On hover, every experiment card lifts 6px with a <code>0 16px 32px</code> shadow. Isomorphic has no shadow anywhere. Agent Commons already wrote the rule down: outline, never elevation. This one is a taste call, so it is in the second list.</p>
+  <div class="card">
+    <div class="row"><span class="seg" id="shadowSeg"><button data-s="drop" class="on">Lift and shadow, as shipped</button><button data-s="hair">Tint and outline</button></span><span class="readout" id="shadowRead"></span></div>
+    <div class="mockwrap" id="mockwrap"><div class="mock drop" id="mock"><span class="tag" style="margin:0;color:#14201a;box-shadow:inset 0 0 0 1px rgba(20,32,26,.3)">experiment 01 · tool</span><b>YouTube Transcript Generator</b><small>Paste a link, get a clean Markdown transcript.</small></div></div>
+    <p class="verdict" id="shadowNote"></p>
+  </div>
+</section>
+
+<section id="accent" class="rv">
+  <p class="eye">6 · Accent</p>
+  <h2>Zero accent uses above the fold</h2>
+  <p class="dim" style="margin-top:12px;max-width:640px">The probe found no chromatic accent on the homepage at all: mint, cream and lilac are all under 20% saturation. Isomorphic keeps one technical blue and spends it only on focus and utility. The HANDOFF file has carried "one sharp accent color" as an open decision since May. The measurement agrees with the note.</p>
+  <div class="card">
+    <div class="row"><span class="seg" id="accentSeg"><button data-a="none" class="on">None, as measured</button><button data-a="one">One, with one job</button></span><span class="readout"><b id="accCount" style="color:var(--red)">0</b> <span id="accLabel">accent elements above the fold</span></span></div>
+    <div class="demo-light"><div style="display:flex;justify-content:space-between;align-items:center;font-size:14px"><span style="font-weight:600">Kelly Lucas</span><span id="navBtn" style="padding:6px 14px;border-radius:9999px;box-shadow:inset 0 0 0 1px #14201a;font-size:12px;letter-spacing:.08em;text-transform:uppercase">contact</span></div><div style="margin-top:28px;font-size:40px;line-height:.95;font-weight:500;letter-spacing:-.03em">Welcome to<br>the lab.</div><div style="margin-top:18px;display:inline-flex;align-items:center;gap:12px;font-size:12px;letter-spacing:.08em;text-transform:uppercase">see the experiments <span id="heroBtn" style="width:40px;height:40px;border-radius:9999px;box-shadow:inset 0 0 0 1px #14201a;display:inline-grid;place-items:center">&rarr;</span></div></div>
+    <p class="verdict" id="accNote"></p>
+  </div>
+</section>
+
+<section id="diff" class="rv">
+  <p class="eye">The diff</p>
+  <h2>Nine dimensions, one table</h2>
+  <table>
+    <thead><tr><th>Token</th><th>kellylucas.dev, measured 2026-09-24</th><th>Isomorphic Labs, measured 2026-08-23</th></tr></thead>
+    <tbody>
+      <tr><td>Canvas</td><td>#f4f2ec warm off white</td><td class="them">#ffffff</td></tr>
+      <tr><td>Surfaces</td><td>6 distinct: ink footer, cream, lilac, mint deep, plus the cool gradient slab<span class="tag ok">tight</span></td><td class="them">white cards on white, one cool field #E9FFE9 to #E6F7FF, one warm field, #3A3A3A dark</td></tr>
+      <tr><td>Hairlines</td><td>8 distinct: 1px ink ×30, then alphas .10 .12 .18 .25 .35 and a tail<span class="tag bad">sprawl</span></td><td class="them">2: 1px #1E1E1E and 1px #D8D8D8, cells overlap by 1px</td></tr>
+      <tr><td>Text roles</td><td>3 on light (#14201a, #3b4842, #6c766f), 3 on dark (mint at 1, .7, .55)<span class="tag ok">fine</span></td><td class="them">4: #000, #1E1E1E, #3A3A3A, #D8D8D8 on dark</td></tr>
+      <tr><td>Display tracking</td><td>h1 -0.005em at 151px<span class="tag bad">loose</span>, h2 -0.040em, h3 -0.020em</td><td class="them">-0.030em at 56px, -0.021em at 48px, -0.009em at 28px</td></tr>
+      <tr><td>Body tracking</td><td>-0.006em at 17px, +0.040em on 13px labels, +0.080em on 12px tags<span class="tag ok">right sign</span></td><td class="them">-0.010em at 20px, +0.083em on 12px mono tags</td></tr>
+      <tr><td>Accent</td><td>none, 0 uses in the first viewport<span class="tag mid">decide</span></td><td class="them">#2D62FF, focus and utility only</td></tr>
+      <tr><td>Type scale</td><td>15 rendered sizes, weights 400 and 500<span class="tag bad">sprawl</span></td><td class="them">7 desktop roles, weights 200, 300, 400</td></tr>
+      <tr><td>Radii</td><td>5: pill, 1.5, 4, 14, 28<span class="tag ok">tight</span></td><td class="them">5: 4.5, 5.6, 7, 10, 20</td></tr>
+      <tr><td>Elevation</td><td>at rest 2 shadows, on hover 0 16px 32px lift on every card<span class="tag mid">decide</span></td><td class="them">none, outline only</td></tr>
+      <tr><td>Rhythm</td><td>1280px container, sections 88 to 130px, 14px slab gap<span class="tag ok">fine</span></td><td class="them">84vw container, sections 120px, 72px nav</td></tr>
+    </tbody>
+  </table>
+  <p class="dim" style="margin-top:14px">The first four rows account for most of the perceived difference. The lab's colour choices are its own and stay.</p>
+</section>
+
+<section id="fixes" class="rv">
+  <p class="eye">The fixes</p>
+  <h2>Ranked by visible effect per hour</h2>
+  <div class="cols">
+    <div>
+      <h3>Mechanical, do today</h3>
+      <ul class="list">
+        <li><span class="tick"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.7 9 10 3.3" stroke="#08090a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="lbl">Set <code>.display</code> to <code>-0.03em</code> so the h1 follows the rule the smaller headlines already follow</span><span class="eff">10 min</span></li>
+        <li><span class="tick"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.7 9 10 3.3" stroke="#08090a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="lbl">Two hairline tokens, <code>--line-strong</code> and <code>--line</code>, and replace every rgba alpha with one of them</span><span class="eff">30 min</span></li>
+        <li><span class="tick"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.7 9 10 3.3" stroke="#08090a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="lbl">Nine type steps at 1.27, as tokens, then retire 10, 14, 16 and the half pixel sizes</span><span class="eff">1 hr</span></li>
+        <li><span class="tick"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.7 9 10 3.3" stroke="#08090a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="lbl">Write the five radii into CLAUDE.md so the next page cannot add a sixth</span><span class="eff">5 min</span></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Needs a decision</h3>
+      <ul class="list">
+        <li><span class="tick" style="background:var(--amber)"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 2v5M6 9.5v.5" stroke="#08090a" stroke-width="2" stroke-linecap="round"/></svg></span><span class="lbl">Card hover: keep the lift and shadow as a lab signature, or move to tint and outline. Recommendation: tint and outline, keep the stickers' paper edge as the one shadow</span><span class="eff">20 min after</span></li>
+        <li><span class="tick" style="background:var(--amber)"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 2v5M6 9.5v.5" stroke="#08090a" stroke-width="2" stroke-linecap="round"/></svg></span><span class="lbl">One accent with one job, or none on purpose. If one: focus rings and the single primary CTA, nowhere else</span><span class="eff">1 hr after</span></li>
+        <li><span class="tick" style="background:var(--amber)"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 2v5M6 9.5v.5" stroke="#08090a" stroke-width="2" stroke-linecap="round"/></svg></span><span class="lbl">Display weight: Isomorphic gets authority from weight 200 at 56px. Heliora Light (300) is already in assets. Try the h1 at 300 before changing anything else</span><span class="eff">15 min to test</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="patch" class="rv">
+  <p class="eye">The patch</p>
+  <h2>The mechanical half, as CSS</h2>
+<pre id="patchCode"><span class="c">/* hairlines: two values instead of eight */</span>
+:root {
+  --line-strong: #14201a;
+  --line: rgba(20, 32, 26, 0.14);
+}
+
+<span class="c">/* display: the h1 follows the same rule as the h2 */</span>
+.display { letter-spacing: -0.03em; }
+
+<span class="c">/* type: nine steps at 1.27, from the notebook */</span>
+:root {
+  --t-1: 11px;   <span class="c">/* tags */</span>
+  --t-2: 13px;   <span class="c">/* labels, scribbles */</span>
+  --t-3: 17px;   <span class="c">/* body */</span>
+  --t-4: 22px;   <span class="c">/* lede small */</span>
+  --t-5: 28px;   <span class="c">/* card titles, now-body */</span>
+  --t-6: 36px;   <span class="c">/* lede */</span>
+  --t-7: 45px;   <span class="c">/* quote */</span>
+  --t-8: 56px;   <span class="c">/* display floor */</span>
+  <span class="c">/* display: clamp(56px, 10.5vw, 168px) stays */</span>
+}
+
+<span class="c">/* radii: the five that exist, written down */</span>
+:root {
+  --radius-block: 28px;  --radius-card: 20px;
+  --radius-media: 14px;  --radius-mark: 4px;
+  <span class="c">/* pill: 999px. nothing else. */</span>
+}</pre>
+  <p class="dim" style="margin-top:22px">Values for kellylucas.dev were read from live computed CSS on a local build of the design desk branch. Isomorphic Labs is referenced as a standard, from a measured package in Kelly's own vault, not from memory. Nothing here reproduces their copy, imagery or type files. No logos are shown because neither real mark could be fetched from this session, and the skill forbids drawing an approximation.</p>
+</section>
+
+  </main>
+</div>
+<div id="toast"></div>
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s)}, $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+  var tt; function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show')},1600)}
+
+  /* progress + scrollspy + reveal */
+  var bar=$('#bar'), links=$$('.rail a'), secs=links.map(function(a){return document.getElementById(a.getAttribute('href').slice(1))});
+  function onScroll(){var max=document.documentElement.scrollHeight-innerHeight;bar.style.width=(max>0?(scrollY/max)*100:0)+'%';var idx=0;secs.forEach(function(s,i){if(s&&s.getBoundingClientRect().top<innerHeight*.35)idx=i});links.forEach(function(a,i){a.classList.toggle('act',i===idx)})}
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.08});$$('.rv').forEach(function(e){io.observe(e)})}else{$$('.rv').forEach(function(e){e.classList.add('in')})}
+
+  /* master */
+  var knob=$('#knob'), mBtns=$$('#master button');
+  function sizeKnob(){var on=$('#master button.on');if(!on)return;knob.style.left=on.offsetLeft+'px';knob.style.width=on.offsetWidth+'px'}
+  function setMode(mode){var after=mode==='after';mBtns.forEach(function(b){b.classList.toggle('on',b.dataset.m===mode)});sizeKnob();setTrack(after?-30:-5);setHair(after?'two':'all');setType(after?'nine':'all');setRad(after?'all':'drift');setShadow(after?'hair':'drop');setAccent(after?'one':'none');toast(after?'adjusted':'as measured')}
+  mBtns.forEach(function(b){b.addEventListener('click',function(){setMode(b.dataset.m)})});addEventListener('resize',sizeKnob);
+
+  /* 1 tracking: measured -0.005em (h1) to -0.040em (h2); Isomorphic at -0.030em */
+  var range=$('#trackRange'),demo=$('#trackDemo'),out=$('#trackOut'),vd=$('#trackVerdict');
+  function setTrack(v){range.value=v;var em=v/1000;demo.style.letterSpacing=em+'em';out.textContent=em.toFixed(3)+'em';var msg,col;
+    if(v>=-7){msg='The h1 as shipped, -0.005em. Looser than every other headline on the page.';col='#eb5757'}
+    else if(v>-19){msg='Between the h1 and the smaller display sizes. The 28px card titles sit here at -0.020em.';col='#f5b23e'}
+    else if(v>=-33){msg="Isomorphic's display range, -0.030em at 56px. The h2 and the motto already live next door at -0.035 and -0.040.";col='#27a644'}
+    else{msg='The h2 value, -0.040em. Works at 108px. At 151px the W and the e start to touch.';col='#f5b23e'}
+    vd.textContent=msg;vd.style.color=col}
+  range.addEventListener('input',function(e){setTrack(+e.target.value)});
+  addEventListener('keydown',function(e){if(e.target.tagName==='INPUT')return;if(e.key==='b'||e.key==='B'){setMode($('#master button.on').dataset.m==='after'?'before':'after')}if(e.key==='ArrowLeft'){setTrack(Math.max(-40,+range.value-1))}if(e.key==='ArrowRight'){setTrack(Math.min(-5,+range.value+1))}});
+
+  /* 2 hairlines: measured values on the homepage */
+  var MEAS=[['rgb(20,32,26)','1px #14201a ×30'],['rgba(20,32,26,.10)','.10 ×6'],['rgba(20,32,26,.12)','.12 ×2'],['rgba(20,32,26,.18)','.18'],['rgba(20,32,26,.25)','.25'],['rgba(201,230,201,.35)','mint .35 ×2, footer'],['rgba(201,230,201,.18)','mint .18 ×2, footer'],['rgba(20,32,26,.14)','.14, design desk']];
+  var TWO=[['rgb(20,32,26)','--line-strong  1px #14201a'],['rgba(20,32,26,.14)','--line  1px rgba(20,32,26,.14)']];
+  var hl=$('#hairLines');
+  function setHair(m){var set=m==='two'?TWO:MEAS;hl.innerHTML='';set.forEach(function(x){var d=document.createElement('div');d.className='line';d.style.borderTopColor=x[0];d.innerHTML='<span>'+x[1]+'</span>';hl.appendChild(d)});$('#hairCount').textContent=set.length+' values';$('#hairNote').textContent=m==='two'?'Structure in full ink, everything else at one soft value. The footer keeps its mint lines by inverting the same two tokens.':'Six near identical greys between 0.10 and 0.35. Each one was chosen sensibly on its own day.';$('#hairNote').style.color=m==='two'?'#27a644':'#eb5757';$$('#hairSeg button').forEach(function(b){b.classList.toggle('on',b.dataset.h===m)})}
+  $$('#hairSeg button').forEach(function(b){b.addEventListener('click',function(){setHair(b.dataset.h)})});
+
+  /* 3 type: measured sizes vs nine steps */
+  var ALL=[151,108,79,56,38,32,28,17,16,15,14,13,12,10];
+  var NINE=[['11','tags'],['13','labels'],['17','body'],['22','lede small'],['28','card title'],['36','lede'],['45','quote'],['56','display floor'],['clamp','display, up to 168']];
+  var ts=$('#typeScale');
+  function setType(m){ts.innerHTML='';if(m==='nine'){NINE.forEach(function(x){var d=document.createElement('div');var px=x[0]==='clamp'?56:+x[0];d.style.fontSize=Math.min(px,44)+'px';d.innerHTML='<em style="font-style:normal">'+(x[0]==='clamp'?'Display':x[1].charAt(0).toUpperCase()+x[1].slice(1))+'</em><span>'+x[0]+(x[0]==='clamp'?'':'px')+' · '+x[1]+'</span>';ts.appendChild(d)});$('#typeCount').textContent='9 steps';$('#typeNote').textContent='Each size has a name and a job. The notebook ratio, 1.27, turns eleven pixels into twenty two in three steps.';$('#typeNote').style.color='#27a644'}else{ALL.forEach(function(px){var d=document.createElement('div');d.style.fontSize=Math.min(px,44)+'px';d.innerHTML='<em style="font-style:normal">Aa</em><span>'+px+'px</span>';ts.appendChild(d)});$('#typeCount').textContent='15 sizes rendered';$('#typeNote').textContent='Six sizes between 12 and 17px. Nobody can tell 14 from 15 from 16, which is exactly why they sneak in.';$('#typeNote').style.color='#eb5757'}$$('#typeSeg button').forEach(function(b){b.classList.toggle('on',b.dataset.t===m)})}
+  $$('#typeSeg button').forEach(function(b){b.addEventListener('click',function(){setType(b.dataset.t)})});
+
+  /* 4 radii */
+  var RAD=[['9999px','pill'],['1.5px','dot'],['4px','mark'],['14px','media'],['28px','slab'],['20px','card']];
+  var DRIFT=[['9px','chips'],['6px','code']];
+  var rr=$('#radiiRow');
+  function setRad(m){rr.innerHTML='';RAD.concat(m==='drift'?DRIFT:[]).forEach(function(x,i){var d=document.createElement('div');d.className='rchip'+(m!=='drift'&&i>=RAD.length?' gone':'');d.style.borderRadius=x[0];d.textContent=x[1]+' '+x[0];rr.appendChild(d)});$('#radCount').textContent=(m==='drift'?RAD.length+DRIFT.length:RAD.length)+' radii';$('#radNote').textContent=m==='drift'?'Two extra values the design desk introduced today. Removed before this page was finished.':'Pill, dot, mark, media, slab, card. Six shapes, each with one job.';$('#radNote').style.color=m==='drift'?'#eb5757':'#27a644';$$('#radSeg button').forEach(function(b){b.classList.toggle('on',b.dataset.r===m)})}
+  $$('#radSeg button').forEach(function(b){b.addEventListener('click',function(){setRad(b.dataset.r)})});
+
+  /* 5 elevation */
+  var mock=$('#mock');
+  function setShadow(m){mock.classList.toggle('drop',m==='drop');mock.classList.toggle('hair',m==='hair');$('#shadowRead').textContent=m==='drop'?'translateY(-6px) rotate(-0.4deg) · 0 16px 32px rgba(20,32,26,.08)':'translateY(-2px) · background tint · inset 0 0 0 1px #14201a';$('#shadowNote').textContent=m==='drop'?'The card floats above a page whose whole grammar is flat slabs and hairlines.':'The card darkens a step and its outline goes to full ink. It reads as pressed, not floating. Same energy, no shadow.';$('#shadowNote').style.color=m==='drop'?'#f5b23e':'#27a644';$$('#shadowSeg button').forEach(function(b){b.classList.toggle('on',b.dataset.s===m)})}
+  $$('#shadowSeg button').forEach(function(b){b.addEventListener('click',function(){setShadow(b.dataset.s)})});
+
+  /* 6 accent */
+  var navBtn=$('#navBtn'),heroBtn=$('#heroBtn'),ac=$('#accCount'),al=$('#accLabel');
+  function setAccent(m){if(m==='one'){heroBtn.style.cssText='width:40px;height:40px;border-radius:9999px;display:inline-grid;place-items:center;background:#14201a;color:#b1d8b3;box-shadow:none';navBtn.style.cssText='padding:6px 14px;border-radius:9999px;box-shadow:inset 0 0 0 1px #14201a;font-size:12px;letter-spacing:.08em;text-transform:uppercase';ac.textContent='1';ac.style.color='#27a644';al.textContent='accent element, and it marks the one action';$('#accNote').textContent='One filled control, ink with the mint as the counter colour. The mint is already on the page, it just never got a job.';$('#accNote').style.color='#27a644'}else{heroBtn.style.cssText='width:40px;height:40px;border-radius:9999px;box-shadow:inset 0 0 0 1px #14201a;display:inline-grid;place-items:center';navBtn.style.cssText='padding:6px 14px;border-radius:9999px;box-shadow:inset 0 0 0 1px #14201a;font-size:12px;letter-spacing:.08em;text-transform:uppercase';ac.textContent='0';ac.style.color='#eb5757';al.textContent='accent elements above the fold';$('#accNote').textContent='Every control is an outlined pill in ink. Nothing tells the eye which one matters most.';$('#accNote').style.color='#eb5757'}$$('#accentSeg button').forEach(function(b){b.classList.toggle('on',b.dataset.a===m)})}
+  $$('#accentSeg button').forEach(function(b){b.addEventListener('click',function(){setAccent(b.dataset.a)})});
+
+  setMode('before');
+})();
+</script>
+</body>
+</html>

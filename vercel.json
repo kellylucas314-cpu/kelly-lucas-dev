@@ -140,6 +140,15 @@
           "value": "agentcommons.kellylucas.dev"
         }
       ]
+    },
+    {
+      "source": "/heliopolis/(.*)",
+      "headers": [
+        {
+          "key": "x-vercel-enable-rewrite-caching",
+          "value": "1"
+        }
+      ]
     }
   ],
   "redirects": [
@@ -153,6 +162,22 @@
       ],
       "destination": "/brain/room.html",
       "permanent": false
+    },
+    {
+      "source": "/heliopolis",
+      "destination": "/heliopolis/index.html",
+      "permanent": false
+    },
+    {
+      "source": "/heliopolis/",
+      "destination": "/heliopolis/index.html",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/heliopolis/:path*",
+      "destination": "https://kellylucas314-cpu.github.io/heliopolis-art-library/:path*"
     }
   ]
 }

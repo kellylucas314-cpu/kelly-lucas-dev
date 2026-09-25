@@ -1,0 +1,850 @@
+<!doctype html>
+<!--
+  teardown-template.html
+
+  The locked interactive teardown template. Copy this file, then replace the
+  measured values with the ones from your own run. Read references/style-lock.md
+  before changing anything visual: the palette, type scale and component list
+  are fixed on purpose.
+
+  REPLACE, in this order:
+
+  1. --glaido            the accent custom property. Rename it and set it to the
+                         SUBJECT's real brand colour, pulled from the measurement run.
+  2. The two <svg> marks  both brands' real logos. Pull them from the live sites.
+                         Never draw an approximation.
+  3. .hero h1 / .lede    the headline and standfirst
+  4. .stats              four headline numbers from the diff
+  5. #summary cards      the three largest gaps
+  6. The LAD array (JS)  the three surface elevation stages
+  7. setTrack() bands    the verdict copy, keyed to the two measured tracking values
+  8. setAccent()         accent counts and labels for each state
+  9. RAD array (JS)      every measured radius, with keep:true on the survivors
+ 10. #tokens table       the full token diff
+ 11. #notes              the findings that need a human decision
+ 12. #patch <pre>        the ready to paste token block
+ 13. #checklist          the ordered fix list with time estimates
+ 14. <footer>            measurement provenance and credits
+
+  Every control must be wired to real values. A slider that does not move
+  between two numbers you actually measured is worse than no slider.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Glaido vs Linear design teardown</title>
+<style>
+:root{
+  --void:#08090a; --carbon:#0f1011; --obsidian:#161718;
+  --graphite:#23252a; --smoke:#383b3f;
+  --ash:#62666d; --fog:#8a8f98; --mist:#d0d6e0; --bone:#e5e5e6; --paper:#fff;
+  --lime:#e4f222; --glaido:#bff549; --red:#eb5757; --green:#27a644;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth;scroll-padding-top:96px}
+body{
+  margin:0;background:var(--void);color:var(--mist);
+  font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",sans-serif;
+  font-size:15px;line-height:1.6;letter-spacing:-0.011em;
+}
+::selection{background:rgba(228,242,34,.25);color:#fff}
+
+/* top bar */
+.top{position:fixed;top:0;left:0;right:0;z-index:60;height:56px;
+  background:rgba(8,9,10,.72);backdrop-filter:blur(20px) saturate(160%);
+  border-bottom:1px solid var(--graphite);display:flex;align-items:center;gap:18px;padding:0 22px}
+.bar{position:absolute;bottom:-1px;left:0;height:1.5px;background:var(--glaido);width:0;
+  box-shadow:0 0 10px rgba(191,245,73,.6);transition:width .1s linear}
+.vs{display:flex;align-items:center;gap:11px;font-family:var(--mono);font-size:11px;color:var(--ash)}
+.vs svg{display:block}
+.spacer{flex:1}
+.kb{font-family:var(--mono);font-size:10.5px;color:var(--ash);display:flex;gap:6px;align-items:center}
+.key{display:inline-block;min-width:18px;text-align:center;padding:1px 5px;border-radius:4px;
+  background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px var(--graphite);color:var(--mist)}
+
+.master{display:flex;align-items:center;background:rgba(255,255,255,.04);
+  box-shadow:inset 0 0 0 1px var(--graphite);border-radius:9999px;padding:3px;position:relative}
+.master button{position:relative;z-index:2;border:0;background:transparent;cursor:pointer;
+  font:inherit;font-size:12px;font-weight:500;letter-spacing:-0.011em;color:var(--fog);
+  padding:5px 15px;border-radius:9999px;transition:color .2s var(--ease);white-space:nowrap}
+.master button.on{color:var(--void)}
+.knob{position:absolute;top:3px;bottom:3px;border-radius:9999px;background:var(--bone);
+  transition:all .32s var(--ease);z-index:1}
+body.after .knob{background:var(--glaido)}
+
+/* layout */
+.shell{display:grid;grid-template-columns:190px minmax(0,1fr);gap:56px;max-width:1220px;margin:0 auto;padding:0 28px}
+.rail{position:sticky;top:96px;align-self:start;height:max-content;padding-bottom:60px}
+.rail a{display:block;font-size:12.5px;color:var(--ash);text-decoration:none;padding:5px 0 5px 13px;
+  border-left:1px solid var(--graphite);transition:all .18s var(--ease);letter-spacing:-0.008em}
+.rail a:hover{color:var(--mist)}
+.rail a.act{color:var(--paper);border-left-color:var(--glaido)}
+.rail a:focus-visible{outline:2px solid var(--glaido);outline-offset:2px}
+.rail .rh{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--smoke);margin:0 0 10px 13px}
+main{min-width:0;padding-top:56px}
+
+section{padding:76px 0;border-bottom:1px solid var(--graphite)}
+section:last-of-type{border:0}
+h1{font-size:54px;font-weight:600;line-height:1.04;letter-spacing:-0.022em;color:var(--paper);margin:0 0 20px;text-wrap:balance}
+h2{font-size:30px;font-weight:600;line-height:1.12;letter-spacing:-0.022em;color:var(--paper);margin:0 0 10px;text-wrap:balance}
+h3{font-size:17px;font-weight:600;letter-spacing:-0.016em;color:var(--paper);margin:0 0 6px}
+p{margin:0 0 14px;max-width:66ch}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fog);margin:0 0 14px;display:flex;align-items:center;gap:8px}
+.eyebrow:before{content:"";width:5px;height:5px;border-radius:50%;background:var(--glaido);box-shadow:0 0 8px rgba(191,245,73,.8)}
+.lede{font-size:19px;line-height:1.5;color:var(--fog);letter-spacing:-0.014em;max-width:62ch}
+.dim{color:var(--ash);font-size:14px}
+code{font-family:var(--mono);font-size:12.5px;color:var(--mist);background:rgba(255,255,255,.05);padding:1px 5px;border-radius:4px;letter-spacing:-0.013em}
+
+/* hero */
+.hero{padding:104px 0 76px;position:relative}
+.hero .glow{position:absolute;top:-60px;left:-140px;width:520px;height:340px;pointer-events:none;
+  background:radial-gradient(50% 50%,rgba(191,245,73,.07) 0%,rgba(191,245,73,0) 70%)}
+.hero>*{position:relative}
+.matchup{display:flex;align-items:center;gap:18px;margin-bottom:30px}
+.mlogo{display:flex;align-items:center;gap:9px;padding:8px 15px;border-radius:9999px;
+  background:rgba(255,255,255,.03);box-shadow:inset 0 0 0 1px var(--graphite);
+  font-size:13.5px;font-weight:500;color:var(--mist);letter-spacing:-0.011em}
+.mvs{font-family:var(--mono);font-size:11px;color:var(--smoke)}
+.stats{display:flex;gap:30px;margin-top:34px;flex-wrap:wrap}
+.stat b{display:block;font-size:26px;font-weight:600;letter-spacing:-0.022em;color:var(--paper);line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;color:var(--ash);letter-spacing:-0.006em}
+
+/* cards */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+.card{background:var(--carbon);border-radius:12px;box-shadow:inset 0 0 0 1px var(--graphite);
+  padding:22px;transition:all .25s var(--ease)}
+.card:hover{background:var(--obsidian);transform:translateY(-2px)}
+.card .n{font-family:var(--mono);font-size:11px;color:var(--glaido);margin-bottom:12px}
+
+/* lab */
+.lab{background:var(--carbon);border-radius:12px;box-shadow:inset 0 0 0 1px var(--graphite);
+  margin-top:24px;overflow:hidden}
+.lab-head{display:flex;align-items:center;gap:12px;padding:13px 20px;border-bottom:1px solid var(--graphite);
+  background:rgba(255,255,255,.015);flex-wrap:wrap}
+.lab-head .t{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--fog)}
+.lab-head .hint{margin-left:auto;font-size:11.5px;color:var(--smoke)}
+.lab-body{padding:30px 26px}
+.stage{background:var(--void);border-radius:8px;box-shadow:inset 0 0 0 1px var(--graphite);
+  padding:38px 30px;min-height:150px;display:flex;flex-direction:column;justify-content:center}
+
+.slider-row{display:flex;align-items:center;gap:16px;margin-top:26px}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:3px;border-radius:2px;
+  background:linear-gradient(90deg,var(--smoke),var(--graphite));outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+  background:var(--glaido);cursor:grab;box-shadow:0 0 0 4px rgba(191,245,73,.16),0 2px 6px rgba(0,0,0,.5)}
+input[type=range]:focus-visible{outline:2px solid var(--glaido);outline-offset:6px}
+.readout{font-family:var(--mono);font-size:12.5px;color:var(--mist);min-width:96px;text-align:right;font-variant-numeric:tabular-nums}
+.marks{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--smoke);margin-top:9px}
+.verdict{margin-top:18px;font-size:13px;font-family:var(--mono);letter-spacing:-0.006em;transition:color .2s}
+
+.seg{display:inline-flex;background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px var(--graphite);
+  border-radius:9999px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;font:inherit;font-size:12px;font-weight:500;color:var(--fog);
+  padding:5px 13px;border-radius:9999px;cursor:pointer;transition:all .2s var(--ease);letter-spacing:-0.011em}
+.seg button.on{background:var(--bone);color:var(--void)}
+.seg button:hover:not(.on){color:var(--mist)}
+.seg button:focus-visible{outline:2px solid var(--glaido);outline-offset:2px}
+
+.ladder{display:flex;align-items:center;justify-content:center;padding:12px 0}
+.rung{width:100%;max-width:440px;border-radius:12px;padding:16px 20px;display:flex;align-items:center;
+  gap:12px;transition:all .35s var(--ease);font-size:13.5px}
+.rung .hx{font-family:var(--mono);font-size:11px;color:var(--ash);margin-left:auto}
+
+.mockwrap{position:relative;padding:34px 20px 0;border-radius:8px;overflow:hidden;transition:background .4s var(--ease)}
+.mockwrap.floor{background:radial-gradient(52% 58% at 50% 100%,rgba(8,9,10,0) 0%,rgba(8,9,10,.5) 100%),linear-gradient(#08090a 10%,#d0d6e0 100%)}
+.mock{background:#0c0c0e;border-radius:12px;overflow:hidden;transition:box-shadow .45s var(--ease),transform .45s var(--ease)}
+.mock.drop{box-shadow:0 1px 2px rgba(0,0,0,.5),0 14px 36px -10px rgba(0,0,0,.6),0 44px 90px -28px rgba(0,0,0,.8);transform:translateY(-6px)}
+.mock.hair{box-shadow:inset 0 0 0 1px var(--graphite)}
+.mock .bar{position:static;display:flex;gap:6px;padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.06);background:none;width:auto;height:auto}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--graphite)}
+.mock .body{padding:22px 18px 30px;display:flex;flex-direction:column;gap:9px}
+.ln{height:8px;border-radius:3px;background:rgba(255,255,255,.07)}
+
+.fauxnav{display:flex;align-items:center;gap:14px;padding:11px 16px;border-bottom:1px solid var(--graphite);font-size:12.5px;color:var(--fog)}
+.fauxnav .brand{display:flex;align-items:center;gap:7px;color:var(--paper);font-weight:600;font-size:14px;letter-spacing:-0.014em}
+.fauxnav .sp{flex:1}
+.fbtn{padding:5px 13px;border-radius:6px;font-size:12px;font-weight:500;letter-spacing:-0.011em;transition:all .35s var(--ease)}
+.fhero{padding:34px 18px 38px}
+.fh1{font-size:31px;font-weight:600;letter-spacing:-0.022em;line-height:1.05;color:var(--paper);margin:0}
+.fh1 em{font-style:normal;color:var(--fog)}
+.fsub{font-size:13.5px;color:var(--fog);margin:11px 0 0;max-width:38ch}
+.cta-big{display:inline-block;margin-top:20px;padding:9px 17px;font-size:13.5px;font-weight:600;
+  letter-spacing:-0.011em;transition:all .35s var(--ease)}
+.tally{display:flex;align-items:baseline;gap:10px;margin-top:20px;font-family:var(--mono);font-size:12px}
+.tally .cnt{font-size:22px;font-weight:600;letter-spacing:-0.02em;transition:color .3s;font-variant-numeric:tabular-nums}
+.blob{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .5s var(--ease);
+  background:radial-gradient(60% 70% at 82% 45%,rgba(191,245,73,.42) 0%,rgba(140,194,31,.14) 45%,rgba(0,0,0,0) 75%)}
+.blob.show{opacity:1}
+
+.radii{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:16px 0}
+.rchip{width:62px;height:62px;background:rgba(255,255,255,.045);box-shadow:inset 0 0 0 1px var(--graphite);
+  display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font-family:var(--mono);
+  font-size:10px;color:var(--ash);transition:all .45s var(--ease)}
+.rchip.gone{opacity:.16;filter:grayscale(1)}
+
+.sw{display:flex;gap:7px;flex-wrap:wrap;margin-top:22px}
+.chip{width:70px;cursor:pointer;border:0;background:none;padding:0;text-align:left;font:inherit}
+.chip i{display:block;height:48px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);transition:transform .2s var(--ease)}
+.chip:hover i{transform:translateY(-3px)}
+.chip:focus-visible{outline:2px solid var(--glaido);outline-offset:3px;border-radius:8px}
+.chip span{display:block;font-family:var(--mono);font-size:9.5px;color:var(--ash);margin-top:6px;letter-spacing:0}
+.chip b{display:block;font-family:var(--mono);font-size:9px;color:var(--smoke);font-weight:400}
+
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin-top:24px;font-size:14px;min-width:600px}
+th{text-align:left;font-weight:600;color:var(--fog);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:0 12px 10px;border-bottom:1px solid var(--graphite)}
+th.hl{color:var(--glaido)}
+td{padding:11px 12px;border-bottom:1px solid rgba(35,37,42,.6);vertical-align:top}
+td:first-child{color:var(--fog);width:22%}
+tr{transition:background .15s}
+tr:hover td{background:rgba(255,255,255,.02)}
+.them{color:var(--paper)}
+.tag{font-family:var(--mono);font-size:10px;padding:1px 6px;border-radius:4px;margin-left:6px;white-space:nowrap}
+.bad{background:rgba(235,87,87,.14);color:#f08a8a}
+.ok{background:rgba(39,166,68,.14);color:#5fca7f}
+
+.find{display:grid;grid-template-columns:34px 1fr;gap:18px;padding:24px 0;border-bottom:1px solid rgba(35,37,42,.7)}
+.find:last-child{border:0}
+.num{font-family:var(--mono);font-size:11.5px;color:var(--glaido);padding-top:4px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:14px}
+.box{border-radius:8px;padding:13px 15px;font-family:var(--mono);font-size:11.5px;line-height:1.7;letter-spacing:-0.013em;white-space:pre-wrap;overflow-x:auto}
+.box b{display:block;font-family:-apple-system,sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-bottom:8px}
+.now{background:rgba(235,87,87,.055);box-shadow:inset 0 0 0 1px rgba(235,87,87,.2);color:#e5b0b0}
+.now b{color:var(--red)}
+.next{background:rgba(39,166,68,.05);box-shadow:inset 0 0 0 1px rgba(39,166,68,.2);color:#b3dabe}
+.next b{color:var(--green)}
+
+.prewrap{position:relative;margin-top:22px}
+pre{background:var(--carbon);box-shadow:inset 0 0 0 1px var(--graphite);border-radius:12px;
+  padding:24px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.72;
+  color:var(--mist);letter-spacing:-0.013em;margin:0}
+pre .c{color:var(--ash)}
+pre .k{color:var(--fog)}
+pre .v{color:#cbd6a5}
+.copy{position:absolute;top:13px;right:13px;border:0;background:rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 1px var(--graphite);color:var(--mist);font:inherit;font-size:11.5px;
+  padding:5px 11px;border-radius:6px;cursor:pointer;transition:all .2s var(--ease)}
+.copy:hover{background:rgba(255,255,255,.11);color:var(--paper)}
+.copy:focus-visible{outline:2px solid var(--glaido);outline-offset:2px}
+
+ul.order{list-style:none;padding:0;margin:24px 0 0}
+ul.order li{display:grid;grid-template-columns:22px 1fr auto;gap:15px;align-items:center;
+  padding:13px 0;border-bottom:1px solid rgba(35,37,42,.7);cursor:pointer}
+ul.order li:last-child{border:0}
+.tick{width:17px;height:17px;border-radius:5px;box-shadow:inset 0 0 0 1px var(--smoke);display:flex;
+  align-items:center;justify-content:center;transition:all .22s var(--ease)}
+.tick svg{opacity:0;transition:opacity .2s}
+li.done .tick{background:var(--glaido);box-shadow:none}
+li.done .tick svg{opacity:1}
+li.done .lbl{color:var(--ash);text-decoration:line-through;text-decoration-color:var(--smoke)}
+.lbl{font-size:14.5px;color:var(--mist);letter-spacing:-0.011em;transition:color .2s}
+.eff{font-family:var(--mono);font-size:10.5px;color:var(--ash);white-space:nowrap}
+.prog{margin-top:16px;font-family:var(--mono);font-size:11.5px;color:var(--fog)}
+
+.toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,20px);z-index:80;
+  background:var(--obsidian);box-shadow:inset 0 0 0 1px var(--graphite),0 8px 30px rgba(0,0,0,.6);
+  color:var(--mist);font-family:var(--mono);font-size:12px;padding:9px 16px;border-radius:9999px;
+  opacity:0;pointer-events:none;transition:all .28s var(--ease)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+footer{padding:46px 0 80px;color:var(--ash);font-size:13px;max-width:70ch}
+
+.rv{opacity:0;transform:translateY(14px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.rv.in{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none}
+}
+@media(max-width:960px){
+  .shell{grid-template-columns:1fr;gap:0;padding:0 20px}
+  .rail{display:none}
+  .grid3,.cmp{grid-template-columns:1fr}
+  h1{font-size:38px}
+  .kb{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="bar" id="bar"></div>
+  <div class="vs">
+    <svg width="17" height="17" viewBox="0 0 83 82" fill="#bff549" role="img" aria-label="Glaido"><path d="M65.9202 27.3358H29.9063C28.5227 27.3358 27.401 28.4546 27.401 29.8348V38.5815C27.401 39.9617 28.5227 41.0805 29.9063 41.0805H66.2274C67.3794 41.0805 68.3372 41.9653 68.4255 43.111V65.7586C68.4255 67.1388 69.5472 68.2577 70.9308 68.2577H79.5429C80.9265 68.2577 82.0482 67.1388 82.0482 65.7586V43.5796C82.0482 42.1994 80.9265 41.0805 79.5429 41.0805H71.0874C69.6173 41.0805 68.4255 39.8917 68.4255 38.4253V29.8348C68.4255 28.4546 67.3039 27.3358 65.9202 27.3358Z"/><path d="M54.9604 65.9124V57.1657C54.9604 55.7855 53.8387 54.6667 52.455 54.6667H23.3307C17.9691 54.6667 13.6227 50.3311 13.6227 44.9829V17.4933C13.6227 15.4231 15.3052 13.7448 17.3806 13.7448H65.7645C67.1482 13.7448 68.2698 12.6259 68.2698 11.2457V2.49905C68.2698 1.11886 67.1482 0 65.7645 0H17.5372C7.85167 0 0 7.83203 0 17.4933V45.3504C0 51.3155 2.37557 57.0363 6.60411 61.2543L27.4019 82V70.9105C27.4019 69.5303 28.5236 68.4114 29.9072 68.4114H52.455C53.8387 68.4114 54.9604 67.2926 54.9604 65.9124Z"/></svg>
+    <span>VS</span>
+    <svg width="15" height="15" viewBox="0 0 100 100" fill="#E2E4E6" role="img" aria-label="Linear"><path d="M1.22541 61.5228c-.2225-.9485.90748-1.5459 1.59638-.857L39.3342 97.1782c.6889.6889.0915 1.8189-.857 1.5964C20.0515 94.4522 5.54779 79.9485 1.22541 61.5228ZM.00189135 46.8891c-.01764375.2833.08887215.5599.28957165.7606L52.3503 99.7085c.2007.2007.4773.3075.7606.2896 2.3692-.1476 4.6938-.46 6.9624-.9259.7645-.157 1.0301-1.0963.4782-1.6481L2.57595 39.4485c-.55186-.5519-1.49117-.2863-1.648174.4782-.465915 2.2686-.77832 4.5932-.92588465 6.9624ZM4.21093 29.7054c-.16649.3738-.08169.8106.20765 1.1l64.77602 64.776c.2894.2894.7262.3742 1.1.2077 1.7861-.7956 3.5171-1.6927 5.1855-2.684.5521-.328.6373-1.0867.1832-1.5407L8.43566 24.3367c-.45409-.4541-1.21271-.3689-1.54074.1832-.99132 1.6684-1.88843 3.3994-2.68399 5.1855ZM12.6587 18.074c-.3701-.3701-.393-.9637-.0443-1.3541C21.7795 6.45931 35.1114 0 49.9519 0 77.5927 0 100 22.4073 100 50.0481c0 14.8405-6.4593 28.1724-16.7199 37.3375-.3903.3487-.984.3258-1.3542-.0443L12.6587 18.074Z"/></svg>
+  </div>
+  <div class="spacer"></div>
+  <div class="kb"><span class="key">B</span> flip both states &nbsp;<span class="key">&larr;</span><span class="key">&rarr;</span> tracking</div>
+  <div class="master" id="master">
+    <div class="knob" id="knob"></div>
+    <button class="on" data-m="before">Glaido now</button>
+    <button data-m="after">Adjusted</button>
+  </div>
+</div>
+
+<div class="shell">
+
+<nav class="rail" aria-label="Sections">
+  <p class="rh">Contents</p>
+  <a href="#summary">Summary</a>
+  <a href="#tracking">Letter spacing</a>
+  <a href="#surfaces">Surface elevation</a>
+  <a href="#elevation">Shadow treatment</a>
+  <a href="#accent">Accent frequency</a>
+  <a href="#radii">Border radius</a>
+  <a href="#tokens">Token comparison</a>
+  <a href="#notes">Design decisions</a>
+  <a href="#patch">Token patch</a>
+  <a href="#order">Priority order</a>
+</nav>
+
+<main>
+
+<div class="hero">
+  <div class="glow"></div>
+  <div class="matchup">
+    <span class="mlogo">
+      <svg width="15" height="15" viewBox="0 0 83 82" fill="#bff549" role="img" aria-label="Glaido"><path d="M65.9202 27.3358H29.9063C28.5227 27.3358 27.401 28.4546 27.401 29.8348V38.5815C27.401 39.9617 28.5227 41.0805 29.9063 41.0805H66.2274C67.3794 41.0805 68.3372 41.9653 68.4255 43.111V65.7586C68.4255 67.1388 69.5472 68.2577 70.9308 68.2577H79.5429C80.9265 68.2577 82.0482 67.1388 82.0482 65.7586V43.5796C82.0482 42.1994 80.9265 41.0805 79.5429 41.0805H71.0874C69.6173 41.0805 68.4255 39.8917 68.4255 38.4253V29.8348C68.4255 28.4546 67.3039 27.3358 65.9202 27.3358Z"/><path d="M54.9604 65.9124V57.1657C54.9604 55.7855 53.8387 54.6667 52.455 54.6667H23.3307C17.9691 54.6667 13.6227 50.3311 13.6227 44.9829V17.4933C13.6227 15.4231 15.3052 13.7448 17.3806 13.7448H65.7645C67.1482 13.7448 68.2698 12.6259 68.2698 11.2457V2.49905C68.2698 1.11886 67.1482 0 65.7645 0H17.5372C7.85167 0 0 7.83203 0 17.4933V45.3504C0 51.3155 2.37557 57.0363 6.60411 61.2543L27.4019 82V70.9105C27.4019 69.5303 28.5236 68.4114 29.9072 68.4114H52.455C53.8387 68.4114 54.9604 67.2926 54.9604 65.9124Z"/></svg>
+      Glaido
+    </span>
+    <span class="mvs">vs</span>
+    <span class="mlogo">
+      <svg width="13" height="13" viewBox="0 0 100 100" fill="#E2E4E6" role="img" aria-label="Linear"><path d="M1.22541 61.5228c-.2225-.9485.90748-1.5459 1.59638-.857L39.3342 97.1782c.6889.6889.0915 1.8189-.857 1.5964C20.0515 94.4522 5.54779 79.9485 1.22541 61.5228ZM.00189135 46.8891c-.01764375.2833.08887215.5599.28957165.7606L52.3503 99.7085c.2007.2007.4773.3075.7606.2896 2.3692-.1476 4.6938-.46 6.9624-.9259.7645-.157 1.0301-1.0963.4782-1.6481L2.57595 39.4485c-.55186-.5519-1.49117-.2863-1.648174.4782-.465915 2.2686-.77832 4.5932-.92588465 6.9624ZM4.21093 29.7054c-.16649.3738-.08169.8106.20765 1.1l64.77602 64.776c.2894.2894.7262.3742 1.1.2077 1.7861-.7956 3.5171-1.6927 5.1855-2.684.5521-.328.6373-1.0867.1832-1.5407L8.43566 24.3367c-.45409-.4541-1.21271-.3689-1.54074.1832-.99132 1.6684-1.88843 3.3994-2.68399 5.1855ZM12.6587 18.074c-.3701-.3701-.393-.9637-.0443-1.3541C21.7795 6.45931 35.1114 0 49.9519 0 77.5927 0 100 22.4073 100 50.0481c0 14.8405-6.4593 28.1724-16.7199 37.3375-.3903.3487-.984.3258-1.3542-.0443L12.6587 18.074Z"/></svg>
+      Linear
+    </span>
+  </div>
+
+  <h1>Glaido measured against Linear's design system</h1>
+  <p class="lede">Both sites run the same architecture: a dark canvas, one bright accent, a token file, mono eyebrows. The gaps that make Linear read as more finished are measurable, and they concentrate in three areas. Every value below was read from live computed CSS on both sites.</p>
+
+  <div class="stats">
+    <div class="stat"><b>17 &rarr; 8</b><span>font sizes</span></div>
+    <div class="stat"><b>9 &rarr; 5</b><span>border radii</span></div>
+    <div class="stat"><b>1 &rarr; 3</b><span>surface levels</span></div>
+    <div class="stat"><b>0.010 &rarr; 0.022</b><span>display tracking (negative em)</span></div>
+  </div>
+</div>
+
+<section id="summary" class="rv">
+  <p class="eyebrow">Summary</p>
+  <h2>The three largest gaps</h2>
+  <div class="grid3">
+    <div class="card">
+      <div class="n">01</div>
+      <h3>Letter spacing is too loose</h3>
+      <p class="dim" style="margin:0">The 76px headline sits at <code>-0.76px</code>. Linear sets display type at <code>-0.022em</code>, which is <code>-1.67px</code> at that size. Small text runs the opposite way: Glaido adds positive tracking where Linear uses negative.</p>
+    </div>
+    <div class="card">
+      <div class="n">02</div>
+      <h3>There is no elevation ladder</h3>
+      <p class="dim" style="margin:0">Pricing cards use <code>#0d0d0d</code> on a <code>#0d0d0d</code> page, so the card reads as a surface only because of its border. Linear steps through three greys before it adds a line.</p>
+    </div>
+    <div class="card">
+      <div class="n">03</div>
+      <h3>Hero art competes with the product</h3>
+      <p class="dim" style="margin:0">A full bleed lime gradient sits behind a mocked up Slack window. Linear uses product screenshots as the primary visual and adds no decorative imagery.</p>
+    </div>
+  </div>
+</section>
+
+<section id="tracking" class="rv">
+  <p class="eyebrow">Interactive</p>
+  <h2>Letter spacing</h2>
+  <p class="dim">Tracking scales with type size. Drag the slider from Glaido's current value to Linear's and watch where the headline stops looking like a browser default.</p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="t">Letter spacing</span>
+      <span class="hint">drag, or use the arrow keys</span>
+    </div>
+    <div class="lab-body">
+      <div class="stage">
+        <div id="trackDemo" style="font-size:44px;font-weight:600;line-height:1.02;color:#fff;letter-spacing:-0.010em">Glide through work at 150 WPM</div>
+        <div id="trackSmall" style="font-size:14px;margin-top:18px;color:#8a8f98;letter-spacing:0.010em">Zero data retention, lightning fast, and turns messy speech into ready to paste text.</div>
+      </div>
+      <div class="slider-row">
+        <input type="range" id="trackRange" min="-30" max="0" value="-10" step="1" aria-label="Letter spacing in thousandths of an em">
+        <span class="readout" id="trackOut">-0.010em</span>
+      </div>
+      <div class="marks">
+        <span>-0.030em</span><span>Linear -0.022em</span><span>Glaido -0.010em</span><span>0</span>
+      </div>
+      <div class="verdict" id="trackVerdict"></div>
+    </div>
+  </div>
+</section>
+
+<section id="surfaces" class="rv">
+  <p class="eyebrow">Interactive</p>
+  <h2>Surface elevation</h2>
+  <p class="dim">Glaido's card and page are the same value, so a 10% white line does all the work of separating them. That line is bright enough to read as a drawn rule rather than an edge. Step through what Linear does instead.</p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="t">Card surface</span>
+      <span class="hint">
+        <span class="seg" id="ladderSeg">
+          <button class="on" data-l="0">Glaido</button>
+          <button data-l="1">Lift the surface</button>
+          <button data-l="2">Cool the border</button>
+        </span>
+      </span>
+    </div>
+    <div class="lab-body">
+      <div class="stage" style="padding:26px">
+        <div class="ladder">
+          <div class="rung" id="rungCard">
+            <span style="color:#fff;font-weight:600">Pro plan</span>
+            <span class="hx" id="rungHex">bg #0d0d0d · border rgba(255,255,255,.1)</span>
+          </div>
+        </div>
+        <p class="dim" id="ladderNote" style="text-align:center;margin:14px 0 0;font-size:12.5px">The card and the page are the same value. The border is the only thing defining the surface.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="elevation" class="rv">
+  <p class="eyebrow">Interactive</p>
+  <h2>Shadow treatment</h2>
+  <p class="dim">Glaido's hero mock carries a four layer shadow out to 90px at 80% black. Linear grounds screenshots with a gradient floor and an inset hairline, so the image sits in the page rather than above it.</p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="t">Product mock</span>
+      <span class="hint">
+        <span class="seg" id="shadowSeg">
+          <button class="on" data-s="drop">Four layer shadow</button>
+          <button data-s="hair">Hairline and floor</button>
+        </span>
+      </span>
+    </div>
+    <div class="lab-body">
+      <div class="stage" style="padding:0;overflow:hidden">
+        <div class="mockwrap" id="mockwrap">
+          <div class="mock drop" id="mock" style="max-width:400px;margin:0 auto">
+            <div class="bar"><i class="dot" style="background:#bff549"></i><i class="dot"></i><i class="dot"></i></div>
+            <div class="body">
+              <div class="ln" style="width:52%"></div><div class="ln" style="width:88%"></div>
+              <div class="ln" style="width:74%"></div><div class="ln" style="width:35%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="dim" id="shadowNote" style="margin:16px 0 0;font-size:12px;font-family:var(--mono);overflow-x:auto">box-shadow: 0 1px 2px rgba(0,0,0,.5), 0 14px 36px -10px rgba(0,0,0,.6), 0 44px 90px -28px rgba(0,0,0,.8)</p>
+    </div>
+  </div>
+</section>
+
+<section id="accent" class="rv">
+  <p class="eyebrow">Interactive</p>
+  <h2>Accent frequency</h2>
+  <p class="dim">Glaido uses lime four times above the fold: the nav button, the hero button, the eyebrow dot, and the background gradient. Linear's nav button is a plain white pill so that the single accent button further down the page still reads as the primary action.</p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="t">Above the fold</span>
+      <span class="hint">
+        <span class="seg" id="accentSeg">
+          <button class="on" data-a="many">Glaido now</button>
+          <button data-a="one">One accent</button>
+        </span>
+      </span>
+    </div>
+    <div class="lab-body">
+      <div class="stage" style="padding:0;overflow:hidden;position:relative">
+        <div class="blob show" id="blob"></div>
+        <div style="position:relative">
+          <div class="fauxnav">
+            <span class="brand">
+              <svg width="14" height="14" viewBox="0 0 83 82" fill="#bff549" role="img" aria-label="Glaido"><path d="M65.9202 27.3358H29.9063C28.5227 27.3358 27.401 28.4546 27.401 29.8348V38.5815C27.401 39.9617 28.5227 41.0805 29.9063 41.0805H66.2274C67.3794 41.0805 68.3372 41.9653 68.4255 43.111V65.7586C68.4255 67.1388 69.5472 68.2577 70.9308 68.2577H79.5429C80.9265 68.2577 82.0482 67.1388 82.0482 65.7586V43.5796C82.0482 42.1994 80.9265 41.0805 79.5429 41.0805H71.0874C69.6173 41.0805 68.4255 39.8917 68.4255 38.4253V29.8348C68.4255 28.4546 67.3039 27.3358 65.9202 27.3358Z"/><path d="M54.9604 65.9124V57.1657C54.9604 55.7855 53.8387 54.6667 52.455 54.6667H23.3307C17.9691 54.6667 13.6227 50.3311 13.6227 44.9829V17.4933C13.6227 15.4231 15.3052 13.7448 17.3806 13.7448H65.7645C67.1482 13.7448 68.2698 12.6259 68.2698 11.2457V2.49905C68.2698 1.11886 67.1482 0 65.7645 0H17.5372C7.85167 0 0 7.83203 0 17.4933V45.3504C0 51.3155 2.37557 57.0363 6.60411 61.2543L27.4019 82V70.9105C27.4019 69.5303 28.5236 68.4114 29.9072 68.4114H52.455C53.8387 68.4114 54.9604 67.2926 54.9604 65.9124Z"/></svg>
+              Glaido
+            </span>
+            <span>Pricing</span><span>FAQ</span><span>Docs</span>
+            <span class="sp"></span>
+            <span>Log in</span>
+            <span class="fbtn" id="navBtn" style="background:#bff549;color:#000;border-radius:2px">Download</span>
+          </div>
+          <div class="fhero">
+            <p class="eyebrow" style="margin-bottom:12px">Private by design</p>
+            <h3 class="fh1">The voice layer<br><em>for every app</em></h3>
+            <p class="fsub">Zero data retention, lightning fast, and turns messy speech into ready to paste text.</p>
+            <span class="cta-big" id="heroBtn" style="background:#bff549;color:#000;border-radius:2px">Download for free</span>
+          </div>
+        </div>
+      </div>
+      <div class="tally">
+        <span class="cnt" id="limeCount" style="color:#eb5757">4</span>
+        <span style="color:var(--ash)" id="limeLabel">lime elements above the fold</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="radii" class="rv">
+  <p class="eyebrow">Interactive</p>
+  <h2>Border radius vocabulary</h2>
+  <p class="dim">Glaido's token file declares four radii. The live DOM ships nine. Buttons at <code>2px</code> next to cards at <code>16px</code> read as two different products on one page.</p>
+
+  <div class="lab">
+    <div class="lab-head">
+      <span class="t">Radii in use</span>
+      <span class="hint">
+        <span class="seg" id="radiusSeg">
+          <button class="on" data-r="all">Glaido, 9 values</button>
+          <button data-r="few">Collapsed to 5</button>
+        </span>
+      </span>
+    </div>
+    <div class="lab-body">
+      <div class="stage" style="padding:22px">
+        <div class="radii" id="radiiRow"></div>
+      </div>
+      <p class="dim" id="radiusNote" style="margin:14px 0 0;font-size:12.5px">Buttons <code>2px</code>, pricing cards <code>8px</code>, hero mock <code>16px</code>, testimonial avatars <code>18px</code>.</p>
+    </div>
+  </div>
+</section>
+
+<section id="tokens" class="rv">
+  <p class="eyebrow">Token comparison</p>
+  <h2>Values side by side</h2>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Token</th><th>Glaido</th><th class="hl">Linear</th></tr></thead>
+    <tbody>
+      <tr><td>Canvas</td><td>#0d0d0d, neutral black</td><td class="them">#08090a, cooler and deeper</td></tr>
+      <tr><td>Surface ladder</td><td>page and card both #0d0d0d<span class="tag bad">flat</span></td><td class="them">#08090a &rarr; #0f1011 &rarr; #161718</td></tr>
+      <tr><td>Hairlines</td><td>rgba(255,255,255,.1) everywhere</td><td class="them">#23252a subtle, #383b3f section</td></tr>
+      <tr><td>Body text</td><td>#ffffff<span class="tag bad">harsh</span></td><td class="them">#8a8f98 and #d0d6e0, never pure white</td></tr>
+      <tr><td>Accent</td><td>#bff549<span class="tag ok">good</span></td><td class="them">#e4f222</td></tr>
+      <tr><td>Accent usage</td><td>nav, hero, footer<span class="tag bad">3 buttons</span></td><td class="them">one per viewport, nav button white</td></tr>
+      <tr><td>Display weight</td><td>400</td><td class="them">510, never higher</td></tr>
+      <tr><td>Display tracking</td><td>-0.010em<span class="tag bad">loose</span></td><td class="them">-0.022em</td></tr>
+      <tr><td>Small text tracking</td><td>+0.010em<span class="tag bad">wrong sign</span></td><td class="them">-0.011em</td></tr>
+      <tr><td>Type steps</td><td>17 sizes<span class="tag bad">sprawl</span></td><td class="them">8</td></tr>
+      <tr><td>Radii in the DOM</td><td>1, 2, 4, 6, 8, 9, 16, 18, pill<span class="tag bad">9</span></td><td class="them">2, 4, 6, 12, pill</td></tr>
+      <tr><td>Elevation method</td><td>four layer drop shadow to 90px</td><td class="them">inset 1px hairline, no drop</td></tr>
+      <tr><td>Container</td><td>1336px</td><td class="them">1160px to 1200px</td></tr>
+      <tr><td>Section rhythm</td><td>full width rule under all 8</td><td class="them">96px of space, no rules</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p class="dim" style="margin-top:26px;font-size:12.5px">Click any swatch to copy its hex.</p>
+  <div class="sw" id="swatches"></div>
+</section>
+
+<section id="notes" class="rv">
+  <p class="eyebrow">Design decisions</p>
+  <h2>Two changes that need a call from you</h2>
+
+  <div class="find">
+    <div class="num">01</div>
+    <div>
+      <h3>The hero shows a mocked up Slack window</h3>
+      <p class="dim">The interface on screen is not Glaido. Linear's visual language is built entirely on real product screenshots, with no stock photography, decorative illustration, or invented interfaces. A real capture of Glaido dictating into an app would carry the hero on its own, and the lime gradient behind it would no longer be needed.</p>
+      <div class="cmp">
+        <div class="box now"><b>Glaido now</b>hero art   : full bleed lime gradient
+hero mock  : invented Slack window</div>
+        <div class="box next"><b>Change to</b>hero art   : gradient floor only
+hero mock  : real Glaido capture</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="find">
+    <div class="num">02</div>
+    <div>
+      <h3>Section dividers are doing the job of spacing</h3>
+      <p class="dim">All eight sections close with a full width <code>rgba(255,255,255,.1)</code> rule inside a 1336px container, which leaves the page dense and short on rest. Linear separates sections with 96px of space at 1160px and uses no rules at all. Keep one or two rules for genuine chapter breaks, set them to <code>#23252a</code>, and remove the rest.</p>
+      <div class="cmp">
+        <div class="box now"><b>Glaido now</b>max-width: 1336px;
+section { border-bottom:
+  1px solid rgba(255,255,255,.1); }  x8</div>
+        <div class="box next"><b>Change to</b>max-width: 1160px;
+section { padding-block: 96px; }
+/* rule only at chapter breaks, #23252a */</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="patch" class="rv">
+  <p class="eyebrow">Token patch</p>
+  <h2>Values to swap in your token file</h2>
+  <p class="dim">The architecture stays as it is. These replace values only. Keep the Glaido lime.</p>
+  <div class="prewrap">
+    <button class="copy" id="copyBtn">Copy</button>
+<pre id="patchCode"><span class="c">/* surfaces: three levels instead of one */</span>
+<span class="k">--color-neutral-950</span>: <span class="v">#08090a</span>;   <span class="c">/* canvas, was #0d0d0d */</span>
+<span class="k">--color-neutral-900</span>: <span class="v">#0f1011</span>;   <span class="c">/* card, was #1a1a1a   */</span>
+<span class="k">--color-neutral-850</span>: <span class="v">#161718</span>;   <span class="c">/* elevated, new       */</span>
+
+<span class="c">/* borders: cool hairlines instead of white */</span>
+<span class="k">--color-border-default</span>: <span class="v">#23252a</span>;  <span class="c">/* was rgba(255,255,255,.1) */</span>
+<span class="k">--color-border-section</span>: <span class="v">#383b3f</span>;
+
+<span class="c">/* text: pure white is for headings only */</span>
+<span class="k">--color-text-default</span>:   <span class="v">#ffffff</span>;  <span class="c">/* h1 and h2 only     */</span>
+<span class="k">--color-text-secondary</span>: <span class="v">#d0d6e0</span>;  <span class="c">/* h3, lead copy      */</span>
+<span class="k">--color-text-subdued</span>:   <span class="v">#8a8f98</span>;  <span class="c">/* body, was #fff/70  */</span>
+<span class="k">--color-text-muted</span>:     <span class="v">#62666d</span>;  <span class="c">/* captions, metadata */</span>
+
+<span class="c">/* radii: five values, each with one job */</span>
+<span class="k">--radius-sm</span>: <span class="v">2px</span>;   <span class="k">--radius-md</span>: <span class="v">4px</span>;
+<span class="k">--radius-lg</span>: <span class="v">6px</span>;   <span class="c">/* buttons and inputs, was 2px  */</span>
+<span class="k">--radius-xl</span>: <span class="v">12px</span>;  <span class="c">/* all cards, was 8 / 16 / 18   */</span>
+<span class="k">--radius-full</span>: <span class="v">9999px</span>;
+
+<span class="c">/* elevation: hairlines carry it, not shadow */</span>
+<span class="k">--shadow-subtle</span>: <span class="v">inset 0 0 0 1px #23252a</span>;
+<span class="k">--shadow-sm</span>:     <span class="v">0 2px 4px rgba(0,0,0,.4)</span>;
+<span class="k">--shadow-cta</span>:    <span class="v">0 5px 2px rgba(0,0,0,.04),
+                 0 3px 2px rgba(0,0,0,.07),
+                 0 1px 1px rgba(0,0,0,.08)</span>;
+<span class="c">/* remove --shadow-elevation and the four layer mock shadow */</span>
+
+<span class="c">/* type: 8 steps, negative tracking throughout */</span>
+<span class="k">--display</span>:    <span class="v">72px/1.0  600  -0.022em</span>;
+<span class="k">--heading-lg</span>: <span class="v">64px/1.0  600  -0.022em</span>;
+<span class="k">--heading</span>:    <span class="v">48px/1.0  600  -0.022em</span>;
+<span class="k">--heading-sm</span>: <span class="v">32px/1.13 500  -0.022em</span>;
+<span class="k">--body-lg</span>:    <span class="v">20px/1.33 500  -0.012em</span>;
+<span class="k">--body</span>:       <span class="v">16px/1.5  400  -0.011em</span>;
+<span class="k">--body-sm</span>:    <span class="v">15px/1.6  400  -0.011em</span>;
+<span class="k">--caption</span>:    <span class="v">13px/1.2  400  -0.006em</span>;
+<span class="c">/* Aspekta has no 510. Use 500 or 600 and go no higher. */</span>
+
+<span class="c">/* layout */</span>
+<span class="k">--container</span>:   <span class="v">1160px</span>;  <span class="c">/* was 1336px */</span>
+<span class="k">--section-gap</span>: <span class="v">96px</span>;</pre>
+  </div>
+</section>
+
+<section id="order" class="rv">
+  <p class="eyebrow">Priority order</p>
+  <h2>Ordered by visible effect per hour</h2>
+  <p class="dim">Click any row to tick it off. The first two are roughly two hours and account for most of the visible change.</p>
+  <ul class="order" id="checklist">
+    <li><span class="tick"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.7 9 10 3.3" stroke="#08090a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="lbl">Fix letter spacing across the scale and set body text to <code>#8a8f98</code></span><span class="eff">1 hr · largest effect</span></li>
+    <li><span class="tick"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.7 9 10 3.3" stroke="#08090a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="lbl">Lift card surfaces to <code>#0f1011</code> and borders to <code>#23252a</code></span><span class="eff">1 hr</span></li>
+    <li><span class="tick"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.7 9 10 3.3" stroke="#08090a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="lbl">Replace the mock's drop shadow with an inset hairline and a gradient floor</span><span class="eff">2 hrs</span></li>
+    <li><span class="tick"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.7 9 10 3.3" stroke="#08090a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="lbl">Change the nav button to a white pill and keep one lime button per screen</span><span class="eff">20 min</span></li>
+    <li><span class="tick"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.7 9 10 3.3" stroke="#08090a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="lbl">Collapse radii to five values, buttons at <code>6px</code> and cards at <code>12px</code></span><span class="eff">30 min</span></li>
+    <li><span class="tick"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.7 9 10 3.3" stroke="#08090a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="lbl">Set the container to <code>1160px</code>, use <code>96px</code> section gaps, remove most divider rules</span><span class="eff">1 hr</span></li>
+    <li><span class="tick"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6.2 4.7 9 10 3.3" stroke="#08090a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="lbl">Replace the mocked up Slack hero with a real Glaido capture</span><span class="eff">design work</span></li>
+  </ul>
+  <p class="prog" id="prog">0 of 7 done</p>
+</section>
+
+<footer>
+  Values measured from live computed CSS on glaido.com and linear.app, cross checked against the Refero Linear style entry. Linear is referenced as a standard. Nothing here reproduces their copy or product imagery. Both logos belong to their respective brands.
+</footer>
+
+</main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  var $ = function(s){ return document.querySelector(s); };
+  var $$ = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
+
+  var tt;
+  function toast(msg){
+    var t = $('#toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(tt); tt = setTimeout(function(){ t.classList.remove('show'); }, 1600);
+  }
+
+  /* progress bar and scrollspy */
+  var bar = $('#bar'), links = $$('.rail a');
+  var secs = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function onScroll(){
+    var max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
+    var idx = 0;
+    secs.forEach(function(s,i){ if(s && s.getBoundingClientRect().top < innerHeight * 0.35) idx = i; });
+    links.forEach(function(a,i){ a.classList.toggle('act', i === idx); });
+  }
+  addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.08});
+  $$('.rv').forEach(function(e){ io.observe(e); });
+
+  /* master state toggle */
+  var knob = $('#knob'), mBtns = $$('#master button');
+  function sizeKnob(){
+    var on = $('#master button.on'); if(!on) return;
+    knob.style.left = on.offsetLeft + 'px';
+    knob.style.width = on.offsetWidth + 'px';
+  }
+  function setMode(mode){
+    document.body.classList.toggle('after', mode === 'after');
+    mBtns.forEach(function(b){ b.classList.toggle('on', b.dataset.m === mode); });
+    sizeKnob();
+    setTrack(mode === 'after' ? -22 : -10);
+    setLadder(mode === 'after' ? 2 : 0);
+    setShadow(mode === 'after' ? 'hair' : 'drop');
+    setAccent(mode === 'after' ? 'one' : 'many');
+    setRadius(mode === 'after' ? 'few' : 'all');
+  }
+  mBtns.forEach(function(b){ b.addEventListener('click', function(){ setMode(b.dataset.m); }); });
+  addEventListener('resize', sizeKnob);
+
+  /* letter spacing */
+  var range = $('#trackRange'), demo = $('#trackDemo'), small = $('#trackSmall'),
+      out = $('#trackOut'), vd = $('#trackVerdict');
+  function setTrack(v){
+    range.value = v;
+    var em = v / 1000;
+    demo.style.letterSpacing = em + 'em';
+    small.style.letterSpacing = (v <= -14 ? -0.011 : 0.010) + 'em';
+    out.textContent = em.toFixed(3) + 'em';
+    var msg, col;
+    if(v > -6){ msg = 'Looser than Glaido currently sets it'; col = '#eb5757'; }
+    else if(v > -14){ msg = "Glaido's current value, -0.010em"; col = '#eb5757'; }
+    else if(v > -19){ msg = 'Between the two values'; col = '#f5b23e'; }
+    else if(v >= -25){ msg = "Linear's range, -0.022em at display size"; col = '#27a644'; }
+    else { msg = 'Tighter than Linear. Letters begin to collide at this size.'; col = '#f5b23e'; }
+    vd.textContent = msg; vd.style.color = col;
+  }
+  range.addEventListener('input', function(e){ setTrack(+e.target.value); });
+
+  /* surface ladder */
+  var rung = $('#rungCard'), rhex = $('#rungHex'), lnote = $('#ladderNote');
+  var LAD = [
+    {bg:'#0d0d0d', bd:'inset 0 0 0 1px rgba(255,255,255,.1)', r:'8px',
+     hex:'bg #0d0d0d · border rgba(255,255,255,.1)',
+     note:'The card and the page are the same value. The border is the only thing defining the surface.'},
+    {bg:'#0f1011', bd:'inset 0 0 0 1px rgba(255,255,255,.1)', r:'12px',
+     hex:'bg #0f1011 · border rgba(255,255,255,.1)',
+     note:'Surface lifted to #0f1011. The border now reads brighter than the edge requires.'},
+    {bg:'#0f1011', bd:'inset 0 0 0 1px #23252a', r:'12px',
+     hex:'bg #0f1011 · border #23252a',
+     note:'Border cooled to #23252a. The card reads as a surface on its value, and the line only finishes the edge.'}
+  ];
+  function setLadder(i){
+    var s = LAD[i];
+    rung.style.background = s.bg; rung.style.boxShadow = s.bd; rung.style.borderRadius = s.r;
+    rhex.textContent = s.hex; lnote.textContent = s.note;
+    $$('#ladderSeg button').forEach(function(b){ b.classList.toggle('on', +b.dataset.l === i); });
+  }
+  $$('#ladderSeg button').forEach(function(b){ b.addEventListener('click', function(){ setLadder(+b.dataset.l); }); });
+
+  /* shadow */
+  var mock = $('#mock'), mwrap = $('#mockwrap'), snote = $('#shadowNote');
+  function setShadow(m){
+    mock.classList.toggle('drop', m === 'drop');
+    mock.classList.toggle('hair', m === 'hair');
+    mwrap.classList.toggle('floor', m === 'hair');
+    snote.textContent = m === 'drop'
+      ? 'box-shadow: 0 1px 2px rgba(0,0,0,.5), 0 14px 36px -10px rgba(0,0,0,.6), 0 44px 90px -28px rgba(0,0,0,.8)'
+      : 'box-shadow: inset 0 0 0 1px #23252a  ·  floor: linear-gradient(#08090a 10%, #d0d6e0 100%)';
+    $$('#shadowSeg button').forEach(function(b){ b.classList.toggle('on', b.dataset.s === m); });
+  }
+  $$('#shadowSeg button').forEach(function(b){ b.addEventListener('click', function(){ setShadow(b.dataset.s); }); });
+
+  /* accent */
+  var navBtn = $('#navBtn'), heroBtn = $('#heroBtn'), blob = $('#blob'),
+      cnt = $('#limeCount'), clabel = $('#limeLabel');
+  function setAccent(m){
+    var many = m === 'many';
+    blob.classList.toggle('show', many);
+    if(many){
+      navBtn.style.cssText = 'background:#bff549;color:#000;border-radius:2px';
+      heroBtn.style.cssText = 'background:#bff549;color:#000;border-radius:2px';
+      cnt.textContent = '4'; cnt.style.color = '#eb5757';
+      clabel.textContent = 'lime elements above the fold: nav button, hero button, eyebrow dot, background gradient';
+    } else {
+      navBtn.style.cssText = 'background:#e5e5e6;color:#08090a;border-radius:9999px;padding:5px 14px';
+      heroBtn.style.cssText = 'background:#bff549;color:#08090a;border-radius:6px;font-weight:600;' +
+        'box-shadow:0 5px 2px rgba(0,0,0,.04),0 3px 2px rgba(0,0,0,.07),0 1px 1px rgba(0,0,0,.08)';
+      cnt.textContent = '1'; cnt.style.color = '#27a644';
+      clabel.textContent = 'lime element, and it marks the primary action';
+    }
+    $$('#accentSeg button').forEach(function(b){ b.classList.toggle('on', b.dataset.a === m); });
+  }
+  $$('#accentSeg button').forEach(function(b){ b.addEventListener('click', function(){ setAccent(b.dataset.a); }); });
+
+  /* radii */
+  var RAD = [
+    {v:'1px', keep:false}, {v:'2px', keep:true},  {v:'4px', keep:true},
+    {v:'6px', keep:true},  {v:'8px', keep:false}, {v:'9px', keep:false},
+    {v:'12px',keep:true, add:true}, {v:'16px',keep:false}, {v:'18px',keep:false},
+    {v:'pill',keep:true}
+  ];
+  var rrow = $('#radiiRow');
+  rrow.innerHTML = RAD.map(function(r){
+    return '<div class="rchip" data-keep="' + r.keep + '" style="border-radius:' +
+      (r.v === 'pill' ? '9999px' : r.v) + (r.add ? ';opacity:.35' : '') + '">' + r.v + '</div>';
+  }).join('');
+  var rnote = $('#radiusNote');
+  function setRadius(m){
+    var few = m === 'few';
+    $$('#radiiRow .rchip').forEach(function(c,i){
+      c.classList.toggle('gone', few && c.dataset.keep !== 'true');
+      if(RAD[i].add) c.style.opacity = few ? '1' : '.35';
+    });
+    rnote.innerHTML = few
+      ? 'Five values, each with one job. <code>2px</code> badges, <code>4px</code> chips, <code>6px</code> buttons and inputs, <code>12px</code> cards, pill for nav buttons.'
+      : 'Buttons <code>2px</code>, pricing cards <code>8px</code>, hero mock <code>16px</code>, testimonial avatars <code>18px</code>.';
+    $$('#radiusSeg button').forEach(function(b){ b.classList.toggle('on', b.dataset.r === m); });
+  }
+  $$('#radiusSeg button').forEach(function(b){ b.addEventListener('click', function(){ setRadius(b.dataset.r); }); });
+
+  /* swatches */
+  var SW = [
+    ['#0d0d0d','canvas','Glaido'], ['#08090a','canvas','Linear'], ['#0f1011','card','Linear'],
+    ['#161718','elevated','Linear'], ['#23252a','hairline','Linear'], ['#383b3f','section','Linear'],
+    ['#62666d','muted','Linear'], ['#8a8f98','body','Linear'], ['#d0d6e0','secondary','Linear'],
+    ['#bff549','accent','Glaido'], ['#e4f222','accent','Linear']
+  ];
+  $('#swatches').innerHTML = SW.map(function(s){
+    return '<button class="chip" type="button" data-hex="' + s[0] + '" aria-label="Copy ' + s[0] + '">' +
+      '<i style="background:' + s[0] + '"></i><span>' + s[0] + '</span><b>' + s[1] + ' · ' + s[2] + '</b></button>';
+  }).join('');
+  $$('.chip').forEach(function(c){
+    c.addEventListener('click', function(){
+      navigator.clipboard.writeText(c.dataset.hex).then(function(){ toast('Copied ' + c.dataset.hex); });
+    });
+  });
+
+  $('#copyBtn').addEventListener('click', function(){
+    navigator.clipboard.writeText($('#patchCode').innerText).then(function(){
+      toast('Token patch copied');
+      $('#copyBtn').textContent = 'Copied';
+      setTimeout(function(){ $('#copyBtn').textContent = 'Copy'; }, 1600);
+    });
+  });
+
+  /* checklist */
+  var items = $$('#checklist li'), prog = $('#prog');
+  function updateProg(){
+    var n = $$('#checklist li.done').length;
+    prog.textContent = n + ' of ' + items.length + ' done';
+    prog.style.color = n === items.length ? '#27a644' : '';
+  }
+  items.forEach(function(li){ li.addEventListener('click', function(){ li.classList.toggle('done'); updateProg(); }); });
+
+  addEventListener('keydown', function(e){
+    if(e.target.tagName === 'INPUT') return;
+    if(e.key.toLowerCase() === 'b'){ setMode(document.body.classList.contains('after') ? 'before' : 'after'); }
+    if(e.key === 'ArrowLeft'){ setTrack(Math.max(-30, +range.value - 1)); e.preventDefault(); }
+    if(e.key === 'ArrowRight'){ setTrack(Math.min(0, +range.value + 1)); e.preventDefault(); }
+  });
+
+  setTrack(-10); setLadder(0); setShadow('drop'); setAccent('many'); setRadius('all');
+  requestAnimationFrame(sizeKnob);
+})();
+</script>
+</body>
+</html>
