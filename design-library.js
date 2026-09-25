@@ -1166,6 +1166,83 @@ window.DESIGN_LIBRARY = {
       "url": "https://www.earli.com/",
       "title": "Earli",
       "why": "Early cancer detection, told plainly. A neighbor on the same shelf as HelioFlux."
+    },
+    {
+      "url": "https://myheliopolis.com/meetings/2026-09-17/#home",
+      "title": "Heliopolis meeting room",
+      "kind": "site",
+      "tags": [
+        "mine",
+        "heliopolis"
+      ],
+      "why": "The meeting page I built for 2026-09-17. Learned a ton making it. Kept here to measure the next one against.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://pretzel.thetravelprotocol.com",
+      "title": "Pretzel Protocol",
+      "kind": "site",
+      "tags": [
+        "mine",
+        "trip-atlas"
+      ],
+      "why": "The family trip atlas. Cream, navy, one attention colour, a delight budget of five. Mine, and still teaching me.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://ui.aceternity.com",
+      "title": "Aceternity UI",
+      "kind": "tool",
+      "tags": [
+        "components",
+        "motion"
+      ],
+      "why": "Animated heroes, spotlight cards, parallax grids. Jack's UI sniping arsenal: snipe it, then make it obey the system.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://reactbits.dev",
+      "title": "ReactBits",
+      "kind": "tool",
+      "tags": [
+        "components",
+        "motion"
+      ],
+      "why": "Unique animated micro-components nobody recognises from a template. Same rule: restyle to the tokens after sniping.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://www.relume.io",
+      "title": "Relume",
+      "kind": "tool",
+      "tags": [
+        "wireframes",
+        "ai-design"
+      ],
+      "why": "AI sitemaps and wireframes. Only useful after the five questions are answered, which is the whole point of Jack's guide.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://higgsfield.ai",
+      "title": "Higgsfield",
+      "kind": "tool",
+      "tags": [
+        "ai-video",
+        "brand-assets"
+      ],
+      "why": "AI image and video. The engine behind the Brand Asset Machine, and where the Magpie Collector already lives.",
+      "added": "2026-09-24"
+    },
+    {
+      "url": "https://kie.ai",
+      "title": "Kie.ai",
+      "kind": "tool",
+      "tags": [
+        "ai-video",
+        "ai-images"
+      ],
+      "why": "AI images and video by API. The other generator Jack plugs in for hero videos.",
+      "added": "2026-09-24"
     }
   ],
   "items": [
@@ -1517,7 +1594,7 @@ window.DESIGN_LIBRARY = {
       "why": "Ingest a site, freeze the design as a template, expose only content slots, and run every change through a deterministic validator so a client cannot break the layout. Filed for the day the lab needs an editor.",
       "added": "2026-09-24",
       "source": "manual",
-      "thumb": "",
+      "thumb": "assets/design/thumbs/app.notion.com-p-the-ai-native-client-cms-free-build-blueprint-374e8d6bd13781559214ffd5ac6041f6.jpg",
       "section": "resources"
     },
     {
@@ -1740,6 +1817,118 @@ window.DESIGN_LIBRARY = {
       "added": "2026-09-24",
       "source": "manual",
       "thumb": "assets/design/thumbs/reddit.com-r-uxdesign.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "myheliopolis.com/meetings/2026-09-17",
+      "domain": "myheliopolis.com",
+      "kind": "site",
+      "tags": [
+        "mine",
+        "heliopolis"
+      ],
+      "url": "https://myheliopolis.com/meetings/2026-09-17/#home",
+      "title": "Heliopolis meeting room",
+      "why": "The meeting page I built for 2026-09-17. Learned a ton making it. Kept here to measure the next one against.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/myheliopolis.com-meetings-2026-09-17.jpg",
+      "section": "heliopolis"
+    },
+    {
+      "id": "pretzel.thetravelprotocol.com",
+      "domain": "pretzel.thetravelprotocol.com",
+      "kind": "site",
+      "tags": [
+        "mine",
+        "trip-atlas"
+      ],
+      "url": "https://pretzel.thetravelprotocol.com",
+      "title": "Pretzel Protocol",
+      "why": "The family trip atlas. Cream, navy, one attention colour, a delight budget of five. Mine, and still teaching me.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/pretzel.thetravelprotocol.com.jpg",
+      "section": "pretzel"
+    },
+    {
+      "id": "ui.aceternity.com",
+      "domain": "ui.aceternity.com",
+      "kind": "tool",
+      "tags": [
+        "components",
+        "motion"
+      ],
+      "url": "https://ui.aceternity.com",
+      "title": "Aceternity UI",
+      "why": "Animated heroes, spotlight cards, parallax grids. Jack's UI sniping arsenal: snipe it, then make it obey the system.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/ui.aceternity.com.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "reactbits.dev",
+      "domain": "reactbits.dev",
+      "kind": "tool",
+      "tags": [
+        "components",
+        "motion"
+      ],
+      "url": "https://reactbits.dev",
+      "title": "ReactBits",
+      "why": "Unique animated micro-components nobody recognises from a template. Same rule: restyle to the tokens after sniping.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "thumb": "",
+      "section": "resources"
+    },
+    {
+      "id": "relume.io",
+      "domain": "relume.io",
+      "kind": "tool",
+      "tags": [
+        "wireframes",
+        "ai-design"
+      ],
+      "url": "https://www.relume.io",
+      "title": "Relume",
+      "why": "AI sitemaps and wireframes. Only useful after the five questions are answered, which is the whole point of Jack's guide.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/relume.io.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "higgsfield.ai",
+      "domain": "higgsfield.ai",
+      "kind": "tool",
+      "tags": [
+        "ai-video",
+        "brand-assets"
+      ],
+      "url": "https://higgsfield.ai",
+      "title": "Higgsfield",
+      "why": "AI image and video. The engine behind the Brand Asset Machine, and where the Magpie Collector already lives.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/higgsfield.ai.jpg",
+      "section": "resources"
+    },
+    {
+      "id": "kie.ai",
+      "domain": "kie.ai",
+      "kind": "tool",
+      "tags": [
+        "ai-video",
+        "ai-images"
+      ],
+      "url": "https://kie.ai",
+      "title": "Kie.ai",
+      "why": "AI images and video by API. The other generator Jack plugs in for hero videos.",
+      "added": "2026-09-24",
+      "source": "manual",
+      "thumb": "assets/design/thumbs/kie.ai.jpg",
       "section": "resources"
     },
     {
