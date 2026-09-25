@@ -78,6 +78,12 @@ Keep it clean. No backup files, no version-numbered copies.
   (which shows the guess in its popup) sort the same way. Tests:
   `npm run test:design`. Video cards show takeaways from the clip's `## Notes`
   bullets, or an honest "notes pending" state until those exist.
+- Pictures: a card shows its Magpie preview when the vault has one
+  (`npm run sync:design -- --thumbs` copies them in). For cards without one,
+  `npm run shots:design` shoots the page with a headless Chrome and saves
+  `assets/design/thumbs/<card id>.jpg`; run `npm run sync:design` after.
+  Videos use their YouTube frame. A card with no picture shows initials,
+  which is the honest state.
 
 ## Skills in the lab
 - `.claude/skills/` holds Claude Code skills from Jack Roberts' design loop, kept

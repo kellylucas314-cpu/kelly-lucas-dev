@@ -18,7 +18,10 @@
    MAGPIE_SOURCE=/path/to/magpie also works.
 
    --thumbs copies each clip's small preview (under 200 KB) into
-   assets/design/thumbs/ so the card shows a picture instead of initials. */
+   assets/design/thumbs/ so the card shows a picture instead of initials.
+   Cards with no preview can get one from scripts/capture-design-thumbs.mjs,
+   which saves assets/design/thumbs/<card id>.jpg; the sync picks those up
+   by name on every run. */
 
 import { copyFile, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -156,21 +159,35 @@ async function exists(file) {
   }
 }
 
-async function thumbFor(clip) {
-  const name = path.basename(String(clip.thumbLocal || ""));
+/* A picture taken by scripts/capture-design-thumbs.mjs is named after the
+   card's id, so it survives every sync. */
+export function shotName(id) {
+  const stem = String(id || "").replace(/[^a-z0-9.-]+/gi, "-").replace(/^-+|-+$/g, "");
+  return stem ? `${stem}.jpg` : "";
+}
+
+async function shotFor(id) {
+  const name = shotName(id);
   if (!name) return "";
+  return (await exists(path.join(thumbDir, name))) ? `assets/design/thumbs/${name}` : "";
+}
+
+/* The Magpie preview when there is one, else a captured shot, else nothing. */
+async function thumbFor(clip, id) {
+  const name = path.basename(String(clip.thumbLocal || ""));
+  if (!name) return shotFor(id);
   const dest = path.join(thumbDir, name);
   const served = `assets/design/thumbs/${name}`;
   if (await exists(dest)) return served;
-  if (!wantThumbs) return "";
+  if (!wantThumbs) return shotFor(id);
   const src = path.join(sourceRoot, "thumbs", name);
   try {
     const info = await stat(src);
-    if (info.size > MAX_THUMB_BYTES) return "";
+    if (info.size > MAX_THUMB_BYTES) return shotFor(id);
     await copyFile(src, dest);
     return served;
   } catch {
-    return "";
+    return shotFor(id);
   }
 }
 
@@ -245,7 +262,7 @@ for (const clip of clips) {
     summary: firstSentences(parsed.summary || clip.description || ""),
     takeaways: parsed.takeaways.map(dedash),
     hasTranscript: Boolean(clip.hasTranscript),
-    thumb: await thumbFor(clip),
+    thumb: await thumbFor(clip, id),
     clippedAt: clip.clippedAt || "",
     source: "magpie",
   }));
@@ -267,6 +284,7 @@ for (const entry of manual) {
   const merged = base
     ? { ...base, ...overrides, id, source: "magpie+manual" }
     : { id, domain: domainOf(entry.url), kind: guessKind, tags: [], ...overrides, source: "manual" };
+  if (!merged.thumb) merged.thumb = await shotFor(id);
   /* A hand-written entry is on the desk by definition: its own `section`,
      else the sorter's guess, else resources or examples by kind. */
   if (!SECTIONS.includes(merged.section)) {

@@ -23,6 +23,7 @@
     "eval:army": "node scripts/eval-army.mjs",
     "magpie:password": "node scripts/set-magpie-password.mjs",
     "sync:design": "node scripts/sync-design-library.mjs",
+    "shots:design": "node scripts/capture-design-thumbs.mjs",
     "test:design": "node --test tests/design-desk.test.mjs"
   },
   "dependencies": {
