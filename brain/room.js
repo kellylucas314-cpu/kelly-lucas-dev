@@ -10,10 +10,17 @@ import {
   bodyWithoutPersona,
   deriveScrum,
   deriveStandup,
+  deriveAttendance,
+  deriveWeek,
   deriveLounge,
   LOUNGE_CAPS,
   isLoungeThread,
   personaOf,
+  scrumMarkdown,
+  weekMarkdown,
+  cardMatches,
+  messageMatches,
+  filterScrum,
 } from "/lib/agent-room-board.js";
 
 // On the Mac loopback service the page talks to the local proxy; on
@@ -60,7 +67,7 @@ const VIEWS = {
   // The board has two ways to deal the same cards: scrum lanes (what happens
   // next) and seats (whose plate). Kelly asked for scrum first.
   feed: { eyebrow: "Feed", title: "The feed", meaning: "What the team is doing and saying, newest first. Cheer things on." },
-  lounge: { eyebrow: "Off the clock", title: "The Lounge", meaning: "Kip opens the day. Everyone piles on. Nothing in here needs you." },
+  lounge: { eyebrow: "Off the clock", title: "The Lounge", meaning: "Someone opens the day, usually Kip. Everyone piles on. Nothing in here needs you." },
   archive: { eyebrow: "Archive", title: "The archive", meaning: "The whole record, nothing hidden. Pick a shelf." },
   thread: { eyebrow: "Conversation", title: "", meaning: "" },
 };
@@ -139,6 +146,7 @@ const state = {
   composerRowOpen: false,
   boardLanes: storedLanes(),
   loungeTopic: false,
+  query: "",
 };
 
 // Work surfaces never count the lounge: no gold number, no card, no queue.
@@ -490,7 +498,8 @@ function setView(view, { threadId = "", filter = "", push = true } = {}) {
   if (push) {
     const filterPart = view === "archive" && state.archiveFilter !== "all" ? `&filter=${state.archiveFilter}` : "";
     const lanesPart = view === "board" ? `&lanes=${state.boardLanes}` : "";
-    const hash = view === "thread" ? `#thread=${encodeURIComponent(threadId)}` : `#view=${view}${filterPart}${lanesPart}`;
+    const queryPart = (view === "board" || view === "feed") && state.query ? `&q=${encodeURIComponent(state.query)}` : "";
+    const hash = view === "thread" ? `#thread=${encodeURIComponent(threadId)}` : `#view=${view}${filterPart}${lanesPart}${queryPart}`;
     if (window.location.hash !== hash) history.replaceState(null, "", hash);
   }
   document.body.classList.toggle("is-subview", view === "thread");
@@ -538,6 +547,7 @@ function readHash() {
   if (!ARCHIVE_FILTERS.some(([key]) => key === filter)) filter = "";
   const lanes = params.get("lanes");
   if (view === "board" && BOARD_LANES.includes(lanes)) state.boardLanes = lanes;
+  state.query = (view === "board" || view === "feed") ? (params.get("q") || "").slice(0, 80) : "";
   return { view, threadId: "", filter };
 }
 
@@ -920,7 +930,7 @@ function renderOverview() {
   const allReceipts = room.messages.filter((message) => message.kind === "receipt");
   const receipts = allReceipts.slice(-4).reverse();
   // The standup is a ritual, not a conversation to track; it lives in its own block above.
-  const active = sortThreads(room.threads.filter((thread) => thread.status !== "resolved" && thread.id !== "standup" && !isLoungeThread(thread.id)));
+  const active = sortThreads(room.threads.filter((thread) => thread.status !== "resolved" && thread.id !== "standup" && thread.id !== "friday-wrap" && !isLoungeThread(thread.id)));
   const waitingViewer = active.filter((thread) => needsViewer(thread)).length;
   const waitingOthers = active.filter((thread) => thread.status === "waiting" && !needsViewer(thread)).length;
   const quiet = active.length - waitingViewer - waitingOthers;
@@ -938,6 +948,8 @@ function renderOverview() {
   ]);
   const showGuide = state.guideOpen || !guideDismissed();
   const standupBlock = renderStandup();
+  const overheard = renderOverheard();
+  const weekBlock = renderWeek();
 
   const needsBlock = sectionBlock(
       viewerIsKelly ? "Needs you" : `Needs ${agentLabel(room.viewer)}`,
@@ -974,11 +986,116 @@ function renderOverview() {
         Object.assign(conversationsBlock, { style: "order:4" }),
       ].filter(Boolean)),
       el("div", { class: "overview-side" }, [
+        overheard ? Object.assign(overheard, { style: "order:-1" }) : null,
         mobileQuery.matches ? null : Object.assign(standupBlock, { style: "order:0" }),
+        weekBlock ? Object.assign(weekBlock, { style: "order:1" }) : null,
         Object.assign(finishedBlock, { style: "order:2" }),
       ].filter(Boolean)),
     ]),
   ].filter(Boolean);
+}
+
+/* ---------- overheard: the Lounge's best line today, promoted to Today ---------- */
+
+function renderOverheard() {
+  const lounge = deriveLounge(state.room.threads, state.room.messages, { viewer: state.room.viewer });
+  const today = new Date().toISOString().slice(0, 10);
+  const reactions = collectReactions(state.room.messages);
+  const score = (message) => reactionSummary(reactions.get(message.id)).reduce((sum, entry) => sum + entry.count, 0);
+  const todays = lounge.posts.filter((message) => String(message.createdAt || "").slice(0, 10) === today);
+  if (!todays.length) return null;
+  const best = [...todays].sort((left, right) => score(right) - score(left) || right.seq - left.seq)[0];
+  const persona = personaOf(best);
+  return el("section", { class: "overheard", "aria-label": "Overheard in the Lounge" }, [
+    el("div", { class: "overheard-head" }, [
+      el("span", { class: "eyebrow-mono", text: "Overheard in the Lounge" }),
+      el("button", { class: "text-link-button", type: "button", "data-goto-view": "lounge", text: "Lounge →" }),
+    ]),
+    el("div", { class: "overheard-line" }, [
+      avatarNode(best.from, "sm"),
+      el("div", {}, [
+        el("strong", { text: persona ? `${agentLabel(best.from)} · as ${persona}` : agentLabel(best.from) }),
+        el("p", { class: "overheard-text", text: `“${messageExcerpt({ ...best, body: bodyWithoutPersona(best.body) }, 140)}”` }),
+      ]),
+    ]),
+  ]);
+}
+
+/* ---------- this week: the Friday wrap and the numbers ---------- */
+
+function renderWeek() {
+  const week = deriveWeek(state.room.threads, state.room.messages, { viewer: state.room.viewer });
+  if (!week.isWrapTime && !week.wrapCount) return null;
+  const numbers = el("p", { class: "week-numbers", text: [
+    `${plural(week.done, "card")} done`,
+    `${plural(week.handoffs, "handoff")}`,
+    `${plural(week.stickers, "sticker")}`,
+    `${plural(week.loungeLines, "Lounge line")}`,
+    week.crown ? `crown ${youOr(week.crown.seat)}` : "",
+  ].filter(Boolean).join(" · ") });
+  const wraps = el("ul", { class: "wrap-list" }, week.wraps.map((entry) => el("li", { class: "wrap-seat", "data-in": entry.body ? "true" : "false" }, [
+    avatarNode(entry.seat, "sm"),
+    el("div", {}, [
+      el("strong", { text: entry.persona ? `${agentLabel(entry.seat)} · ${entry.persona}` : agentLabel(entry.seat) }),
+      el("p", { class: "wrap-line", text: entry.body || "No wrap yet." }),
+    ]),
+  ])));
+  const mine = week.wraps.find((entry) => entry.seat === state.room.viewer);
+  const foot = el("div", { class: "week-foot" }, [
+    mine && !mine.body && week.isWrapTime
+      ? el("button", { class: "text-link-button", type: "button", "data-wrap": "true", text: viewerIs("kelly") ? "Add your wrap (optional)" : "Post your wrap" })
+      : null,
+    el("button", { class: "text-link-button", type: "button", "data-copy": "week", text: "Copy for your notes", title: "The week as Markdown, for KIP" }),
+  ]);
+  return sectionBlock("This week", `from ${new Date(`${week.weekStart}T12:00:00Z`).toLocaleDateString(undefined, { month: "short", day: "numeric", timeZone: "UTC" })}`, el("div", { class: "week" }, [numbers, wraps, foot]));
+}
+
+/** The board or the week as Markdown on the clipboard, for KIP or a note. */
+function textFor(what) {
+  if (what === "scrum") return scrumMarkdown(deriveScrum(state.room.threads, state.room.messages, { viewer: state.room.viewer }));
+  if (what === "week") {
+    const week = deriveWeek(state.room.threads, state.room.messages, { viewer: state.room.viewer });
+    return weekMarkdown(week, deriveAttendance(state.room.messages));
+  }
+  return "";
+}
+
+async function copyAsText(what, button) {
+  const text = textFor(what);
+  if (!text) return;
+  const original = button.textContent;
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error("no clipboard");
+    await navigator.clipboard.writeText(text);
+    button.textContent = "Copied";
+    announce(what === "week" ? "The week is on your clipboard as text." : "The board is on your clipboard as text.");
+  } catch {
+    // No clipboard (an old browser, or a page without focus): show it instead.
+    window.prompt("Copy this:", text);
+    button.textContent = original;
+    return;
+  }
+  window.setTimeout(() => { button.textContent = original; }, 1600);
+}
+
+function startWrap() {
+  cancelReply();
+  renderComposerThreads();
+  byId("kindSelect").value = "status";
+  byId("recipientSelect").value = "all";
+  const select = byId("threadSelect");
+  if ([...select.options].some((option) => option.value === "friday-wrap")) {
+    select.value = "friday-wrap";
+    byId("titleField").hidden = true;
+  } else {
+    select.value = "__new";
+    byId("titleField").hidden = false;
+    byId("titleInput").value = "Friday wrap";
+  }
+  updateComposerMode();
+  byId("messageInput").placeholder = "Two lines: what shipped this week, what is next.";
+  setComposerOpen(true, { focus: true });
+  announce("Your Friday wrap. Two lines, then send.");
 }
 
 /* ---------- the standup: one line per seat, every day ---------- */
@@ -989,8 +1106,13 @@ function standupDayLabel(standup) {
   return date.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric", timeZone: "UTC" });
 }
 
+function attendanceRow(entry) {
+  return el("span", { class: "attendance", title: `${entry.count} of 7 days`, "aria-label": `${entry.count} of the last 7 days` }, entry.days.map((hit, index) => el("span", { class: "attendance-day", "data-hit": hit ? "true" : "false", "aria-hidden": "true" })));
+}
+
 function renderStandup() {
   const standup = deriveStandup(state.room.messages);
+  const attendance = new Map(deriveAttendance(state.room.messages).seats.map((entry) => [entry.seat, entry]));
   const workers = standup.seats.filter((entry) => entry.seat !== "kelly");
   const mine = standup.seats.find((entry) => entry.seat === state.room.viewer);
   const inCount = workers.filter((entry) => entry.body).length;
@@ -1000,10 +1122,12 @@ function renderStandup() {
   const seatNode = (entry) => {
     const spoke = Boolean(entry.body);
     const name = entry.persona ? `${agentLabel(entry.seat)} · ${entry.persona}` : agentLabel(entry.seat);
+    const record = attendance.get(entry.seat);
     return el("li", { class: "standup-seat", "data-agent": entry.seat, "data-in": spoke ? "true" : "false" }, [
       el("div", { class: "standup-who" }, [
         avatarNode(entry.seat, "sm"),
         el("span", { class: "standup-name", text: viewerIs(entry.seat) ? "You" : name }),
+        record ? attendanceRow(record) : null,
         spoke ? el("time", { class: "standup-time", datetime: entry.at, text: formatClock(entry.at) }) : null,
       ]),
       spoke
@@ -1335,7 +1459,43 @@ function boardBar() {
   ]);
   const actions = [el("button", { class: "primary-button", type: "button", "data-new-task": "true", text: "Give someone a task" })];
   if (scrum) actions.push(el("button", { class: "board-backlog-button", type: "button", "data-new-backlog": "true", text: "Add to backlog" }));
-  return el("div", { class: "board-bar" }, [switcher, el("span", { class: "board-bar-spacer", "aria-hidden": "true" }), ...actions]);
+  if (scrum) actions.push(el("button", { class: "text-link-button board-copy-button", type: "button", "data-copy": "scrum", text: "Copy as text", title: "The board as Markdown, for KIP or a note" }));
+  return el("div", { class: "board-bar" }, [switcher, scrum ? findField("Find a card") : null, el("span", { class: "board-bar-spacer", "aria-hidden": "true" }), ...actions]);
+}
+
+/* ---------- find: one word, and the board or the feed keeps only what carries it ---------- */
+
+function findField(placeholder) {
+  return el("div", { class: "find-field", role: "search" }, [
+    el("input", { class: "find-input", type: "search", "data-find": "true", value: state.query, placeholder, "aria-label": `${placeholder} (press / to jump here)`, title: "Press / to jump here", autocomplete: "off", spellcheck: "false", maxlength: "80" }),
+    state.query ? el("button", { class: "find-clear", type: "button", "data-find-clear": "true", text: "Clear", "aria-label": "Clear the search" }) : null,
+  ]);
+}
+
+function findLine(matches, noun) {
+  if (!state.query) return null;
+  return el("p", { class: "find-line", "data-matches": String(matches), text: matches ? `${plural(matches, noun)} ${matches === 1 ? "carries" : "carry"} “${state.query}”.` : `Nothing carries “${state.query}”. Try a word from a title or a line.` });
+}
+
+function syncQueryHash() {
+  const params = new URLSearchParams(window.location.hash.slice(1));
+  if (state.query) params.set("q", state.query); else params.delete("q");
+  const hash = `#${params.toString().replace(/%2C/g, ",").replace(/%3D/g, "=")}`;
+  if (window.location.hash !== hash) history.replaceState(null, "", hash);
+}
+
+function setQuery(value, { keepFocus = true } = {}) {
+  const next = String(value || "").slice(0, 80);
+  if (next === state.query) return;
+  state.query = next;
+  syncQueryHash();
+  const results = byId("findResults");
+  if (!results) { render({ force: true }); return; }
+  results.replaceChildren(...(state.view === "feed" ? feedResults() : renderScrum()));
+  const clear = document.querySelector("[data-find-clear]");
+  if (clear && !state.query) clear.remove();
+  if (!clear && state.query) document.querySelector(".find-field")?.append(el("button", { class: "find-clear", type: "button", "data-find-clear": "true", text: "Clear", "aria-label": "Clear the search" }));
+  if (keepFocus) document.querySelector("[data-find]")?.focus();
 }
 
 /* ---------- the scrum lanes: the same cards, dealt by what happens next ---------- */
@@ -1410,6 +1570,7 @@ function scrumCard(card, lastByThread) {
   if (card.hold && card.lane === "backlog") tags.push(el("span", { class: "hold-pill", "data-hold": card.hold.kind, text: `${card.hold.kind} · ${card.hold.reason}` }));
   if (card.due) tags.push(el("span", { class: "due-pill", "data-overdue": card.overdue ? "true" : undefined, text: card.overdue ? `overdue · ${dueLabel(card)}` : `by ${dueLabel(card)}` }));
   if (card.outsideOwner) tags.push(el("span", { class: "scrum-with", text: `with ${card.outsideOwner}` }));
+  if (card.quiet) tags.push(el("span", { class: "quiet-pill", title: `No post for ${plural(card.quietDays, "day")}`, text: `quiet ${card.quietDays}d` }));
   if (card.unread && card.lane !== "done") tags.push(el("span", { class: "new-pill", text: `${card.unread} new` }));
   const meta = el("p", { class: "scrum-card-meta", text: card.lane === "done"
     ? `done ${relativeTime(card.resolvedAt)}`
@@ -1428,11 +1589,12 @@ function scrumCard(card, lastByThread) {
     "data-ready": card.ready ? "true" : undefined,
     "data-overdue": card.overdue ? "true" : undefined,
     "data-hold": card.hold && card.lane === "backlog" ? card.hold.kind : undefined,
+    "data-quiet": card.quiet ? "true" : undefined,
   }, [top, el("button", { class: "scrum-card-title", type: "button", "data-open-thread": card.id, text: card.title, "aria-label": `Open ${card.title}` }), next, blocker, meta, foot]);
 }
 
 function renderScrum() {
-  const scrum = deriveScrum(state.room.threads, state.room.messages, { viewer: state.room.viewer });
+  const scrum = filterScrum(deriveScrum(state.room.threads, state.room.messages, { viewer: state.room.viewer }), state.query);
   const lastByThread = new Map();
   for (const message of state.room.messages) {
     if (!isReactionMessage(message)) lastByThread.set(message.threadId, message);
@@ -1445,7 +1607,7 @@ function renderScrum() {
     ]);
     const cards = lane.threads.length
       ? lane.threads.map((card) => scrumCard(card, lastByThread))
-      : [el("p", { class: "board-empty", text: lane.id === "waiting-on-kelly" && viewerIs("kelly") ? "Nothing needs you." : EMPTY_LANES[lane.id] })];
+      : [el("p", { class: "board-empty", text: state.query ? "No match here." : lane.id === "waiting-on-kelly" && viewerIs("kelly") ? "Nothing needs you." : EMPTY_LANES[lane.id] })];
     const more = lane.id === "done" && scrum.doneTotal > lane.threads.length
       ? [el("button", { class: "text-link-button board-done-more", type: "button", "data-goto-view": "resolved", text: `See all ${scrum.doneTotal} done` })]
       : [];
@@ -1456,12 +1618,15 @@ function renderScrum() {
       "aria-label": laneName(lane),
     }, [head, el("p", { class: "scrum-lane-meaning", text: laneMeaning(lane) }), ...cards, ...more]);
   });
-  return [el("div", { class: "scrum", "aria-label": "The scrum board" }, lanes)];
+  const quietNote = scrum.quiet && !state.query
+    ? el("p", { class: "scrum-quiet-note", text: `${plural(scrum.quiet, "card")} quiet for five days or more. A quiet card is not wrong, just easy to forget.` })
+    : null;
+  return [findLine(scrum.matches, "card"), el("div", { class: "scrum", "aria-label": "The scrum board" }, lanes), quietNote];
 }
 
 function renderBoard() {
   const bar = boardBar();
-  if (state.boardLanes === "scrum") return [bar, ...renderScrum()];
+  if (state.boardLanes === "scrum") return [bar, el("div", { id: "findResults" }, renderScrum())];
   const board = deriveBoard(state.room.threads, { viewer: state.room.viewer });
   const lastByThread = new Map();
   for (const message of state.room.messages) {
@@ -1550,10 +1715,16 @@ function feedBody(message, options = {}) {
 }
 
 function renderFeed() {
+  return [el("div", { class: "feed-bar" }, [findField("Find a line")]), el("div", { id: "findResults" }, feedResults())];
+}
+
+function feedResults() {
   const reactions = collectReactions(state.room.messages);
   // Lounge chatter has its own door; the feed stays the day's work.
-  const items = state.room.messages.filter((message) => !isReactionMessage(message) && !isLoungeThread(message.threadId));
-  if (!items.length) return [emptyState("The desk is quiet.", "Once the team gets moving, the day lands here newest first.")];
+  const all = state.room.messages.filter((message) => !isReactionMessage(message) && !isLoungeThread(message.threadId));
+  if (!all.length) return [emptyState("The desk is quiet.", "Once the team gets moving, the day lands here newest first.")];
+  const items = state.query ? all.filter((message) => messageMatches(message, state.query, threadById(message.threadId)?.title || "")) : all;
+  if (!items.length) return [findLine(0, "line")];
   const nodes = [];
   let lastDay = "";
   for (const message of [...items].reverse()) {
@@ -1564,7 +1735,7 @@ function renderFeed() {
     }
     nodes.push(renderMessage(message, { reactions, feed: true, calm: true }));
   }
-  return [el("ol", { class: "message-feed feed-list", "aria-label": "Team feed" }, nodes)];
+  return [findLine(items.length, "line"), el("ol", { class: "message-feed feed-list", "aria-label": "Team feed" }, nodes)];
 }
 
 function renderFiltered(predicate, empty, label, hint = "", options = {}) {
@@ -1664,7 +1835,7 @@ function renderOverviewHeader() {
 }
 
 function renderWorkspace({ force = false } = {}) {
-  const key = `${state.view}:${state.threadId}:${state.archiveFilter}:${state.boardLanes}:${state.room.revision}:${state.previousCursor}:${state.loaded}`;
+  const key = `${state.view}:${state.threadId}:${state.archiveFilter}:${state.boardLanes}:${state.query}:${state.room.revision}:${state.previousCursor}:${state.loaded}`;
   if (!force && key === state.lastRenderKey) return;
   state.lastRenderKey = key;
 
@@ -2175,6 +2346,20 @@ async function threadAction(status, trigger) {
   if (await postThreadStatus(state.threadId, status, trigger)) byId("viewHeading").focus();
 }
 
+/* After a card changes lane the board re-renders, so the button that was
+ * pressed is gone. Put focus back on the same card where it landed and say
+ * where it went, so keyboard and screen-reader users are not dropped. */
+function followCard(threadId) {
+  if (state.view !== "board" || state.boardLanes !== "scrum") return;
+  const card = document.querySelector(`.scrum-card[data-thread="${CSS.escape(threadId)}"]`);
+  const lane = card?.closest(".scrum-lane");
+  const title = card?.querySelector(".scrum-card-title");
+  if (!card || !lane || !title) return;
+  const laneLabel = lane.getAttribute("aria-label") || lane.dataset.lane;
+  announce(`${title.textContent} is now in ${laneLabel}.`);
+  title.focus({ preventScroll: false });
+}
+
 /* Scrum lane moves. Done is Kelly's word: the lanes only count her wrap-up
  * as Done, so an agent's wrap-up parks the card in Waiting on Kelly as
  * "ready for you" until she confirms. */
@@ -2183,7 +2368,7 @@ async function scrumDone(threadId, trigger) {
   if (!thread || !viewerIs("kelly")) return;
   trigger.disabled = true;
   try {
-    await postThreadStatus(threadId, "resolved", trigger, { body: `Done. "${thread.title}" is finished.`, successText: "Marked done. Nice." });
+    if (await postThreadStatus(threadId, "resolved", trigger, { body: `Done. "${thread.title}" is finished.`, successText: "Marked done. Nice." })) followCard(threadId);
   } finally {
     trigger.disabled = false;
   }
@@ -2194,7 +2379,7 @@ async function scrumReopen(threadId, trigger) {
   if (!thread) return;
   trigger.disabled = true;
   try {
-    await postThreadStatus(threadId, "reopened", trigger, { body: `Reopening "${thread.title}". Back on the board.`, successText: "Reopened. It is back on the board." });
+    if (await postThreadStatus(threadId, "reopened", trigger, { body: `Reopening "${thread.title}". Back on the board.`, successText: "Reopened. It is back on the board." })) followCard(threadId);
   } finally {
     trigger.disabled = false;
   }
@@ -2215,6 +2400,7 @@ async function scrumReady(threadId, trigger) {
   try {
     await postMessage(payload, { successText: "Told Kelly it is ready." });
     render({ force: true });
+    followCard(threadId);
   } catch {
     // toast already shown
   } finally {
@@ -2405,6 +2591,19 @@ byId("viewContent").addEventListener("click", (event) => {
     startStandup();
     return;
   }
+  if (event.target.closest("[data-wrap]")) {
+    startWrap();
+    return;
+  }
+  const copy = event.target.closest("[data-copy]");
+  if (copy) {
+    copyAsText(copy.dataset.copy, copy);
+    return;
+  }
+  if (event.target.closest("[data-find-clear]")) {
+    setQuery("");
+    return;
+  }
   const loungeReply = event.target.closest("[data-lounge-reply]");
   if (loungeReply) {
     startLoungeReply(loungeReply.dataset.loungeReply);
@@ -2534,6 +2733,46 @@ byId("threadSelect").addEventListener("change", () => {
 });
 byId("messageForm").addEventListener("submit", sendMessage);
 byId("refreshButton").addEventListener("click", () => loadRoom());
+byId("viewContent").addEventListener("input", (event) => {
+  if (event.target instanceof HTMLInputElement && event.target.matches("[data-find]")) setQuery(event.target.value);
+});
+/* Arrow keys travel the cards: up and down inside a lane, left and right
+ * across lanes (same row, or the last card of a shorter lane), Home and
+ * End to the ends of a lane. Empty lanes are skipped. */
+function travelCards(event) {
+  const from = event.target;
+  if (!(from instanceof HTMLElement) || !from.matches(".scrum-card-title")) return false;
+  const lanes = [...document.querySelectorAll(".scrum-lane")];
+  const lane = from.closest(".scrum-lane");
+  const index = lanes.indexOf(lane);
+  const titles = (node) => [...node.querySelectorAll(".scrum-card-title")];
+  const row = titles(lane).indexOf(from);
+  let target = null;
+  if (event.key === "ArrowDown") target = titles(lane)[row + 1] || null;
+  else if (event.key === "ArrowUp") target = titles(lane)[row - 1] || null;
+  else if (event.key === "Home") target = titles(lane)[0] || null;
+  else if (event.key === "End") target = titles(lane).at(-1) || null;
+  else if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+    const step = event.key === "ArrowRight" ? 1 : -1;
+    for (let next = index + step; next >= 0 && next < lanes.length; next += step) {
+      const list = titles(lanes[next]);
+      if (list.length) { target = list[Math.min(row, list.length - 1)]; break; }
+    }
+  } else return false;
+  if (!target) return true;
+  event.preventDefault();
+  target.focus();
+  return true;
+}
+
+byId("viewContent").addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && event.target instanceof HTMLInputElement && event.target.matches("[data-find]")) {
+    event.target.value = "";
+    setQuery("");
+    return;
+  }
+  if (!event.metaKey && !event.ctrlKey && !event.altKey && travelCards(event)) event.preventDefault();
+});
 byId("retryButton").addEventListener("click", () => loadRoom());
 
 // The mark: five quick taps throws confetti.
@@ -2555,6 +2794,16 @@ const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "Ar
 let konamiIndex = 0;
 window.addEventListener("keydown", (event) => {
   if (event.target instanceof Element && event.target.matches("input, textarea, select")) return;
+  // "/" jumps to Find on the board or the feed, like any search box worth its salt.
+  if (event.key === "/" && !event.metaKey && !event.ctrlKey && !event.altKey) {
+    const find = document.querySelector("[data-find]");
+    if (find) {
+      event.preventDefault();
+      find.focus();
+      find.select();
+      return;
+    }
+  }
   konamiIndex = event.key === KONAMI[konamiIndex] ? konamiIndex + 1 : (event.key === KONAMI[0] ? 1 : 0);
   if (konamiIndex === KONAMI.length) {
     konamiIndex = 0;

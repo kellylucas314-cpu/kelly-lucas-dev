@@ -168,6 +168,8 @@ async function main() {
     await wait(1200);
     const standup = await evaluate("(() => { const seats = [...document.querySelectorAll('.standup-seat')]; return { seats: seats.map((node) => node.dataset.agent), inSeats: seats.filter((node) => node.dataset.in === 'true').map((node) => node.dataset.agent), codex: seats.find((node) => node.dataset.agent === 'codex')?.querySelector('.standup-line')?.textContent || '', vellum: seats.find((node) => node.dataset.agent === 'vellum')?.querySelector('.standup-line')?.textContent || '' }; })()", cwd);
     assert(standup && standup.seats.join(",") === "kelly,codex,claude-code,kip,vellum" && standup.inSeats.join(",") === "codex,claude-code,kip" && /Export retry is solid/.test(standup.codex) && /No line that day|Not in yet/.test(standup.vellum), `The standup block shows every seat, who is in, and their line (${JSON.stringify(standup)})`, failures);
+    const attendance = await evaluate("(() => [...document.querySelectorAll('.standup-seat')].map((node) => node.querySelectorAll('.attendance-day').length))()", cwd);
+    assert(Array.isArray(attendance) && attendance.length === 5 && attendance.every((count) => count === 7), `Every seat shows seven attendance squares (${JSON.stringify(attendance)})`, failures);
     const standupCard = await evaluate("(() => [...document.querySelectorAll('.thread-title, .board-card-title, .scrum-card-title')].some((node) => node.textContent.trim() === 'Standup'))()", cwd);
     assert(standupCard === false, "The standup thread is never a card or a conversation row", failures);
 
@@ -189,12 +191,25 @@ async function main() {
     assert(datedCard && datedCard.due === "by Sep 15" && /research only/.test(datedCard.blocker) && /Draft the application/.test(datedCard.next), `A card shows next step, blocker, and due date from plain lines (${JSON.stringify(datedCard)})`, failures);
     const meaning = await evaluate("document.getElementById('viewMeaning').textContent", cwd);
     assert(/Only you mark Done/.test(meaning), `The board explains that only Kelly marks Done (got ${meaning})`, failures);
+    // The fixture is dated 2026-08-21, so against the real clock its live cards are quiet.
+    const quietCard = await evaluate("(() => { const card = [...document.querySelectorAll('.scrum-card')].find((node) => node.querySelector('.scrum-card-title')?.textContent === 'Founders week application'); return card ? { quiet: card.dataset.quiet, pill: card.querySelector('.quiet-pill')?.textContent || '', note: document.querySelector('.scrum-quiet-note')?.textContent || '' } : null; })()", cwd);
+    assert(quietCard && quietCard.quiet === "true" && /^quiet \d+d$/.test(quietCard.pill) && /quiet for five days/.test(quietCard.note), `A card with no post for five days wears a quiet pill and the board counts them (${JSON.stringify(quietCard)})`, failures);
+    const heldQuiet = await evaluate("(() => { const card = [...document.querySelectorAll('.scrum-card')].find((node) => node.querySelector('.scrum-card-title')?.textContent === 'Tape recap'); return card ? Boolean(card.querySelector('.quiet-pill')) : null; })()", cwd);
+    assert(heldQuiet === false, "A paused card is never flagged quiet", failures);
+    const copyBoard = await evaluate("(() => { const button = document.querySelector('[data-copy=\"scrum\"]'); if (!button) return null; window.prompt = () => null; button.click(); return button.textContent; })()", cwd);
+    assert(copyBoard === "Copied" || copyBoard === "Copy as text", `The board bar offers the board as text (${JSON.stringify(copyBoard)})`, failures);
     if (shots) await cli(["screenshot", "--filename=desktop-scrum.png"], { cwd });
+
+    process.stdout.write("Arrow keys travel the cards\n");
+    const travel = await evaluate("(() => { const key = (name) => { const active = document.activeElement; active.dispatchEvent(new KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true })); const lane = document.activeElement.closest('.scrum-lane')?.dataset.lane; return lane + ':' + document.activeElement.textContent; }; const first = document.querySelector('.scrum-lane[data-lane=\"doing\"] .scrum-card-title'); first.focus(); return [key('ArrowDown'), key('ArrowUp'), key('ArrowRight'), key('ArrowLeft'), key('End'), key('Home')]; })()", cwd);
+    assert(Array.isArray(travel) && /^doing:/.test(travel[0]) && travel[0] !== travel[1] && /^doing:/.test(travel[1]) && /^waiting-on-kelly:/.test(travel[2]) && /^doing:/.test(travel[3]) && /^doing:/.test(travel[4]) && travel[5] === travel[1], `Arrow keys move focus down, up, across lanes, and to the ends (${JSON.stringify(travel)})`, failures);
 
     process.stdout.write("Kelly marks a card done\n");
     await cli(["eval", "(() => { const card = [...document.querySelectorAll('.scrum-card')].find((node) => node.querySelector('.scrum-card-title')?.textContent === 'Export retry logic'); card.querySelector('[data-scrum-done]').click(); return 'ok'; })()"], { cwd });
     await wait(1800);
     assert((await laneOf("Export retry logic")) === "done", "Kelly's Done moves the card to Done", failures);
+    const followed = await evaluate("(() => ({ focus: document.activeElement?.textContent || '', lane: document.activeElement?.closest('.scrum-lane')?.dataset.lane || '', said: document.getElementById('statusRegion').textContent }))()", cwd);
+    assert(followed && followed.focus === "Export retry logic" && followed.lane === "done" && /Export retry logic is now in Done/.test(followed.said), `Focus follows the card into Done and the move is announced (${JSON.stringify(followed)})`, failures);
     const storedDone = await fetch(`${origin}/api/agent-room`, { headers: { "X-Agent": "codex" } }).then((response) => response.json());
     const doneMessage = storedDone.messages.find((message) => message.threadId === "export-retry" && message.from === "kelly" && message.thread?.status === "resolved");
     assert(Boolean(doneMessage), "Done is stored as Kelly's own wrap-up message, history untouched", failures);
@@ -264,10 +279,25 @@ async function main() {
     await wait(1800);
     const droppedTopic = await fetch(`${origin}/api/agent-room`, { headers: { "X-Agent": "codex" } }).then((response) => response.json());
     assert(droppedTopic.messages.some((message) => message.threadId === "lounge-best-snack" && message.from === "kelly" && message.thread?.title === "Best snack"), "Dropping a topic lands it in the Lounge as its own thread", failures);
+    await cli(["goto", `${origin}/brain/room.html#view=overview`], { cwd });
+    await wait(1200);
+    const overheard = await evaluate("document.querySelector('.overheard-text')?.textContent || ''", cwd);
+    assert(/Pretzels/.test(overheard), `Today shows the Lounge's line of the day once one exists (got ${overheard})`, failures);
     await cli(["goto", `${origin}/brain/room.html#view=feed`], { cwd });
     await wait(1000);
     const feedLeak = await evaluate("(() => [...document.querySelectorAll('.feed-list .thread-chip')].some((node) => /Lounge|Name a font|Best snack/.test(node.textContent)))()", cwd);
     assert(feedLeak === false, "Lounge chatter stays out of the work feed", failures);
+    process.stdout.write("Find\n");
+    const feedFind = await evaluate("(() => { const input = document.querySelector('.feed-bar [data-find]'); if (!input) return null; input.value = 'retry'; input.dispatchEvent(new Event('input', { bubbles: true })); return { lines: document.querySelectorAll('.feed-list .message-item').length, line: document.querySelector('.find-line')?.textContent || '', hash: location.hash, focused: document.activeElement === input }; })()", cwd);
+    assert(feedFind && feedFind.lines >= 1 && feedFind.lines < 10 && /carry “retry”/.test(feedFind.line) && /q=retry/.test(feedFind.hash) && feedFind.focused, `Typing a word keeps only the feed lines that carry it and the link remembers it (${JSON.stringify(feedFind)})`, failures);
+    await cli(["goto", `${origin}/brain/room.html#view=board&lanes=scrum&q=founders`], { cwd });
+    await wait(1000);
+    const boardFind = await evaluate("(() => ({ value: document.querySelector('.board-bar [data-find]')?.value, cards: [...document.querySelectorAll('.scrum-card-title')].map((node) => node.textContent), empties: [...document.querySelectorAll('.scrum-lane .board-empty')].map((node) => node.textContent), line: document.querySelector('.find-line')?.textContent || '' }))()", cwd);
+    assert(boardFind && boardFind.value === "founders" && boardFind.cards.join("|") === "Founders week application" && boardFind.empties.every((text) => text === "No match here.") && /^1 card carries/.test(boardFind.line), `A q= link opens the board on one card with the other lanes saying no match (${JSON.stringify(boardFind)})`, failures);
+    const cleared = await evaluate("(() => { document.querySelector('[data-find-clear]')?.click(); return { cards: document.querySelectorAll('.scrum-card').length, hash: location.hash, line: Boolean(document.querySelector('.find-line')) }; })()", cwd);
+    assert(cleared && cleared.cards > 5 && !/q=/.test(cleared.hash) && cleared.line === false, `Clear brings every card back and drops q= from the link (${JSON.stringify(cleared)})`, failures);
+    const slash = await evaluate("(() => { document.activeElement?.blur(); window.dispatchEvent(new KeyboardEvent('keydown', { key: '/', bubbles: true })); return document.activeElement?.matches('[data-find]') || false; })()", cwd);
+    assert(slash === true, "Pressing / jumps to Find", failures);
     await cli(["goto", `${origin}/brain/room.html#view=board&lanes=scrum`], { cwd });
     await wait(1000);
     const loungeCard = await evaluate("(() => [...document.querySelectorAll('.scrum-card-title')].some((node) => /Lounge|Name a font|Best snack/.test(node.textContent)))()", cwd);

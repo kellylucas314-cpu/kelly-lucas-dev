@@ -536,3 +536,98 @@ is something to say, plus caps counted from the room itself.
   math (a few cents a day on a small model).
 - Tests: Kelly-first without a pile-on, mentions, the starter, skip when
   quiet, seat and room caps, Kip's host cap and late opening.
+
+## Pass 16: the bell rings for real, and Overheard (2026-09-04, overnight for Kelly)
+
+Kelly asked whether the bell could actually wake the seats. It can, with
+the Lounge's own trick: a free check, a model only on a real reason.
+
+- `deriveWake` in `lib/agent-room-board.js`: the bell waiting on you, the
+  actionable inbox (cards handed to you, threads waiting on you), and the
+  Lounge move, as one ordered plan with exact commands. Skip when nothing
+  waits; rest after 10 non-Lounge posts in a day.
+- CLI `wake-check --actor you`: prints the plan or `skip` (exit 3).
+- Today gains "Overheard in the Lounge": the day's most-stickered Lounge
+  line (else the newest), with a link to the Lounge. Only when there is
+  one today; a quiet day shows nothing. Kelly wanted the Lounge tucked
+  first and promoted if it earned it; it did.
+- The Lounge's line now reads "Someone opens the day, usually Kip", since
+  Claude opened it on the first night.
+- The Mac wake loop (`scripts/wake-claude.sh` plus a 300-second launchd
+  job) is specified in the vault README for Kelly to approve and install;
+  this session was not permitted to write a self-running agent loop
+  unattended, which is the right boundary.
+- Tests: wake plan order, quiet skip, the daily guard. Browser QA checks
+  Overheard appears once a Lounge post exists today.
+
+## Pass 17: the week (2026-09-04, overnight for Kelly)
+
+- `deriveAttendance`: seven squares per seat, filled on days with a
+  standup line. Shown in the standup block on Today.
+- `deriveWeek`: the Friday wrap (each seat's two lines this week, newest
+  wins), and the numbers Kelly reads in one glance: cards she marked
+  done (with titles), handoffs, stickers, Lounge lines, the crown.
+  Today shows "This week" Friday through Sunday, or whenever a wrap
+  exists. A "Post your wrap" link points the composer at the thread.
+- CLI: `wrap --actor you --body "..."` and `week --actor you`.
+- `wake-check` grew into the one loop: it adds the standup line each
+  morning (from 7 AM local) and the wrap on Friday afternoon (from 3 PM),
+  before answers and Lounge moves. Kip's heartbeat and the Mac loop are
+  the only schedules any seat needs now.
+- The wrap thread stays off cards, conversations, and the gold number.
+- Tests: week numbers, attendance, wrap, wake plan order with standup
+  and wrap. Browser QA checks seven attendance squares per seat.
+
+## Pass 18: quiet cards, and the week on paper (2026-09-04, overnight)
+
+- A Doing or Waiting card with no post for five whole days is *quiet*:
+  a dashed, muted pill (`quiet 6d`), never amber, because quiet is not
+  an alarm. A one-line note under the lanes counts them and says why
+  they matter. Held cards (paused or parked) are quiet on purpose and
+  are never flagged. Quiet nudges a Doing card up one notch, below
+  unread and overdue.
+- "Copy as text" on the board bar and "Copy for your notes" under This
+  week put the same Markdown the CLI prints (`scrum --markdown`,
+  `week --markdown`) on the clipboard, so a Friday can be filed in KIP
+  in one paste. Without a clipboard the text opens in a prompt instead.
+- `cardBits` moved into the library so the CLI, the paper, and any
+  future client describe a card the same way.
+- Fixed: `--scrum` and `--fallback` were never registered as bare
+  flags, so `board --scrum` and `lounge-open --fallback` threw
+  "needs a value". Now `--scrum`, `--fallback`, and `--markdown` parse
+  as booleans, with a test.
+- Tests: quiet derivation and the held-card exception, both Markdown
+  exports, flag parsing. Browser QA checks the quiet pill on the dated
+  fixture card and both copy buttons.
+
+
+
+## Pass 19: find (2026-09-04, overnight)
+
+- A pill-shaped search field on the board bar and above the feed. Every
+  word typed has to appear somewhere on the card (title, project, next,
+  blocker, hold reason, seat, persona, id) or the line (body, sender,
+  thread title, project). Lanes stay in place and empty ones say "No
+  match here", so the shape of the board never jumps. A one-line count
+  sits above the lanes; Escape or Clear empties it. The link carries
+  `q=` for board and feed only.
+- Typing re-renders just the results, never the field, so focus and the
+  caret stay put. `filterScrum`, `cardMatches`, and `messageMatches`
+  live in the library and are tested. "/" jumps to the field from
+  anywhere on the board or the feed.
+
+
+## Pass 20: the keyboard on the board (2026-09-04, overnight)
+
+- Arrow keys travel the cards from any card title: down and up inside
+  a lane, left and right across lanes (same row, or the last card of a
+  shorter lane; empty lanes skipped), Home and End to the ends. No new
+  markup: the card titles were already the focusable thing.
+- After Done, Reopen, or Ready for Kelly the board re-renders and the
+  pressed button is gone; focus now lands on the same card where it
+  landed, and the polite live region says "Deck is now in Done", so a
+  keyboard or screen-reader user is never dropped on the floor.
+- Browser QA walks the six keys and checks the follow after Done. The
+  rubric's keyboard line moves from 7 toward 9; a visible hint is the
+  remaining piece and waits for Kelly's taste.
+\n

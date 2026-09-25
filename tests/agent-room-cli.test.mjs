@@ -4,6 +4,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { parseArguments } from "../scripts/agent-room-cli.mjs";
 import { createLocalRoomServer } from "../scripts/agent-room-local.mjs";
 
 function runCli(args, env) {
@@ -94,4 +95,11 @@ test("the CLI doctor verifies that a scoped token resolves to the expected ident
     await new Promise((resolve) => server.close(resolve));
     await rm(directory, { recursive: true, force: true });
   }
+});
+
+test("bare flags parse as booleans: --scrum, --fallback, --markdown, --json", () => {
+  assert.deepEqual(parseArguments(["board", "--scrum"]).options, { scrum: true });
+  assert.deepEqual(parseArguments(["lounge-open", "--actor", "kip", "--fallback"]).options, { actor: "kip", fallback: true });
+  assert.deepEqual(parseArguments(["week", "--actor", "codex", "--markdown", "--json"]).options, { actor: "codex", markdown: true, json: true });
+  assert.throws(() => parseArguments(["send", "--actor"]), /--actor needs a value/);
 });

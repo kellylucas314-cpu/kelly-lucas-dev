@@ -14,12 +14,24 @@ import {
   LOUNGE_CAPS,
   LOUNGE_FALLBACKS,
   deriveLoungeTurn,
+  deriveWake,
+  deriveWeek,
+  deriveAttendance,
+  weekStart,
+  weekMarkdown,
+  scrumMarkdown,
+  cardBits,
+  cardMatches,
+  messageMatches,
+  filterScrum,
+  quietDays,
+  QUIET_AFTER_DAYS,
   isScrumCard,
   personaOf,
   scrumLane,
   scrumSummary,
 } from "../lib/agent-room-board.js";
-import { appendMessage, deriveThreads, emptyRoom } from "../lib/agent-room-model.js";
+import { appendMessage, deriveInbox, deriveThreads, emptyRoom } from "../lib/agent-room-model.js";
 import { deriveBoard } from "../lib/agent-room-board.js";
 
 function room(...posts) {
@@ -326,7 +338,163 @@ test("lounge caps stop a seat and the room before any model is called; Kip hosts
   assert.equal(early.skip, true);
 });
 
+test("wake-check answers the bell, then what waits on you, then a Lounge move, and skips when nothing does", () => {
+  // The room() helper stamps posts on 2026-09-02, so "today" is that day.
+  const now = Date.parse("2026-09-02T16:30:00.000Z");
+  const value = room(
+    ["codex", { body: "Standup line.", to: ["all"], kind: "status", threadId: "standup" }],
+    ["kelly", { body: "Bell's ringing!", to: ["all"], kind: "alert", threadId: "wake-up-bell", thread: { title: "Wake-up bell" }, waitingOn: ["codex", "claude-code", "kip", "vellum"] }],
+    ["kelly", { body: "Codex, take the Press page", to: ["codex"], kind: "handoff", threadId: "press-page", thread: { title: "Press page" }, note: { project: "HelioFlux", summary: "Take it.", nextOwner: "codex" }, waitingOn: ["codex"] }],
+    ["kip", { body: "Diner question?", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", thread: { title: "Lounge · Wednesday" } }],
+  );
+  const threads = deriveThreads(value, "codex");
+  const inbox = deriveInbox(value, "codex");
+  const codex = deriveWake(threads, inbox, value.messages, { actor: "codex", now });
+  assert.equal(codex.skip, false);
+  assert.deepEqual(codex.plan.map((step) => step.kind), ["bell", "answer", "lounge"]);
+  assert.equal(codex.plan[1].threadId, "press-page");
+  assert.match(codex.plan[0].command, /wake-up-bell/);
+
+  const afterAnswers = room(
+    ["codex", { body: "Standup line.", to: ["all"], kind: "status", threadId: "standup" }],
+    ["kelly", { body: "Bell's ringing!", to: ["all"], kind: "alert", threadId: "wake-up-bell", thread: { title: "Wake-up bell" }, waitingOn: ["codex", "claude-code", "kip", "vellum"] }],
+    ["codex", { body: "Here.", to: ["all"], kind: "message", threadId: "wake-up-bell" }],
+    ["kip", { body: "Diner question?", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", thread: { title: "Lounge · Wednesday" } }],
+    ["codex", { body: "Soup.", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-4" }],
+  );
+  const quiet = deriveWake(deriveThreads(afterAnswers, "codex"), deriveInbox(afterAnswers, "codex"), afterAnswers.messages, { actor: "codex", now });
+  assert.equal(quiet.skip, true);
+  assert.equal(quiet.why, "nothing is waiting on you");
+
+  const posts = [["kelly", { body: "Bell's ringing!", to: ["all"], kind: "alert", threadId: "wake-up-bell", thread: { title: "Wake-up bell" }, waitingOn: ["codex"] }]];
+  for (let index = 0; index < 10; index += 1) posts.push(["codex", { body: `Line ${index}`, to: ["all"], kind: "status", threadId: index === 0 ? "standup" : "general" }]);
+  const busy = room(...posts);
+  const rested = deriveWake(deriveThreads(busy, "codex"), deriveInbox(busy, "codex"), busy.messages, { actor: "codex", now });
+  assert.equal(rested.skip, true);
+  assert.match(rested.why, /posted 10 times today/);
+});
+
+test("the week derives attendance squares, Friday wraps, and the numbers Kelly reads", () => {
+  const now = Date.parse("2026-09-04T20:00:00.000Z"); // a Friday
+  assert.equal(new Date(weekStart(now)).toISOString().slice(0, 10), "2026-08-31");
+  const value = room(
+    ["codex", { body: "Standup line.", to: ["all"], kind: "status", threadId: "standup" }],
+    ["kip", { body: "Standup line.", to: ["all"], kind: "status", threadId: "standup" }],
+    ["kelly", { body: "Codex, take it", to: ["codex"], kind: "handoff", threadId: "deck", thread: { title: "Deck" }, note: { project: "HQ", summary: "Take it.", nextOwner: "codex" }, waitingOn: ["codex"] }],
+    ["kelly", { body: "Done.", to: ["all"], kind: "status", threadId: "deck", thread: { status: "resolved" } }],
+    ["kip", { body: "Question?", to: ["all"], kind: "message", threadId: "lounge-2026-09-02", thread: { title: "Lounge · Wednesday" } }],
+    ["kelly", { body: "😂", to: ["kip"], kind: "message", threadId: "lounge-2026-09-02", replyTo: "message-t-5" }],
+    ["codex", { body: "As: Codex\nShipped the export. Next: the Press page.", to: ["all"], kind: "status", threadId: "friday-wrap", thread: { title: "Friday wrap" } }],
+  );
+  const threads = deriveThreads(value, "kelly");
+  const week = deriveWeek(threads, value.messages, { now, viewer: "kelly" });
+  assert.equal(week.weekStart, "2026-08-31");
+  assert.equal(week.done, 1);
+  assert.deepEqual(week.doneTitles, ["Deck"]);
+  assert.equal(week.handoffs, 1);
+  assert.equal(week.stickers, 1);
+  assert.equal(week.loungeLines, 1);
+  assert.equal(week.wrapCount, 1);
+  assert.equal(week.wraps.find((entry) => entry.seat === "codex").body, "Shipped the export. Next: the Press page.");
+  assert.equal(week.wraps.find((entry) => entry.seat === "kip").body, "");
+  assert.equal(week.isWrapTime, true);
+  // The room() helper posts on 2026-09-02; attendance as of the 4th shows that day filled.
+  const attendance = deriveAttendance(value.messages, { now });
+  assert.equal(attendance.days.length, 7);
+  assert.equal(attendance.days[attendance.days.length - 1], "2026-09-04");
+  assert.equal(attendance.seats.find((entry) => entry.seat === "codex").count, 1);
+  assert.equal(attendance.seats.find((entry) => entry.seat === "vellum").count, 0);
+  const scrum = deriveScrum(threads, value.messages, { viewer: "kelly" });
+  assert.equal(scrum.lanes.flatMap((lane) => lane.threads).some((card) => card.id === "friday-wrap" || card.id === "standup"), false);
+});
+
+test("wake-check adds the standup line each morning and the wrap on Friday afternoon", () => {
+  const empty = room();
+  const morning = deriveWake(deriveThreads(empty, "codex"), deriveInbox(empty, "codex"), empty.messages, { actor: "codex", now: Date.parse("2026-09-02T14:00:00.000Z") });
+  assert.equal(morning.skip, false);
+  assert.equal(morning.plan[0].kind, "standup");
+  const friday = deriveWake(deriveThreads(empty, "codex"), deriveInbox(empty, "codex"), empty.messages, { actor: "codex", now: Date.parse("2026-09-04T20:00:00.000Z") });
+  assert.deepEqual(friday.plan.map((step) => step.kind), ["standup", "wrap"]);
+});
+
 test("cardHints never throws on legacy messages without notes or receipts", () => {
   assert.deepEqual(cardHints([{ body: "hello", kind: "message" }, { body: "", kind: "status" }]), { next: "", blocker: "", due: "", dueAt: null, hold: null, owner: "" });
   assert.deepEqual(cardHints(undefined).hold, null);
+});
+
+test("a Doing or Waiting card with no post for five days is quiet; held cards and fresh cards are not", () => {
+  const value = room(
+    ["kelly", { body: "Kip, take the deck", to: ["kip"], kind: "handoff", threadId: "deck", thread: { title: "Deck" }, note: { project: "HQ", summary: "Take it.", nextOwner: "kip" }, waitingOn: ["kip"] }],
+    ["kip", { body: "Heads up.", to: ["kelly"], kind: "alert", threadId: "gateway", thread: { title: "Gateway" }, waitingOn: ["kelly"] }],
+    ["vellum", { body: "Note: HQ\nLater.\nParked: after the launch", to: ["all"], kind: "note", threadId: "later", thread: { title: "Later" }, note: { project: "HQ", summary: "Later." } }],
+  );
+  const threads = deriveThreads(value, "kelly");
+  const sameDay = deriveScrum(threads, value.messages, { viewer: "kelly", now: Date.parse("2026-09-02T18:00:00.000Z") });
+  assert.equal(sameDay.quiet, 0);
+  assert.equal(sameDay.lanes.flatMap((lane) => lane.threads).every((card) => card.quiet === false), true);
+  const later = Date.parse("2026-09-09T12:00:00.000Z");
+  const scrum = deriveScrum(threads, value.messages, { viewer: "kelly", now: later });
+  const card = (id) => scrum.lanes.flatMap((lane) => lane.threads).find((entry) => entry.id === id);
+  assert.equal(quietDays({ lastAt: "2026-09-02T15:01:00.000Z" }, later), 6);
+  assert.equal(QUIET_AFTER_DAYS, 5);
+  assert.equal(card("deck").quiet, true);
+  assert.equal(card("deck").quietDays, 6);
+  assert.equal(card("gateway").quiet, true);
+  assert.equal(card("later").quiet, false, "a parked backlog card is quiet on purpose");
+  assert.equal(scrum.quiet, 2);
+  assert.match(scrumSummary(scrum), /2 quiet$/);
+  assert.ok(cardBits(card("deck")).includes("quiet 6d"));
+  assert.equal(cardBits(card("later")).includes("quiet 6d"), false);
+  assert.equal(quietDays({ lastAt: "" }), 0);
+});
+
+test("the board and the week print as Markdown for KIP", () => {
+  const now = Date.parse("2026-09-04T20:00:00.000Z");
+  const value = room(
+    ["kelly", { body: "Kip, take the deck", to: ["kip"], kind: "handoff", threadId: "deck", thread: { title: "Deck" }, note: { project: "HQ", summary: "Take it.", nextOwner: "kip" }, waitingOn: ["kip"] }],
+    ["kip", { body: "Draft is up.\nNext: Kelly reads it", to: ["kelly"], kind: "status", threadId: "deck", waitingOn: ["kelly"] }],
+    ["kelly", { body: "Done.", to: ["all"], kind: "status", threadId: "old", thread: { title: "Old thing", status: "resolved" } }],
+    ["codex", { body: "Standup line.", to: ["all"], kind: "status", threadId: "standup" }],
+    ["codex", { body: "As: Codex\nShipped the export.\nNext: the Press page.", to: ["all"], kind: "status", threadId: "friday-wrap", thread: { title: "Friday wrap" } }],
+  );
+  const threads = deriveThreads(value, "kelly");
+  const board = scrumMarkdown(deriveScrum(threads, value.messages, { viewer: "kelly", now }));
+  assert.match(board, /^# Agent Commons scrum · 2026-09-04\n/);
+  assert.match(board, /## Waiting on Kelly \(1\)\n\n- \*\*Deck\*\* · HQ · waiting on kelly · 1 unread/);
+  assert.match(board, /## Done \(1\)\n\n- Old thing · done 2026-09-02/);
+  assert.match(board, /## Backlog \(0\)\n\n- nothing/);
+  const week = weekMarkdown(deriveWeek(threads, value.messages, { now, viewer: "kelly" }), deriveAttendance(value.messages, { now }));
+  assert.match(week, /^# Agent Commons week from 2026-08-31\n/);
+  assert.match(week, /- Done: 1 card \(Old thing\)\n- Handoffs: 1\n/);
+  assert.match(week, /- Crown: nobody yet/);
+  assert.match(week, /- \*\*codex · Codex\*\*: Shipped the export\. Next: the Press page\./);
+  assert.match(week, /- \*\*kip\*\*: no wrap yet/);
+  assert.match(week, /## Attendance \(standup lines, last 7 days\)\n\n- kelly: · · · · · · · \(0\/7\)\n- codex: · · · · ■ · · \(1\/7\)/);
+});
+
+test("find keeps the cards and lines that carry every word of the query, any case, and an empty query keeps everything", () => {
+  const value = room(
+    ["kelly", { body: "Kip, take the deck", to: ["kip"], kind: "handoff", threadId: "deck", thread: { title: "Investor deck" }, note: { project: "HelioFlux", summary: "Take it.", nextOwner: "kip", action: "Draft slide nine" }, waitingOn: ["kip"] }],
+    ["vellum", { body: "As: Lumen\nNote: Personal\nTape recap for the archive.", to: ["all"], kind: "note", threadId: "tape", thread: { title: "Tape recap" }, note: { project: "Personal", summary: "Tape recap for the archive." } }],
+  );
+  const threads = deriveThreads(value, "kelly");
+  const scrum = deriveScrum(threads, value.messages, { viewer: "kelly" });
+  const cards = scrum.lanes.flatMap((lane) => lane.threads);
+  const deck = cards.find((card) => card.id === "deck");
+  assert.equal(cardMatches(deck, "DECK"), true, "title, any case");
+  assert.equal(cardMatches(deck, "helioflux kip"), true, "project and seat, every word");
+  assert.equal(cardMatches(deck, "slide nine"), true, "the next step");
+  assert.equal(cardMatches(deck, "tape"), false);
+  assert.equal(cardMatches(deck, "   "), true);
+  const found = filterScrum(scrum, " Recap ");
+  assert.equal(found.matches, 1);
+  assert.equal(found.query, "recap");
+  assert.deepEqual(found.lanes.flatMap((lane) => lane.threads.map((card) => card.id)), ["tape"]);
+  assert.equal(filterScrum(scrum, "").matches, null);
+  assert.equal(filterScrum(scrum, "nothing-here").matches, 0);
+  const line = value.messages.find((message) => message.threadId === "tape");
+  assert.equal(messageMatches(line, "lumen"), true, "a persona counts");
+  assert.equal(messageMatches(line, "recap", "Tape recap"), true);
+  assert.equal(messageMatches(line, "investor", "Tape recap"), false);
+  assert.equal(messageMatches(line, "investor", "Investor deck"), true, "the thread title counts");
 });
