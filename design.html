@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Design Desk · Kelly Lucas</title>
-  <meta name="description" content="Kelly Lucas's design desk: a swipe file for UI, kept in public. Design systems, art libraries, galleries, sites worth studying, videos to rewatch, and notebook pages." />
+  <meta name="description" content="Kelly Lucas's design desk: a swipe file for UI, kept in public and sorted into five piles. The HelioFlux website, Heliopolis, Pretzel Protocol, resources, and examples worth studying." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='5' fill='%23b1d8b3' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -52,25 +52,144 @@
 
       <h1 class="display balance">Design<br />desk.</h1>
       <div class="hero-aside">
-        <p class="scribble">(a swipe file, kept in public)</p>
+        <p class="scribble">(a swipe file, kept in public, in five piles)</p>
         <p>
           I'm learning UI by paying attention. This is where I keep what I
-          notice: the systems behind my own sites, the libraries I'm building,
-          the galleries I raid, the videos I rewatch, and the pages from my
-          notebook.
+          notice, sorted by what it is for: the HelioFlux website, Heliopolis,
+          Pretzel, the resources I reach for, and the examples worth studying.
+          The Magpie feather files new clips into the right pile on its own.
         </p>
-        <a href="#shelf" class="cta">
-          <span class="cta__label">Browse the shelf</span>
-          <span class="cta__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
-            </svg>
-          </span>
-        </a>
+        <nav class="chip-row desk-nav" aria-label="The piles">
+          <a class="chip" href="#website"><b>01</b> website</a>
+          <a class="chip" href="#heliopolis"><b>02</b> heliopolis</a>
+          <a class="chip" href="#pretzel"><b>03</b> pretzel</a>
+          <a class="chip" href="#resources"><b>04</b> resources</a>
+          <a class="chip" href="#examples"><b>05</b> examples</a>
+        </nav>
       </div>
     </section>
 
-    <!-- NOTEBOOK -->
+    <!-- 01 THE WEBSITE -->
+    <section id="website" class="block block--cream desk-section" data-section="website">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>01 &middot; the website &middot; helioflux.co</span>
+      </div>
+      <h2 class="display display--sm">The HelioFlux website</h2>
+      <p class="scribble">(the live look, and the next one, still in the playground)</p>
+      <p class="desk-count desk-count--inline js-count" aria-live="polite"></p>
+
+      <div class="desk-part">
+        <h3 class="desk-sub">The systems</h3>
+        <div class="system-grid js-systems"></div>
+      </div>
+      <div class="desk-part">
+        <h3 class="desk-sub">Documents and the style pack</h3>
+        <div class="doc-grid js-docs"></div>
+      </div>
+      <div class="desk-part">
+        <h3 class="desk-sub">Libraries</h3>
+        <ul class="now-list library-list js-libraries"></ul>
+      </div>
+      <div class="desk-part">
+        <h3 class="desk-sub">Clipped for it</h3>
+        <div class="desk-grid desk-grid--tight js-cards"></div>
+        <p class="desk-empty js-empty" hidden>nothing clipped for the website yet. hit the feather on a site worth learning from.</p>
+      </div>
+    </section>
+
+    <!-- 02 HELIOPOLIS -->
+    <section id="heliopolis" class="block block--mint desk-section" data-section="heliopolis">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>02 &middot; heliopolis &middot; myheliopolis.com</span>
+      </div>
+      <h2 class="display display--sm">Heliopolis</h2>
+      <p class="scribble">(the team site: cream, navy, one lime. the drawings lead.)</p>
+      <p class="desk-count desk-count--inline js-count" aria-live="polite"></p>
+
+      <div class="desk-part">
+        <h3 class="desk-sub">The system</h3>
+        <div class="system-grid js-systems"></div>
+      </div>
+      <div class="desk-part">
+        <h3 class="desk-sub">Documents and drawings</h3>
+        <div class="doc-grid js-docs"></div>
+      </div>
+      <div class="desk-part">
+        <h3 class="desk-sub">Libraries</h3>
+        <ul class="now-list library-list js-libraries"></ul>
+      </div>
+      <div class="desk-part">
+        <h3 class="desk-sub">Clipped for it</h3>
+        <div class="desk-grid desk-grid--tight js-cards"></div>
+        <p class="desk-empty js-empty" hidden>nothing clipped for heliopolis yet.</p>
+      </div>
+    </section>
+
+    <!-- 03 PRETZEL -->
+    <section id="pretzel" class="block block--cream desk-section" data-section="pretzel">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>03 &middot; pretzel protocol &middot; pretzel.thetravelprotocol.com</span>
+      </div>
+      <h2 class="display display--sm">Pretzel Protocol</h2>
+      <p class="scribble">(a family trip atlas that channels heliopolis in october)</p>
+      <p class="desk-count desk-count--inline js-count" aria-live="polite"></p>
+
+      <div class="desk-part">
+        <h3 class="desk-sub">The system</h3>
+        <div class="system-grid js-systems"></div>
+      </div>
+      <div class="desk-part">
+        <h3 class="desk-sub">Documents and drawings</h3>
+        <div class="doc-grid js-docs"></div>
+      </div>
+      <div class="desk-part">
+        <h3 class="desk-sub">Libraries</h3>
+        <ul class="now-list library-list js-libraries"></ul>
+      </div>
+      <div class="desk-part">
+        <h3 class="desk-sub">Clipped for it</h3>
+        <div class="desk-grid desk-grid--tight js-cards"></div>
+        <p class="desk-empty js-empty" hidden>nothing clipped for pretzel yet.</p>
+      </div>
+    </section>
+
+    <!-- 04 RESOURCES: the shelf -->
+    <section id="resources" class="block--bare desk-shelf desk-section" data-section="resources" data-part="shelf">
+      <div class="three-up__head spark-head">
+        <div class="dot-tag">
+          <span class="dot-tag__dot"></span>
+          <span>04 &middot; resources &middot; the shelf</span>
+        </div>
+        <h2 class="display display--sm">Resources</h2>
+        <p>Galleries I raid, tools I reach for, things I read, repos I keep. Each one has a line on why it is here.</p>
+      </div>
+      <div class="desk-controls">
+        <div class="chip-row" id="shelfChips" role="group" aria-label="Filter the shelf"></div>
+        <label class="desk-search-wrap">
+          <span class="visually-hidden">Search the shelf</span>
+          <input type="search" class="desk-search" id="shelfSearch" placeholder="search the shelf" autocomplete="off" />
+        </label>
+      </div>
+      <p class="desk-count" id="shelfCount" aria-live="polite"></p>
+      <div class="desk-grid" id="shelfGrid"></div>
+      <p class="desk-empty" id="shelfEmpty" hidden></p>
+    </section>
+
+    <!-- 04 RESOURCES: the rewatch list -->
+    <section class="block block--lilac desk-rewatch" data-section="resources" data-part="videos">
+      <div class="dot-tag dot-tag--top-right">
+        <span class="dot-tag__dot"></span>
+        <span>rewatch list &middot; in progress</span>
+      </div>
+      <h2 class="display display--sm">Videos I keep going back to</h2>
+      <p class="scribble">(lilac means unfinished. some of these notes are still cooking.)</p>
+      <div class="video-grid js-videos" id="videoGrid"></div>
+    </section>
+
+    <!-- 04 RESOURCES: the notebook -->
     <section class="block block--cream desk-notebook">
       <div class="dot-tag dot-tag--top-right">
         <span class="dot-tag__dot"></span>
@@ -148,59 +267,36 @@
       </div>
     </section>
 
-    <!-- DESIGN SYSTEMS -->
-    <section class="block block--mint desk-systems">
+    <!-- 05 EXAMPLES -->
+    <section id="examples" class="block block--mint desk-section" data-section="examples">
       <div class="dot-tag dot-tag--top-right">
         <span class="dot-tag__dot"></span>
-        <span>my systems</span>
+        <span>05 &middot; examples &middot; sites worth studying</span>
       </div>
-      <h2 class="display display--sm">One system per site</h2>
-      <p class="scribble">(the rules I keep writing down so I stop re-deciding them)</p>
-      <div class="system-grid" id="systemGrid"></div>
+      <h2 class="display display--sm">Examples</h2>
+      <p class="scribble">(the ones I open when I forget what good looks like)</p>
+      <p class="desk-count desk-count--inline js-count" aria-live="polite"></p>
+      <div class="desk-part">
+        <div class="desk-grid desk-grid--tight js-cards"></div>
+        <p class="desk-empty js-empty" hidden>no examples yet. clip a site and say why in one line.</p>
+      </div>
     </section>
 
-    <!-- ART LIBRARIES -->
-    <section class="block block--cream desk-libraries">
+    <!-- THE LAB ITSELF -->
+    <section id="lab" class="block block--cream desk-section" data-section="lab">
       <div class="dot-tag dot-tag--top-left">
         <span class="dot-tag__dot"></span>
-        <span>my libraries</span>
+        <span>and this site</span>
       </div>
-      <h2 class="display display--sm">Libraries I've been making</h2>
-      <p class="scribble">(art, fonts, references. the raw material for everything above.)</p>
-      <ul class="now-list library-list" id="libraryList"></ul>
-    </section>
-
-    <!-- THE SHELF -->
-    <section id="shelf" class="block--bare desk-shelf">
-      <div class="three-up__head spark-head">
-        <div class="dot-tag">
-          <span class="dot-tag__dot"></span>
-          <span>the shelf</span>
-        </div>
-        <h2 class="display display--sm">Everything on the shelf</h2>
-        <p>Galleries I raid, sites I study, tools I reach for. Each one has a line on why it is here.</p>
+      <h2 class="display display--sm">The lab itself</h2>
+      <p class="scribble">(this site's own rules, and the room next door)</p>
+      <div class="desk-part">
+        <div class="system-grid js-systems"></div>
       </div>
-      <div class="desk-controls">
-        <div class="chip-row" id="shelfChips" role="group" aria-label="Filter the shelf"></div>
-        <label class="desk-search-wrap">
-          <span class="visually-hidden">Search the shelf</span>
-          <input type="search" class="desk-search" id="shelfSearch" placeholder="search the shelf" autocomplete="off" />
-        </label>
+      <div class="desk-part">
+        <h3 class="desk-sub">Libraries</h3>
+        <ul class="now-list library-list js-libraries"></ul>
       </div>
-      <p class="desk-count" id="shelfCount" aria-live="polite"></p>
-      <div class="desk-grid" id="shelfGrid"></div>
-      <p class="desk-empty" id="shelfEmpty" hidden></p>
-    </section>
-
-    <!-- REWATCH LIST -->
-    <section class="block block--lilac desk-rewatch">
-      <div class="dot-tag dot-tag--top-right">
-        <span class="dot-tag__dot"></span>
-        <span>rewatch list &middot; in progress</span>
-      </div>
-      <h2 class="display display--sm">Videos I keep going back to</h2>
-      <p class="scribble">(lilac means unfinished. some of these notes are still cooking.)</p>
-      <div class="video-grid" id="videoGrid"></div>
     </section>
 
     <!-- HOW IT FILLS -->
@@ -210,19 +306,19 @@
         <span>how it works</span>
       </div>
       <h2 class="display display--sm">How this page fills itself</h2>
-      <p class="scribble">(the chrome button already existed. it just needed a new job.)</p>
+      <p class="scribble">(the chrome feather already existed. now it knows where things go.)</p>
       <ul class="now-list">
         <li>
           <span class="now-label">1. clip</span>
-          <span class="now-body">Hit the Magpie feather on any page, tag it <code>design</code>, and say why in one line.</span>
+          <span class="now-body">Hit the Magpie feather on any page. The popup guesses the pile from the address, the tags and what you wrote: the website, heliopolis, pretzel, resources or examples. Change it if it guessed wrong, or say <code>not for the desk</code>.</span>
         </li>
         <li>
           <span class="now-label">2. sync</span>
-          <span class="now-body"><code>npm run sync:design</code> pulls every desk-tagged clip into <code>design-library.js</code>.</span>
+          <span class="now-body"><code>npm run sync:design</code> rebuilds <code>design-library.js</code> from every desk clip and files each one under its pile. The rules live in <code>lib/desk-rules.json</code>.</span>
         </li>
         <li>
           <span class="now-label">3. push</span>
-          <span class="now-body">Push to main. Vercel deploys, the shelf updates, and the video notes fill in.</span>
+          <span class="now-body">Push to main. Vercel deploys, the piles update, and the video notes fill in.</span>
         </li>
       </ul>
     </section>

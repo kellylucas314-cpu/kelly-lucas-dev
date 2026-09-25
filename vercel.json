@@ -167,6 +167,11 @@
       "source": "/heliopolis",
       "destination": "/heliopolis/index.html",
       "permanent": false
+    },
+    {
+      "source": "/heliopolis/",
+      "destination": "/heliopolis/index.html",
+      "permanent": false
     }
   ],
   "rewrites": [

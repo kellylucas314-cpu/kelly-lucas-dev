@@ -2,12 +2,15 @@
 /* Fills design-library.js from the Magpie vault.
 
    The design desk (design.html) reads one data file. This script rebuilds
-   the Magpie half of it: every clip that carries a desk tag becomes a card.
+   the Magpie half of it: every clip the sorter (lib/desk-sort.mjs, rules in
+   lib/desk-rules.json) puts on the desk becomes a card, filed under one of
+   five piles: website, heliopolis, pretzel, resources, examples. A clip
+   tagged desk:<section> is filed there; desk:none keeps it off.
    Entries in the file's `manual` list are kept exactly as written and win
    over the Magpie copy of the same URL, so a hand-written "why" is never
-   lost when the same page gets clipped later. The `systems` and
-   `libraries` lists (Kelly's own design systems and art libraries) are
-   hand-written and pass through untouched.
+   lost when the same page gets clipped later. The `systems`, `libraries`
+   and `docs` lists (Kelly's own design systems, art libraries and style
+   documents) are hand-written and pass through untouched.
 
    usage:  npm run sync:design                        (default vault path)
            npm run sync:design -- /path/to/magpie     (another vault)
@@ -15,10 +18,14 @@
    MAGPIE_SOURCE=/path/to/magpie also works.
 
    --thumbs copies each clip's small preview (under 200 KB) into
-   assets/design/thumbs/ so the card shows a picture instead of initials. */
+   assets/design/thumbs/ so the card shows a picture instead of initials.
+   Cards with no preview can get one from scripts/capture-design-thumbs.mjs,
+   which saves assets/design/thumbs/<card id>.jpg; the sync picks those up
+   by name on every run. */
 
 import { copyFile, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { RESOURCE_KINDS, SECTIONS, kindOf, loadRules, sortClip } from "../lib/desk-sort.mjs";
 
 const args = process.argv.slice(2);
 const wantThumbs = args.includes("--thumbs");
@@ -33,13 +40,9 @@ const targetPath = path.join(worktree, "design-library.js");
 const thumbDir = path.join(worktree, "assets", "design", "thumbs");
 const MAX_THUMB_BYTES = 200 * 1024;
 
-/* A clip lands on the desk when it carries any of these tags. */
-const DESK_TAGS = new Set([
-  "design-desk", "design", "design-inspiration", "design-reference",
-  "design-tool", "design-tools", "design-engineering", "web-design", "ui-ux",
-  "website-examples", "visual-inspiration", "typography", "fonts", "color",
-  "color-palette", "taste-library", "kellylucas-dev",
-]);
+/* Whether a clip lands on the desk, and in which pile, is decided by
+   lib/desk-sort.mjs from lib/desk-rules.json. */
+const rules = loadRules();
 
 /* Housekeeping tags that mean nothing to a visitor. */
 const HIDDEN_TAGS = new Set([
@@ -47,18 +50,7 @@ const HIDDEN_TAGS = new Set([
   "competitive-inspiration", "repo-radar", "agentic-os", "openclaw",
   "security-review", "kellylucas-dev", "design-desk", "design",
 ]);
-
-/* Tags that decide a card's kind when the clip type does not. */
-const TOOL_TAGS = new Set([
-  "design-tool", "design-tools", "tools", "fonts", "typography", "color",
-  "color-palette", "ai-design", "agent-skills", "skills", "components",
-  "icons", "design-engineering",
-]);
-const GALLERY_TAGS = new Set([
-  "design-inspiration", "design-reference", "visual-inspiration",
-  "website-examples", "inspiration", "web-design", "ui-ux", "references",
-  "curation", "taste-library",
-]);
+const hiddenTag = (tag) => HIDDEN_TAGS.has(tag) || tag.startsWith("desk:");
 
 const norm = (tag) => String(tag || "").trim().toLowerCase();
 const uniq = (list) => [...new Set(list)];
@@ -125,17 +117,6 @@ function firstSentences(text, limit = 200) {
   return cut.slice(0, cut.lastIndexOf(" ")) + "\u2026";
 }
 
-function kindOf(clip) {
-  const type = String(clip.type || "").toLowerCase();
-  const tags = (clip.tags || []).map(norm);
-  if (type === "video" || type === "transcript") return "video";
-  if (type.startsWith("github")) return "repo";
-  if (["article", "paper", "document", "pdf"].includes(type)) return "reading";
-  if (tags.some((tag) => TOOL_TAGS.has(tag))) return "tool";
-  if (tags.some((tag) => GALLERY_TAGS.has(tag))) return "gallery";
-  return "site";
-}
-
 /* Pull the useful parts out of a clip's Markdown note. */
 function parseClip(markdown) {
   const sections = {};
@@ -178,21 +159,35 @@ async function exists(file) {
   }
 }
 
-async function thumbFor(clip) {
-  const name = path.basename(String(clip.thumbLocal || ""));
+/* A picture taken by scripts/capture-design-thumbs.mjs is named after the
+   card's id, so it survives every sync. */
+export function shotName(id) {
+  const stem = String(id || "").replace(/[^a-z0-9.-]+/gi, "-").replace(/^-+|-+$/g, "");
+  return stem ? `${stem}.jpg` : "";
+}
+
+async function shotFor(id) {
+  const name = shotName(id);
   if (!name) return "";
+  return (await exists(path.join(thumbDir, name))) ? `assets/design/thumbs/${name}` : "";
+}
+
+/* The Magpie preview when there is one, else a captured shot, else nothing. */
+async function thumbFor(clip, id) {
+  const name = path.basename(String(clip.thumbLocal || ""));
+  if (!name) return shotFor(id);
   const dest = path.join(thumbDir, name);
   const served = `assets/design/thumbs/${name}`;
   if (await exists(dest)) return served;
-  if (!wantThumbs) return "";
+  if (!wantThumbs) return shotFor(id);
   const src = path.join(sourceRoot, "thumbs", name);
   try {
     const info = await stat(src);
-    if (info.size > MAX_THUMB_BYTES) return "";
+    if (info.size > MAX_THUMB_BYTES) return shotFor(id);
     await copyFile(src, dest);
     return served;
   } catch {
-    return "";
+    return shotFor(id);
   }
 }
 
@@ -214,10 +209,21 @@ function parseExisting(text) {
 const library = JSON.parse(
   await readFile(path.join(sourceRoot, "library.json"), "utf8"),
 );
-const clips = (library.items || []).filter((clip) =>
-  (clip.tags || []).some((tag) => DESK_TAGS.has(norm(tag))),
-);
-if (!clips.length) throw new Error(`No desk-tagged clips found in ${sourceRoot}`);
+const verdicts = new Map();
+const clips = (library.items || []).filter((clip) => {
+  const verdict = sortClip(clip, rules);
+  if (verdict.onDesk) verdicts.set(clip, verdict);
+  return verdict.onDesk;
+});
+if (!clips.length) throw new Error(`No desk clips found in ${sourceRoot}`);
+
+/* Keep the vault's copy of the rules in step, so the Magpie server and the
+   Chrome clipper file new clips the same way this script does. */
+try {
+  await copyFile(path.join(worktree, "lib", "desk-rules.json"), path.join(sourceRoot, "desk-rules.json"));
+} catch {
+  /* another vault, or none: the site's copy is the one that matters here */
+}
 
 let existing = { manual: [], items: [] };
 try {
@@ -226,10 +232,11 @@ try {
   /* first run: nothing to keep */
 }
 const manual = Array.isArray(existing.manual) ? existing.manual : [];
-/* Kelly's own design systems and art libraries are hand-written too, and
-   never come from Magpie, so they pass through untouched. */
+/* Kelly's own design systems, art libraries and style documents are
+   hand-written too, and never come from Magpie, so they pass through untouched. */
 const systems = Array.isArray(existing.systems) ? existing.systems : [];
 const libraries = Array.isArray(existing.libraries) ? existing.libraries : [];
+const docs = Array.isArray(existing.docs) ? existing.docs : [];
 
 if (wantThumbs) await mkdir(thumbDir, { recursive: true });
 
@@ -248,13 +255,14 @@ for (const clip of clips) {
     url: clip.url,
     domain: domainOf(clip.url),
     author: dedash(clip.author || ""),
-    kind: kindOf(clip),
-    tags: uniq((clip.tags || []).map(norm).filter((tag) => tag && !HIDDEN_TAGS.has(tag))),
+    kind: verdicts.get(clip).kind,
+    section: verdicts.get(clip).section,
+    tags: uniq((clip.tags || []).map(norm).filter((tag) => tag && !hiddenTag(tag))),
     why,
     summary: firstSentences(parsed.summary || clip.description || ""),
     takeaways: parsed.takeaways.map(dedash),
     hasTranscript: Boolean(clip.hasTranscript),
-    thumb: await thumbFor(clip),
+    thumb: await thumbFor(clip, id),
     clippedAt: clip.clippedAt || "",
     source: "magpie",
   }));
@@ -265,11 +273,26 @@ for (const clip of clips) {
 for (const entry of manual) {
   const id = entry.id || fingerprint(entry.url);
   if (!id) continue;
-  const overrides = compact({ ...entry, id: undefined });
+  /* `hidden: true` takes a clip off the desk without touching the vault. */
+  if (entry.hidden) {
+    byId.delete(id);
+    continue;
+  }
+  const overrides = compact({ ...entry, id: undefined, hidden: undefined });
   const base = byId.get(id);
-  byId.set(id, base
+  const guessKind = kindOf({ url: entry.url, type: entry.kind === "video" ? "video" : "" }, rules);
+  const merged = base
     ? { ...base, ...overrides, id, source: "magpie+manual" }
-    : { id, domain: domainOf(entry.url), kind: "site", tags: [], ...overrides, source: "manual" });
+    : { id, domain: domainOf(entry.url), kind: guessKind, tags: [], ...overrides, source: "manual" };
+  if (!merged.thumb) merged.thumb = await shotFor(id);
+  /* A hand-written entry is on the desk by definition: its own `section`,
+     else the sorter's guess, else resources or examples by kind. */
+  if (!SECTIONS.includes(merged.section)) {
+    const guess = sortClip({ url: merged.url, title: merged.title, tags: merged.tags, note: merged.why,
+      type: merged.kind === "video" ? "video" : "" }, rules);
+    merged.section = guess.onDesk ? guess.section : RESOURCE_KINDS.has(merged.kind) ? "resources" : "examples";
+  }
+  byId.set(id, merged);
 }
 
 const dateOf = (item) => String(item.clippedAt || item.added || "");
@@ -282,6 +305,7 @@ const out = {
   updatedAt: new Date().toISOString().slice(0, 10),
   systems,
   libraries,
+  docs,
   manual,
   items,
 };
@@ -297,6 +321,10 @@ const counts = {};
 for (const item of items) counts[item.kind] = (counts[item.kind] || 0) + 1;
 console.log(`design-library.js: ${items.length} items from ${sourceRoot}`);
 for (const [kind, count] of Object.entries(counts)) console.log(`  ${kind.padEnd(8)} ${count}`);
-for (const item of items) {
-  console.log(`  - [${item.kind}] ${item.title || item.url}${item.source === "manual" ? "  (manual)" : ""}`);
+for (const section of SECTIONS) {
+  const pile = items.filter((item) => item.section === section);
+  console.log(`\n${section} (${pile.length})`);
+  for (const item of pile) {
+    console.log(`  - [${item.kind}] ${item.title || item.url}${item.source === "manual" ? "  (manual)" : ""}`);
+  }
 }
