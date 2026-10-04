@@ -81,8 +81,8 @@ if (viewer && entries.length) {
     entry.addEventListener("mouseenter", () => show(entry));
     entry.addEventListener("focus", () => show(entry));
   });
-  entries[0].classList.add("is-active");
-  current = entries[0];
+  current = entries.find((e) => e.hasAttribute("data-default")) || entries[0];
+  current.classList.add("is-active");
 
   // warm the plate images once the page is idle, so swaps are instant
   const warm = () => entries.forEach((e) => { const i = new Image(); i.src = e.dataset.plate; });

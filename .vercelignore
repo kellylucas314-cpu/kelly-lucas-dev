@@ -22,3 +22,5 @@ assets/avatars/source/
 
 # Claude Code project skills: keep them in Git, keep them off the website
 .claude/
+assets/collection/**/*.webp.json
+assets/collection/*.webp.json

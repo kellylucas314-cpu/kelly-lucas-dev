@@ -21,13 +21,16 @@ system is recorded in `DESIGN.md`.
 - Kelly's tints are plate backdrops, not decoration: mint `#c9e6c9`, lilac
   `#e3e3ee`, sand `#ebe3cf`, sky `#d9eaf3`.
 - The Magpie feather (rainbow plus warm half) is the only saturated color on a
-  page. Links use `--link: #2456c9`; focus rings use Magpie blue `#3e7be8`.
+  page, plus Magpie's own UI inside the plate 01 drawing. Links are ink with a
+  1px underline; focus rings and the "In use" dot use Magpie blue `#3e7be8`.
 - One typeface, Heliora. Hierarchy from size and weight only. No eyebrows or
   kickers above headings; metadata goes after the title.
 - Status is Kelly's 9px square dot: blue "In use", green "Live", violet
   "Private".
-- Rectilinear plates with a 6px radius, hairline rules (`--rule`), no heavy
-  shadows. Pills for buttons and filters.
+- Rectilinear plates with a 6px radius, hairline rules (`--rule`), 1px ink
+  rails, no heavy shadows. Actions are ruled catalogue bars (`.actions` /
+  `.action`: ink rules, arrow flush right), never pill buttons. Filters, chips
+  and inputs use a 4px radius.
 - Copy is direct, warm, sentence case. Honest labels: screenshots are real,
   the Magpie plate says it is redrawn in HTML, counts say when they were counted.
 - Personality budget: the tab-title message, the "Clip it" demo in plate 01,

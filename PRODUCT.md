@@ -43,7 +43,7 @@ Kelly builds personal tools she runs every day, then puts them on the shelf. The
 
 ## Evidence on Hand
 
-- Magpie numbers from `kip-workspace/magpie/library.json`: 279 clips, 258 sites, 257 tags, 8 transcripts, 10 papers, 31 personal notes, clipped 2026-02-24 to 2026-08-19.
+- Magpie numbers from `kip-workspace/magpie/library.json`: 279 clips, 258 sites, 257 tags, 8 transcripts, 10 papers, 31 personal notes, clipped 2026-02-24 to 2026-08-19. 147 clips are tagged stumbleupon (an imported archive), and all 51 tagged weird are among them.
 - Design desk: 128 cards, 54 fed by Magpie, 117 public thumbnails in `assets/design/thumbs/`.
 - `assets/ai-workspace-field-guide.png`, the field guide map.
 - There are no screenshots of the Magpie UI. Any depiction of it must be built from public desk thumbnails and labeled as an illustration.
