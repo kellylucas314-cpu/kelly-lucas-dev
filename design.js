@@ -2,7 +2,8 @@
    Renders the desk from design-library.js: five piles (the website,
    Heliopolis, Pretzel, resources, examples) plus the lab itself, and runs
    the type-scale toy. Every target is null-checked so the page stays
-   readable if anything is missing. GSAP is optional. */
+   readable if anything is missing. GSAP is optional and no longer loaded
+   here; riseIn() quietly does nothing without it. */
 
 (function designDesk() {
   const library = window.DESIGN_LIBRARY || null;
@@ -22,7 +23,7 @@
     reading: "reading",
   };
   const KIND_ORDER = ["gallery", "site", "tool", "repo", "reading", "video"];
-  const TINTS = ["mint", "cream", "lilac"];
+  const TINTS = ["mint", "sand", "lilac", "sky"];
   const ARROW =
     '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/></svg>';
   const PLAY =
@@ -167,10 +168,10 @@
     thumb.appendChild(play);
 
     const body = el("div", "video-body");
-    body.appendChild(dotTag("video · " + (video.author || "youtube")));
     const heading = el("h3");
     heading.appendChild(external(el("a", null, video.title || (id ? "youtu.be/" + id : video.url)), video.url));
     body.appendChild(heading);
+    body.appendChild(dotTag("video · " + (video.author || "youtube")));
 
     const notes = Array.isArray(video.takeaways) ? video.takeaways.filter(Boolean) : [];
     if (notes.length) {
@@ -179,9 +180,9 @@
       body.appendChild(notesList);
     } else {
       body.appendChild(el("p", "pending-pill", "notes pending"));
-      body.appendChild(el("p", "scribble", video.hasTranscript
-        ? "(the transcript is in the vault. takeaways come next.)"
-        : "(clip it with magpie, run the sync, the notes land here)"));
+      body.appendChild(el("p", "desk-note", video.hasTranscript
+        ? "The transcript is in the vault. Takeaways come next."
+        : "Clip it with Magpie, run the sync, and the notes land here."));
     }
 
     card.appendChild(thumb);
@@ -191,8 +192,8 @@
 
   function buildSystem(system) {
     const card = el("article", "system-card");
-    card.appendChild(dotTag((system.status || "system") + (system.site ? " · " + system.site : "")));
     card.appendChild(el("h3", null, system.name || system.site || "untitled"));
+    card.appendChild(dotTag((system.status || "system") + (system.site ? " · " + system.site : "")));
 
     const palette = Array.isArray(system.palette) ? system.palette : [];
     if (palette.length) {
@@ -242,7 +243,7 @@
     const body = el("span", "now-body");
     body.appendChild(document.createTextNode(entry.what || ""));
     if (entry.count) body.appendChild(el("small", null, entry.count));
-    if (entry.private) body.appendChild(el("span", "private-pill", "private · kelly only"));
+    if (entry.private) body.appendChild(el("span", "private-pill", "private, Kelly only"));
     row.appendChild(body);
     return row;
   }
@@ -253,8 +254,8 @@
     const card = el("article", "doc-card" + (images.length ? " doc-card--wide" : ""));
 
     if (images.length) {
-      card.appendChild(dotTag((doc.kind || "images") + (doc.meta ? " · " + doc.meta : "")));
       card.appendChild(el("h3", null, doc.title || "images"));
+      card.appendChild(dotTag((doc.kind || "images") + (doc.meta ? " · " + doc.meta : "")));
       if (doc.what) card.appendChild(el("p", null, doc.what));
       const strip = el("div", "art-strip" + (doc.tall ? " art-strip--tall" : ""));
       strip.setAttribute("aria-label", doc.title || "images");
@@ -291,12 +292,12 @@
     if (doc.kind === "pdf") tile.appendChild(el("span", "doc-tile__badge", "pdf"));
     card.appendChild(tile);
 
-    card.appendChild(dotTag((doc.kind || "doc") + (doc.meta ? " · " + doc.meta : "")));
     const heading = el("h3");
     heading.appendChild(link(el("a", null, doc.title || doc.href), doc.href));
     card.appendChild(heading);
+    card.appendChild(dotTag((doc.kind || "doc") + (doc.meta ? " · " + doc.meta : "")));
     if (doc.what) card.appendChild(el("p", null, doc.what));
-    if (doc.private) card.appendChild(el("span", "private-pill", "private · sign-in"));
+    if (doc.private) card.appendChild(el("span", "private-pill", "private, sign-in"));
     card.appendChild(cta(doc.href, doc.cta || "Open"));
     return card;
   }
@@ -321,13 +322,13 @@
     const rest = cards.slice(keep);
     rest.forEach((card) => { card.hidden = true; });
     const row = el("div", "chip-row desk-fold");
-    const button = el("button", "chip", "show all " + cards.length);
+    const button = el("button", "chip", "Show all " + cards.length);
     button.type = "button";
     button.setAttribute("aria-expanded", "false");
     button.addEventListener("click", () => {
       const open = button.getAttribute("aria-expanded") === "true";
       rest.forEach((card) => { card.hidden = open; });
-      button.textContent = open ? "show all " + cards.length : "show fewer";
+      button.textContent = open ? "Show all " + cards.length : "Show fewer";
       button.setAttribute("aria-expanded", String(!open));
       if (open) container.scrollIntoView({ block: "start", behavior: reduced ? "auto" : "smooth" });
       if (window.ScrollTrigger && typeof ScrollTrigger.refresh === "function") ScrollTrigger.refresh();
@@ -356,7 +357,7 @@
     if (part === "videos") {
       const grid = block.querySelector(".js-videos");
       const videos = items.filter((item) => sectionOfItem(item) === id && item.kind === "video");
-      if (grid && !videos.length) grid.appendChild(el("p", "desk-empty", "no videos saved yet. clip one with magpie."));
+      if (grid && !videos.length) grid.appendChild(el("p", "desk-empty", "No videos saved yet. Clip one with Magpie."));
       fill(grid, videos.map(buildVideo));
       return;
     }
@@ -417,28 +418,51 @@
     const search = block.querySelector("#shelfSearch");
     if (!grid) return;
     let activeKind = "all";
+    /* With no filter or search, the shelf shows its newest few and folds the rest. */
+    const KEEP = 16;
+    let expanded = false;
+    const foldRow = el("div", "chip-row desk-fold");
+    const foldButton = el("button", "chip");
+    foldButton.type = "button";
+    foldButton.setAttribute("aria-expanded", "false");
+    foldButton.setAttribute("aria-controls", "shelfGrid");
+    foldRow.appendChild(foldButton);
+    grid.insertAdjacentElement("afterend", foldRow);
+    foldButton.addEventListener("click", () => {
+      expanded = !expanded;
+      foldButton.setAttribute("aria-expanded", String(expanded));
+      applyFilter();
+      if (!expanded) grid.scrollIntoView({ block: "start", behavior: reduced ? "auto" : "smooth" });
+    });
 
     function applyFilter() {
       const query = ((search && search.value) || "").trim().toLowerCase();
+      const folding = activeKind === "all" && !query && !expanded && shelf.length > KEEP + 2;
       let shown = 0;
+      let matched = 0;
       grid.querySelectorAll(".desk-card").forEach((card) => {
         const kindOk = activeKind === "all" || card.dataset.kind === activeKind;
         const queryOk = !query || card.dataset.search.includes(query);
-        const on = kindOk && queryOk;
+        const match = kindOk && queryOk;
+        if (match) matched += 1;
+        const on = match && (!folding || matched <= KEEP);
         card.hidden = !on;
         if (on) shown += 1;
       });
+      const unfiltered = activeKind === "all" && !query;
+      foldRow.hidden = !unfiltered || shelf.length <= KEEP + 2;
+      foldButton.textContent = expanded ? "Show fewer" : "Show all " + shelf.length;
       if (countEl) {
-        countEl.textContent = shown === shelf.length
+        countEl.textContent = unfiltered
           ? shelf.length + " things on the shelf, newest first"
-          : shown + " of " + shelf.length + " things on the shelf";
+          : matched + " of " + shelf.length + " things on the shelf";
       }
       if (emptyEl) {
         const nothingSaved = shelf.length === 0;
-        emptyEl.hidden = shown !== 0;
+        emptyEl.hidden = matched !== 0;
         emptyEl.textContent = nothingSaved
-          ? "the shelf is empty. clip something with magpie and run the sync."
-          : "nothing on the shelf matches that. try fewer letters.";
+          ? "The shelf is empty. Clip something with Magpie and run the sync."
+          : "Nothing on the shelf matches that. Try fewer letters.";
       }
       if (window.ScrollTrigger && typeof ScrollTrigger.refresh === "function") ScrollTrigger.refresh();
     }

@@ -3,368 +3,398 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kelly Lucas</title>
-  <meta name="description" content="Kelly Lucas is learning to build the web in public. Welcome to the lab." />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='5' fill='%23b1d8b3' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="style.css" />
+  <title>Kelly Lucas · the collection</title>
+  <meta name="description" content="Kelly Lucas builds software for how she thinks, then uses it every day. The collection: Magpie, the design desk, Clue d'État, and more." />
+  <meta name="theme-color" content="#f4f2ec" />
+  <link rel="icon" href="assets/collection/magpie-feather.svg" type="image/svg+xml" />
+  <link rel="preload" href="assets/fonts/Heliora-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/fonts/Heliora-Medium.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <header class="site-header">
-    <a href="/" class="logo">
-      <span class="logo-mark" id="logoMark"></span>
-      Kelly Lucas
-      <span class="version-pill" aria-hidden="true">v0.9</span>
-    </a>
-    <nav class="site-nav" aria-label="Primary">
-      <a href="#work">Work</a>
-      <a href="#about">About</a>
-      <a href="#now">Now</a>
-      <a href="all-fonts.html">Fonts</a>
-      <a href="quotes.html">Spark</a>
-      <a href="design.html">Design</a>
-      <a href="/lab/">Lab</a>
-      <a href="#contact">Contact</a>
-    </nav>
+  <!--
+    THESIS: Kelly's site is a collection, published like a museum's online
+    catalogue: real objects with plates, tombstone labels and an index. It
+    refuses the toy-box lab and the stock "hi, I'm a builder" card grid.
+    OWN-WORLD: warm paper ground, deep ink green as the case, Kelly's mint,
+    lilac, sand and sky as seamless plate backdrops. One face, Heliora, set by
+    scale alone. Status is her 9px square dot. The Magpie feather is the only
+    saturated colour on the page.
+    STORY: a visitor learns who Kelly is in one sentence, sees Magpie working,
+    scans ten real projects in the index, and leaves knowing where to write.
+    FIRST VIEWPORT: left five columns hold the sentence, lede, two actions and
+    a short facts list; right seven columns hold Plate 01, the Magpie popup
+    clipping a page into its gallery, with its tombstone under it.
+    FORM: catalog record, Kelly's pick (impeccable's top grounded candidate),
+    seed key 407b5ec5.
+    FINISH: unreviewed and undocumented is unfinished; this build ends with the
+    finish review, the verdict, DESIGN.md, and every shipping raster carrying
+    its provenance.
+  -->
+  <a class="skip-link" href="#main">Skip to the collection</a>
+
+  <header class="site-header" id="top">
+    <div class="wrap site-header__inner">
+      <a href="/" class="wordmark" aria-label="Kelly Lucas, home">Kelly Lucas <span class="wordmark__sub">the collection</span></a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/#index">Index</a>
+        <a href="/magpie.html">Magpie</a>
+        <a href="/playground.html">Playground</a>
+        <a href="/log.html" class="nav-wide">Log</a>
+        <a href="#contact" class="nav-wide">Contact</a>
+      </nav>
+    </div>
   </header>
 
-  <main class="page">
-
-    <!-- HERO BLOCK -->
-    <section class="block block--mint hero">
-      <div class="dot-tag dot-tag--top-right">
-        <span class="dot-tag__dot"></span>
-        <span>kelly's lab</span>
-      </div>
-
-      <div class="sticker-shelf" id="stickerShelf">
-        <p class="scribble scribble--shelf">
-          drag these
-          <svg class="scribble-arrow" viewBox="0 0 60 40" aria-hidden="true">
-            <path d="M4 6 C 18 30, 38 34, 52 24 M 44 22 L 53 24 L 49 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </p>
-        <div class="sticker-row">
-          <span class="sticker sticker--mint" style="--tilt:-4deg">html</span>
-          <span class="sticker sticker--lilac" style="--tilt:3deg">css</span>
-          <span class="sticker sticker--cream" style="--tilt:-2deg">just enough js</span>
+  <main id="main">
+    <section class="wrap intro" aria-labelledby="intro-title">
+      <div class="intro__text">
+        <div>
+          <h1 class="display" id="intro-title">I build tools for how I think, then use them every day.</h1>
+          <p class="lede">
+            I'm Kelly Lucas, founder of <a class="text-link" href="https://helioflux.co" target="_blank" rel="noopener noreferrer">HelioFlux</a>,
+            where we read the light your cells emit to catch cancer early. On the
+            side I make software for myself. This is the collection, starting
+            with the one I use most.
+          </p>
+          <div class="btn-row">
+            <a class="btn btn--solid" href="#index">
+              Browse the index
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="btn btn--line" href="magpie.html">
+              Magpie's full record
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
         </div>
+        <dl class="facts">
+          <dt>In the collection</dt><dd>10 objects, all working</dd>
+          <dt>Most used</dt><dd>Magpie, plate 01</dd>
+          <dt>Latest addition</dt><dd>The design desk, September 2026</dd>
+        </dl>
       </div>
 
-      <h1 class="display balance" id="heroTitle">
-        Welcome to<br />
-        the lab.
-      </h1>
-      <div class="hero-aside">
-        <p class="scribble hero-greeting" id="greeting">you found the lab.</p>
-        <p>
-          I'm Kelly. I'm learning web development by building this site in
-          public, breaking it, and fixing it where you can see. Everything
-          here is an experiment.
-        </p>
-        <a href="#work" class="cta">
-          <span class="cta__label">See the experiments</span>
-          <span class="cta__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
-            </svg>
-          </span>
+      <figure class="plate plate--magpie intro__plate">
+        <div class="plate__field plate__field--magpie">
+          <div class="mp-scene" data-clip-scene>
+            <div class="mp-gallery" aria-hidden="true">
+              <div class="mp-gallery__bar">
+                <img src="assets/collection/magpie-feather.svg" alt="" width="20" height="20" />
+                <span class="mp-gallery__word">Magpie</span>
+                <span class="mp-gallery__count">279 clips</span>
+              </div>
+              <div class="mp-gallery__search">Search titles, notes, sites, tags</div>
+              <div class="mp-gallery__tags"><span class="is-on">all</span><span>website-inspiration</span><span>helioflux</span><span>papers</span><span>weird</span></div>
+              <div class="mp-wall">
+                <div class="mp-card"><div class="mp-card__img"><img src="assets/collection/clips/godly.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Godly</div><div class="mp-card__d">godly.website</div></div></div>
+                <div class="mp-card"><div class="mp-card__img"><img src="assets/collection/clips/lawsofux.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Laws of UX</div><div class="mp-card__d">lawsofux.com</div></div></div>
+                <div class="mp-card"><div class="mp-card__img"><img src="assets/collection/clips/cosmos.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Cosmos, explore</div><div class="mp-card__d">cosmos.so</div></div></div>
+                <div class="mp-card"><div class="mp-card__img"><img src="assets/collection/clips/ciechanowski.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Mechanical Watch</div><div class="mp-card__d">ciechanow.ski</div></div></div>
+                <div class="mp-card"><div class="mp-card__img"><img src="assets/collection/clips/iso.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Isomorphic Labs</div><div class="mp-card__d">isomorphiclabs.com</div></div></div>
+                <div class="mp-card"><div class="mp-card__img"><img src="assets/collection/clips/minimal.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Minimal Gallery</div><div class="mp-card__d">minimal.gallery</div></div></div>
+              </div>
+            </div>
+
+            <div class="mp-pop">
+              <div class="mp-pop__head">
+                <img src="assets/collection/magpie-feather.svg" alt="" width="24" height="24" />
+                <span class="mp-pop__word">Magpie</span>
+                <span class="mp-pop__badge">web page</span>
+              </div>
+              <div class="mp-pop__preview" data-clip-source>
+                <div class="mp-card__img"><img src="assets/collection/clips/refero.webp" alt="" width="400" height="250" /></div>
+                <div>
+                  <div class="mp-pop__pt">Refero: UI and UX inspiration</div>
+                  <div class="mp-pop__pd">refero.design</div>
+                </div>
+              </div>
+              <div class="mp-pop__label">Tags</div>
+              <div class="mp-pop__field"><span class="mp-pop__chip">references</span><span class="mp-pop__chip">ui</span></div>
+              <div class="mp-pop__label">Design desk</div>
+              <div class="mp-pop__field"><span class="mp-pop__guess">Auto: Resources</span></div>
+              <div class="mp-pop__label">My notes</div>
+              <div class="mp-pop__field"><span class="mp-pop__note">for the site redesign</span></div>
+              <button class="mp-pop__btn" type="button" data-clip-button>Clip it</button>
+            </div>
+          </div>
+        </div>
+        <figcaption>
+          <div class="plate__cap"><span>Plate 01. The clipper and the gallery, redrawn in HTML</span><span>KL 2026.01</span></div>
+          <div class="tomb">
+            <h2 class="tomb__title"><a href="magpie.html">Magpie</a>, <span class="tomb__date">2026</span></h2>
+            <p class="tomb__line">A web clipper and private library. One click files a page into my notes and my gallery at once.</p>
+            <p class="tomb__line tomb__medium">Chrome extension, Python, Markdown, Obsidian</p>
+            <div class="tomb__foot">
+              <span class="status status--use">In use</span>
+              <span class="small muted">279 clips from 258 sites</span>
+              <a class="text-link small" href="magpie.html">Full record</a>
+            </div>
+          </div>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="wrap path" aria-labelledby="path-title">
+      <div class="path__head">
+        <h2 class="h2" id="path-title">One click, two nests.</h2>
+        <p class="lede">Magpie collects shiny things from the web and drops them in two places at once: a full note in my Obsidian vault and a card in a gallery I can search.</p>
+      </div>
+      <ol class="stations">
+        <li class="station">
+          <span class="station__n">Step 1</span>
+          <h3 class="h3">Clip</h3>
+          <p>Press the feather, or Alt+Shift+M, on any page. Add tags and a note. Select text first and only the selection is saved.</p>
+        </li>
+        <li class="station">
+          <span class="station__n">Step 2</span>
+          <h3 class="h3">Two nests</h3>
+          <p>A Markdown note lands in the vault and an entry lands in the library. Clip a page twice and it updates instead of duplicating.</p>
+        </li>
+        <li class="station">
+          <span class="station__n">Step 3</span>
+          <h3 class="h3">Find it again</h3>
+          <p>A gallery with search and filters, and a galaxy map that groups everything I've saved into clusters.</p>
+        </li>
+        <li class="station">
+          <span class="station__n">Step 4</span>
+          <h3 class="h3">Put it to work</h3>
+          <p>Design clips sort themselves into the five piles of my public design desk. Everything else stays private.</p>
+        </li>
+      </ol>
+      <div class="path__foot">
+        <a class="btn btn--line" href="magpie.html">
+          How Magpie works, in full
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
     </section>
 
-    <!-- ABOUT BLOCK -->
-    <section id="about" class="block block--cream split">
-      <div class="dot-tag dot-tag--top-left">
-        <span class="dot-tag__dot"></span>
-        <span>about</span>
-      </div>
-      <div class="split-left">
-        <p class="lede balance">
-          This whole site is my practice space. Every page is something I
-          built while figuring it out, and I keep the seams visible on
-          purpose.
-        </p>
-        <p class="scribble">(yes, the site is the portfolio)</p>
-      </div>
-      <div class="split-right">
-        <p>
-          I care about clean design and code that gets out of the way. Right
-          now I'm on the fundamentals: HTML, CSS, and just enough JavaScript
-          to make things feel alive. So far,
-          <button type="button" class="egg-fonts" id="fontEgg">97 fonts auditioned</button>
-          and one survivor.
-        </p>
-      </div>
-    </section>
-
-    <!-- MOTTO BLOCK -->
-    <section class="block block--mint statement">
-      <div class="dot-tag dot-tag--top-right">
-        <span class="dot-tag__dot"></span>
-        <span>the idea</span>
-      </div>
-      <h2 class="display display--md balance motto">
-        <span class="motto-line">Build slowly.</span><br />
-        <button type="button" class="motto-line motto-ship" id="shipBtn">Ship anyway.</button><br />
-        <span class="motto-line">Learn in public.</span>
-      </h2>
-      <p class="scribble scribble--motto">(the middle one is a button)</p>
-    </section>
-
-    <!-- EXPERIMENTS -->
-    <section id="work" class="block--bare three-up">
-      <div class="three-up__head">
-        <div class="dot-tag">
-          <span class="dot-tag__dot"></span>
-          <span>experiments</span>
+    <section class="wrap index" id="index" aria-labelledby="index-title">
+      <div class="index__head">
+        <div>
+          <h2 class="h2" id="index-title">The index</h2>
+          <p class="index__count" data-count aria-live="polite">10 objects</p>
+        </div>
+        <div class="filters" role="group" aria-label="Filter the index">
+          <button class="filter" type="button" data-filter="all" aria-pressed="true">All<b>10</b></button>
+          <button class="filter" type="button" data-filter="tools" aria-pressed="false">Tools<b>3</b></button>
+          <button class="filter" type="button" data-filter="libraries" aria-pressed="false">Libraries<b>3</b></button>
+          <button class="filter" type="button" data-filter="sites" aria-pressed="false">Sites<b>2</b></button>
+          <button class="filter" type="button" data-filter="games" aria-pressed="false">Games<b>2</b></button>
         </div>
       </div>
-      <div class="card-grid u-3cols">
-        <article class="card">
-          <div class="card__top">
-            <div class="dot-tag">
-              <span class="dot-tag__dot"></span>
-              <span>experiment 01 &middot; tool</span>
+
+      <div class="index__body">
+        <ol class="entries" data-entries>
+          <li data-group="tools">
+            <a class="entry" href="magpie.html" data-tint="case"
+               data-no="01" data-title="Magpie" data-what="A web clipper and private library. One click files a page into my notes and my gallery at once." data-medium="Chrome extension, Python, Markdown, Obsidian" data-status="In use" data-status-kind="use" data-plate="assets/collection/magpie.webp" data-alt="The Magpie popup clipping a page into a gallery of saved sites">
+              <span class="entry__no">01</span>
+              <span class="entry__main"><span class="entry__title">Magpie</span><span class="entry__what">Web clipper and private library</span></span>
+              <span class="entry__meta"><span class="entry__kind">Tool</span><span class="status status--use">In use</span></span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="entry__thumb tint-case"><img src="assets/collection/magpie.webp" alt="" loading="lazy" width="1200" height="750" /></span>
+            </a>
+          </li>
+          <li data-group="libraries">
+            <a class="entry" href="design.html" data-tint="mint"
+               data-no="02" data-title="Design desk" data-what="A public swipe file for UI. Magpie sorts new clips into its five piles." data-medium="HTML, vanilla JavaScript, Node sync scripts" data-status="Live" data-status-kind="live" data-plate="assets/collection/design-desk.webp" data-alt="The design desk, a gallery of saved design references">
+              <span class="entry__no">02</span>
+              <span class="entry__main"><span class="entry__title">Design desk</span><span class="entry__what">A public swipe file for UI, sorted by Magpie</span></span>
+              <span class="entry__meta"><span class="entry__kind">Library</span><span class="status">Live</span></span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="entry__thumb tint-mint"><img src="assets/collection/design-desk.webp" alt="" loading="lazy" width="1200" height="750" /></span>
+            </a>
+          </li>
+          <li data-group="sites">
+            <a class="entry" href="https://helioflux.co" target="_blank" rel="noopener noreferrer" data-tint="sky"
+               data-no="03" data-title="HelioFlux website" data-what="The website for my company. Your cells emit light, and HelioFlux learned to read it." data-medium="HTML, CSS, JavaScript" data-status="Live" data-status-kind="live" data-plate="assets/collection/helioflux.webp" data-alt="The HelioFlux homepage: your cells emit light, we learned to read it">
+              <span class="entry__no">03</span>
+              <span class="entry__main"><span class="entry__title">HelioFlux website</span><span class="entry__what">The website for my company</span></span>
+              <span class="entry__meta"><span class="entry__kind">Site</span><span class="status">Live</span></span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="entry__thumb tint-sky"><img src="assets/collection/helioflux.webp" alt="" loading="lazy" width="1200" height="750" /></span>
+            </a>
+          </li>
+          <li data-group="games">
+            <a class="entry" href="https://kellylucas314-cpu.github.io/Jeopardy/" target="_blank" rel="noopener noreferrer" data-tint="sand"
+               data-no="04" data-title="Clue d'État" data-what="Game-night trivia hosted by Napoleon, with more than 6,600 original clues. Solo ranks, buzz-in mode, no repeat categories." data-medium="Vite, vanilla JavaScript, Web Audio" data-status="Live" data-status-kind="live" data-plate="assets/collection/clue.webp" data-alt="The Clue d'État setup screen with Napoleon">
+              <span class="entry__no">04</span>
+              <span class="entry__main"><span class="entry__title">Clue d'État</span><span class="entry__what">Trivia night hosted by Napoleon, 6,600+ original clues</span></span>
+              <span class="entry__meta"><span class="entry__kind">Game</span><span class="status">Live</span></span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="entry__thumb tint-sand"><img src="assets/collection/clue.webp" alt="" loading="lazy" width="1200" height="750" /></span>
+            </a>
+          </li>
+          <li data-group="libraries">
+            <a class="entry" href="https://guide.kellylucas.dev" target="_blank" rel="noopener noreferrer" data-tint="lilac"
+               data-no="05" data-title="AI Workspace Field Guide" data-what="A calm, searchable map of the AI tools, skills, memory and project handoffs I work with." data-medium="Static site" data-status="Live" data-status-kind="live" data-plate="assets/collection/guide.webp" data-alt="The AI Workspace Field Guide: your tools are separate, your context is organized">
+              <span class="entry__no">05</span>
+              <span class="entry__main"><span class="entry__title">AI Workspace Field Guide</span><span class="entry__what">A map of my AI tools, skills and handoffs</span></span>
+              <span class="entry__meta"><span class="entry__kind">Guide</span><span class="status">Live</span></span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="entry__thumb tint-lilac"><img src="assets/collection/guide.webp" alt="" loading="lazy" width="1200" height="750" /></span>
+            </a>
+          </li>
+          <li data-group="sites">
+            <a class="entry" href="https://pretzel.thetravelprotocol.com" target="_blank" rel="noopener noreferrer" data-tint="mint"
+               data-no="06" data-title="Pretzel Protocol" data-what="An atlas for a family trip to Berlin, Munich and Prague: daily plans, stops, and my drawings." data-medium="HTML, JavaScript, hand drawings" data-status="Live" data-status-kind="live" data-plate="assets/collection/pretzel.webp" data-alt="The Pretzel Protocol map of Amsterdam, Berlin, Munich and Prague">
+              <span class="entry__no">06</span>
+              <span class="entry__main"><span class="entry__title">Pretzel Protocol</span><span class="entry__what">A family trip atlas with my drawings</span></span>
+              <span class="entry__meta"><span class="entry__kind">Site</span><span class="status">Live</span></span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="entry__thumb tint-mint"><img src="assets/collection/pretzel.webp" alt="" loading="lazy" width="1200" height="750" /></span>
+            </a>
+          </li>
+          <li data-group="libraries">
+            <a class="entry" href="/heliopolis/index.html" data-tint="sand"
+               data-no="07" data-title="Heliopolis art library" data-what="The drawings behind Heliopolis: the original five, 33 redraws, a style catalog, and art by subject." data-medium="Hand drawings, static site" data-status="Live" data-status-kind="live" data-plate="assets/collection/heliopolis.webp" data-alt="A Heliopolis drawing: an arched courtyard opening onto a library">
+              <span class="entry__no">07</span>
+              <span class="entry__main"><span class="entry__title">Heliopolis art library</span><span class="entry__what">My drawings, the redraws, and the style catalog</span></span>
+              <span class="entry__meta"><span class="entry__kind">Library</span><span class="status">Live</span></span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="entry__thumb tint-sand"><img src="assets/collection/heliopolis.webp" alt="" loading="lazy" width="1200" height="750" /></span>
+            </a>
+          </li>
+          <li data-group="tools">
+            <a class="entry" href="https://agentcommons.kellylucas.dev" target="_blank" rel="noopener noreferrer" data-tint="sky"
+               data-no="08" data-title="Agent Commons" data-what="A shared desk where my AI agents post their work, hand off tasks, and wait on me." data-medium="Vercel functions, vanilla JavaScript" data-status="Private" data-status-kind="private" data-plate="assets/collection/agent-commons.webp" data-alt="Agent Commons: the board, with the agents who checked in">
+              <span class="entry__no">08</span>
+              <span class="entry__main"><span class="entry__title">Agent Commons</span><span class="entry__what">Where my AI agents post work and wait on me</span></span>
+              <span class="entry__meta"><span class="entry__kind">Tool</span><span class="status status--private">Private</span></span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="entry__thumb tint-sky"><img src="assets/collection/agent-commons.webp" alt="" loading="lazy" width="1200" height="750" /></span>
+            </a>
+          </li>
+          <li data-group="tools">
+            <a class="entry" href="https://kelly-youtube-transcriber.vercel.app" target="_blank" rel="noopener noreferrer" data-tint="mint"
+               data-no="09" data-title="YouTube Transcript Generator" data-what="Paste a YouTube link, get a clean Markdown transcript to copy or download." data-medium="Vercel serverless" data-status="Live" data-status-kind="live" data-plate="assets/collection/transcriber.webp" data-alt="Transcript Lab: turn YouTube into clean Markdown">
+              <span class="entry__no">09</span>
+              <span class="entry__main"><span class="entry__title">YouTube Transcript Generator</span><span class="entry__what">A link in, clean Markdown out</span></span>
+              <span class="entry__meta"><span class="entry__kind">Tool</span><span class="status">Live</span></span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 12 12 4M5.5 4H12v6.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="entry__thumb tint-mint"><img src="assets/collection/transcriber.webp" alt="" loading="lazy" width="1200" height="750" /></span>
+            </a>
+          </li>
+          <li data-group="games">
+            <a class="entry" href="army.html" data-tint="sky"
+               data-no="10" data-title="Boot Camp" data-what="A one-button side-scroller. Jump the lawnmower vacuums, dodge the flying pigs. Playtested by a bot army." data-medium="HTML, CSS, vanilla JavaScript" data-status="Live" data-status-kind="live" data-plate="assets/collection/bootcamp.webp" data-alt="The Boot Camp title screen: the army of lawnmower vacuums and flying pigs">
+              <span class="entry__no">10</span>
+              <span class="entry__main"><span class="entry__title">Boot Camp</span><span class="entry__what">A one-button side-scroller with flying pigs</span></span>
+              <span class="entry__meta"><span class="entry__kind">Game</span><span class="status">Live</span></span>
+              <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="entry__thumb tint-sky"><img src="assets/collection/bootcamp.webp" alt="" loading="lazy" width="1200" height="750" /></span>
+            </a>
+          </li>
+        </ol>
+
+        <aside class="viewer" aria-label="Selected object" data-viewer>
+          <figure class="plate">
+            <div class="plate__field tint-case" data-v-field>
+              <img src="assets/collection/magpie.webp" alt="The Magpie popup clipping a page into a gallery of saved sites" width="1200" height="750" data-v-img />
             </div>
-            <h3 class="card__title balance">YouTube Transcript Generator</h3>
-            <p class="card__desc">Paste a YouTube link, get a clean Markdown transcript. Built to scratch my own itch.</p>
-          </div>
-          <a href="https://kelly-youtube-transcriber.vercel.app" target="_blank" rel="noopener noreferrer" class="cta">
-            <span class="cta__label">Open tool</span>
-            <span class="cta__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
-              </svg>
-            </span>
+            <figcaption>
+              <div class="plate__cap"><span data-v-plate>Plate 01</span><span data-v-acc>KL 2026.01</span></div>
+              <div class="tomb">
+                <p class="tomb__title"><span data-v-title>Magpie</span>, <span class="tomb__date">2026</span></p>
+                <p class="tomb__line" data-v-what>A web clipper and private library. One click files a page into my notes and my gallery at once.</p>
+                <p class="tomb__line tomb__medium" data-v-medium>Chrome extension, Python, Markdown, Obsidian</p>
+                <div class="tomb__foot"><span class="status status--use" data-v-status>In use</span></div>
+              </div>
+            </figcaption>
+          </figure>
+        </aside>
+      </div>
+    </section>
+
+    <section class="wrap lower" aria-label="Recent additions and the playground">
+      <div class="lower__acq">
+        <h2 class="h2">Recent acquisitions</h2>
+        <ol class="ledger">
+          <li>
+            <time datetime="2026-10-04">Oct 4, 2026</time>
+            <p><b>The lab became a collection.</b> Real projects up front, Magpie as plate 01, and the toys moved to the playground.</p>
+          </li>
+          <li>
+            <time datetime="2026-09-24">Sep 24, 2026</time>
+            <p><b>The design desk got five piles.</b> The HelioFlux website, Heliopolis, Pretzel Protocol, resources and examples. The Magpie feather now guesses the pile before you clip.</p>
+          </li>
+          <li>
+            <time datetime="2026-09-24">Sep 24, 2026</time>
+            <p><b>The design desk opened.</b> A swipe file for UI with galleries, sites and videos. Magpie got a second job feeding it.</p>
+          </li>
+        </ol>
+        <p class="ledger-more"><a class="text-link" href="log.html">The full log</a></p>
+      </div>
+
+      <div class="lower__play">
+        <h2 class="h2">The playground</h2>
+        <div class="drawer">
+          <p>Side rooms I built for fun while learning. None of it is useful, and all of it works.</p>
+          <ul class="rooms">
+            <li><a href="claude.html">Pixel garden</a></li>
+            <li><a href="pet.html">The pet</a></li>
+            <li><a href="panel.html">The panel</a></li>
+            <li><a href="noise.html">Noise room</a></li>
+            <li><a href="quantum.html">Quantum wing</a></li>
+            <li><a href="qrng.html">Entropy tap</a></li>
+            <li><a href="quotes.html">Spark notes</a></li>
+            <li><a href="all-fonts.html">Audition room</a></li>
+          </ul>
+          <a class="btn btn--solid" href="playground.html">
+            Enter the playground
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
-        </article>
-        <article class="card">
-          <div class="card__top">
-            <div class="dot-tag">
-              <span class="dot-tag__dot"></span>
-              <span>experiment 02 &middot; page</span>
-            </div>
-            <h3 class="card__title balance">Spark Notes</h3>
-            <p class="card__desc">A living quote wall. The lines I save to keep building.</p>
-          </div>
-          <a href="quotes.html" class="cta">
-            <span class="cta__label">Open page</span>
-            <span class="cta__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
-              </svg>
-            </span>
-          </a>
-        </article>
-        <article class="card">
-          <div class="card__top">
-            <div class="dot-tag">
-              <span class="dot-tag__dot"></span>
-              <span>experiment 03 &middot; claude's project</span>
-            </div>
-            <h3 class="card__title balance">Pixel Garden</h3>
-            <p class="card__desc">A tiny generative garden Claude planted in the lab. Click the soil, something grows.</p>
-          </div>
-          <a href="claude.html" class="cta">
-            <span class="cta__label">Open garden</span>
-            <span class="cta__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
-              </svg>
-            </span>
-          </a>
-        </article>
-        <a
-          href="https://guide.kellylucas.dev"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="card card--wide card--guide"
-          aria-label="Open Kelly's AI Workspace Field Guide"
-        >
-          <div class="guide-card__media">
-            <img
-              class="guide-card__image"
-              src="assets/ai-workspace-field-guide.png"
-              width="1730"
-              height="909"
-              loading="lazy"
-              alt="Kelly's AI Workspace Field Guide illustrated system map"
-            />
-          </div>
-          <div class="card__top">
-            <div class="dot-tag">
-              <span class="dot-tag__dot"></span>
-              <span>experiment 04 &middot; field guide</span>
-            </div>
-            <h3 class="card__title balance">AI Workspace Field Guide</h3>
-            <p class="card__desc">A calm, searchable map of AI tools, skills, memory, Obsidian, Git, and project handoffs.</p>
-          </div>
-          <span class="cta">
-            <span class="cta__label">Open guide</span>
-            <span class="cta__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
-              </svg>
-            </span>
-          </span>
-        </a>
+        </div>
       </div>
     </section>
-
-    <!-- NOW BLOCK -->
-    <section id="now" class="block block--cream now">
-      <div class="dot-tag dot-tag--top-right">
-        <span class="dot-tag__dot"></span>
-        <span>now</span>
-      </div>
-      <h2 class="display display--sm">Currently</h2>
-      <p class="scribble">(updates when life does)</p>
-      <ul class="now-list">
-        <li>
-          <span class="now-label">Building</span>
-          <span class="now-body">The design desk: a swipe file for UI, kept in public.</span>
-        </li>
-        <li>
-          <span class="now-label">Reading</span>
-          <span class="now-body">GSAP docs, one plugin at a time.</span>
-        </li>
-        <li>
-          <span class="now-label">Next up</span>
-          <span class="now-body">Feeding the desk from the Magpie clipper, one tag at a time.</span>
-        </li>
-      </ul>
-    </section>
-
-    <!-- FIELD GUIDE BLOCK -->
-    <section class="block block--lilac field-guide">
-      <div class="dot-tag dot-tag--top-right">
-        <span class="dot-tag__dot"></span>
-        <span>field guide</span>
-      </div>
-      <h2 class="display display--sm">Every room in the lab</h2>
-      <p class="scribble">(yes, there are rooms now. it got out of hand)</p>
-      <ul class="now-list guide-list">
-        <li>
-          <span class="now-label"><a href="claude.html">the garden</a></span>
-          <span class="now-body">Plants made of math. Claude's project.</span>
-        </li>
-        <li>
-          <span class="now-label"><a href="pet.html">the pet</a></span>
-          <span class="now-body">Small. Round. Lives in your browser. Judges nothing.</span>
-        </li>
-        <li>
-          <span class="now-label"><a href="panel.html">the panel</a></span>
-          <span class="now-body">Switches and dials. One button you should not press.</span>
-        </li>
-        <li>
-          <span class="now-label"><a href="noise.html">the noise room</a></span>
-          <span class="now-body">Five notes, eight steps, zero wrong answers.</span>
-        </li>
-        <li>
-          <span class="now-label"><a href="quantum.html">the quantum wing</a></span>
-          <span class="now-body">Reality is in beta. Observe responsibly.</span>
-        </li>
-        <li>
-          <span class="now-label"><a href="qrng.html">the entropy tap</a></span>
-          <span class="now-body">Homemade quantum randomness, straight from your camera's photons.</span>
-        </li>
-        <li>
-          <span class="now-label"><a href="quotes.html">spark notes</a></span>
-          <span class="now-body">Borrowed courage, saved lines.</span>
-        </li>
-        <li>
-          <span class="now-label"><a href="design.html">the design desk</a></span>
-          <span class="now-body">A swipe file for UI in five piles: the HelioFlux website, Heliopolis, Pretzel, resources, examples. The Magpie feather files new clips on its own.</span>
-        </li>
-        <li>
-          <span class="now-label"><a href="all-fonts.html">the audition room</a></span>
-          <span class="now-body">97 fonts walked in. One walked out.</span>
-        </li>
-        <li>
-          <span class="now-label"><a href="log.html">the log</a></span>
-          <span class="now-body">Receipts, newest first.</span>
-        </li>
-        <li>
-          <span class="now-label"><a href="colophon.html">the colophon</a></span>
-          <span class="now-body">The site explaining itself.</span>
-        </li>
-        <li>
-          <span class="now-label"><a href="/a-door-that-does-not-exist">a missing door</a></span>
-          <span class="now-body">Leads nowhere. On purpose. Try it.</span>
-        </li>
-      </ul>
-    </section>
-
-    <!-- QUOTE BLOCK -->
-    <section class="block block--mint quote">
-      <div class="dot-tag dot-tag--top-left">
-        <span class="dot-tag__dot"></span>
-        <span>a thought</span>
-      </div>
-      <blockquote class="balance" id="quoteText">
-        "The best way to learn is to make the thing you wish existed, badly,
-        and then make it less badly."
-      </blockquote>
-      <a href="quotes.html" class="cta quote__cta">
-        <span class="cta__label">More of these in Spark Notes</span>
-        <span class="cta__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/>
-          </svg>
-        </span>
-      </a>
-    </section>
-
   </main>
 
-  <footer id="contact" class="site-footer">
-    <div class="footer-inner">
+  <footer class="site-footer" id="contact">
+    <div class="wrap">
       <div class="footer-top">
-        <span class="footer-tag">say hi</span>
-        <a class="footer-mail" href="mailto:hello@kellylucas.dev">hello@kellylucas.dev</a>
+        <div class="footer-say">
+          <h2 class="h2">Say hi.</h2>
+          <p>Questions about anything here, or just hello.</p>
+          <a class="footer-mail" href="mailto:hello@kellylucas.dev">hello@kellylucas.dev</a>
+        </div>
+        <div class="footer-cols">
+          <div>
+            <h2>Collection</h2>
+            <ul>
+              <li><a href="/#index">Index</a></li>
+              <li><a href="/magpie.html">Magpie</a></li>
+              <li><a href="/design.html">Design desk</a></li>
+              <li><a href="/log.html">Log</a></li>
+              <li><a href="/colophon.html">Colophon</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Playground</h2>
+            <ul>
+              <li><a href="/playground.html">All rooms</a></li>
+              <li><a href="/quotes.html">Spark notes</a></li>
+              <li><a href="/all-fonts.html">Audition room</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Staff only</h2>
+            <ul>
+              <li><a class="lock" href="/brain/gallery.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="2.5" y="6" width="9" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6V4.5a2.5 2.5 0 0 1 5 0V6" stroke="currentColor" stroke-width="1.2"/></svg>Magpie library</a></li>
+              <li><a class="lock" href="https://agentcommons.kellylucas.dev"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="2.5" y="6" width="9" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6V4.5a2.5 2.5 0 0 1 5 0V6" stroke="currentColor" stroke-width="1.2"/></svg>Agent Commons</a></li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <p class="footer-signature" aria-label="Build status">
-        <span class="footer-signature__dot" aria-hidden="true"></span>
-        <button type="button" class="footer-version" id="changelogBtn" aria-expanded="false" aria-controls="changelogPop">v0.9</button>
-        <span aria-hidden="true">&middot;</span>
-        <span>last edited 2026-09-24</span>
-        <span aria-hidden="true">&middot;</span>
-        <span>97 fonts auditioned</span>
-        <span aria-hidden="true">&middot;</span>
-        <span>5 experiments live</span>
-        <span aria-hidden="true">&middot;</span>
-        <span id="labClock"></span>
-        <span aria-hidden="true">&middot;</span>
-        <span>made in public</span>
-        <span class="changelog-pop" id="changelogPop" hidden>
-          <span>v0.5 shipped the site</span>
-          <span>v0.6 grew spark notes</span>
-          <span>v0.7 became a lab</span>
-          <span>v0.8 mapped the AI workspace</span>
-          <span>v0.9 opened the design desk</span>
-          <span>v0.9.1 sorted the desk into five piles</span>
-        </span>
-      </p>
       <div class="footer-bottom">
-        <span class="footer-logo">Kelly Lucas</span>
-        <nav class="footer-nav" aria-label="Footer">
-          <a href="#work">Work</a>
-          <a href="#about">About</a>
-          <a href="#now">Now</a>
-          <a href="log.html">Log</a>
-          <a href="colophon.html">Colophon</a>
-        </nav>
-        <span class="footer-meta">&copy; <span id="year"></span> Kelly Lucas</span>
+        <span>&copy; <span data-year>2026</span> Kelly Lucas</span>
+        <span>v1.0 · catalogued Oct 4, 2026 · made in public</span>
       </div>
     </div>
   </footer>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
-
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
-  <script defer src="script.js"></script>
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
+  <script defer src="/script.js"></script>
 </body>
 </html>

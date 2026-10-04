@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 14 90 90">
+  <defs>
+    <linearGradient id="rainbow" x1="20%" y1="90%" x2="80%" y2="10%">
+      <stop offset="0%" stop-color="#ff694d"/>
+      <stop offset="22%" stop-color="#9b4fe8"/>
+      <stop offset="48%" stop-color="#387cff"/>
+      <stop offset="75%" stop-color="#22d3a7"/>
+      <stop offset="100%" stop-color="#14b88a"/>
+    </linearGradient>
+    <linearGradient id="warm" x1="0%" y1="100%" x2="60%" y2="0%">
+      <stop offset="0%" stop-color="#ff9a3c"/>
+      <stop offset="60%" stop-color="#ff6f3d"/>
+      <stop offset="100%" stop-color="#ffb052"/>
+    </linearGradient>
+    <linearGradient id="shaft" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2a4a8a"/>
+      <stop offset="100%" stop-color="#1d6f6a"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(60 60)">
+    <g transform="rotate(36)">
+      <g transform="scale(1.22 1.04)">
+        <g transform="translate(-60 -60)">
+          <path
+            fill="none"
+            stroke="#244a76"
+            stroke-width="3.4"
+            stroke-linejoin="round"
+            d="M60 8 C76 24 84 44 82 64 C81 80 72 96 60 104 C48 96 39 80 38 64 C36 44 44 24 60 8 Z"
+          />
+          <path fill="url(#warm)" d="M60 8 C76 24 84 44 82 64 C81 80 72 96 60 104 L60 8 Z"/>
+          <path fill="url(#rainbow)" d="M60 8 C44 24 36 44 38 64 C39 80 48 96 60 104 L60 8 Z"/>
+          <g stroke="#fffaf3" stroke-width="4.2" stroke-linecap="round" fill="none">
+            <path d="M42 38 Q52 42 59 41"/>
+            <path d="M39 54 Q51 58 59 56"/>
+            <path d="M40 70 Q51 74 59 71"/>
+            <path d="M46 86 Q54 88 59 85"/>
+            <path d="M78 30 Q68 35 61 34"/>
+            <path d="M81 46 Q69 51 61 49"/>
+            <path d="M80 62 Q69 66 61 64"/>
+            <path d="M74 79 Q66 81 61 78"/>
+          </g>
+          <path
+            fill="none"
+            stroke="url(#shaft)"
+            stroke-width="3.2"
+            stroke-linecap="round"
+            d="M60 10 C60 40 60 70 58 88 C57 98 54 108 48 116"
+          />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

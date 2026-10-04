@@ -3,138 +3,131 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lab Log · Kelly Lucas</title>
-  <meta name="description" content="A running record of what shipped, what broke, and what got learned at kellylucas.dev." />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='5' fill='%23b1d8b3' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="style.css" />
+  <title>The log · Kelly Lucas</title>
+  <meta name="description" content="What shipped on kellylucas.dev, what broke, and what got learned. Newest first." />
+  <meta name="theme-color" content="#f4f2ec" />
+  <link rel="icon" href="/assets/collection/magpie-feather.svg" type="image/svg+xml" />
+  <link rel="preload" href="/assets/fonts/Heliora-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/Heliora-Medium.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <header class="site-header">
-    <a href="index.html" class="logo">
-      <span class="logo-mark" id="logoMark"></span>
-      Kelly Lucas
-      <span class="version-pill" aria-hidden="true">v0.7</span>
-    </a>
-    <nav class="site-nav" aria-label="Primary">
-      <a href="index.html#work">Work</a>
-      <a href="index.html#about">About</a>
-      <a href="index.html#now">Now</a>
-      <a href="all-fonts.html">Fonts</a>
-      <a href="quotes.html">Spark</a>
-      <a href="design.html">Design</a>
-      <a href="index.html#contact">Contact</a>
-    </nav>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="wrap site-header__inner">
+      <a href="/" class="wordmark" aria-label="Kelly Lucas, home">Kelly Lucas <span class="wordmark__sub">the collection</span></a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/#index">Index</a>
+        <a href="/magpie.html">Magpie</a>
+        <a href="/playground.html">Playground</a>
+        <a href="/log.html" class="nav-wide" aria-current="page">Log</a>
+        <a href="#contact" class="nav-wide">Contact</a>
+      </nav>
+    </div>
   </header>
 
-  <main class="page">
-
-    <section class="block block--cream hero log-hero">
-      <div class="dot-tag dot-tag--top-right">
-        <span class="dot-tag__dot"></span>
-        <span>the lab log</span>
-      </div>
-      <h1 class="display balance">Lab<br />log.</h1>
-      <div class="hero-aside">
-        <p class="scribble">(newest first. the log only moves forward.)</p>
-        <p>
-          A running record of what shipped, what broke, and what got learned.
-          Learning in public means keeping the receipts.
-        </p>
-      </div>
-    </section>
-
-    <section class="block block--mint log-entries">
-      <div class="dot-tag dot-tag--top-right">
-        <span class="dot-tag__dot"></span>
-        <span>entries</span>
-      </div>
-      <h2 class="display display--sm">Receipts</h2>
-      <ul class="now-list">
-        <li>
-          <span class="now-label">2026-09-24 &middot; v0.9.1</span>
-          <span class="now-body">The design desk got its five piles: the HelioFlux website (with the house style PDF and a 25-file style pack), Heliopolis, Pretzel Protocol, resources and examples. The Magpie feather now guesses the pile before you clip.</span>
-        </li>
-        <li>
-          <span class="now-label">2026-09-24 &middot; v0.9</span>
-          <span class="now-body">The design desk opened: a swipe file for UI with galleries, sites, videos, and three notebook pages. The Magpie clipper got a second job feeding it.</span>
-        </li>
-        <li>
-          <span class="now-label">2026-06-10 &middot; midnight</span>
-          <span class="now-body">The lab built its own quantum random number generator out of camera shot noise. The universe splitter now spends homemade photons.</span>
-        </li>
-        <li>
-          <span class="now-label">2026-06-10 &middot; night</span>
-          <span class="now-body">The pet got a gene lab. A quantum wing opened: a double slit you can fire one particle at a time, a cat in a box, spooky action, and a universe splitter. Spark notes grew to 28 voices. The cat is fine.</span>
-        </li>
-        <li>
-          <span class="now-label">2026-06-10 &middot; later</span>
-          <span class="now-body">The lab grew a pet, an instrument panel, a noise room, and a field guide to keep track of all the rooms. Claude was left unsupervised for one afternoon.</span>
-        </li>
-        <li>
-          <span class="now-label">2026-06-10 &middot; v0.7</span>
-          <span class="now-body">The site became a lab. GSAP moved in: draggable stickers, confetti when you ship, a konami code. Claude planted a pixel garden. Four new pages, including this one.</span>
-        </li>
-        <li>
-          <span class="now-label">2026-05-11 &middot; v0.6</span>
-          <span class="now-body">Spark Notes shipped: a living quote wall with favorites that survive a refresh, thanks to localStorage.</span>
-        </li>
-        <li>
-          <span class="now-label">2026-05-07 &middot; v0.5</span>
-          <span class="now-body">kellylucas.dev went live on Vercel. First domain, first deploy, real internet.</span>
-        </li>
-        <li>
-          <span class="now-label">2026-05-07 &middot; type</span>
-          <span class="now-body">Auditioned 97 fonts across three batches. Heliora survived and became the face of the site.</span>
-        </li>
-        <li>
-          <span class="now-label">before the log</span>
-          <span class="now-body">Built the YouTube Transcript Generator, the first experiment to leave the lab.</span>
-        </li>
-      </ul>
-    </section>
-
-    <section class="block block--lilac log-next">
-      <div class="dot-tag dot-tag--top-left">
-        <span class="dot-tag__dot"></span>
-        <span>next entry</span>
-      </div>
-      <blockquote class="balance">
-        "loading&hellip;"
-      </blockquote>
-      <p class="scribble scribble--motto">(this space reserved for the next thing I break)</p>
-    </section>
-
+  <main id="main">
+    <div class="wrap">
+      <section class="page-head" aria-labelledby="log-title">
+        <h1 class="display" id="log-title">The log</h1>
+        <p class="lede">What shipped, what broke, and what got learned, newest first. Building in public means keeping the receipts.</p>
+      </section>
+      <section class="log-body" aria-label="Entries">
+        <ol class="ledger ledger--full">
+          <li>
+            <time datetime="2026-10-04">Oct 4, 2026</time>
+            <p><span class="ledger__v">v1.0</span> <b>The lab became a collection.</b> Real projects up front with plates and labels, Magpie as plate 01, the toys moved to the playground, and Heliora went to WOFF2 at a third of the weight.</p>
+          </li>
+          <li>
+            <time datetime="2026-09-24">Sep 24, 2026</time>
+            <p><span class="ledger__v">v0.9.1</span> <b>The design desk got five piles.</b> The HelioFlux website (with the house style PDF and a 25-file style pack), Heliopolis, Pretzel Protocol, resources and examples. The Magpie feather now guesses the pile before you clip.</p>
+          </li>
+          <li>
+            <time datetime="2026-09-24">Sep 24, 2026</time>
+            <p><span class="ledger__v">v0.9</span> <b>The design desk opened.</b> A swipe file for UI with galleries, sites, videos, and three notebook pages. The Magpie clipper got a second job feeding it.</p>
+          </li>
+          <li>
+            <time datetime="2026-06-10">Jun 10, 2026</time>
+            <p><span class="ledger__v">midnight</span> <b>The lab built its own random number generator.</b> Out of camera shot noise. The universe splitter now spends homemade photons.</p>
+          </li>
+          <li>
+            <time datetime="2026-06-10">Jun 10, 2026</time>
+            <p><span class="ledger__v">night</span> <b>The pet got a gene lab, and a quantum wing opened.</b> A double slit you can fire one particle at a time, a cat in a box, spooky action, and a universe splitter. Spark notes grew to 28 voices. The cat is fine.</p>
+          </li>
+          <li>
+            <time datetime="2026-06-10">Jun 10, 2026</time>
+            <p><span class="ledger__v">later</span> <b>A pet, a panel, a noise room.</b> And a field guide to keep track of all the rooms. Claude was left unsupervised for one afternoon.</p>
+          </li>
+          <li>
+            <time datetime="2026-06-10">Jun 10, 2026</time>
+            <p><span class="ledger__v">v0.7</span> <b>The site became a lab.</b> GSAP moved in: draggable stickers, confetti when you ship, a konami code. Claude planted a pixel garden.</p>
+          </li>
+          <li>
+            <time datetime="2026-05-11">May 11, 2026</time>
+            <p><span class="ledger__v">v0.6</span> <b>Spark notes shipped.</b> A living quote wall with favorites that survive a refresh, thanks to localStorage.</p>
+          </li>
+          <li>
+            <time datetime="2026-05-07">May 7, 2026</time>
+            <p><span class="ledger__v">v0.5</span> <b>kellylucas.dev went live.</b> First domain, first deploy, real internet.</p>
+          </li>
+          <li>
+            <time datetime="2026-05-07">May 7, 2026</time>
+            <p><span class="ledger__v">type</span> <b>97 fonts auditioned.</b> Three batches. Heliora survived and became the face of the site.</p>
+          </li>
+          <li>
+            <span class="ledger__when">Before the log</span>
+            <p><b>The first experiment left the lab.</b> The YouTube Transcript Generator.</p>
+          </li>
+        </ol>
+      </section>
+    </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
+  <footer class="site-footer" id="contact">
+    <div class="wrap">
       <div class="footer-top">
-        <span class="footer-tag">back to the lab</span>
-        <a class="footer-mail" href="index.html">kellylucas.dev</a>
+        <div class="footer-say">
+          <h2 class="h2">Say hi.</h2>
+          <p>Questions about anything here, or just hello.</p>
+          <a class="footer-mail" href="mailto:hello@kellylucas.dev">hello@kellylucas.dev</a>
+        </div>
+        <div class="footer-cols">
+          <div>
+            <h2>Collection</h2>
+            <ul>
+              <li><a href="/#index">Index</a></li>
+              <li><a href="/magpie.html">Magpie</a></li>
+              <li><a href="/design.html">Design desk</a></li>
+              <li><a href="/log.html">Log</a></li>
+              <li><a href="/colophon.html">Colophon</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Playground</h2>
+            <ul>
+              <li><a href="/playground.html">All rooms</a></li>
+              <li><a href="/quotes.html">Spark notes</a></li>
+              <li><a href="/all-fonts.html">Audition room</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Staff only</h2>
+            <ul>
+              <li><a class="lock" href="/brain/gallery.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="2.5" y="6" width="9" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6V4.5a2.5 2.5 0 0 1 5 0V6" stroke="currentColor" stroke-width="1.2"/></svg>Magpie library</a></li>
+              <li><a class="lock" href="https://agentcommons.kellylucas.dev"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="2.5" y="6" width="9" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6V4.5a2.5 2.5 0 0 1 5 0V6" stroke="currentColor" stroke-width="1.2"/></svg>Agent Commons</a></li>
+            </ul>
+          </div>
+        </div>
       </div>
       <div class="footer-bottom">
-        <span class="footer-logo">Kelly Lucas</span>
-        <nav class="footer-nav" aria-label="Footer">
-          <a href="log.html" aria-current="page">Log</a>
-          <a href="colophon.html">Colophon</a>
-          <a href="claude.html">Garden</a>
-          <a href="pet.html">Pet</a>
-          <a href="panel.html">Panel</a>
-          <a href="noise.html">Noise</a>
-          <a href="quantum.html">Quantum</a>
-          <a href="quotes.html">Spark</a>
-        </nav>
-        <span class="footer-meta">&copy; <span id="year"></span> Kelly Lucas</span>
+        <span>&copy; <span data-year>2026</span> Kelly Lucas</span>
+        <span>v1.0 · catalogued Oct 4, 2026 · made in public</span>
       </div>
     </div>
   </footer>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
-
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
-  <script defer src="script.js"></script>
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
+  <script defer src="/script.js"></script>
 </body>
 </html>

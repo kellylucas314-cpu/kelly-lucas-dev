@@ -1,56 +1,76 @@
 # CLAUDE.md, Kelly Lucas Personal Website
 
 ## Project
-Personal website at kellylucas.dev. Practice project for building web dev skills.
+Personal website at kellylucas.dev: the home for Kelly's real projects, with
+Magpie up front. Still a place to build web skills in public.
 Hosted on Vercel, auto-deploys from main.
 
 ## Design Direction
-"Kelly's lab": a playful interactive workbench for learning in public.
-Structurally it keeps the Isomorphic Labs DNA (stacked rounded color slabs,
-dot tags, huge sans headlines; see `Isomorphiclabsinspiration.png`), but the
-vibe is charming and personal over slick and corporate: draggable stickers,
-scribble margin notes, visible version numbers, honest unfinished states,
-small easter eggs.
+"The collection" (v1.0, 2026-10-04). The site is where Kelly's real projects
+live, published like a museum's online collection: every project is an object
+with a plate (a picture on a tinted backdrop), a tombstone label (title, year,
+what it is, what it is made with, status) and an accession number
+(`KL 2026.NN`). Magpie is plate 01 and leads the homepage. It replaced the v0.5
+to v0.9 "lab" (stacked slabs, stickers, confetti), which now lives on only in
+the playground rooms. Product truth lives in `PRODUCT.md`; the built visual
+system is recorded in `DESIGN.md`.
 
 ### Visual rules
-- Page background is warm off-white (`--page-bg: #f4f2ec`).
-- Section blocks alternate: **mint** (`#c9e6c9`), **cream** (`#f6f3e8`),
-  **lilac** (`#e3e3ee`). Footer is **deep ink green** (`#14201a`).
-- **Lilac means "experiment in progress / unfinished"** (e.g. the experiment 03 card).
-- Each block is a generously padded rounded slab (`border-radius: 28px`).
-- Every block has a **dot tag** in a top corner.
-- Headlines are huge and tight (`letter-spacing: -0.04em`, line-height ~0.95).
-- Sans-serif only. No italic serif treatment, no decorative fonts.
-- Copy is direct, lowercase-leaning, sentence case.
-- Whitespace is generous. Nothing cramped.
-- Playful motion is welcome (confetti, drag physics, split-text reveals) but
-  must respect `prefers-reduced-motion` and never block reading.
-- Easter egg budget: keep it to a handful per page so charming never tips
-  into noisy. Current eggs: logo mark 5-click confetti, "97 fonts auditioned"
-  font roulette, konami code, footer changelog popover, experiment 03 status
-  cycler, tab-title message.
+- Paper ground (`--paper: #f4f2ec`), deep ink green text and "case"
+  (`--ink: #14201a`), footer in the case color.
+- Kelly's tints are plate backdrops, not decoration: mint `#c9e6c9`, lilac
+  `#e3e3ee`, sand `#ebe3cf`, sky `#d9eaf3`.
+- The Magpie feather (rainbow plus warm half) is the only saturated color on a
+  page. Links use `--link: #2456c9`; focus rings use Magpie blue `#3e7be8`.
+- One typeface, Heliora. Hierarchy from size and weight only. No eyebrows or
+  kickers above headings; metadata goes after the title.
+- Status is Kelly's 9px square dot: blue "In use", green "Live", violet
+  "Private".
+- Rectilinear plates with a 6px radius, hairline rules (`--rule`), no heavy
+  shadows. Pills for buttons and filters.
+- Copy is direct, warm, sentence case. Honest labels: screenshots are real,
+  the Magpie plate says it is redrawn in HTML, counts say when they were counted.
+- Personality budget: the tab-title message, the "Clip it" demo in plate 01,
+  the museum-label 404, and the playground. Keep it to a handful.
+- Motion: one authored moment per page (the plate 01 clip), plus small hover
+  transitions. Always respects `prefers-reduced-motion`, never hides content.
+
+## Adding a project to the collection
+1. Shoot a 1440x900 screenshot of it and save `assets/collection/<slug>.webp`
+   at 1200x750 (ffmpeg works). Never show private data: check the shot for
+   names, investor or family details before committing.
+2. Add an `<li>` to the index in `index.html` (copy a row): number, title,
+   one-line "what", kind, status, and the `data-*` fields the plate viewer
+   reads (`data-what`, `data-medium`, `data-status`, `data-plate`, `data-tint`).
+3. Update the filter counts and the "In the collection" fact, then add a line
+   to "Recent acquisitions" and `log.html`.
 
 ## Tech
 - Static HTML/CSS/JS, no frameworks and no build step.
-- One exception: **GSAP via jsdelivr CDN** (pinned 3.13.0; core, ScrollTrigger,
-  Draggable; free plugins only, no Club plugins).
-- Animations must degrade gracefully: initial hidden/offset states are set in
-  JS (`gsap.from`), never in CSS, so content stays visible if the CDN fails.
-- `script.js` is shared by index.html and quotes.html; every feature must
-  null-check its DOM targets.
+- Collection pages (index, magpie, design, playground, log, colophon, 404)
+  use `style.css` and `script.js`: vanilla JS and the Web Animations API, no
+  GSAP. Every feature null-checks its targets; pages read fine without JS.
+- Playground rooms (claude, pet, panel, noise, quantum, qrng, quotes) keep the
+  old look on `lab.css` and `lab.js`, which still load GSAP 3.13.0 from
+  jsdelivr (core, ScrollTrigger, Draggable; free plugins only).
+- Use absolute paths (`/style.css`, `/magpie.html`) in collection pages so
+  `404.html` works at any URL.
 - Mobile responsive from the start.
 
 ## Typography
-- **Heliora** for everything (local files in `assets/fonts/`, weights 300 to 700).
+- **Heliora** for everything, self-hosted as WOFF2 (TTF fallback) in
+  `assets/fonts/`, weights 300 to 700.
 - `assets/fonts/` also holds the other auditioned fonts used by the
-  `all-fonts.html` testing rig and the font roulette easter egg.
+  `all-fonts.html` audition room and the lab rooms.
 
 ## File Structure
 Keep it clean. No backup files, no version-numbered copies.
-- `index.html`
-- `style.css` (all styles, not inline)
-- `script.js` (interactions/animations if needed)
-- `assets/` (images, fonts)
+- `index.html`, `magpie.html`, `design.html`, `playground.html`, `log.html`,
+  `colophon.html`, `404.html`: the collection
+- `style.css`, `script.js`: the collection's styles and interactions
+- `lab.css`, `lab.js`: the playground rooms' old lab styles and interactions
+- `assets/collection/`: plates, the Magpie feather, clip and room thumbnails
+- `PRODUCT.md` (product truth), `DESIGN.md` (the built visual system)
 - Use Git for version control instead of backup files
 
 ## Proxied paths
@@ -59,9 +79,10 @@ Keep it clean. No backup files, no version-numbered copies.
   GitHub Pages). Edit the art there, not here.
 
 ## Design desk
-- `design.html` is the public swipe file, in five piles: the HelioFlux
+- `design.html` (plate 02) is the public swipe file, in five piles: the HelioFlux
   website, Heliopolis, Pretzel Protocol, resources, examples (plus "the lab
-  itself" for this site's own rules). It renders `design-library.js`, a
+  itself", shown as "This site", for this site's own rules). It renders
+  `design-library.js`, a
   generated data file: `manual` entries are hand-written, `items` is rebuilt
   by `npm run sync:design` from the Magpie vault. `systems` (one design system
   per site, with palette and rules), `libraries` (Kelly's own art and font
@@ -89,6 +110,8 @@ Keep it clean. No backup files, no version-numbered copies.
   tool lilac, reading cream, site outline, repo ink), the title, and the why
   clamped to two or three lines. Four across on desktop, two on a phone.
   Filter chips carry counts. No OPEN buttons on cards, no ruled cells.
+  The resources shelf shows its newest 16 and folds the rest behind
+  "Show all"; any filter or search shows every match.
 
 ## Skills in the lab
 - `.claude/skills/` holds Claude Code skills from Jack Roberts' design loop, kept

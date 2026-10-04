@@ -1,5 +1,11 @@
 # Handoff doc — Kelly Lucas project
 
+> **2026-10-04: superseded in part.** The site was redesigned as "the
+> collection" (v1.0): real projects as catalog entries, Magpie as plate 01, the
+> toy rooms moved to `/playground.html`. The current rules are in `CLAUDE.md`,
+> `PRODUCT.md` and `DESIGN.md`. The notes below describe the v0.5 lab and
+> stay for history.
+
 Last updated: 2026-05-07
 
 ## Two projects in flight

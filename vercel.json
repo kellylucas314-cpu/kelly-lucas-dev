@@ -172,6 +172,16 @@
       "source": "/heliopolis/",
       "destination": "/heliopolis/index.html",
       "permanent": false
+    },
+    {
+      "source": "/lab",
+      "destination": "/#index",
+      "permanent": false
+    },
+    {
+      "source": "/lab/",
+      "destination": "/#index",
+      "permanent": false
     }
   ],
   "rewrites": [

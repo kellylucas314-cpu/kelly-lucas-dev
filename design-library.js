@@ -5,41 +5,46 @@ window.DESIGN_LIBRARY = {
   "updatedAt": "2026-09-25",
   "systems": [
     {
-      "name": "Kelly's lab",
+      "name": "The collection",
       "site": "kellylucas.dev",
       "status": "live",
       "palette": [
         {
-          "name": "page",
+          "name": "paper",
           "hex": "#f4f2ec"
+        },
+        {
+          "name": "ink",
+          "hex": "#14201a"
         },
         {
           "name": "mint",
           "hex": "#c9e6c9"
         },
         {
-          "name": "cream",
-          "hex": "#f6f3e8"
-        },
-        {
           "name": "lilac",
           "hex": "#e3e3ee"
         },
         {
-          "name": "ink",
-          "hex": "#14201a"
+          "name": "sand",
+          "hex": "#ebe3cf"
+        },
+        {
+          "name": "sky",
+          "hex": "#d9eaf3"
         }
       ],
-      "type": "Heliora for everything, 300 to 700.",
+      "type": "Heliora for everything. Hierarchy from size and weight, never a second face.",
       "rules": [
-        "Stacked rounded slabs, 28px radius, a dot tag in every corner.",
-        "Lilac means unfinished. Say so on the page.",
-        "Motion is welcome, never blocks reading, respects reduced motion.",
-        "No em dashes. Lowercase-leaning, sentence case."
+        "The site is a collection: every project gets a plate, a tombstone label and a number.",
+        "Mint, lilac, sand and sky are plate backdrops, not decoration.",
+        "The Magpie feather is the only rainbow on the page.",
+        "Real over cute. The toys live in the playground, which keeps the old lab look.",
+        "No em dashes. Mobile first, tested at 390px."
       ],
       "live": "https://kellylucas.dev",
-      "doc": "https://github.com/kellylucas314-cpu/kelly-lucas-dev/blob/main/CLAUDE.md",
-      "docLabel": "CLAUDE.md",
+      "doc": "https://github.com/kellylucas314-cpu/kelly-lucas-dev/blob/main/DESIGN.md",
+      "docLabel": "DESIGN.md",
       "section": "lab"
     },
     {

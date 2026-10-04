@@ -4,144 +4,119 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Colophon · Kelly Lucas</title>
-  <meta name="description" content="How kellylucas.dev is made: the stack, the type, and the rules of the lab." />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='8' y='8' width='16' height='16' rx='5' fill='%23b1d8b3' transform='rotate(45 16 16)'/%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="How kellylucas.dev is made: hand-written HTML, one stylesheet, Heliora, and Vercel." />
+  <meta name="theme-color" content="#f4f2ec" />
+  <link rel="icon" href="/assets/collection/magpie-feather.svg" type="image/svg+xml" />
+  <link rel="preload" href="/assets/fonts/Heliora-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/Heliora-Medium.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <header class="site-header">
-    <a href="index.html" class="logo">
-      <span class="logo-mark" id="logoMark"></span>
-      Kelly Lucas
-      <span class="version-pill" aria-hidden="true">v0.7</span>
-    </a>
-    <nav class="site-nav" aria-label="Primary">
-      <a href="index.html#work">Work</a>
-      <a href="index.html#about">About</a>
-      <a href="index.html#now">Now</a>
-      <a href="all-fonts.html">Fonts</a>
-      <a href="quotes.html">Spark</a>
-      <a href="design.html">Design</a>
-      <a href="index.html#contact">Contact</a>
-    </nav>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="wrap site-header__inner">
+      <a href="/" class="wordmark" aria-label="Kelly Lucas, home">Kelly Lucas <span class="wordmark__sub">the collection</span></a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/#index">Index</a>
+        <a href="/magpie.html">Magpie</a>
+        <a href="/playground.html">Playground</a>
+        <a href="/log.html" class="nav-wide">Log</a>
+        <a href="#contact" class="nav-wide">Contact</a>
+      </nav>
+    </div>
   </header>
 
-  <main class="page">
+  <main id="main">
+    <div class="wrap">
+      <section class="page-head" aria-labelledby="co-title">
+        <h1 class="display" id="co-title">Colophon</h1>
+        <p class="lede">The page where a site explains itself. No frameworks and no build step: everything here is HTML, CSS and JavaScript you could read with view source.</p>
+      </section>
 
-    <section class="block block--lilac hero">
-      <div class="dot-tag dot-tag--top-right">
-        <span class="dot-tag__dot"></span>
-        <span>colophon</span>
-      </div>
-      <h1 class="display balance">How this<br />is made.</h1>
-      <div class="hero-aside">
-        <p class="scribble">(a colophon is the page where a site explains itself)</p>
-        <p>
-          No frameworks, no build step, no secrets. Everything here is plain
-          HTML, CSS, and JavaScript you could read with view source.
-        </p>
-      </div>
-    </section>
+      <section class="chapter" aria-labelledby="co-ing">
+        <div class="chapter__head"><h2 class="h2" id="co-ing">Ingredients</h2></div>
+        <div class="chapter__body">
+          <dl class="datalist">
+            <div><dt>Markup</dt><dd>HTML written by hand. Every tag on purpose.</dd></div>
+            <div><dt>Style</dt><dd>One stylesheet with custom properties. The playground rooms keep the old lab stylesheet.</dd></div>
+            <div><dt>Motion</dt><dd>A little plain JavaScript and the Web Animations API. The playground still runs on GSAP.</dd></div>
+            <div><dt>Type</dt><dd>Heliora, survivor of 97 auditions, self-hosted as WOFF2.</dd></div>
+            <div><dt>Pictures</dt><dd>Plates are screenshots of the live projects. Magpie's plate is redrawn in HTML from the real popup.</dd></div>
+            <div><dt>Host</dt><dd>Vercel. Every push to main goes straight to the internet.</dd></div>
+            <div><dt>Memory</dt><dd>Git for time travel. No backup files, no final-final-v2 folders.</dd></div>
+          </dl>
+        </div>
+      </section>
 
-    <section class="block block--cream">
-      <div class="dot-tag dot-tag--top-right">
-        <span class="dot-tag__dot"></span>
-        <span>the stack</span>
-      </div>
-      <h2 class="display display--sm">Ingredients</h2>
-      <ul class="now-list">
-        <li>
-          <span class="now-label">Markup</span>
-          <span class="now-body">HTML written by hand. Every tag on purpose.</span>
-        </li>
-        <li>
-          <span class="now-label">Style</span>
-          <span class="now-body">One CSS file. Custom properties, stacked color slabs, 28px corners.</span>
-        </li>
-        <li>
-          <span class="now-label">Motion</span>
-          <span class="now-body">GSAP from a CDN: ScrollTrigger, Draggable, and a hand-rolled confetti cannon.</span>
-        </li>
-        <li>
-          <span class="now-label">Type</span>
-          <span class="now-body">Heliora, survivor of 97 auditions. Hosted right here, no font CDN.</span>
-        </li>
-        <li>
-          <span class="now-label">Host</span>
-          <span class="now-body">Vercel. Every push to main goes straight to the internet.</span>
-        </li>
-        <li>
-          <span class="now-label">Memory</span>
-          <span class="now-body">Git for time travel. No backup files, no final-final-v2 folders.</span>
-        </li>
-      </ul>
-    </section>
+      <section class="chapter" aria-labelledby="co-rules">
+        <div class="chapter__head"><h2 class="h2" id="co-rules">House style</h2><p>Version 1.0, the collection.</p></div>
+        <div class="chapter__body">
+          <ol class="journey journey--plain">
+            <li><h3 class="h3">The site is a collection.</h3><p>Every project gets a plate, a label and a number, like an object in a museum's online catalogue.</p></li>
+            <li><h3 class="h3">Paper, ink, and four backdrops.</h3><p>Warm paper and deep ink green. Mint, lilac, sand and sky are the backdrops plates sit on, not decoration.</p></li>
+            <li><h3 class="h3">One typeface.</h3><p>Heliora everywhere. Hierarchy comes from size and weight, never from a second font.</p></li>
+            <li><h3 class="h3">One rainbow.</h3><p>The Magpie feather is the only saturated color on the page.</p></li>
+            <li><h3 class="h3">Real over cute.</h3><p>If it doesn't work, it doesn't go in the index. The fun stuff lives in the playground.</p></li>
+            <li><h3 class="h3">No em dashes, mobile first.</h3><p>Ever. And everything is tested at 390 pixels wide.</p></li>
+          </ol>
+        </div>
+      </section>
 
-    <section class="block block--mint">
-      <div class="dot-tag dot-tag--top-left">
-        <span class="dot-tag__dot"></span>
-        <span>lab rules</span>
-      </div>
-      <h2 class="display display--sm">House style</h2>
-      <ul class="now-list">
-        <li>
-          <span class="now-label">Rule 01</span>
-          <span class="now-body">Warm off-white page. Mint, cream, and lilac slabs.</span>
-        </li>
-        <li>
-          <span class="now-label">Rule 02</span>
-          <span class="now-body">Every block gets a dot tag in the corner.</span>
-        </li>
-        <li>
-          <span class="now-label">Rule 03</span>
-          <span class="now-body">Headlines huge and tight. Copy lowercase-leaning.</span>
-        </li>
-        <li>
-          <span class="now-label">Rule 04</span>
-          <span class="now-body">No em dashes. Ever. Ask the footer why.</span>
-        </li>
-        <li>
-          <span class="now-label">Rule 05</span>
-          <span class="now-body">Mobile first. Everything tested at 390 pixels wide.</span>
-        </li>
-        <li>
-          <span class="now-label">Rule 06</span>
-          <span class="now-body">Charming beats slick. Honest beats finished.</span>
-        </li>
-      </ul>
-    </section>
-
+      <section class="chapter" aria-labelledby="co-refs">
+        <div class="chapter__head"><h2 class="h2" id="co-refs">References</h2></div>
+        <div class="chapter__body prose">
+          <p>The structure comes from museum collection sites: plates, tombstone labels and an index you can scan. For the feel, I pulled references through Refero: the private-archive warmth of mymind, the ordered calm of Daniël van der Winden's site, and herdi.ng's habit of showing the product inside a frame.</p>
+          <p>Versions 0.5 to 0.9 were the lab: stacked color slabs, dot tags, draggable stickers and a lot of confetti. The rooms in the <a href="/playground.html">playground</a> still wear that look, and the <a href="/log.html">log</a> keeps the receipts.</p>
+        </div>
+      </section>
+    </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
+  <footer class="site-footer" id="contact">
+    <div class="wrap">
       <div class="footer-top">
-        <span class="footer-tag">back to the lab</span>
-        <a class="footer-mail" href="index.html">kellylucas.dev</a>
+        <div class="footer-say">
+          <h2 class="h2">Say hi.</h2>
+          <p>Questions about anything here, or just hello.</p>
+          <a class="footer-mail" href="mailto:hello@kellylucas.dev">hello@kellylucas.dev</a>
+        </div>
+        <div class="footer-cols">
+          <div>
+            <h2>Collection</h2>
+            <ul>
+              <li><a href="/#index">Index</a></li>
+              <li><a href="/magpie.html">Magpie</a></li>
+              <li><a href="/design.html">Design desk</a></li>
+              <li><a href="/log.html">Log</a></li>
+              <li><a href="/colophon.html">Colophon</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Playground</h2>
+            <ul>
+              <li><a href="/playground.html">All rooms</a></li>
+              <li><a href="/quotes.html">Spark notes</a></li>
+              <li><a href="/all-fonts.html">Audition room</a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Staff only</h2>
+            <ul>
+              <li><a class="lock" href="/brain/gallery.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="2.5" y="6" width="9" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6V4.5a2.5 2.5 0 0 1 5 0V6" stroke="currentColor" stroke-width="1.2"/></svg>Magpie library</a></li>
+              <li><a class="lock" href="https://agentcommons.kellylucas.dev"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="2.5" y="6" width="9" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6V4.5a2.5 2.5 0 0 1 5 0V6" stroke="currentColor" stroke-width="1.2"/></svg>Agent Commons</a></li>
+            </ul>
+          </div>
+        </div>
       </div>
       <div class="footer-bottom">
-        <span class="footer-logo">Kelly Lucas</span>
-        <nav class="footer-nav" aria-label="Footer">
-          <a href="log.html">Log</a>
-          <a href="colophon.html" aria-current="page">Colophon</a>
-          <a href="claude.html">Garden</a>
-          <a href="pet.html">Pet</a>
-          <a href="panel.html">Panel</a>
-          <a href="noise.html">Noise</a>
-          <a href="quantum.html">Quantum</a>
-          <a href="quotes.html">Spark</a>
-        </nav>
-        <span class="footer-meta">&copy; <span id="year"></span> Kelly Lucas</span>
+        <span>&copy; <span data-year>2026</span> Kelly Lucas</span>
+        <span>v1.0 · catalogued Oct 4, 2026 · made in public</span>
       </div>
     </div>
   </footer>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
-
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
-  <script defer src="script.js"></script>
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
+  <script defer src="/script.js"></script>
 </body>
 </html>

@@ -27,3 +27,7 @@ output/playwright/
 rtf-*/
 .rtf-staging/
 __pycache__/
+
+# Impeccable working files (review captures, mocks)
+.impeccable/review/
+.impeccable/mocks/
