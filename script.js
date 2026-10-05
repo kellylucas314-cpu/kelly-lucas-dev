@@ -53,15 +53,6 @@ if (poster && $("[data-place-img]", poster) && $("[data-place-name]", poster)) {
   const img = $("[data-place-img]", poster);
   const nameEl = $("[data-place-name]", poster);
   const next = $("[data-place-next]", poster);
-  // the two small places orbiting the sun: if the big drawing is one of them, that circle shows Torres instead
-  // the satellites show the 480px copy of each drawing (a "-sm.webp" next to the full one)
-  const sm = (src) => src.replace(/\.webp$/, "-sm.webp");
-  const sats = $$(".sat img", poster).map((im) => ({ im, src: im.getAttribute("src"), alt: im.alt }));
-  const syncSats = (p) => sats.forEach((s) => {
-    const dup = ART + sm(p.src) === s.src;
-    const want = dup ? ART + sm(PLACES[0].src) : s.src;
-    if (s.im.getAttribute("src") !== want) { s.im.src = want; s.im.alt = dup ? PLACES[0].alt : s.alt; }
-  });
 
   const show = (i, animate) => {
     const p = PLACES[i];
@@ -72,7 +63,6 @@ if (poster && $("[data-place-img]", poster) && $("[data-place-name]", poster)) {
       img.alt = p.alt;
       nameEl.innerHTML = p.name;
       poster.style.setProperty("--poster-c", SUNS[i % SUNS.length]);
-      syncSats(p);
     };
     if (!animate || reducedMotion || !img.animate) { apply(); return; }
     const out = img.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: "ease-out", fill: "forwards" });

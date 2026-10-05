@@ -253,11 +253,6 @@ kbd {
 .orb--splat { width: 12%; left: -4%; top: 57%; color: var(--coral); }
 .orb--squig { width: 13%; right: -2%; top: 40%; color: var(--navy); }
 /* two small places on round shapes, orbiting the sun */
-.sat { position: absolute; z-index: 3; display: grid; place-items: center; }
-.sat .shape { grid-area: 1 / 1; width: 100%; }
-.sat img { grid-area: 1 / 1; position: relative; width: 82%; }
-.sat--a { width: 22%; left: -2%; top: 15%; color: var(--honey-tint); animation: bob 9s ease-in-out infinite; }
-.sat--b { width: 20%; right: -2%; top: 1%; color: var(--pale-coral); animation: bob 11s ease-in-out infinite reverse; }
 .poster__cap { position: relative; display: grid; justify-items: center; gap: 12px; margin-top: 22px; font-size: 20px; letter-spacing: -0.01em; text-align: center; }
 .poster__cap a { text-underline-offset: 3px; }
 .poster__cap .btn { width: 200px; justify-content: center; }
@@ -660,8 +655,6 @@ kbd {
   .note__d { font-size: 16px; }
   .poster__cap { font-size: 18px; margin-top: 16px; }
   .poster__cap [data-place-name] { display: grid; align-content: end; min-height: 3em; }
-  .sat--a { width: 24%; left: 0; }
-  .sat--b { width: 22%; right: 0; }
   .orb--quat { right: 28%; }
   .cur b { font-size: 12px; padding: 2px 8px; }
   .band { padding: 84px 0; }

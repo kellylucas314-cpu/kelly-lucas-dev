@@ -22,8 +22,8 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
   tints are the bands. Navy on coral or teal is only for large text (the
   pills); never body copy. No bright blue, no violet.
 - A poster, not a hero. Every page opens with one of Kelly's drawings on a big
-  round shape (the home poster: Torres del Paine on a honey sun, two small
-  places orbiting, an "Another place" button that cycles 13 places on click;
+  round shape (the home poster: Torres del Paine on a honey sun, a few
+  chunky shapes around it, an "Another place" button that cycles 13 places on click;
   Torres shows on every load). Drawings are never boxed in or cropped.
 - Round, never square. Shapes are SVG symbols (sun, rays, cog, blob, bean,
   arch, circle, asterisk, plus, quatrefoil, squiggle) in the sprite at the top
@@ -45,7 +45,7 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
   cursor tag on the poster, the Alt+Shift+M reflex on the homepage, the
   "Clip it" demo on the Magpie page, the magpie 404, and the playground.
 - Motion: the suns turn very slowly (the spin lives on the svg root), the
-  orbiting places bob, the poster crossfades on click, the clip demo plays
+  cursor tag bobs, the poster crossfades on click, the clip demo plays
   once on the Magpie page. `prefers-reduced-motion` turns all of it off and
   nothing is hidden behind JS.
 
@@ -62,11 +62,11 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
 - A new place on the homepage: add it to `PLACES` in `script.js` (file,
   size, caption, alt) and, if it should appear in the scatter, to the places
   list in `index.html`.
-- Next to each travel drawing, Pretzel city and the drawer magpie sits a
-  `-sm.webp`, its 480px copy for the orbiting places and the Magpie note; the
-  project screenshots in `assets/collection/` have 320px `-sm.webp` copies
-  for the phone thumbnails. They are derived files (Pillow, Lanczos, quality
-  82): regenerate one when its source changes. They need no prompt sidecar.
+- `magpie-drawer-sm.webp` is the 480px copy of the drawer magpie for the
+  Magpie note, and the project screenshots in `assets/collection/` have
+  320px `-sm.webp` copies for the phone thumbnails. They are derived files
+  (Pillow, Lanczos, quality 82): regenerate one when its source changes.
+  They need no prompt sidecar.
 
 ## Adding a project
 1. Add an `<li>` to the projects list in `index.html` (copy a row): number,
