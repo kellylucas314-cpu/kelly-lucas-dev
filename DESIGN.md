@@ -354,7 +354,7 @@ The band tints. A band is one of these from edge to edge, with a wave or scallop
 - **Sage Tint** (`sage-tint`): the "Built for one" band on the Magpie page, the whole log, the Heliopolis pile and the closing chapter on the desk, the Design desk pill, the desk’s "sky" tiles and the notebook pages on a paper pile.
 
 ### Neutral
-- **Paper** (`paper`): the page, the header and footer, the hero and page-hero grounds, the paper band, the scene frame, text on navy and on the deeps, the inside of every redraw window, orbit plates in the places scatter, the "nothing here" room plate.
+- **Paper** (`paper`): the page, the header and footer, the hero and page-hero grounds, the paper band, the scene frame, text on navy and on the deeps, the inside of every redraw window, the "nothing here" room plate.
 - **Paper Two** (`paper-2`): inline `code`, the redraw’s image wells, and the desk’s tiles without a picture, scale demo and default kind pill.
 - **Card** (`card`): the lightest surface: the redraw’s gallery and popup windows, the desk search field, system cards and notebook pages.
 - **Line** (`line`): a cool 1px gray for the quietest edges: the footer’s base rule, the nav’s rule when it wraps onto its own line on a phone, and every window, card, field and chip edge inside the Magpie redraw. 1.3:1 on paper, so it is a hairline, never a border that has to carry meaning.
