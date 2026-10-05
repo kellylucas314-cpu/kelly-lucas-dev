@@ -1,12 +1,12 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-05T00:25:00Z",
+  "generatedAt": "2026-10-05T12:00:00Z",
   "title": "Design System: Kelly Lucas",
   "extensions": {
     "colorMeta": {
-      "ink": {
+      "navy": {
         "role": "primary",
-        "displayName": "Pen Navy",
+        "displayName": "Navy",
         "canonical": "oklch(33.3% 0.078 261.8)",
         "tonalRamp": [
           "oklch(15.0% 0.035 261.8)",
@@ -18,7 +18,71 @@
           "oklch(83.6% 0.062 261.8)",
           "oklch(95.0% 0.039 261.8)"
         ],
-        "purpose": "Every word and every structural line; focus ring, toast, pressed chip. 11.2:1 on paper."
+        "purpose": "Every word on every ground; list rules, the button border, the focus ring, the filled button, the In use dot. 11.2:1 on paper, 9.3:1 or better on every band."
+      },
+      "navy-hover": {
+        "role": "primary",
+        "displayName": "Navy Hover",
+        "canonical": "oklch(40.6% 0.068 262.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.030 262.1)",
+          "oklch(26.4% 0.044 262.1)",
+          "oklch(37.9% 0.057 262.1)",
+          "oklch(49.3% 0.068 262.1)",
+          "oklch(60.7% 0.068 262.1)",
+          "oklch(72.1% 0.068 262.1)",
+          "oklch(83.6% 0.054 262.1)",
+          "oklch(95.0% 0.034 262.1)"
+        ],
+        "purpose": "The filled button on hover; the design desk’s secondary text as --ink-2. 8.4:1 on paper."
+      },
+      "navy-soft": {
+        "role": "primary",
+        "displayName": "Navy Soft",
+        "canonical": "oklch(50.5% 0.052 262.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.023 262.8)",
+          "oklch(26.4% 0.034 262.8)",
+          "oklch(37.9% 0.044 262.8)",
+          "oklch(49.3% 0.052 262.8)",
+          "oklch(60.7% 0.052 262.8)",
+          "oklch(72.1% 0.052 262.8)",
+          "oklch(83.6% 0.042 262.8)",
+          "oklch(95.0% 0.026 262.8)"
+        ],
+        "purpose": "Quiet text: captions, data terms, the tally note, the footer base line, the redraw’s counts; --ink-3 on the desk. 5.4:1 on paper, 4.5:1 or better on every band."
+      },
+      "honey": {
+        "role": "secondary",
+        "displayName": "Honey",
+        "canonical": "oklch(82.8% 0.141 85.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.063 85.4)",
+          "oklch(26.4% 0.092 85.4)",
+          "oklch(37.9% 0.120 85.4)",
+          "oklch(49.3% 0.141 85.4)",
+          "oklch(60.7% 0.141 85.4)",
+          "oklch(72.1% 0.141 85.4)",
+          "oklch(83.6% 0.113 85.4)",
+          "oklch(95.0% 0.070 85.4)"
+        ],
+        "purpose": "The sun on the home poster, step tiles, the newest version tag, the active row’s sun, the clipped card’s outline, selection, the Log pill. Navy on honey is 7.1:1."
+      },
+      "sage": {
+        "role": "secondary",
+        "displayName": "Sage",
+        "canonical": "oklch(75.0% 0.062 133.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.028 133.0)",
+          "oklch(26.4% 0.040 133.0)",
+          "oklch(37.9% 0.052 133.0)",
+          "oklch(49.3% 0.062 133.0)",
+          "oklch(60.7% 0.062 133.0)",
+          "oklch(72.1% 0.062 133.0)",
+          "oklch(83.6% 0.049 133.0)",
+          "oklch(95.0% 0.031 133.0)"
+        ],
+        "purpose": "The Log door, the design desk and log suns, orbs and tiles. Navy on sage is 5.6:1."
       },
       "coral": {
         "role": "secondary",
@@ -34,26 +98,10 @@
           "oklch(83.6% 0.120 24.7)",
           "oklch(95.0% 0.075 24.7)"
         ],
-        "purpose": "Warm mark: running-text underlines, current-page nav line, hover lines, In use dot, caret. 3.4:1 on paper: never text."
-      },
-      "pale-coral": {
-        "role": "secondary",
-        "displayName": "Pale Coral",
-        "canonical": "oklch(91.5% 0.029 28.1)",
-        "tonalRamp": [
-          "oklch(15.0% 0.013 28.1)",
-          "oklch(26.4% 0.019 28.1)",
-          "oklch(37.9% 0.025 28.1)",
-          "oklch(49.3% 0.029 28.1)",
-          "oklch(60.7% 0.029 28.1)",
-          "oklch(72.1% 0.029 28.1)",
-          "oklch(83.6% 0.024 28.1)",
-          "oklch(95.0% 0.015 28.1)"
-        ],
-        "purpose": "Fill: stone, roofs and petals in drawings; selection, newest version tag, tool and private pills."
+        "purpose": "The wordmark sun, the cog behind the flying magpie, the Playground pill, the current nav underline, orbs. Navy on coral is 3.3:1: pill-size text only, never body copy."
       },
       "teal": {
-        "role": "tertiary",
+        "role": "secondary",
         "displayName": "Teal",
         "canonical": "oklch(65.3% 0.070 190.7)",
         "tonalRamp": [
@@ -66,7 +114,39 @@
           "oklch(83.6% 0.056 190.7)",
           "oklch(95.0% 0.035 190.7)"
         ],
-        "purpose": "Cool mark: water and leaves in drawings; the Live dot, desk dot tags. 2.9:1 on paper: never text."
+        "purpose": "Plates in the places scatter, the Log door’s blob, the quotes room; --mint-2 on the desk. 2.9:1 on paper and navy on it is 3.9:1: never under or as text."
+      },
+      "deep-coral": {
+        "role": "secondary",
+        "displayName": "Deep Coral",
+        "canonical": "oklch(54.1% 0.148 25.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.067 25.8)",
+          "oklch(26.4% 0.096 25.8)",
+          "oklch(37.9% 0.126 25.8)",
+          "oklch(49.3% 0.148 25.8)",
+          "oklch(60.7% 0.148 25.8)",
+          "oklch(72.1% 0.148 25.8)",
+          "oklch(83.6% 0.118 25.8)",
+          "oklch(95.0% 0.074 25.8)"
+        ],
+        "purpose": "Coral darkened until paper reads on it (5.0:1): the Playground door, the Say hello pill, the Private dot, the cursor tag."
+      },
+      "deep-teal": {
+        "role": "secondary",
+        "displayName": "Deep Teal",
+        "canonical": "oklch(52.5% 0.062 189.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.028 189.7)",
+          "oklch(26.4% 0.040 189.7)",
+          "oklch(37.9% 0.053 189.7)",
+          "oklch(49.3% 0.062 189.7)",
+          "oklch(60.7% 0.062 189.7)",
+          "oklch(72.1% 0.062 189.7)",
+          "oklch(83.6% 0.050 189.7)",
+          "oklch(95.0% 0.031 189.7)"
+        ],
+        "purpose": "Teal darkened until paper reads on it (4.8:1): the Live dot, one scatter plate, the desk’s dot tags as --live."
       },
       "pale-teal": {
         "role": "tertiary",
@@ -82,11 +162,59 @@
           "oklch(83.6% 0.016 189.2)",
           "oklch(95.0% 0.010 189.2)"
         ],
-        "purpose": "Fill: lakes and foliage in drawings; the Magpie redraw field, version tags, search focus halo, gallery pill."
+        "purpose": "Band: Magpie at home, the clip demo. The redraw’s badge, the second step tile, the gallery pill and mint tiles on the desk. Navy on it is 9.5:1."
+      },
+      "pale-coral": {
+        "role": "tertiary",
+        "displayName": "Pale Coral",
+        "canonical": "oklch(91.5% 0.029 28.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.013 28.1)",
+          "oklch(26.4% 0.019 28.1)",
+          "oklch(37.9% 0.025 28.1)",
+          "oklch(49.3% 0.029 28.1)",
+          "oklch(60.7% 0.029 28.1)",
+          "oklch(72.1% 0.029 28.1)",
+          "oklch(83.6% 0.024 28.1)",
+          "oklch(95.0% 0.015 28.1)"
+        ],
+        "purpose": "Band: projects and Say hello at home, the rooms, what Magpie clips. Tag chips in the redraw, the third step tile, the tool pill and lilac tiles on the desk. Navy on it is 9.3:1."
+      },
+      "honey-tint": {
+        "role": "tertiary",
+        "displayName": "Honey Tint",
+        "canonical": "oklch(95.5% 0.045 91.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.020 91.7)",
+          "oklch(26.4% 0.029 91.7)",
+          "oklch(37.9% 0.038 91.7)",
+          "oklch(49.3% 0.045 91.7)",
+          "oklch(60.7% 0.045 91.7)",
+          "oklch(72.1% 0.045 91.7)",
+          "oklch(83.6% 0.036 91.7)",
+          "oklch(95.0% 0.022 91.7)"
+        ],
+        "purpose": "Band: the places at home, the counts, the whole log. The left orbit plate, the reading pill and sand tiles on the desk. Navy on it is 10.7:1."
+      },
+      "sage-tint": {
+        "role": "tertiary",
+        "displayName": "Sage Tint",
+        "canonical": "oklch(93.5% 0.018 127.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.008 127.1)",
+          "oklch(26.4% 0.012 127.1)",
+          "oklch(37.9% 0.016 127.1)",
+          "oklch(49.3% 0.018 127.1)",
+          "oklch(60.7% 0.018 127.1)",
+          "oklch(72.1% 0.018 127.1)",
+          "oklch(83.6% 0.015 127.1)",
+          "oklch(95.0% 0.009 127.1)"
+        ],
+        "purpose": "Band: Built for one on the Magpie page. The Design desk pill, the sky tiles on the desk. Navy on it is 10.1:1."
       },
       "paper": {
         "role": "neutral",
-        "displayName": "Warm Paper",
+        "displayName": "Paper",
         "canonical": "oklch(97.3% 0.007 88.6)",
         "tonalRamp": [
           "oklch(15.0% 0.003 88.6)",
@@ -98,12 +226,12 @@
           "oklch(83.6% 0.006 88.6)",
           "oklch(95.0% 0.003 88.6)"
         ],
-        "purpose": "Page, header and footer ground; text on navy."
+        "purpose": "The page, header, footer and hero ground; the paper band; the scene frame; text on navy and the deeps; plates in the scatter."
       },
       "paper-2": {
         "role": "neutral",
         "displayName": "Paper Two",
-        "canonical": "oklch(94.6% 0.011 89.7)",
+        "canonical": "oklch(94.3% 0.011 89.7)",
         "tonalRamp": [
           "oklch(15.0% 0.005 89.7)",
           "oklch(26.4% 0.007 89.7)",
@@ -114,23 +242,7 @@
           "oklch(83.6% 0.009 89.7)",
           "oklch(95.0% 0.006 89.7)"
         ],
-        "purpose": "Quiet wells: tiles without a picture, image wells, inline code, default kind pill."
-      },
-      "paper-3": {
-        "role": "neutral",
-        "displayName": "Paper Three",
-        "canonical": "oklch(91.3% 0.014 88.7)",
-        "tonalRamp": [
-          "oklch(15.0% 0.006 88.7)",
-          "oklch(26.4% 0.009 88.7)",
-          "oklch(37.9% 0.012 88.7)",
-          "oklch(49.3% 0.014 88.7)",
-          "oklch(60.7% 0.014 88.7)",
-          "oklch(72.1% 0.014 88.7)",
-          "oklch(83.6% 0.011 88.7)",
-          "oklch(95.0% 0.007 88.7)"
-        ],
-        "purpose": "The design desk sand: reading pill and sand tiles only."
+        "purpose": "Inline code, the redraw’s image wells, desk tiles without a picture, the default kind pill."
       },
       "card": {
         "role": "neutral",
@@ -146,43 +258,27 @@
           "oklch(83.6% 0.003 91.4)",
           "oklch(95.0% 0.002 91.4)"
         ],
-        "purpose": "Lightest surface: search field, system cards, notebook pages, fields in the redraw."
+        "purpose": "The lightest surface: the redraw’s gallery and popup windows, the desk search, system cards, notebook pages."
       },
-      "ink-2": {
+      "line": {
         "role": "neutral",
-        "displayName": "Ink Two",
-        "canonical": "oklch(43.1% 0.062 261.7)",
+        "displayName": "Line",
+        "canonical": "oklch(88.4% 0.004 247.9)",
         "tonalRamp": [
-          "oklch(15.0% 0.028 261.7)",
-          "oklch(26.4% 0.040 261.7)",
-          "oklch(37.9% 0.052 261.7)",
-          "oklch(49.3% 0.062 261.7)",
-          "oklch(60.7% 0.062 261.7)",
-          "oklch(72.1% 0.062 261.7)",
-          "oklch(83.6% 0.049 261.7)",
-          "oklch(95.0% 0.031 261.7)"
+          "oklch(15.0% 0.002 247.9)",
+          "oklch(26.4% 0.002 247.9)",
+          "oklch(37.9% 0.003 247.9)",
+          "oklch(49.3% 0.004 247.9)",
+          "oklch(60.7% 0.004 247.9)",
+          "oklch(72.1% 0.004 247.9)",
+          "oklch(83.6% 0.003 247.9)",
+          "oklch(95.0% 0.002 247.9)"
         ],
-        "purpose": "Secondary text. 7.5:1 on paper, 6.2:1 on the pales."
-      },
-      "ink-3": {
-        "role": "neutral",
-        "displayName": "Ink Three",
-        "canonical": "oklch(50.2% 0.047 263.4)",
-        "tonalRamp": [
-          "oklch(15.0% 0.021 263.4)",
-          "oklch(26.4% 0.030 263.4)",
-          "oklch(37.9% 0.040 263.4)",
-          "oklch(49.3% 0.047 263.4)",
-          "oklch(60.7% 0.047 263.4)",
-          "oklch(72.1% 0.047 263.4)",
-          "oklch(83.6% 0.037 263.4)",
-          "oklch(95.0% 0.023 263.4)"
-        ],
-        "purpose": "Tertiary text: labels, dates, numbers, terms. 5.5:1 on paper, 4.6:1 on paper-3 and the pales."
+        "purpose": "The quietest 1px edge: the footer base rule, the wrapped nav rule on a phone, every window and chip inside the redraw. 1.3:1 on paper."
       },
       "rule": {
         "role": "neutral",
-        "displayName": "Hairline",
+        "displayName": "Rule",
         "canonical": "rgba(31, 53, 94, 0.14)",
         "tonalRamp": [
           "rgba(31, 53, 94, 0.04)",
@@ -194,11 +290,11 @@
           "rgba(31, 53, 94, 0.5)",
           "rgba(31, 53, 94, 0.64)"
         ],
-        "purpose": "Navy at 14%: the design desk quiet edges and section tops."
+        "purpose": "Navy at 14%: the design desk’s section tops, system card, notebook and swatch borders, library row lines."
       },
       "rule-2": {
         "role": "neutral",
-        "displayName": "Strong Hairline",
+        "displayName": "Strong Rule",
         "canonical": "rgba(31, 53, 94, 0.28)",
         "tonalRamp": [
           "rgba(31, 53, 94, 0.04)",
@@ -210,117 +306,137 @@
           "rgba(31, 53, 94, 0.5)",
           "rgba(31, 53, 94, 0.64)"
         ],
-        "purpose": "Navy at 28%: row separators, the place caption line, chip and field borders."
+        "purpose": "Navy at 28%: the desk’s chip, search, pile link and site pill borders, the library list’s top rule."
       }
     },
     "typographyMeta": {
-      "display-hero": {
-        "displayName": "Display hero",
-        "purpose": "The homepage greeting only."
-      },
       "display": {
         "displayName": "Display",
-        "purpose": "The h1 of every other page; Magpie and Projects on the homepage."
+        "purpose": "The h1 of every page; 68px at 1180, 52px at 760. Say hello uses it at 96px."
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "Chapter titles, Playground and Log, Say hello, the next-project title."
-      },
-      "numeral": {
-        "displayName": "Numeral",
-        "purpose": "The strip number on the homepage (2rem on phones), tabular figures."
-      },
-      "entry": {
-        "displayName": "Entry",
-        "purpose": "Project row and playground room titles."
+        "purpose": "Every section and chapter title; 36px on a phone."
       },
       "title": {
         "displayName": "Title",
-        "purpose": "h3 steps inside chapters."
+        "purpose": "Door titles and stat heads; 22px on a phone. Note title 26px, room title 24px, row title 22px share the voice."
       },
       "lede": {
         "displayName": "Lede",
-        "purpose": "The paragraph under a display title, navy, max 31em."
+        "purpose": "The paragraph under a display title, max 600px; Where to next. 20px at 1299 in the hero, 19px on a phone."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Running text, word-spacing 0.04em; 1.03rem at phone width."
+        "purpose": "Running text at 16px; door copy 17px, ledger entries 18px; prose max 40em."
+      },
+      "big-number": {
+        "displayName": "Big number",
+        "purpose": "The clip count at home (96px on a phone); the counts list at 72px (56px on a phone)."
+      },
+      "pill": {
+        "displayName": "Pill",
+        "purpose": "Where to next pills: 64px at home, 40px in the small set, 52px at 1180, 38px on a phone."
+      },
+      "entry": {
+        "displayName": "Entry",
+        "purpose": "Project row titles; 19px on a phone."
+      },
+      "subhead": {
+        "displayName": "Subhead",
+        "purpose": "Does keys at 20px; journey titles 22px, bench terms 18px, footer heads 16px. Weight 500 is the loudest weight in the system."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Pill buttons; 16px in the small size and on a phone."
       },
       "link": {
-        "displayName": "Text-arrow link",
-        "purpose": "Standalone links; the only bold in the system."
-      },
-      "meta": {
-        "displayName": "Meta",
-        "purpose": "Place caption, status lines, data terms, ledger dates, toast."
-      },
-      "control": {
-        "displayName": "Control",
-        "purpose": "Design desk chips and pile links."
-      },
-      "small": {
-        "displayName": "Small",
-        "purpose": "Footer line, log dates, caption under the redraw."
-      },
-      "caption": {
-        "displayName": "Caption",
-        "purpose": "Version tags, desk domains, the empty room tile."
+        "displayName": "Standalone link",
+        "purpose": ".tlink under section heads and in the doors, 1px underline at a 4px offset, 2px on hover."
       },
       "nav": {
         "displayName": "Nav",
-        "purpose": "Uppercase header links; 0.6875rem and 0.1em on phones, 0.08em below 360px."
+        "purpose": "Header links; 16px on a phone."
       },
-      "label": {
-        "displayName": "Label",
-        "purpose": "Uppercase ink-3 column heads, data terms and project kinds; never above a heading."
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Under the places (22px under the first, 20px under the poster); 15px and 19px on a phone."
       },
-      "tag": {
-        "displayName": "Tag",
-        "purpose": "Kind, private and pending pills on the design desk."
+      "small": {
+        "displayName": "Small",
+        "purpose": "Row descriptions, chips, the toast, the reflex, data terms, the scene caption, footer links."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Row kinds and statuses, ledger dates, the footer base line; 13px on a phone."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "DM Mono for every time element, project numbers, version tags, keycaps; step counters at 15px."
       }
     },
     "shadows": [
       {
-        "name": "private-dot-stroke",
-        "value": "inset 0 0 0 1.25px var(--ink)",
-        "purpose": "Not elevation: draws the outline of the Private status dot."
-      },
-      {
-        "name": "search-focus-halo",
-        "value": "0 0 0 3px var(--pale-teal)",
-        "purpose": "Not elevation: the flat focus halo on the design desk search field."
+        "name": "none",
+        "value": "none",
+        "purpose": "No box-shadow anywhere. The round project thumbnail on a phone wears a 1px navy-at-18% outline, a stroke, not a lift."
       }
     ],
     "motion": [
       {
         "name": "ease",
         "value": "cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "The shared curve (--ease in CSS, EASE in script.js) for every movement."
+        "purpose": "The shared curve (--ease in CSS, EASE in script.js) for every authored movement."
       },
       {
-        "name": "hover-line",
-        "value": "0.2s ease",
-        "purpose": "Underline and border colour changes on nav, text-arrow links, chips, the place button."
+        "name": "spin",
+        "value": "rotate 360deg over 180s linear infinite",
+        "purpose": "The poster sun, on the SVG root so it turns on its own center. .spin--rev is 240s reversed, on the home Magpie cog."
       },
       {
-        "name": "underline-thicken",
-        "value": "0.15s ease",
-        "purpose": "Running-text link underline going from 1px to 2px."
+        "name": "bob",
+        "value": "translate(6px, -5px) and back, ease-in-out",
+        "purpose": "The orbiting places over 9s and 11s (reversed), the cursor tag over 7s."
       },
       {
-        "name": "arrow-nudge",
-        "value": "0.25s var(--ease)",
-        "purpose": "Drawn arrows nudging 2px to 4px toward where they go."
+        "name": "sun-color",
+        "value": "color 0.5s",
+        "purpose": "The poster sun changing between honey, coral and teal as the place cycles."
+      },
+      {
+        "name": "button",
+        "value": "background 0.15s, color 0.15s, transform 0.2s, translateY(-1px)",
+        "purpose": "Pill buttons on hover."
+      },
+      {
+        "name": "pill-nav",
+        "value": "transform 0.2s, translateY(-3px) rotate(-1deg)",
+        "purpose": "Where to next pills on hover."
+      },
+      {
+        "name": "note",
+        "value": "color 0.2s, transform 0.3s, rotate(14deg) and translateY(-3px)",
+        "purpose": "The Magpie note: the cog goes honey and tilts, the drawing lifts."
+      },
+      {
+        "name": "room",
+        "value": "transform 0.3s, rotate(8deg)",
+        "purpose": "A room’s shape on hover."
+      },
+      {
+        "name": "row-marker",
+        "value": "opacity 0.15s",
+        "purpose": "The honey sun replacing an active project’s number."
       },
       {
         "name": "place-out",
-        "value": "180ms ease-out",
-        "purpose": "The hero drawing fading out on Another place."
+        "value": "160ms ease-out, opacity 1 to 0",
+        "purpose": "The poster drawing fading out on Another place."
       },
       {
         "name": "place-in",
-        "value": "520ms var(--ease), translateY(6px) to 0",
-        "purpose": "The next place fading in and settling."
+        "value": "460ms var(--ease), opacity 0 to 1, translateY(8px) to none",
+        "purpose": "The next place fading in after it loads; the sun is never left empty."
       },
       {
         "name": "clip-start",
@@ -329,8 +445,8 @@
       },
       {
         "name": "clip-flight",
-        "value": "820ms var(--ease)",
-        "purpose": "The preview arcing into the gallery first slot."
+        "value": "820ms var(--ease), arc rising 30px at the midpoint",
+        "purpose": "The preview flying into the gallery’s first slot."
       },
       {
         "name": "clip-slide",
@@ -343,41 +459,51 @@
         "purpose": "Clipped state before the button resets."
       },
       {
-        "name": "toast",
-        "value": "opacity 0.25s ease, transform 0.35s var(--ease), dwell 2800ms",
-        "purpose": "Toast rising 8px into place, then hiding."
+        "name": "clip-press",
+        "value": "transform 0.15s ease, scale(0.98)",
+        "purpose": "The Clip it button while pressed."
       },
       {
-        "name": "picture-zoom",
-        "value": "0.6s var(--ease), scale 1.03 to 1.035",
+        "name": "toast",
+        "value": "opacity 0.25s ease, transform 0.35s var(--ease), dwell 2800ms",
+        "purpose": "The toast rising 8px into place, then hiding."
+      },
+      {
+        "name": "desk-zoom",
+        "value": "transform 0.6s var(--ease), scale 1.03 to 1.035",
         "purpose": "Design desk tiles on hover."
       },
       {
         "name": "reduced-motion",
-        "value": "transition and animation 0.01ms",
-        "purpose": "prefers-reduced-motion: nothing autoplays, swaps are instant, content never hides."
+        "value": "animation: none !important; transition: none !important; scroll-behavior: auto",
+        "purpose": "prefers-reduced-motion: nothing spins, bobs or autoplays; swaps are instant; nothing is hidden."
       }
     ],
     "breakpoints": [
       {
-        "name": "desk-3up",
-        "value": "1100px",
-        "purpose": "Design desk grid four to three across."
+        "name": "hero-column",
+        "value": "1299px",
+        "purpose": "The hero’s poster column narrows to 560px and the lede to 20px."
       },
       {
         "name": "tablet",
-        "value": "1080px",
-        "purpose": "Projects grid tightens to 36px, 13rem, 1fr, 5.5rem, 8rem, 18px."
+        "value": "1180px",
+        "purpose": "Gutter 40px, h1 68px, poster 48% and 44%, projects one column with the preview hidden, pills 52px, scatter six columns, rooms two, chapters one column."
       },
       {
-        "name": "notebook-2up",
+        "name": "stack",
         "value": "960px",
-        "purpose": "Notebook two across."
+        "purpose": "Hero and page hero stack (poster first on inner pages), Magpie grid stacks head, art, does; doors one column; counts two."
       },
       {
         "name": "phone",
-        "value": "860px",
-        "purpose": "Every split to one column, drawings first, nav shrinks and drops Log, project rows restack."
+        "value": "760px",
+        "purpose": "Gutter 20px, header wraps with the nav on its own line, h1 52, h2 36, h3 22, bands 84px, edges 20px tall, rows restack with a round thumbnail, pills 38px, rooms one column."
+      },
+      {
+        "name": "desk-3up",
+        "value": "1100px",
+        "purpose": "Design desk grid four to three across."
       },
       {
         "name": "desk-2up",
@@ -385,28 +511,36 @@
         "purpose": "Design desk grid two across."
       },
       {
-        "name": "one-column",
+        "name": "desk-1up",
         "value": "640px",
-        "purpose": "Library rows and notebook one column."
+        "purpose": "Library rows and the notebook one column."
       },
       {
         "name": "scene-stack",
         "value": "560px (container)",
-        "purpose": "Magpie redraw becomes a tall stacked picture."
+        "purpose": "The Magpie redraw becomes a tall stacked picture, 158cqw high, popup across the bottom."
       },
       {
-        "name": "small-phone",
-        "value": "360px",
-        "purpose": "Nav gap 12px, tracking 0.08em."
+        "name": "test-width",
+        "value": "390px",
+        "purpose": "Every layout is checked here first."
       }
     ],
     "aliases": [
       {
-        "name": "--mint",
-        "pointsTo": "pale-teal"
+        "name": "--ink",
+        "pointsTo": "navy"
       },
       {
-        "name": "--sky",
+        "name": "--ink-2",
+        "pointsTo": "navy-hover"
+      },
+      {
+        "name": "--ink-3",
+        "pointsTo": "navy-soft"
+      },
+      {
+        "name": "--mint",
         "pointsTo": "pale-teal"
       },
       {
@@ -414,203 +548,295 @@
         "pointsTo": "teal"
       },
       {
-        "name": "--live",
-        "pointsTo": "teal"
-      },
-      {
         "name": "--lilac",
         "pointsTo": "pale-coral"
       },
       {
-        "name": "--lilac-2",
-        "pointsTo": "coral",
-        "unused": true
-      },
-      {
-        "name": "--magpie",
-        "pointsTo": "coral",
-        "unused": true
-      },
-      {
         "name": "--sand",
-        "pointsTo": "paper-3"
+        "pointsTo": "honey-tint"
+      },
+      {
+        "name": "--sky",
+        "pointsTo": "sage-tint"
       },
       {
         "name": "--case",
-        "pointsTo": "ink"
+        "pointsTo": "navy"
       },
       {
         "name": "--link",
-        "pointsTo": "ink"
+        "pointsTo": "navy"
       },
       {
-        "name": "--case-2",
-        "pointsTo": "ink-2",
-        "unused": true
+        "name": "--live",
+        "pointsTo": "deep-teal"
       },
       {
-        "name": "--private",
-        "pointsTo": "ink-3",
-        "unused": true
+        "name": "--radius",
+        "pointsTo": "20px"
+      },
+      {
+        "name": "--ease",
+        "pointsTo": "cubic-bezier(0.16, 1, 0.3, 1)"
+      },
+      {
+        "name": "--font",
+        "pointsTo": "--sans"
       }
-    ]
+    ],
+    "shapes": {
+      "sprite": "One inline SVG sprite at the top of every page; every symbol on viewBox -100 -100 200 200, filled with currentColor, placed with <use x=\"-100\" y=\"-100\" width=\"200\" height=\"200\">.",
+      "symbols": [
+        "s-sun",
+        "s-rays",
+        "s-cog",
+        "s-blob",
+        "s-bean",
+        "s-arch",
+        "s-circle",
+        "s-ast",
+        "s-plus",
+        "s-quat",
+        "s-squig",
+        "s-arrow",
+        "i-lock"
+      ],
+      "clip": "blob-clip, a clipPath in objectBoundingBox units, on the project preview and room screenshots.",
+      "colorClasses": [
+        "c-paper",
+        "c-navy",
+        "c-teal",
+        "c-coral",
+        "c-pale-teal",
+        "c-pale-coral",
+        "c-honey",
+        "c-sage"
+      ],
+      "tileClasses": [
+        "bg-paper",
+        "bg-navy",
+        "bg-teal",
+        "bg-coral",
+        "bg-pale-teal",
+        "bg-pale-coral",
+        "bg-honey",
+        "bg-sage"
+      ],
+      "perInstance": {
+        ".pl": [
+          "--c (plate color, default paper)",
+          "--r (rotate, default 0deg)",
+          "--s (plate width, default 78%)",
+          "--t (plate center from top, default 46%)"
+        ],
+        ".room__pic": [
+          "--c (default pale teal)",
+          "--r (default 0deg)"
+        ]
+      },
+      "edges": {
+        "wave": "160px by 28px mask tile (114 by 20 on a phone)",
+        "scallop": "56px by 28px mask tile (40 by 20 on a phone)"
+      }
+    }
   },
   "components": [
     {
       "name": "Site Navigation",
       "kind": "nav",
       "refersTo": "nav-link",
-      "description": "Wordmark left, four uppercase links right, a 1px navy rule under the header; the current page keeps a coral line.",
-      "html": "<header class=\"ds-header\"><a class=\"ds-wordmark\" href=\"#\">Kelly Lucas</a><nav class=\"ds-nav\" aria-label=\"Primary\"><a href=\"#\" aria-current=\"page\">Magpie</a><a href=\"#\">Projects</a><a href=\"#\">Log</a><a href=\"#\">Playground</a></nav></header>",
-      "css": ".ds-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 76px; padding: 0 24px; background: var(--paper, #f8f6f1); color: var(--ink, #1f355e); border-bottom: 1px solid var(--ink, #1f355e); font-family: var(--font, \"Lato\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); } .ds-wordmark { font-size: 1.375rem; line-height: 1; letter-spacing: -0.005em; color: inherit; text-decoration: none; } .ds-nav { display: flex; gap: 28px; } .ds-nav a { padding: 6px 0; border-bottom: 1px solid transparent; color: inherit; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; transition: border-color 0.2s ease; } .ds-nav a:hover { border-bottom-color: var(--ink, #1f355e); } .ds-nav a[aria-current=\"page\"] { border-bottom-color: var(--coral, #d6605b); } .ds-nav a:focus-visible, .ds-wordmark:focus-visible { outline: 2px solid var(--ink, #1f355e); outline-offset: 4px; border-radius: 2px; }"
+      "description": "A 78px paper row: the sun wordmark, four 17px links, a small pill pushed right; the current page keeps a 2px coral underline.",
+      "html": "<header class=\"ds-top\"><a class=\"ds-mark\" href=\"#\"><svg viewBox=\"-100 -100 200 200\" aria-hidden=\"true\"><polygon fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"14\" stroke-linejoin=\"round\" points=\"0,-92 12.9,-56.5 39.9,-82.9 36.2,-45.3 71.9,-57.4 52.3,-25.2 89.7,-20.5 58,0 89.7,20.5 52.3,25.2 71.9,57.4 36.2,45.3 39.9,82.9 12.9,56.5 0,92 -12.9,56.5 -39.9,82.9 -36.2,45.3 -71.9,57.4 -52.3,25.2 -89.7,20.5 -58,0 -89.7,-20.5 -52.3,-25.2 -71.9,-57.4 -36.2,-45.3 -39.9,-82.9 -12.9,-56.5\"/><circle r=\"30\" fill=\"var(--navy, #1f355e)\"/></svg><span>Kelly Lucas</span></a><nav class=\"ds-nav\" aria-label=\"Primary\"><a href=\"#\" aria-current=\"page\">Magpie</a><a href=\"#\">Projects</a><a href=\"#\">Log</a><a href=\"#\">Playground</a></nav><a class=\"ds-btn ds-btn--sm\" href=\"#\">Say hello</a></header>",
+      "css": ".ds-top { display: flex; align-items: center; gap: 36px; height: 78px; padding: 0 24px; background: var(--paper, #f8f6f1); color: var(--navy, #1f355e); font-family: var(--sans, \"Instrument Sans\", \"Helvetica Neue\", Arial, system-ui, sans-serif); } .ds-mark { display: flex; align-items: center; gap: 10px; font-size: 20px; letter-spacing: -0.01em; color: inherit; text-decoration: none; } .ds-mark svg { width: 30px; height: 30px; color: var(--coral, #d6605b); } .ds-nav { display: flex; gap: 30px; font-size: 17px; } .ds-nav a { color: inherit; text-decoration: none; } .ds-nav a:hover { text-decoration: underline; text-underline-offset: 5px; } .ds-nav a[aria-current=\"page\"] { text-decoration: underline; text-decoration-color: var(--coral, #d6605b); text-decoration-thickness: 2px; text-underline-offset: 5px; } .ds-btn { display: inline-flex; align-items: center; gap: 10px; margin-left: auto; padding: 12px 26px; border: 1.5px solid var(--navy, #1f355e); border-radius: 999px; background: var(--navy, #1f355e); color: var(--paper, #f8f6f1); font-size: 18px; line-height: 1.25; text-decoration: none; white-space: nowrap; transition: background 0.15s, color 0.15s, transform 0.2s; } .ds-btn--sm { font-size: 16px; padding: 10px 20px; } .ds-btn:hover { background: var(--navy-hover, #35496e); transform: translateY(-1px); } .ds-top a:focus-visible { outline: 3px solid var(--navy, #1f355e); outline-offset: 3px; border-radius: 6px; }"
     },
     {
-      "name": "Text-arrow Links",
+      "name": "Pill Buttons",
       "kind": "button",
-      "refersTo": "text-arrow-link",
-      "description": "The button of this system: a bold underlined label with a small drawn arrow that nudges toward where it goes; the line turns coral on hover.",
-      "html": "<div class=\"ds-tlinks\"><a class=\"ds-tlink\" href=\"#\">Magpie <svg class=\"ds-ico ds-ico--down\" viewBox=\"0 0 12 12\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M6 1.5v9M2.5 7 6 10.5 9.5 7\"/></svg></a><a class=\"ds-tlink\" href=\"#\">Magpie’s full record <svg class=\"ds-ico ds-ico--right\" viewBox=\"0 0 12 12\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M1.5 6h9M7 2.5 10.5 6 7 9.5\"/></svg></a><a class=\"ds-tlink\" href=\"#\">HelioFlux <svg class=\"ds-ico ds-ico--out\" viewBox=\"0 0 12 12\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 9 9 3M4.2 3H9v4.8\"/></svg></a></div>",
-      "css": ".ds-tlinks { display: flex; flex-wrap: wrap; gap: 14px 30px; padding: 24px; background: var(--paper, #f8f6f1); font-family: var(--font, \"Lato\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); } .ds-tlink { display: inline-flex; align-items: center; gap: 7px; padding-bottom: 4px; border-bottom: 1px solid var(--ink, #1f355e); color: var(--ink, #1f355e); font-size: 0.9375rem; font-weight: 700; line-height: 1.3; text-decoration: none; transition: border-color 0.2s ease; } .ds-tlink:hover { border-bottom-color: var(--coral, #d6605b); } .ds-ico { flex: none; transition: transform 0.25s var(--ease, cubic-bezier(0.16, 1, 0.3, 1)); } .ds-tlink:hover .ds-ico--down { transform: translateY(2px); } .ds-tlink:hover .ds-ico--right { transform: translateX(3px); } .ds-tlink:hover .ds-ico--out { transform: translate(2px, -2px); } .ds-tlink:focus-visible { outline: 2px solid var(--ink, #1f355e); outline-offset: 4px; border-radius: 2px; }"
-    },
-    {
-      "name": "Running-text Link",
-      "kind": "custom",
-      "refersTo": "text-link",
-      "description": "Navy words with a 1px coral underline that thickens to 2px on hover.",
-      "html": "<p class=\"ds-lede\">I’m the founder of <a class=\"ds-text-link\" href=\"#\">HelioFlux</a>. On the side I build software for myself and use it every day.</p>",
-      "css": ".ds-lede { max-width: 31em; margin: 0; padding: 24px; background: var(--paper, #f8f6f1); color: var(--ink, #1f355e); font-family: var(--font, \"Lato\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); font-size: 1.25rem; line-height: 1.55; } .ds-text-link { color: var(--ink, #1f355e); text-decoration: underline; text-decoration-color: var(--coral, #d6605b); text-decoration-thickness: 1px; text-underline-offset: 0.24em; transition: text-decoration-thickness 0.15s ease; } .ds-text-link:hover { text-decoration-thickness: 2px; } .ds-text-link:focus-visible { outline: 2px solid var(--ink, #1f355e); outline-offset: 4px; border-radius: 2px; }"
+      "refersTo": "button-primary",
+      "description": "Round ends, never square: a navy pill and a line pill with a 1.5px navy border; hover darkens and lifts 1px, the line pill fills.",
+      "html": "<div class=\"ds-btn-row\"><a class=\"ds-btn\" href=\"#\">Meet Magpie</a><a class=\"ds-btn ds-btn--line\" href=\"#\">All ten projects</a><button class=\"ds-btn ds-btn--line ds-btn--sm\" type=\"button\">Another place <svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M13.4 8.8A5.5 5.5 0 1 1 11.8 3.8M13.6 1.6v3.2h-3.2\"/></svg></button></div>",
+      "css": ".ds-btn-row { display: flex; flex-wrap: wrap; gap: 12px; padding: 24px; background: var(--paper, #f8f6f1); font-family: var(--sans, \"Instrument Sans\", \"Helvetica Neue\", Arial, system-ui, sans-serif); } .ds-btn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 26px; border: 1.5px solid var(--navy, #1f355e); border-radius: 999px; background: var(--navy, #1f355e); color: var(--paper, #f8f6f1); font: inherit; font-size: 18px; line-height: 1.25; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background 0.15s, color 0.15s, transform 0.2s; } .ds-btn:hover { background: var(--navy-hover, #35496e); transform: translateY(-1px); } .ds-btn--line { background: transparent; color: var(--navy, #1f355e); } .ds-btn--line:hover { background: var(--navy, #1f355e); color: var(--paper, #f8f6f1); } .ds-btn--sm { font-size: 16px; padding: 10px 20px; } .ds-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; } .ds-btn:focus-visible { outline: 3px solid var(--navy, #1f355e); outline-offset: 3px; }"
     },
     {
       "name": "Status Dots",
       "kind": "chip",
-      "refersTo": "status-dot-live",
-      "description": "Kelly’s 9px square dot, always with its word: coral In use, teal Live, navy outline Private.",
-      "html": "<div class=\"ds-statuses\"><span class=\"ds-status ds-status--use\">In use</span><span class=\"ds-status\">Live</span><span class=\"ds-status ds-status--private\">Private, sign-in</span></div>",
-      "css": ".ds-statuses { display: flex; flex-wrap: wrap; gap: 12px 28px; padding: 24px; background: var(--paper, #f8f6f1); color: var(--ink, #1f355e); font-family: var(--font, \"Lato\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); font-size: 0.9375rem; } .ds-status { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; } .ds-status::before { content: \"\"; width: 9px; height: 9px; flex: none; border-radius: 2px; background: var(--teal, #5a9e9a); } .ds-status--use::before { background: var(--coral, #d6605b); } .ds-status--private::before { background: transparent; box-shadow: inset 0 0 0 1.25px var(--ink, #1f355e); }"
+      "refersTo": "status-dot-use",
+      "description": "A 10px round dot, always with its word: navy In use, deep teal Live, deep coral Private.",
+      "html": "<div class=\"ds-statuses\"><span class=\"ds-status\"><span class=\"ds-dot ds-dot--use\"></span>In use</span><span class=\"ds-status\"><span class=\"ds-dot ds-dot--live\"></span>Live</span><span class=\"ds-status\"><span class=\"ds-dot ds-dot--priv\"></span>Private, sign-in</span></div>",
+      "css": ".ds-statuses { display: flex; flex-wrap: wrap; gap: 8px 22px; padding: 24px; background: var(--paper, #f8f6f1); color: var(--navy, #1f355e); font-family: var(--sans, \"Instrument Sans\", \"Helvetica Neue\", Arial, system-ui, sans-serif); font-size: 16px; } .ds-status { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; } .ds-dot { display: inline-block; flex: none; width: 10px; height: 10px; border-radius: 50%; } .ds-dot--use { background: var(--navy, #1f355e); } .ds-dot--live { background: var(--deep-teal, #3b7672); } .ds-dot--priv { background: var(--deep-coral, #b5443f); }"
+    },
+    {
+      "name": "Band with a Wave",
+      "kind": "card",
+      "refersTo": "band-pale-teal",
+      "description": "A full-width tint with a wavy top that inherits the band’s color and overlaps the section above; the scallop variant swaps the mask.",
+      "html": "<div class=\"ds-stage\"><div class=\"ds-band ds-band--pteal ds-edge\"><h2 class=\"ds-h2\">Magpie, my web clipper.</h2><p>It files everything I find into two nests at once.</p></div><div class=\"ds-band ds-band--pcoral ds-edge ds-edge--scallop\"><h2 class=\"ds-h2\">Ten things I’ve made.</h2><p>Every line opens the real thing.</p></div></div>",
+      "css": ".ds-stage { padding-top: 32px; background: var(--paper, #f8f6f1); color: var(--navy, #1f355e); font-family: var(--sans, \"Instrument Sans\", \"Helvetica Neue\", Arial, system-ui, sans-serif); } .ds-band { position: relative; padding: 48px 24px; } .ds-band--pteal { background: var(--pale-teal, #d4e7e5); } .ds-band--pcoral { background: var(--pale-coral, #f6dcd8); } .ds-edge::before { content: \"\"; position: absolute; left: 0; right: 0; top: -27px; height: 28px; background: inherit; pointer-events: none; -webkit-mask: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 28'%3E%3Cpath d='M0 28V20C40 20 40 4 80 4S120 20 160 20V28Z'/%3E%3C/svg%3E\") 0 0 / 160px 28px repeat-x; mask: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 28'%3E%3Cpath d='M0 28V20C40 20 40 4 80 4S120 20 160 20V28Z'/%3E%3C/svg%3E\") 0 0 / 160px 28px repeat-x; } .ds-edge--scallop::before { -webkit-mask: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 28'%3E%3Cpath d='M0 28A28 24 0 0 1 56 28Z'/%3E%3C/svg%3E\") 0 0 / 56px 28px repeat-x; mask: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 28'%3E%3Cpath d='M0 28A28 24 0 0 1 56 28Z'/%3E%3C/svg%3E\") 0 0 / 56px 28px repeat-x; } .ds-h2 { margin: 0; font-size: 36px; font-weight: 400; line-height: 1.06; letter-spacing: -0.02em; } .ds-band p { margin: 14px 0 0; font-size: 18px; line-height: 1.45; }"
+    },
+    {
+      "name": "Where to Next Pills",
+      "kind": "nav",
+      "refersTo": "pill-nav-navy",
+      "description": "Big words in colored pills with a round tile holding a shape; hover lifts and tilts. Navy on coral is pill-size text only.",
+      "html": "<nav class=\"ds-pills\" aria-label=\"Where to next\"><a class=\"ds-pill ds-pill--navy\" href=\"#\"><span class=\"ds-ptile\" style=\"background: var(--coral, #d6605b)\"><svg viewBox=\"-100 -100 200 200\" aria-hidden=\"true\"><g stroke=\"currentColor\" stroke-width=\"34\" stroke-linecap=\"round\"><line x1=\"0\" y1=\"-72\" x2=\"0\" y2=\"72\"/><line x1=\"-62.4\" y1=\"-36\" x2=\"62.4\" y2=\"36\"/><line x1=\"-62.4\" y1=\"36\" x2=\"62.4\" y2=\"-36\"/></g></svg></span>Magpie</a><a class=\"ds-pill ds-pill--sage\" href=\"#\"><span class=\"ds-ptile\" style=\"background: var(--paper, #f8f6f1)\"><svg viewBox=\"-100 -100 200 200\" aria-hidden=\"true\"><g fill=\"currentColor\"><circle cx=\"-40\" cy=\"0\" r=\"42\"/><circle cx=\"40\" cy=\"0\" r=\"42\"/><circle cx=\"0\" cy=\"-40\" r=\"42\"/><circle cx=\"0\" cy=\"40\" r=\"42\"/></g></svg></span>Design desk</a><a class=\"ds-pill ds-pill--coral\" href=\"#\"><span class=\"ds-ptile\" style=\"background: var(--pale-coral, #f6dcd8)\"><svg viewBox=\"-100 -100 200 200\" aria-hidden=\"true\"><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"22\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M-82 10 C-70 -40 -42 -40 -36 0 S-6 44 2 0 S38 -44 46 0 S78 40 86 -10\"/></svg></span>Playground</a><a class=\"ds-pill ds-pill--honey\" href=\"#\"><span class=\"ds-ptile\" style=\"background: var(--navy, #1f355e); color: var(--paper, #f8f6f1)\"><svg viewBox=\"-100 -100 200 200\" aria-hidden=\"true\"><g stroke=\"currentColor\" stroke-width=\"44\" stroke-linecap=\"round\"><line x1=\"0\" y1=\"-66\" x2=\"0\" y2=\"66\"/><line x1=\"-66\" y1=\"0\" x2=\"66\" y2=\"0\"/></g></svg></span>Log</a></nav>",
+      "css": ".ds-pills { display: flex; flex-wrap: wrap; gap: 14px; padding: 24px; background: var(--paper, #f8f6f1); color: var(--navy, #1f355e); font-family: var(--sans, \"Instrument Sans\", \"Helvetica Neue\", Arial, system-ui, sans-serif); } .ds-pill { display: inline-flex; align-items: center; gap: 14px; padding: 8px 26px 10px 10px; border-radius: 999px; color: inherit; font-size: 40px; line-height: 1; letter-spacing: -0.025em; text-decoration: none; transition: transform 0.2s; } .ds-pill:hover { transform: translateY(-3px) rotate(-1deg); } .ds-ptile { display: grid; place-items: center; flex: none; width: 48px; height: 48px; margin-top: 2px; border-radius: 50%; color: var(--navy, #1f355e); } .ds-ptile svg { width: 28px; height: 28px; display: block; } .ds-pill--navy { background: var(--navy, #1f355e); color: var(--paper, #f8f6f1); } .ds-pill--sage { background: var(--sage-tint, #e6ecdf); } .ds-pill--coral { background: var(--coral, #d6605b); } .ds-pill--honey { background: var(--honey, #f0bf4c); } .ds-pill:focus-visible { outline: 3px solid var(--navy, #1f355e); outline-offset: 3px; }"
     },
     {
       "name": "Project Row",
       "kind": "card",
-      "refersTo": "project-row",
-      "description": "One line of the ruled projects register: number, title, what it is, kind, status, arrow; the title takes a coral underline on hover.",
-      "html": "<ol class=\"ds-index\"><li><a class=\"ds-row\" href=\"#\"><span class=\"ds-row__num\">01</span><span class=\"ds-row__title\">Magpie</span><span class=\"ds-row__desc\">A web clipper and private library. One click, two nests.</span><span class=\"ds-row__kind\">Tool</span><span class=\"ds-row__status ds-row__status--use\">In use</span><svg class=\"ds-ico ds-row__arr\" viewBox=\"0 0 12 12\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M1.5 6h9M7 2.5 10.5 6 7 9.5\"/></svg></a></li><li><a class=\"ds-row\" href=\"#\"><span class=\"ds-row__num\">02</span><span class=\"ds-row__title\">Design desk</span><span class=\"ds-row__desc\">A public swipe file for UI, sorted into five piles by Magpie.</span><span class=\"ds-row__kind\">Library</span><span class=\"ds-row__status\">Live</span><svg class=\"ds-ico ds-row__arr\" viewBox=\"0 0 12 12\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M1.5 6h9M7 2.5 10.5 6 7 9.5\"/></svg></a></li></ol>",
-      "css": ".ds-index { list-style: none; margin: 0; padding: 0 24px; background: var(--paper, #f8f6f1); border-top: 1px solid var(--ink, #1f355e); font-family: var(--font, \"Lato\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); } .ds-row { display: grid; grid-template-columns: 36px minmax(0, 10rem) minmax(0, 1fr) 5rem 6rem 14px; column-gap: 18px; align-items: baseline; padding: 21px 0 22px; border-bottom: 1px solid var(--rule-2, rgba(31, 53, 94, 0.28)); color: var(--ink, #1f355e); text-decoration: none; } .ds-row__num { font-size: 0.9375rem; font-weight: 300; color: var(--ink-3, #56647f); font-variant-numeric: tabular-nums; } .ds-row__title { font-size: 1.3125rem; line-height: 1.3; } .ds-row__desc { font-size: 1rem; line-height: 1.5; color: var(--ink-2, #3d5072); } .ds-row__kind { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-3, #56647f); } .ds-row__status { display: inline-flex; align-items: center; gap: 8px; font-size: 0.9375rem; white-space: nowrap; } .ds-row__status::before { content: \"\"; width: 9px; height: 9px; border-radius: 2px; background: var(--teal, #5a9e9a); } .ds-row__status--use::before { background: var(--coral, #d6605b); } .ds-row__arr { align-self: center; justify-self: end; transition: transform 0.25s var(--ease, cubic-bezier(0.16, 1, 0.3, 1)); } .ds-row:hover .ds-row__title { text-decoration: underline; text-decoration-color: var(--coral, #d6605b); text-underline-offset: 0.24em; } .ds-row:hover .ds-row__arr { transform: translateX(3px); } .ds-row:focus-visible { outline: 2px solid var(--ink, #1f355e); outline-offset: 4px; border-radius: 2px; }"
+      "refersTo": "status-dot-live",
+      "description": "One line of the projects list: a mono number, the title with its what, the kind and the status, between 1px navy rules; the title underlines on hover.",
+      "html": "<ol class=\"ds-list\"><li><a class=\"ds-row\" href=\"#\"><span class=\"ds-row__n\">01</span><span><span class=\"ds-row__t\">Magpie</span><span class=\"ds-row__w\">A web clipper and private library. One click, two nests.</span></span><span class=\"ds-row__k\">Tool</span><span class=\"ds-row__s\"><span class=\"ds-dot\" style=\"background: var(--navy, #1f355e)\"></span>In use</span></a></li><li><a class=\"ds-row\" href=\"#\"><span class=\"ds-row__n\">02</span><span><span class=\"ds-row__t\">Design desk</span><span class=\"ds-row__w\">A public swipe file for UI, sorted into five piles by Magpie.</span></span><span class=\"ds-row__k\">Library</span><span class=\"ds-row__s\"><span class=\"ds-dot\" style=\"background: var(--deep-teal, #3b7672)\"></span>Live</span></a></li></ol>",
+      "css": ".ds-list { list-style: none; margin: 0; padding: 0 24px; background: var(--pale-coral, #f6dcd8); color: var(--navy, #1f355e); border-top: 1px solid var(--navy, #1f355e); font-family: var(--sans, \"Instrument Sans\", \"Helvetica Neue\", Arial, system-ui, sans-serif); } .ds-list li { border-bottom: 1px solid var(--navy, #1f355e); } .ds-row { display: grid; grid-template-columns: 40px minmax(0, 1fr) 84px 128px; gap: 16px; align-items: baseline; padding: 16px 0; color: inherit; text-decoration: none; } .ds-row__n { font-family: var(--mono, \"DM Mono\", ui-monospace, Menlo, monospace); font-size: 13px; font-variant-numeric: tabular-nums; } .ds-row__t { font-size: 22px; line-height: 1.2; letter-spacing: -0.015em; } .ds-row__w { display: block; margin-top: 3px; font-size: 15px; line-height: 1.4; } .ds-row__k { font-size: 14px; } .ds-row__s { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; white-space: nowrap; } .ds-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; } .ds-row:hover .ds-row__t, .ds-row:focus-visible .ds-row__t { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; } .ds-row:focus-visible { outline: 3px solid var(--navy, #1f355e); outline-offset: 3px; border-radius: 6px; }"
     },
     {
-      "name": "Filter Chips",
-      "kind": "chip",
-      "refersTo": "chip",
-      "description": "Design desk filters: hairline-bordered, 4px corners; pressed fills navy. The count is shown in ink-3 here, the fix for the faded count in the build.",
-      "html": "<div class=\"ds-chips\"><button class=\"ds-chip\" type=\"button\" aria-pressed=\"true\">All<span class=\"ds-chip__count\">96</span></button><button class=\"ds-chip\" type=\"button\" aria-pressed=\"false\">Galleries<span class=\"ds-chip__count\">18</span></button><button class=\"ds-chip\" type=\"button\" aria-pressed=\"false\">Tools<span class=\"ds-chip__count\">24</span></button></div>",
-      "css": ".ds-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 24px; background: var(--paper, #f8f6f1); font-family: var(--font, \"Lato\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); } .ds-chip { font: inherit; font-size: 0.9063rem; min-height: 36px; padding: 7px 14px; border-radius: 4px; border: 1px solid var(--rule-2, rgba(31, 53, 94, 0.28)); background: transparent; color: var(--ink-2, #3d5072); cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; } .ds-chip:hover { border-color: var(--ink, #1f355e); color: var(--ink, #1f355e); } .ds-chip[aria-pressed=\"true\"] { background: var(--ink, #1f355e); border-color: var(--ink, #1f355e); color: var(--paper, #f8f6f1); } .ds-chip__count { margin-left: 6px; color: var(--ink-3, #56647f); } .ds-chip[aria-pressed=\"true\"] .ds-chip__count { color: inherit; opacity: 0.75; } .ds-chip:focus-visible { outline: 2px solid var(--ink, #1f355e); outline-offset: 4px; }"
-    },
-    {
-      "name": "Search Field",
-      "kind": "input",
-      "refersTo": "search-field",
-      "description": "The design desk search: card ground, hairline border, a drawn magnifier; focus turns the border navy with a flat pale-teal halo and a coral caret.",
-      "html": "<label class=\"ds-search-wrap\"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"7\" cy=\"7\" r=\"4.5\"/><path d=\"M10.5 10.5 14 14\"/></svg><input class=\"ds-search\" type=\"search\" placeholder=\"Search the desk\" aria-label=\"Search the desk\" /></label>",
-      "css": ".ds-search-wrap { position: relative; display: block; width: min(320px, 100%); margin: 24px; font-family: var(--font, \"Lato\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); } .ds-search-wrap svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--ink-3, #56647f); pointer-events: none; } .ds-search { width: 100%; height: 42px; padding: 0 14px 0 36px; border-radius: 4px; border: 1px solid var(--rule-2, rgba(31, 53, 94, 0.28)); background: var(--card, #fcfbf8); font: inherit; font-size: 0.9375rem; color: var(--ink, #1f355e); caret-color: var(--coral, #d6605b); box-sizing: border-box; } .ds-search::placeholder { color: var(--ink-3, #56647f); } .ds-search:focus { outline: none; border-color: var(--ink, #1f355e); box-shadow: 0 0 0 3px var(--pale-teal, #d4e7e5); }"
-    },
-    {
-      "name": "Next Project Bar",
+      "name": "Door",
       "kind": "card",
-      "refersTo": "next-object",
-      "description": "Closes a record page: navy rules above and below, the next name in Headline, an arrow that nudges on hover.",
-      "html": "<a class=\"ds-next\" href=\"#\"><span class=\"ds-next__title\">Design desk</span><span class=\"ds-next__meta\">Next project, 02</span><svg class=\"ds-next__ico\" viewBox=\"0 0 12 12\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M1.5 6h9M7 2.5 10.5 6 7 9.5\"/></svg></a>",
-      "css": ".ds-next { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: \"title arrow\" \"meta arrow\"; align-items: center; gap: 4px 24px; margin: 24px; padding: 28px 0 30px; border-top: 1px solid var(--ink, #1f355e); border-bottom: 1px solid var(--ink, #1f355e); color: var(--ink, #1f355e); background: var(--paper, #f8f6f1); font-family: var(--font, \"Lato\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); text-decoration: none; } .ds-next__title { grid-area: title; font-size: clamp(2rem, 3.8vw, 3.25rem); font-weight: 300; line-height: 1.06; letter-spacing: -0.018em; } .ds-next__meta { grid-area: meta; font-size: 0.9375rem; color: var(--ink-3, #56647f); } .ds-next__ico { grid-area: arrow; transition: transform 0.25s var(--ease, cubic-bezier(0.16, 1, 0.3, 1)); } .ds-next:hover .ds-next__title { text-decoration: underline; text-decoration-color: var(--coral, #d6605b); text-decoration-thickness: 1px; text-underline-offset: 0.16em; } .ds-next:hover .ds-next__ico { transform: translateX(4px); } .ds-next:focus-visible { outline: 2px solid var(--ink, #1f355e); outline-offset: 4px; }"
+      "refersTo": "door-sage",
+      "description": "An arched card: a semicircular top holding three shapes, a body with 32px bottom corners; sage with navy text, or deep coral with paper text.",
+      "html": "<article class=\"ds-door ds-door--sage\"><div class=\"ds-door__top\" aria-hidden=\"true\"><svg class=\"ds-s1\" viewBox=\"-100 -100 200 200\" style=\"color: var(--teal, #5a9e9a)\"><g stroke=\"currentColor\" stroke-width=\"34\" stroke-linecap=\"round\"><line x1=\"0\" y1=\"0\" x2=\"74.5\" y2=\"23.1\"/><line x1=\"0\" y1=\"0\" x2=\"34.7\" y2=\"53.8\"/><line x1=\"0\" y1=\"0\" x2=\"-10.5\" y2=\"83.3\"/><line x1=\"0\" y1=\"0\" x2=\"-51.4\" y2=\"47.6\"/><line x1=\"0\" y1=\"0\" x2=\"-57.9\" y2=\"2.8\"/><line x1=\"0\" y1=\"0\" x2=\"-63.7\" y2=\"-48.4\"/><line x1=\"0\" y1=\"0\" x2=\"-14.6\" y2=\"-64.4\"/><line x1=\"0\" y1=\"0\" x2=\"33.8\" y2=\"-65.8\"/><line x1=\"0\" y1=\"0\" x2=\"55.3\" y2=\"-23.3\"/></g><circle r=\"46\" fill=\"currentColor\"/></svg><svg class=\"ds-s2\" viewBox=\"-100 -100 200 200\" style=\"color: var(--pale-coral, #f6dcd8)\"><g fill=\"currentColor\"><circle cx=\"-40\" cy=\"0\" r=\"42\"/><circle cx=\"40\" cy=\"0\" r=\"42\"/><circle cx=\"0\" cy=\"-40\" r=\"42\"/><circle cx=\"0\" cy=\"40\" r=\"42\"/></g></svg><svg class=\"ds-s3\" viewBox=\"-100 -100 200 200\" style=\"color: var(--coral, #d6605b)\"><g stroke=\"currentColor\" stroke-width=\"34\" stroke-linecap=\"round\"><line x1=\"0\" y1=\"-72\" x2=\"0\" y2=\"72\"/><line x1=\"-62.4\" y1=\"-36\" x2=\"62.4\" y2=\"36\"/><line x1=\"-62.4\" y1=\"36\" x2=\"62.4\" y2=\"-36\"/></g></svg></div><div class=\"ds-door__body\"><h3 class=\"ds-h3\">Log</h3><p>What changed on this site, and when.</p><a class=\"ds-tlink\" href=\"#\">The full log</a></div></article>",
+      "css": ".ds-door { display: flex; flex-direction: column; max-width: 420px; margin: 24px; font-family: var(--sans, \"Instrument Sans\", \"Helvetica Neue\", Arial, system-ui, sans-serif); } .ds-door--sage { --door: var(--sage, #9fb78f); color: var(--navy, #1f355e); } .ds-door__top { position: relative; aspect-ratio: 2 / 1; border-radius: 9999px 9999px 0 0; background: var(--door); } .ds-door__top svg { position: absolute; display: block; } .ds-s1 { width: 30%; left: 35%; top: 30%; } .ds-s2 { width: 13%; left: 20%; top: 60%; } .ds-s3 { width: 12%; right: 20%; top: 56%; } .ds-door__body { flex: 1; padding: 6px 48px 48px; border-radius: 0 0 32px 32px; background: var(--door); } .ds-h3 { margin: 0; font-size: 26px; font-weight: 400; line-height: 1.2; letter-spacing: -0.01em; } .ds-door p { margin: 12px 0 0; font-size: 17px; line-height: 1.5; } .ds-tlink { display: inline-block; margin-top: 20px; color: inherit; font-size: 18px; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; } .ds-tlink:hover { text-decoration-thickness: 2px; } .ds-tlink:focus-visible { outline: 3px solid var(--navy, #1f355e); outline-offset: 3px; border-radius: 6px; }"
+    },
+    {
+      "name": "Journey Steps",
+      "kind": "custom",
+      "refersTo": "step-tile",
+      "description": "Numbered steps with round mono counters in honey, pale teal and pale coral, a 500-weight title, 1px navy rules between.",
+      "html": "<ol class=\"ds-journey\"><li><div><h3>Clip</h3><p>I press the feather, or Alt+Shift+M. The popup shows a preview and takes my tags and a note.</p></div></li><li><div><h3>Two nests</h3><p>A server on my Mac writes a note into the vault and adds an entry to the library.</p></div></li><li><div><h3>Find it again</h3><p>The gallery searches titles, notes, sites and tags.</p></div></li></ol>",
+      "css": ".ds-journey { counter-reset: step; list-style: none; margin: 0; padding: 24px; max-width: 720px; background: var(--paper, #f8f6f1); color: var(--navy, #1f355e); font-family: var(--sans, \"Instrument Sans\", \"Helvetica Neue\", Arial, system-ui, sans-serif); font-size: 16px; line-height: 1.5; } .ds-journey li { display: grid; grid-template-columns: 44px 1fr; gap: 18px; padding: 22px 0; border-bottom: 1px solid var(--navy, #1f355e); counter-increment: step; } .ds-journey li:first-child { padding-top: 0; } .ds-journey li::before { content: counter(step); display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--honey, #f0bf4c); font-family: var(--mono, \"DM Mono\", ui-monospace, Menlo, monospace); font-size: 15px; } .ds-journey li:nth-child(2n)::before { background: var(--pale-teal, #d4e7e5); } .ds-journey li:nth-child(3n)::before { background: var(--pale-coral, #f6dcd8); } .ds-journey h3 { margin: 0; font-size: 22px; font-weight: 500; line-height: 1.3; letter-spacing: -0.01em; } .ds-journey p { margin: 6px 0 0; }"
     },
     {
       "name": "Ledger Entry",
       "kind": "custom",
       "refersTo": "version-tag",
-      "description": "The log: a date column, a version tag in pale teal (newest in pale coral), the headline in navy and the rest in ink-2.",
+      "description": "The log: a mono date column, a version tag pill in honey (pale teal and pale coral down the list), a 500-weight lead-in, navy rules.",
       "html": "<ol class=\"ds-ledger\"><li><time datetime=\"2026-10-05\">Oct 5, 2026</time><p><span class=\"ds-ledger__v\">v1.0</span> <b>The lab grew up.</b> Real projects up front, Magpie first, and the toys moved to the playground.</p></li><li><time datetime=\"2026-09-24\">Sep 24, 2026</time><p><span class=\"ds-ledger__v\">v0.9.1</span> <b>The design desk got five piles.</b> The HelioFlux website, Heliopolis, Pretzel Protocol, resources and examples.</p></li></ol>",
-      "css": ".ds-ledger { list-style: none; margin: 24px; padding: 0; border-bottom: 1px solid var(--rule-2, rgba(31, 53, 94, 0.28)); background: var(--paper, #f8f6f1); font-family: var(--font, \"Lato\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); font-size: 1.0625rem; line-height: 1.6; } .ds-ledger li { display: grid; grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr); gap: 6px 32px; padding: 20px 0 22px; border-top: 1px solid var(--rule-2, rgba(31, 53, 94, 0.28)); } .ds-ledger li:first-child { border-top-color: var(--ink, #1f355e); } .ds-ledger time { font-size: 0.9375rem; color: var(--ink-3, #56647f); font-variant-numeric: tabular-nums; } .ds-ledger p { margin: 0; color: var(--ink-2, #3d5072); } .ds-ledger b { font-weight: 400; color: var(--ink, #1f355e); } .ds-ledger__v { display: inline-block; margin-right: 6px; padding: 0 7px; border-radius: 4px; background: var(--pale-teal, #d4e7e5); color: var(--ink, #1f355e); font-size: 0.8125rem; vertical-align: 1px; } .ds-ledger li:first-child .ds-ledger__v { background: var(--pale-coral, #f6dcd8); }"
+      "css": ".ds-ledger { list-style: none; margin: 0; padding: 0 24px; max-width: 860px; background: var(--honey-tint, #fbf0cf); color: var(--navy, #1f355e); border-top: 1px solid var(--navy, #1f355e); font-family: var(--sans, \"Instrument Sans\", \"Helvetica Neue\", Arial, system-ui, sans-serif); } .ds-ledger li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 8px 32px; padding: 22px 0; border-bottom: 1px solid var(--navy, #1f355e); } .ds-ledger time { padding-top: 4px; font-family: var(--mono, \"DM Mono\", ui-monospace, Menlo, monospace); font-size: 14px; font-variant-numeric: tabular-nums; } .ds-ledger p { margin: 0; max-width: 40em; font-size: 18px; line-height: 1.5; } .ds-ledger b { font-weight: 500; } .ds-ledger__v { display: inline-block; margin-right: 8px; padding: 1px 10px; border-radius: 999px; background: var(--honey, #f0bf4c); font-family: var(--mono, \"DM Mono\", ui-monospace, Menlo, monospace); font-size: 13px; vertical-align: 2px; } .ds-ledger li:nth-child(2n) .ds-ledger__v { background: var(--pale-teal, #d4e7e5); } .ds-ledger li:nth-child(3n) .ds-ledger__v { background: var(--pale-coral, #f6dcd8); }"
+    },
+    {
+      "name": "Design Desk Chips and Search",
+      "kind": "input",
+      "refersTo": "desk-chip",
+      "description": "The desk’s filter chips and search field, both pills with a navy-at-28% border; a pressed chip fills navy, focus turns the field’s border navy.",
+      "html": "<div class=\"ds-desk\"><div class=\"ds-chips\"><button class=\"ds-chip\" type=\"button\" aria-pressed=\"true\">All<span class=\"ds-chip__count\">96</span></button><button class=\"ds-chip\" type=\"button\" aria-pressed=\"false\">Galleries<span class=\"ds-chip__count\">18</span></button><button class=\"ds-chip\" type=\"button\" aria-pressed=\"false\">Tools<span class=\"ds-chip__count\">24</span></button></div><label class=\"ds-search-wrap\"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"7\" cy=\"7\" r=\"4.5\"/><path d=\"M10.5 10.5 14 14\"/></svg><input class=\"ds-search\" type=\"search\" placeholder=\"Search the desk\" aria-label=\"Search the desk\" /></label></div>",
+      "css": ".ds-desk { display: grid; gap: 14px; padding: 24px; background: var(--paper, #f8f6f1); font-family: var(--sans, \"Instrument Sans\", \"Helvetica Neue\", Arial, system-ui, sans-serif); } .ds-chips { display: flex; flex-wrap: wrap; gap: 6px; } .ds-chip { font: inherit; font-size: 0.9063rem; padding: 7px 14px; min-height: 36px; border-radius: 999px; border: 1px solid var(--rule-2, rgba(31, 53, 94, 0.28)); background: transparent; color: var(--navy-hover, #35496e); cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; } .ds-chip:hover { border-color: var(--navy, #1f355e); color: var(--navy, #1f355e); } .ds-chip[aria-pressed=\"true\"] { background: var(--navy, #1f355e); border-color: var(--navy, #1f355e); color: var(--paper, #f8f6f1); } .ds-chip__count { margin-left: 6px; color: var(--navy-soft, #556583); } .ds-chip[aria-pressed=\"true\"] .ds-chip__count { color: var(--paper, #f8f6f1); opacity: 0.8; } .ds-search-wrap { position: relative; display: block; width: min(320px, 100%); } .ds-search-wrap svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--navy-soft, #556583); pointer-events: none; } .ds-search { width: 100%; height: 42px; padding: 0 14px 0 36px; border-radius: 999px; border: 1px solid var(--rule-2, rgba(31, 53, 94, 0.28)); background: var(--card, #fcfbf8); font: inherit; font-size: 0.9375rem; color: var(--navy, #1f355e); box-sizing: border-box; } .ds-search::placeholder { color: var(--navy-soft, #556583); } .ds-search:focus { border-color: var(--navy, #1f355e); } .ds-search:focus-visible { outline: 2px solid var(--navy, #1f355e); outline-offset: 2px; } .ds-chip:focus-visible { outline: 3px solid var(--navy, #1f355e); outline-offset: 3px; }"
     },
     {
       "name": "Toast",
       "kind": "custom",
       "refersTo": "toast",
-      "description": "The one floating note: navy ground, paper text, 4px corners, no shadow; rises 8px into place and hides after 2.8s.",
+      "description": "The one floating note: a navy pill with paper text, no shadow; rises 8px into place and hides after 2.8s.",
       "html": "<div class=\"ds-toast-stage\"><div class=\"ds-toast\" role=\"status\">Clipped. Filed under shiny things.</div></div>",
-      "css": ".ds-toast-stage { display: grid; place-items: center; min-height: 96px; background: var(--paper, #f8f6f1); font-family: var(--font, \"Lato\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif); } .ds-toast { max-width: calc(100% - 32px); padding: 10px 16px; border-radius: 4px; background: var(--ink, #1f355e); color: var(--paper, #f8f6f1); font-size: 0.9375rem; transition: opacity 0.25s ease, transform 0.35s var(--ease, cubic-bezier(0.16, 1, 0.3, 1)); } .ds-toast-stage:hover .ds-toast { transform: translateY(-2px); }"
+      "css": ".ds-toast-stage { display: grid; place-items: center; min-height: 96px; background: var(--paper, #f8f6f1); font-family: var(--sans, \"Instrument Sans\", \"Helvetica Neue\", Arial, system-ui, sans-serif); } .ds-toast { max-width: calc(100% - 32px); padding: 10px 18px; border-radius: 999px; background: var(--navy, #1f355e); color: var(--paper, #f8f6f1); font-size: 15px; transition: opacity 0.25s ease, transform 0.35s var(--ease, cubic-bezier(0.16, 1, 0.3, 1)); } .ds-toast-stage:hover .ds-toast { transform: translateY(-2px); }"
     }
   ],
   "narrative": {
-    "northStar": "Drawn in the Heliopolis Style",
-    "overview": "The site is the home for Kelly's real projects, with Magpie up front, and it borrows the look of Heliopolis, the HelioFlux team space Kelly designed: warm paper, a fine navy pen, flat fills, one drawing per view and a lot of calm space around everything. Every page opens with a drawing that sits on the paper the way ink sits in a sketchbook: no frame, no tint behind it, never cropped. The type and the rules are drawn with the same pen as the pictures, so a 1px navy line under the header, a navy rule opening a section and the outline of a granite tower are one material.\n\nDensity is generous. Hierarchy comes from Lato Light at large sizes against Lato Regular for reading, from 1px navy rules and lighter hairlines, and from a 12-column grid with asymmetric splits that always leaves paper showing. Color is used by meaning: navy writes every word and draws every line; pale teal and pale coral fill; teal and coral are small marks (an underline, a dot, the current-page line). The drawings are the one place where all six colors meet at full strength, and they are where the page's color comes from.\n\nMotion is one authored moment per page (the place crossfade on the homepage, the clip on the Magpie page) plus small hover nudges on one shared curve. All of it yields to `prefers-reduced-motion`, and every page reads complete without JavaScript. This system replaced the \"collection\" (Heliora, mint, lilac, sand and sky plates, accession numbers) and, before it, the v0.5 to v0.9 lab (slabs, stickers, confetti), which survives only in the playground rooms on `lab.css`. It equally rejects the stock SaaS page: pill call-to-action pairs, icon card grids, metric heroes.",
+    "northStar": "A Poster of a Place",
+    "overview": "The site is where Kelly’s real projects live, with Magpie up front, and it opens like a poster: one of her travel drawings sitting on a big honey sun, two smaller places orbiting it on round plates, a few chunky shapes scattered around, and a pill button that swaps the place. The frame comes from Figma Slides: a calm paper page, big regular-weight type, flat chunky shapes and bands of pastel color stacked down the page with wavy or scalloped tops. The pictures are not that reference’s square product mockups; they are Kelly’s drawings in her Heliopolis style (fine navy pen, flat color), recolored into this site’s palette and always shown whole, on a shape, never in a box.\n\nKelly asked for color and a bit of chaos: shapes and stuff. The system gives that a budget rather than a free hand. Every page follows the same spine (header, poster, bands, pills, footer), every band is one tint, and the chaos lives in the decoration: suns that turn once every three minutes, orbs that bob, a scatter of places at nine different sizes and tilts, a \"Kelly\" cursor tag winking from the corner of the poster. The palette is her six colors (paper, navy, teal, coral and their pales) plus two friends she chose, honey and sage, after rejecting bright blue and violet. Navy still carries every word; the other colors carry the shapes and the bands.\n\nHierarchy comes from size, not weight: one typeface, Instrument Sans, at a regular 400 for an 86px display and a 16px body, with 500 as the loudest weight anywhere, and DM Mono for dates, numbers and small labels. Nothing lifts: no shadows, no gradients. Depth is overlap, a drawing in front of a sun, a sun in front of a band. Everything is round: pills, circles, blobs, arches, scalloped edges. Motion is slow and few: the spin, the bob, the poster crossfade on click, the clip demo on the Magpie page, and all of it switches off under `prefers-reduced-motion`. The v0.5 to v0.9 lab look (slabs, stickers, confetti) survives only inside the playground rooms on `lab.css`.",
     "keyCharacteristics": [
-      "Warm paper ground, navy for every word and every line; no dark sections, the footer stays on paper.",
-      "Six colors used by meaning; the drawings carry all six, the interface carries mostly navy.",
-      "One typeface, Lato, in four weights: Light display, Regular reading, Medium labels, Bold standalone links.",
-      "One drawing per view, at its natural shape, never boxed, cropped or shadowed.",
-      "Ruled lists (projects, does, journey, data, ledger, rooms) instead of cards.",
-      "Flat: no drop shadows, no gradients, no pill buttons."
+      "A poster, not a hero: every page opens with one drawing on a big round shape, with paper around it.",
+      "Eight colors: paper and navy carry every word; teal, coral, honey and sage carry the shapes; the pales and tints are the bands.",
+      "One typeface at a regular weight, big where it matters (86 / 52 / 26 / 22 / 16, numbers at 120, pills at 64); DM Mono for numbers.",
+      "Round, never square: pill buttons, circle tiles, blob-clipped screenshots, arched doors, wave and scallop band edges.",
+      "Flat: no shadows, no gradients, no borders heavier than 1px or 1.5px navy.",
+      "Slow motion in the decoration, one authored moment per page, all gone under reduced motion."
     ],
     "rules": [
       {
-        "name": "The Navy Writes Rule",
-        "body": "Every word is navy, ink-2 or ink-3. Coral (3.4:1) and teal (2.9:1) never set text, on paper or on any fill; they appear only as lines, dots and outlines.",
+        "name": "The Navy Carries Rule",
+        "body": "Every word is navy, navy hover or navy soft, or paper on navy and the two deeps. Teal, coral, honey and sage write nothing; they fill shapes, bands, tiles and dots.",
         "section": "colors"
       },
       {
-        "name": "The Pale Fill Rule",
-        "body": "Pale teal and pale coral fill drawings and a few small grounds (the redraw's field, version tags, kind pills, selection, the focus halo). They never fill a section band, a button or a card of text.",
+        "name": "The Large Only Rule",
+        "body": "Navy on coral (3.3:1) and navy on teal (3.9:1) appear only under text at pill size, 38px and up. Navy on honey (7.1:1) and navy on sage (5.6:1) pass at any size, so honey and sage can carry a tile, a tag or a door of text.",
         "section": "colors"
       },
       {
-        "name": "The Six in Every Drawing Rule",
-        "body": "Every drawing uses all six colors, recolored by meaning: navy for the pen, teal and pale teal for water and leaves, coral and pale coral for stone, roofs and small accents, paper for the light. The interface stays quiet so the drawing can be the color on the page.",
+        "name": "The Strong Sun Rule",
+        "body": "The big shape behind a drawing is a strong color, never a tint: honey first, then coral, then teal as the home poster cycles (`SUNS` in `script.js`); honey, sage, coral or pale teal on the inner posters. The tints are for bands and small plates.",
         "section": "colors"
       },
       {
-        "name": "The Light Title Rule",
-        "body": "Display and headline sizes are Lato Light 300 with negative tracking; a title is never bold. Weight 700 belongs to standalone text-arrow links and nothing else; 500 belongs to small uppercase labels, the nav, keycaps and the desk's card titles.",
+        "name": "The Two Friends Rule",
+        "body": "Honey and sage are the only colors outside Kelly’s six. No bright blue, no violet, no third friend.",
+        "section": "colors"
+      },
+      {
+        "name": "The Deep for Paper Rule",
+        "body": "When paper must be the text, the ground is navy, deep coral (5.0:1) or deep teal (4.8:1), never coral or teal.",
+        "section": "colors"
+      },
+      {
+        "name": "The Regular Weight Rule",
+        "body": "Display, headline and title are 400 with negative tracking (-0.02em at display and headline size). 500 marks a subhead, a term or a lead-in; 600 and 700 are loaded but unused. Nothing is bold.",
+        "section": "typography"
+      },
+      {
+        "name": "The Big Where It Matters Rule",
+        "body": "Hierarchy is size: 86 over 52 over 26 over 22 over 16, numbers at 120, pills at 64. A new level gets a new size, not a new weight or a new color.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono for Numbers Rule",
+        "body": "Dates, counts, version tags, step numbers and keycaps are DM Mono with tabular figures. Words stay in Instrument Sans.",
         "section": "typography"
       },
       {
         "name": "The Label-After Rule",
-        "body": "Nothing sits above a heading: no eyebrow, kicker or category line. Metadata follows the title (Magpie's status line comes after \"Magpie\"). Uppercase tracked labels name columns and data fields; they never introduce a heading.",
+        "body": "Nothing sits above a heading: no eyebrow, kicker or category line. Status and metadata follow the title (the dot row under \"Magpie\").",
         "section": "typography"
       },
       {
-        "name": "The Paper Around It Rule",
-        "body": "A drawing always has paper on every side. Frames keep its natural shape (`object-fit: contain` in a 3:2 box for the place, a max width for everything else), and a layout that would crop, box or butt a drawing against a rule is wrong.",
+        "name": "The Band Spine Rule",
+        "body": "A page is header, poster, bands, pills, footer. Each band is one tint and opens with a wave or scallop; two paper sections never touch without an edge between them.",
         "section": "layout"
       },
       {
-        "name": "The Pen Line Rule",
-        "body": "A 1px navy rule opens every section, chapter, list and the footer; a Strong Hairline separates rows inside. Lines are the structure; background bands are not.",
+        "name": "The Paper Around It Rule",
+        "body": "A drawing keeps its own silhouette (trimmed WebP with alpha) and sits on a shape with room on every side. A layout that crops a drawing, boxes it, or butts it against an edge is wrong; the home poster gives the drawing 76% of the stage height and `object-fit: contain`.",
         "section": "layout"
       },
       {
         "name": "The Flat Paper Rule",
-        "body": "If it would need a shadow to read as separate, give it a 1px navy line or paper around it instead.",
+        "body": "If something needs to read as separate, give it a round tint behind it, a 1px line, or put it in front of a shape. Never a shadow.",
         "section": "elevation"
+      },
+      {
+        "name": "The Round Never Square Rule",
+        "body": "No rectangle with sharp corners on a site page: a button is a pill, a tile is a circle, a frame is 28px, a screenshot is clipped to a blob or a circle, a band ends in a wave or a scallop.",
+        "section": "shapes"
+      },
+      {
+        "name": "The One Sprite Rule",
+        "body": "New shapes go in the sprite, centered on a 200-unit box, filled with `currentColor`, and are placed with `<use>`. No inline paths, no icon fonts, no raster shapes.",
+        "section": "shapes"
       }
     ],
     "dos": [
-      "**Do** set every word in navy, ink-2 or ink-3, and use coral and teal only as marks: link underlines, status dots, the current-page nav line, hover lines, the caret.",
-      "**Do** open every page with one drawing from `assets/art/`, at its natural shape, with paper on every side; one drawing per view.",
-      "**Do** recolor every new drawing by meaning into all six colors, snap it to the palette, save it as WebP with alpha, and keep its `.webp.json` provenance sidecar beside it.",
-      "**Do** set display and headline sizes in Lato Light 300 with negative tracking (-0.022em, -0.018em), reading text in Regular 400, uppercase tracked labels in Medium 500, and standalone links in Bold 700.",
-      "**Do** make standalone links underlined labels with a 12px drawn arrow that nudges toward where it goes, and running-text links navy with a 1px coral underline that thickens to 2px on hover.",
-      "**Do** show status as the 9px square dot plus its word: coral \"In use\", teal \"Live\", navy outline \"Private\".",
-      "**Do** open every section and list with a 1px navy rule and separate rows with Strong Hairlines.",
-      "**Do** keep things you press or type into at 4px corners and picture grounds at 6px.",
-      "**Do** keep one authored moment per page on the shared ease `cubic-bezier(0.16, 1, 0.3, 1)`, and make every page complete without JavaScript and under `prefers-reduced-motion`.",
-      "**Do** check every layout at 390px first, with the 16px gutter."
+      "**Do** open every page with one drawing on a big round shape (`.poster` or `.page-hero__art`), with paper around it and the shape in a strong color: honey, coral, teal, sage or pale teal.",
+      "**Do** set every word in navy, navy hover or navy soft, or in paper on navy, deep coral or deep teal, and let teal, coral, honey and sage carry shapes, bands, tiles and dots.",
+      "**Do** keep navy on coral and navy on teal for pill-size text only (38px and up), and check any new navy-on-color pair against 4.5:1 for body text.",
+      "**Do** stack the page as bands of one tint each (`.band--pteal`, `.band--pcoral`, `.band--tint`, `.band--sage`, `.band--paper`), every band opening with `.edge` or `.edge--scallop`.",
+      "**Do** make every button a pill (`.btn`, `.btn--line`, `.btn--sm`), every tile a circle, every screenshot a blob (`clip-path: url(#blob-clip)`) or a circle, and every frame at least 14px round.",
+      "**Do** set titles in Instrument Sans at 400 with -0.02em tracking (86 / 52 / 26), reading text at 16px, subheads at 500, and dates, counts, versions and keycaps in DM Mono with tabular figures.",
+      "**Do** draw new shapes into the sprite on the 200-unit centered box with `currentColor`, place them with `<use>`, color them with `.c-*` or a per-instance `--c`, and tilt or size them with `--r`, `--s` and `--t`.",
+      "**Do** show status as a 10px round dot with its word: navy \"In use\", deep teal \"Live\", deep coral \"Private\".",
+      "**Do** keep the shared curve `cubic-bezier(0.16, 1, 0.3, 1)` for every authored movement, keep ambient motion slow (180s spins, 7s to 11s bobs), and make every page complete without JavaScript and under `prefers-reduced-motion`.",
+      "**Do** check every layout at 390px first, with the 20px gutter and the wrapped header.",
+      "**Do** recolor every new drawing by meaning into this site’s colors, snap it to the palette, save it as WebP with alpha, keep its `.webp.json` sidecar beside it, and add a new place to `PLACES` in `script.js`."
     ],
     "donts": [
-      "**Don't** set text in coral (3.4:1) or teal (2.9:1), on paper or on any fill.",
-      "**Don't** box, frame, crop, shadow or tint behind a drawing, and don't put two drawings in one view.",
-      "**Don't** add drop shadows, gradients or glows anywhere.",
-      "**Don't** make pill buttons or filled call-to-action buttons; full rounding belongs to read-only tags on the design desk.",
-      "**Don't** put an eyebrow, kicker or label above a heading.",
-      "**Don't** bold a display or headline, or add a second typeface.",
-      "**Don't** fill a section band, a button or a card of text with pale teal or pale coral.",
-      "**Don't** use the desk's alias names (`--mint`, `--lilac`, `--magpie` and the rest) in new work.",
+      "**Don't** set text in teal (2.9:1 on paper), coral (3.4:1), honey or sage; they are shape and band colors.",
+      "**Don't** put navy body text on coral (3.3:1) or teal (3.9:1); only a pill may.",
+      "**Don't** add a ninth color: no bright blue, no violet, no third friend beside honey and sage.",
+      "**Don't** add drop shadows, gradients, glows or blurs anywhere; depth is overlap and a round tint behind a thing.",
+      "**Don't** draw a rectangle with sharp corners, a square tile, a square screenshot or a straight-cut band on a site page.",
+      "**Don't** box, frame, crop or shrink a drawing into a card; it sits on a shape with room around it, at its own silhouette.",
+      "**Don't** bold a heading, use weight 600 or 700, or set a title in a second typeface; hierarchy is size.",
+      "**Don't** put an eyebrow, kicker or label above a heading; status and metadata follow the title.",
+      "**Don't** reach for the desk’s alias names (`--ink`, `--mint`, `--lilac`, `--sand`, `--sky`, `--case`, `--link`, `--live`) in new work; use the eight colors and their shades.",
+      "**Don't** add a second cursor tag, a second autoplaying moment on a page, or motion that runs under reduced motion.",
       "**Don't** bring `lab.css` slabs, stickers, confetti or hard shadows onto a site page; that skin belongs to the playground rooms only.",
       "**Don't** use em dashes, in copy or in labels."
     ]

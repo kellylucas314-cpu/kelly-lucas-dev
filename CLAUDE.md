@@ -62,6 +62,11 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
 - A new place on the homepage: add it to `PLACES` in `script.js` (file,
   size, caption, alt) and, if it should appear in the scatter, to the places
   list in `index.html`.
+- Next to each travel drawing, Pretzel city and the drawer magpie sits a
+  `-sm.webp`, its 480px copy for the orbiting places and the Magpie note; the
+  project screenshots in `assets/collection/` have 320px `-sm.webp` copies
+  for the phone thumbnails. They are derived files (Pillow, Lanczos, quality
+  82): regenerate one when its source changes. They need no prompt sidecar.
 
 ## Adding a project
 1. Add an `<li>` to the projects list in `index.html` (copy a row): number,
@@ -123,7 +128,9 @@ Keep it clean. No backup files, no version-numbered copies.
   per site, with palette and rules), `libraries` (Kelly's own art and font
   libraries) and `docs` (style PDFs, boards, image strips; files live under
   `assets/design/<pile>/`) are hand-written and pass through the sync
-  untouched. Every entry carries a `section`.
+  untouched. Every entry carries a `section`. Each pile is a `.band` with
+  its own `.wrap`, paper and tints alternating with wave edges, and the
+  cards are flat fills with no borders, like the rest of the site.
 - Where a clip lands is decided once, in `lib/desk-sort.mjs` from
   `lib/desk-rules.json`: Kelly's own sites go to their pile; sites tagged or
   described for a project go there; anything with a design signal is a

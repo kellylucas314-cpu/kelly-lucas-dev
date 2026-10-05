@@ -74,7 +74,7 @@
           <h2 class="h2" id="ch-demo">One click, two nests.</h2>
           <p>The popup on the right clips the page behind it. The card lands in the gallery, and a note lands in the vault at the same moment.</p>
         </div>
-        <figure class="scene" aria-label="The clipper and the gallery, redrawn">
+        <figure class="scene">
           <div class="scene__frame">
             <div class="mp-scene" data-clip-scene>
               <div class="mp-gallery" aria-hidden="true">
@@ -95,6 +95,7 @@
                 </div>
               </div>
               <div class="mp-pop">
+                <div class="mp-pop__body" aria-hidden="true">
                 <div class="mp-pop__head">
                   <img src="/assets/collection/magpie-feather.svg" alt="" width="24" height="24" />
                   <span class="mp-pop__word">Magpie</span>
@@ -113,7 +114,8 @@
                 <div class="mp-pop__field"><span class="mp-pop__guess">Auto: Resources</span></div>
                 <div class="mp-pop__label">My notes</div>
                 <div class="mp-pop__field"><span class="mp-pop__note">for the site redesign</span></div>
-                <button class="mp-pop__btn" type="button" data-clip-button>Clip it</button>
+                </div>
+                <button class="mp-pop__btn" type="button" data-clip-button hidden>Clip it</button>
               </div>
             </div>
           </div>
@@ -227,7 +229,7 @@
       </div>
     </section>
 
-    <section class="next-sec" aria-labelledby="go-title">
+    <section class="next-sec band band--paper edge" aria-labelledby="go-title">
       <div class="wrap">
         <h2 class="lede" id="go-title">Where to next</h2>
       <nav class="pills pills--sm" aria-labelledby="go-title">

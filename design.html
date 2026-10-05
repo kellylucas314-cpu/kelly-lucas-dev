@@ -49,9 +49,7 @@
   </header>
 
   <main id="main" tabindex="-1">
-    <div class="wrap">
-
-          <section class="page-hero" aria-labelledby="desk-title">
+    <section class="page-hero" aria-labelledby="desk-title">
       <div class="wrap page-hero__grid">
         <div class="page-hero__text">
           <h1 class="h1" id="desk-title">Design desk</h1>
@@ -63,6 +61,7 @@
             <a href="#resources">Resources</a>
             <a href="#examples">Examples</a>
           </nav>
+          <noscript><p class="desk-note">The piles are filled in by JavaScript. Without it, the notebook pages below are what’s here.</p></noscript>
         </div>
         <figure class="poster page-hero__art">
           <div class="poster__stage">
@@ -76,10 +75,11 @@
       </div>
     </section>
 
-      <section id="website" class="desk-section" data-section="website">
+      <section id="website" class="desk-section band band--paper" data-section="website">
+        <div class="wrap">
         <div class="desk-section__head">
           <h2 class="h2">The HelioFlux website</h2>
-          <p class="desk-section__meta"><a class="text-link" href="https://helioflux.co" target="_blank" rel="noopener noreferrer">helioflux.co</a> <span aria-hidden="true">·</span> the live look, and the next one<span class="desk-count js-count" aria-live="polite"></span></p>
+          <p class="desk-section__meta"><a class="text-link" href="https://helioflux.co" target="_blank" rel="noopener noreferrer">helioflux.co<span class="sr-only"> (opens in a new tab)</span></a> <span aria-hidden="true">·</span> the live look, and the next one<span class="desk-count js-count" aria-live="polite"></span></p>
         </div>
         <div class="desk-part">
           <h3 class="desk-sub">The systems</h3>
@@ -98,9 +98,11 @@
           <div class="desk-grid js-cards"></div>
           <p class="desk-empty js-empty" hidden>Nothing clipped for the website yet.</p>
         </div>
+        </div>
       </section>
 
-      <section id="heliopolis" class="desk-section" data-section="heliopolis">
+      <section id="heliopolis" class="desk-section band band--sage edge" data-section="heliopolis">
+        <div class="wrap">
         <div class="desk-section__head">
           <h2 class="h2">Heliopolis</h2>
           <p class="desk-section__meta">myheliopolis.com <span aria-hidden="true">·</span> the team site, where the drawings lead<span class="desk-count js-count" aria-live="polite"></span></p>
@@ -122,12 +124,14 @@
           <div class="desk-grid js-cards"></div>
           <p class="desk-empty js-empty" hidden>Nothing clipped for Heliopolis yet.</p>
         </div>
+        </div>
       </section>
 
-      <section id="pretzel" class="desk-section" data-section="pretzel">
+      <section id="pretzel" class="desk-section band band--paper edge" data-section="pretzel">
+        <div class="wrap">
         <div class="desk-section__head">
           <h2 class="h2">Pretzel Protocol</h2>
-          <p class="desk-section__meta"><a class="text-link" href="https://pretzel.thetravelprotocol.com" target="_blank" rel="noopener noreferrer">pretzel.thetravelprotocol.com</a> <span aria-hidden="true">·</span> a family trip atlas<span class="desk-count js-count" aria-live="polite"></span></p>
+          <p class="desk-section__meta"><a class="text-link" href="https://pretzel.thetravelprotocol.com" target="_blank" rel="noopener noreferrer">pretzel.thetravelprotocol.com<span class="sr-only"> (opens in a new tab)</span></a> <span aria-hidden="true">·</span> a family trip atlas<span class="desk-count js-count" aria-live="polite"></span></p>
         </div>
         <div class="desk-part">
           <h3 class="desk-sub">The system</h3>
@@ -146,9 +150,11 @@
           <div class="desk-grid js-cards"></div>
           <p class="desk-empty js-empty" hidden>Nothing clipped for Pretzel yet.</p>
         </div>
+        </div>
       </section>
 
-      <section id="resources" class="desk-section desk-shelf" data-section="resources" data-part="shelf">
+      <section id="resources" class="desk-section band band--tint edge edge--scallop desk-shelf" data-section="resources" data-part="shelf">
+        <div class="wrap">
         <div class="desk-section__head">
           <h2 class="h2">Resources</h2>
           <p class="desk-section__meta">Galleries I raid, tools I reach for, things I read, repos I keep. Each one has a line on why it is here.</p>
@@ -164,17 +170,21 @@
         <p class="desk-count desk-count--line" id="shelfCount" aria-live="polite"></p>
         <div class="desk-grid" id="shelfGrid"></div>
         <p class="desk-empty" id="shelfEmpty" hidden></p>
+        </div>
       </section>
 
-      <section class="desk-section desk-rewatch" data-section="resources" data-part="videos" aria-labelledby="rewatch-title">
+      <section class="desk-section band band--tint band--cont desk-rewatch" data-section="resources" data-part="videos" aria-labelledby="rewatch-title">
+        <div class="wrap">
         <div class="desk-section__head">
           <h2 class="h2" id="rewatch-title">Videos I keep going back to</h2>
           <p class="desk-section__meta">Some of these notes are still cooking.</p>
         </div>
         <div class="video-grid js-videos" id="videoGrid"></div>
+        </div>
       </section>
 
-      <section class="desk-section desk-notebook" aria-labelledby="notebook-title">
+      <section class="desk-section band band--paper edge desk-notebook" aria-labelledby="notebook-title">
+        <div class="wrap">
         <div class="desk-section__head">
           <h2 class="h2" id="notebook-title">Three pages, transcribed</h2>
           <p class="desk-section__meta">Red pen, blue pen, pink pen. Tap a page to see the real thing.</p>
@@ -182,7 +192,7 @@
 
         <div class="notebook-grid">
           <article class="notepage">
-            <a class="notepage__photo" href="/assets/design/notebook-01.jpg" target="_blank" rel="noopener"><img src="/assets/design/notebook-01.jpg" width="900" height="1200" loading="lazy" alt="Notebook page in red pen: presentation of design" /></a>
+            <a class="notepage__photo" href="/assets/design/notebook-01.jpg" target="_blank" rel="noopener"><img src="/assets/design/notebook-01.jpg" width="900" height="1200" loading="lazy" alt="Notebook page in red pen: presentation of design" /><span class="sr-only"> (opens in a new tab)</span></a>
             <h3>Presentation of design</h3>
             <p class="notepage__pen">Page 1, red pen</p>
             <ul class="notepage__list">
@@ -196,7 +206,7 @@
           </article>
 
           <article class="notepage">
-            <a class="notepage__photo" href="/assets/design/notebook-02.jpg" target="_blank" rel="noopener"><img src="/assets/design/notebook-02.jpg" width="900" height="1200" loading="lazy" alt="Notebook page in blue pen: what makes Linear so good" /></a>
+            <a class="notepage__photo" href="/assets/design/notebook-02.jpg" target="_blank" rel="noopener"><img src="/assets/design/notebook-02.jpg" width="900" height="1200" loading="lazy" alt="Notebook page in blue pen: what makes Linear so good" /><span class="sr-only"> (opens in a new tab)</span></a>
             <h3>What makes Linear so good?</h3>
             <p class="notepage__pen">Page 2, blue pen. Answer: clarity.</p>
             <ul class="notepage__list">
@@ -208,7 +218,7 @@
           </article>
 
           <article class="notepage">
-            <a class="notepage__photo" href="/assets/design/notebook-03.jpg" target="_blank" rel="noopener"><img src="/assets/design/notebook-03.jpg" width="900" height="1200" loading="lazy" alt="Notebook page in pink pen: Fibonacci in design" /></a>
+            <a class="notepage__photo" href="/assets/design/notebook-03.jpg" target="_blank" rel="noopener"><img src="/assets/design/notebook-03.jpg" width="900" height="1200" loading="lazy" alt="Notebook page in pink pen: Fibonacci in design" /><span class="sr-only"> (opens in a new tab)</span></a>
             <h3>Fibonacci in design</h3>
             <p class="notepage__pen">Page 3, pink pen</p>
             <ul class="notepage__list">
@@ -237,9 +247,11 @@
             </div>
           </article>
         </div>
+        </div>
       </section>
 
-      <section id="examples" class="desk-section" data-section="examples">
+      <section id="examples" class="desk-section band band--pcoral edge" data-section="examples">
+        <div class="wrap">
         <div class="desk-section__head">
           <h2 class="h2">Examples</h2>
           <p class="desk-section__meta">The sites I open when I forget what good looks like.<span class="desk-count js-count" aria-live="polite"></span></p>
@@ -248,9 +260,11 @@
           <div class="desk-grid js-cards"></div>
           <p class="desk-empty js-empty" hidden>No examples yet. Clip a site and say why in one line.</p>
         </div>
+        </div>
       </section>
 
-      <section id="lab" class="desk-section" data-section="lab">
+      <section id="lab" class="desk-section band band--paper edge" data-section="lab">
+        <div class="wrap">
         <div class="desk-section__head">
           <h2 class="h2">This site</h2>
           <p class="desk-section__meta">This site’s own rules, and the rooms next door.</p>
@@ -262,22 +276,25 @@
           <h3 class="desk-sub">Libraries</h3>
           <ul class="library-list js-libraries"></ul>
         </div>
+        </div>
       </section>
 
-      <section class="chapter desk-how" aria-labelledby="how-title">
+      <section class="desk-how band band--sage edge edge--scallop" aria-labelledby="how-title">
+        <div class="wrap"><div class="chapter">
         <div class="chapter__head">
           <h2 class="h2" id="how-title">How this page fills itself</h2>
           <p>The Chrome feather already existed. Now it knows where things go.</p>
         </div>
         <div class="chapter__body">
           <ol class="journey">
-            <li><h3 class="h3">Clip</h3><p>Hit the Magpie feather on any page. The popup guesses the pile from the address, the tags and what I wrote: the website, Heliopolis, Pretzel, resources or examples. I change it if it guessed wrong, or say <code>not for the desk</code>.</p></li>
-            <li><h3 class="h3">Sync</h3><p><code>npm run sync:design</code> rebuilds <code>design-library.js</code> from every desk clip and files each one under its pile. The rules live in <code>lib/desk-rules.json</code>.</p></li>
-            <li><h3 class="h3">Push</h3><p>Push to main. Vercel deploys, the piles update, and the video notes fill in.</p></li>
+            <li><div><h3>Clip</h3><p>Hit the Magpie feather on any page. The popup guesses the pile from the address, the tags and what I wrote: the website, Heliopolis, Pretzel, resources or examples. I change it if it guessed wrong, or say <code>not for the desk</code>.</p></div></li>
+            <li><div><h3>Sync</h3><p><code>npm run sync:design</code> rebuilds <code>design-library.js</code> from every desk clip and files each one under its pile. The rules live in <code>lib/desk-rules.json</code>.</p></div></li>
+            <li><div><h3>Push</h3><p>Push to main. Vercel deploys, the piles update, and the video notes fill in.</p></div></li>
           </ol>
         </div>
+      </div></div>
       </section>
-    <section class="next-sec" aria-labelledby="go-title">
+    <section class="next-sec band band--paper edge" aria-labelledby="go-title">
       <div class="wrap">
         <h2 class="lede" id="go-title">Where to next</h2>
       <nav class="pills pills--sm" aria-labelledby="go-title">
@@ -287,7 +304,6 @@
       </nav>
       </div>
     </section>
-    </div>
   </main>
 
   <footer class="foot edge edge--scallop">

@@ -88,9 +88,10 @@
     return tag;
   }
 
-  function cta(href, label) {
+  function cta(href, label, context) {
     const anchor = link(el("a", "cta"), href);
     anchor.appendChild(el("span", "cta__label", label));
+    if (context) anchor.appendChild(el("span", "sr-only", ": " + context));
     const icon = el("span", "cta__icon");
     icon.setAttribute("aria-hidden", "true");
     icon.innerHTML = ARROW;
@@ -226,8 +227,9 @@
     }
 
     const links = el("div", "system-card__links");
-    if (system.live) links.appendChild(link(el("a", null, system.liveLabel || "Live"), system.live));
-    if (system.doc) links.appendChild(link(el("a", null, system.docLabel || "The rules"), system.doc));
+    const named = (label) => { const a = el("a", null, label); a.appendChild(el("span", "sr-only", ": " + system.name)); return a; };
+    if (system.live) links.appendChild(link(named(system.liveLabel || "Live"), system.live));
+    if (system.doc) links.appendChild(link(named(system.docLabel || "The rules"), system.doc));
     if (links.childNodes.length) card.appendChild(links);
     return card;
   }
@@ -273,7 +275,7 @@
         strip.appendChild(anchor);
       });
       card.appendChild(strip);
-      if (doc.href) card.appendChild(cta(doc.href, doc.cta || "Open all"));
+      if (doc.href) card.appendChild(cta(doc.href, doc.cta || "Open all", doc.title));
       return card;
     }
 
@@ -298,7 +300,7 @@
     card.appendChild(dotTag((doc.kind || "doc") + (doc.meta ? " · " + doc.meta : "")));
     if (doc.what) card.appendChild(el("p", null, doc.what));
     if (doc.private) card.appendChild(el("span", "private-pill", "private, sign-in"));
-    card.appendChild(cta(doc.href, doc.cta || "Open"));
+    card.appendChild(cta(doc.href, doc.cta || "Open", doc.title));
     return card;
   }
 
@@ -525,6 +527,14 @@
     const active = buttons.find((button) => button.classList.contains("is-active")) || buttons[0];
     if (active) apply(Number(active.dataset.ratio));
   }
+
+  /* every link that opens a new tab says so */
+  document.querySelectorAll('.desk-section a[target="_blank"]').forEach((anchor) => {
+    if (/opens in a new tab/.test(anchor.textContent)) return;
+    const label = anchor.getAttribute("aria-label");
+    if (label) anchor.setAttribute("aria-label", label + " (opens in a new tab)");
+    else anchor.appendChild(el("span", "sr-only", " (opens in a new tab)"));
+  });
 
   if (window.ScrollTrigger && typeof ScrollTrigger.refresh === "function") ScrollTrigger.refresh();
 })();

@@ -90,7 +90,7 @@ window.DESIGN_LIBRARY = {
         "Cranberry is the one attention color, and only ever a chip.",
         "Delight budget of five. To add a sixth, remove one.",
         "Nothing under 12px, inputs at 16px, touch targets 44px.",
-        "Anything a drawing sits on is the art's own cream."
+        "Anything a drawing sits on is the art’s own cream."
       ],
       "live": "https://pretzel.thetravelprotocol.com",
       "doc": "https://github.com/kellylucas314-cpu/pretzel-protocol/blob/main/DESIGN-SYSTEM.md",
@@ -123,9 +123,9 @@ window.DESIGN_LIBRARY = {
           "hex": "#DEDFD9"
         }
       ],
-      "type": "Lato from the site's own files. Page titles at weight 400 with no tight tracking; 10px uppercase labels.",
+      "type": "Lato from the site’s own files. Page titles at weight 400 with no tight tracking; 10px uppercase labels.",
       "rules": [
-        "One drawing per page, large, uncropped, with clear space around it. Kelly's drawings are never redrawn or recoloured.",
+        "One drawing per page, large, uncropped, with clear space around it. Kelly’s drawings are never redrawn or recoloured.",
         "Fine navy outlines, flat fills, little shading. No cyan, pink, bright yellow, or any decorative palette.",
         "Lime means one thing: someone is needed. At zero it turns pale.",
         "Boxes are flat and drawn with the same pen as the pictures. No shadows anywhere.",
@@ -336,7 +336,7 @@ window.DESIGN_LIBRARY = {
       "href": "assets/design/website/hero-options-desktop.jpg",
       "thumb": "assets/design/website/hero-options-desktop.jpg",
       "meta": "board",
-      "what": "Paper plate, dark room, photon by photon, living light. Today's hero stays until one is picked."
+      "what": "Paper plate, dark room, photon by photon, living light. Today’s hero stays until one is picked."
     },
     {
       "section": "website",
@@ -576,7 +576,7 @@ window.DESIGN_LIBRARY = {
       "meta": "seven drawings",
       "title": "Four cities and a few days",
       "tall": true,
-      "what": "Kelly's own drawings for the atlas, built onto cream by a script that refuses black backgrounds.",
+      "what": "Kelly’s own drawings for the atlas, built onto cream by a script that refuses black backgrounds.",
       "href": "https://pretzel-protocol-art-library.kellylucas314.workers.dev/",
       "cta": "Open the art library",
       "images": [
@@ -834,7 +834,7 @@ window.DESIGN_LIBRARY = {
       "url": "https://stitch.withgoogle.com",
       "title": "Stitch",
       "kind": "tool",
-      "why": "Google's AI UI ideation tool. Treat the output as a sketch, not a spec."
+      "why": "Google’s AI UI ideation tool. Treat the output as a sketch, not a spec."
     },
     {
       "url": "https://www.behance.net/onboarding/hirerCreative",
@@ -908,7 +908,7 @@ window.DESIGN_LIBRARY = {
       "tags": [
         "web-design"
       ],
-      "why": "Godly's new home, per Jack Roberts' five shelves. Best of recent design, daily.",
+      "why": "Godly’s new home, per Jack Roberts’ five shelves. Best of recent design, daily.",
       "added": "2026-09-24"
     },
     {
@@ -918,7 +918,7 @@ window.DESIGN_LIBRARY = {
       "tags": [
         "web-design"
       ],
-      "why": "Daily web design inspiration. From Jack's shelf.",
+      "why": "Daily web design inspiration. From Jack’s shelf.",
       "added": "2026-09-24"
     },
     {
@@ -972,7 +972,7 @@ window.DESIGN_LIBRARY = {
         "jack-roberts",
         "brand"
       ],
-      "why": "A skill that interviews you, fixes a palette, then generates a brand's logo, photography, one motion loop and a texture pack, all inside that palette. Three rules: one product build everywhere, no text in photos, approve the extras.",
+      "why": "A skill that interviews you, fixes a palette, then generates a brand’s logo, photography, one motion loop and a texture pack, all inside that palette. Three rules: one product build everywhere, no text in photos, approve the extras.",
       "added": "2026-09-24"
     },
     {
@@ -994,7 +994,7 @@ window.DESIGN_LIBRARY = {
         "jack-roberts",
         "prompts"
       ],
-      "why": "Level one describes a site in a line, level two recreates a reference, level three extracts a site's design DNA and rebuilds something original. Level three is the one that matches how this desk works.",
+      "why": "Level one describes a site in a line, level two recreates a reference, level three extracts a site’s design DNA and rebuilds something original. Level three is the one that matches how this desk works.",
       "added": "2026-09-24"
     },
     {
@@ -1015,7 +1015,7 @@ window.DESIGN_LIBRARY = {
       "tags": [
         "jack-roberts"
       ],
-      "why": "Jack's website builder. Saved to try, not yet opened.",
+      "why": "Jack’s website builder. Saved to try, not yet opened.",
       "added": "2026-09-24"
     },
     {
@@ -1036,9 +1036,9 @@ window.DESIGN_LIBRARY = {
       "author": "AI Automations with Jack",
       "added": "2026-09-24",
       "takeaways": [
-        "Level one: describe the site in plain words and let the model one-shot it. Fast, and it looks like everyone else's.",
+        "Level one: describe the site in plain words and let the model one-shot it. Fast, and it looks like everyone else’s.",
         "Level two: hand over a reference you love and ask for a recreation. Hard mode, and it copies more than it should.",
-        "Level three: extract the reference's design DNA, typography, colour, spacing, layout, ratios, then rebuild something original from that blueprint. This is the one that matches the desk.",
+        "Level three: extract the reference’s design DNA, typography, colour, spacing, layout, ratios, then rebuild something original from that blueprint. This is the one that matches the desk.",
         "Open on max effort for the first build, then drop to medium for everything after. Design judgment is where the effort dial matters.",
         "Awwwards is the place he finds references. Higgsfield or Kie.ai when the hero needs a video."
       ]
@@ -1067,7 +1067,7 @@ window.DESIGN_LIBRARY = {
     },
     {
       "url": "https://www.figma.com/resource-library/ui-design-principles/",
-      "title": "Figma's UI design principles",
+      "title": "Figma’s UI design principles",
       "kind": "reading",
       "tags": [
         "principles"
@@ -1126,7 +1126,7 @@ window.DESIGN_LIBRARY = {
         "design-systems",
         "book"
       ],
-      "why": "Brad Frost's free full book behind modern design systems: atoms to molecules to organisms to pages.",
+      "why": "Brad Frost’s free full book behind modern design systems: atoms to molecules to organisms to pages.",
       "added": "2026-09-24"
     },
     {
@@ -1210,7 +1210,7 @@ window.DESIGN_LIBRARY = {
         "components",
         "motion"
       ],
-      "why": "Animated heroes, spotlight cards, parallax grids. Jack's UI sniping arsenal: snipe it, then make it obey the system.",
+      "why": "Animated heroes, spotlight cards, parallax grids. Jack’s UI sniping arsenal: snipe it, then make it obey the system.",
       "added": "2026-09-24"
     },
     {
@@ -1232,7 +1232,7 @@ window.DESIGN_LIBRARY = {
         "wireframes",
         "ai-design"
       ],
-      "why": "AI sitemaps and wireframes. Only useful after the five questions are answered, which is the whole point of Jack's guide.",
+      "why": "AI sitemaps and wireframes. Only useful after the five questions are answered, which is the whole point of Jack’s guide.",
       "added": "2026-09-24"
     },
     {
@@ -1275,12 +1275,12 @@ window.DESIGN_LIBRARY = {
         "design-inspiration",
         "lists"
       ],
-      "why": "Muzli's long list of inspiration sites. From 2019, so expect a few dead links, but the good ones are still good.",
+      "why": "Muzli’s long list of inspiration sites. From 2019, so expect a few dead links, but the good ones are still good.",
       "added": "2026-09-25"
     },
     {
       "url": "https://docs.google.com/spreadsheets/d/13GStMRQfbn5glWVkUPqFtW1oovyKhMDdRKD3m5cstBg/edit?gid=76987904#gid=76987904",
-      "title": "The People's Design Library",
+      "title": "The People’s Design Library",
       "kind": "reading",
       "tags": [
         "design-inspiration",
@@ -1320,7 +1320,7 @@ window.DESIGN_LIBRARY = {
         "research",
         "graphic-design"
       ],
-      "why": "The subreddit's index: resources, tutorials, and the answers to the questions everyone asks first.",
+      "why": "The subreddit’s index: resources, tutorials, and the answers to the questions everyone asks first.",
       "added": "2026-09-25"
     },
     {
@@ -1354,7 +1354,7 @@ window.DESIGN_LIBRARY = {
         "checklists",
         "agent-skills"
       ],
-      "why": "Checklist Design's hundred-plus checklists as an agent skill: design feedback inside Claude Code, item by item. Available here as /checklist-design.",
+      "why": "Checklist Design’s hundred-plus checklists as an agent skill: design feedback inside Claude Code, item by item. Available here as /checklist-design.",
       "added": "2026-09-25"
     },
     {
@@ -1420,7 +1420,7 @@ window.DESIGN_LIBRARY = {
         "biotech",
         "science-site"
       ],
-      "why": "A platform biotech's science page. How it explains the technology in one scroll.",
+      "why": "A platform biotech’s science page. How it explains the technology in one scroll.",
       "added": "2026-09-25"
     },
     {
@@ -1443,7 +1443,7 @@ window.DESIGN_LIBRARY = {
         "typography",
         "lists"
       ],
-      "why": "Connor Lyon's list of independent foundries, for when Google Fonts is not enough.",
+      "why": "Connor Lyon’s list of independent foundries, for when Google Fonts is not enough.",
       "added": "2026-09-25"
     },
     {
@@ -1454,7 +1454,7 @@ window.DESIGN_LIBRARY = {
         "fonts",
         "typography"
       ],
-      "why": "A Swiss foundry's feature on one typeface family. Worth it for how they present type.",
+      "why": "A Swiss foundry’s feature on one typeface family. Worth it for how they present type.",
       "added": "2026-09-25"
     },
     {
@@ -1497,7 +1497,7 @@ window.DESIGN_LIBRARY = {
       "tags": [
         "design-inspiration"
       ],
-      "why": "A designer's work, as listed on Design Resources.",
+      "why": "A designer’s work, as listed on Design Resources.",
       "added": "2026-09-25"
     },
     {
@@ -1669,7 +1669,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://medium.muz.li/design-inspiration-resources-2019-1cce24b256e5",
       "title": "Design inspiration resources, by Muzli",
-      "why": "Muzli's long list of inspiration sites. From 2019, so expect a few dead links, but the good ones are still good.",
+      "why": "Muzli’s long list of inspiration sites. From 2019, so expect a few dead links, but the good ones are still good.",
       "added": "2026-09-25",
       "source": "manual",
       "thumb": "assets/design/thumbs/medium.muz.li-design-inspiration-resources-2019-1cce24b256e5.jpg",
@@ -1684,7 +1684,7 @@ window.DESIGN_LIBRARY = {
         "lists"
       ],
       "url": "https://docs.google.com/spreadsheets/d/13GStMRQfbn5glWVkUPqFtW1oovyKhMDdRKD3m5cstBg/edit?gid=76987904#gid=76987904",
-      "title": "The People's Design Library",
+      "title": "The People’s Design Library",
       "why": "A shared Google Sheet of design resources, kept by the community. Tabs for tools, learning, inspiration.",
       "added": "2026-09-25",
       "source": "manual",
@@ -1734,7 +1734,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://www.reddit.com/r/graphic_design/wiki/index/",
       "title": "r/graphic_design wiki",
-      "why": "The subreddit's index: resources, tutorials, and the answers to the questions everyone asks first.",
+      "why": "The subreddit’s index: resources, tutorials, and the answers to the questions everyone asks first.",
       "added": "2026-09-25",
       "source": "manual",
       "thumb": "assets/design/thumbs/reddit.com-r-graphic-design-wiki-index.jpg",
@@ -1783,7 +1783,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://www.checklist.design/skill",
       "title": "The Checklist Design skill",
-      "why": "Checklist Design's hundred-plus checklists as an agent skill: design feedback inside Claude Code, item by item. Available here as /checklist-design.",
+      "why": "Checklist Design’s hundred-plus checklists as an agent skill: design feedback inside Claude Code, item by item. Available here as /checklist-design.",
       "added": "2026-09-25",
       "source": "manual",
       "thumb": "assets/design/thumbs/checklist.design-skill.jpg",
@@ -1879,7 +1879,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://www.hexagonbio.com/science/",
       "title": "Hexagon Bio",
-      "why": "A platform biotech's science page. How it explains the technology in one scroll.",
+      "why": "A platform biotech’s science page. How it explains the technology in one scroll.",
       "added": "2026-09-25",
       "source": "manual",
       "thumb": "assets/design/thumbs/hexagonbio.com-science.jpg",
@@ -1912,7 +1912,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://www.connorlyon.co/tools-resources/50-type-foundries-you-should-bookmark",
       "title": "50 type foundries you should bookmark",
-      "why": "Connor Lyon's list of independent foundries, for when Google Fonts is not enough.",
+      "why": "Connor Lyon’s list of independent foundries, for when Google Fonts is not enough.",
       "added": "2026-09-25",
       "source": "manual",
       "thumb": "assets/design/thumbs/connorlyon.co-tools-resources-50-type-foundries-you-should-bookmark.jpg",
@@ -1928,7 +1928,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://lineto.com/features/schema-edition",
       "title": "Lineto: Schema Edition",
-      "why": "A Swiss foundry's feature on one typeface family. Worth it for how they present type.",
+      "why": "A Swiss foundry’s feature on one typeface family. Worth it for how they present type.",
       "added": "2026-09-25",
       "source": "manual",
       "thumb": "assets/design/thumbs/lineto.com-features-schema-edition.jpg",
@@ -1991,7 +1991,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://designresourc.es/inspiration/daniel-sun",
       "title": "Daniel Sun",
-      "why": "A designer's work, as listed on Design Resources.",
+      "why": "A designer’s work, as listed on Design Resources.",
       "added": "2026-09-25",
       "source": "manual",
       "thumb": "assets/design/thumbs/designresourc.es-inspiration-daniel-sun.jpg",
@@ -2320,7 +2320,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://recent.design/",
       "title": "Recent",
-      "why": "Godly's new home, per Jack Roberts' five shelves. Best of recent design, daily.",
+      "why": "Godly’s new home, per Jack Roberts’ five shelves. Best of recent design, daily.",
       "added": "2026-09-24",
       "source": "manual",
       "thumb": "assets/design/thumbs/recent.design.jpg",
@@ -2335,7 +2335,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://noiced.com/",
       "title": "Noiced",
-      "why": "Daily web design inspiration. From Jack's shelf.",
+      "why": "Daily web design inspiration. From Jack’s shelf.",
       "added": "2026-09-24",
       "source": "manual",
       "thumb": "assets/design/thumbs/noiced.com.jpg",
@@ -2414,7 +2414,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://app.notion.com/p/The-Brand-Asset-Machine-3b3e8d6bd13781909d92c4d0cafc7c77",
       "title": "The Brand Asset Machine",
-      "why": "A skill that interviews you, fixes a palette, then generates a brand's logo, photography, one motion loop and a texture pack, all inside that palette. Three rules: one product build everywhere, no text in photos, approve the extras.",
+      "why": "A skill that interviews you, fixes a palette, then generates a brand’s logo, photography, one motion loop and a texture pack, all inside that palette. Three rules: one product build everywhere, no text in photos, approve the extras.",
       "added": "2026-09-24",
       "source": "manual",
       "thumb": "assets/design/thumbs/app.notion.com-p-the-brand-asset-machine-3b3e8d6bd13781909d92c4d0cafc7c77.jpg",
@@ -2446,7 +2446,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://app.notion.com/p/Claude-Fable-5-Website-Design-Prompts-3-Levels-37ee8d6bd1378142b27be3a1480dd0d5",
       "title": "Website Design Prompts, 3 Levels",
-      "why": "Level one describes a site in a line, level two recreates a reference, level three extracts a site's design DNA and rebuilds something original. Level three is the one that matches how this desk works.",
+      "why": "Level one describes a site in a line, level two recreates a reference, level three extracts a site’s design DNA and rebuilds something original. Level three is the one that matches how this desk works.",
       "added": "2026-09-24",
       "source": "manual",
       "thumb": "assets/design/thumbs/app.notion.com-p-claude-fable-5-website-design-prompts-3-levels-37ee8d6bd1378142b27be3a1480dd0d5.jpg",
@@ -2477,7 +2477,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://easywebsitebuilder.tech/",
       "title": "Easy Website Builder",
-      "why": "Jack's website builder. Saved to try, not yet opened.",
+      "why": "Jack’s website builder. Saved to try, not yet opened.",
       "added": "2026-09-24",
       "source": "manual",
       "thumb": "assets/design/thumbs/easywebsitebuilder.tech.jpg",
@@ -2509,9 +2509,9 @@ window.DESIGN_LIBRARY = {
       "author": "AI Automations with Jack",
       "added": "2026-09-24",
       "takeaways": [
-        "Level one: describe the site in plain words and let the model one-shot it. Fast, and it looks like everyone else's.",
+        "Level one: describe the site in plain words and let the model one-shot it. Fast, and it looks like everyone else’s.",
         "Level two: hand over a reference you love and ask for a recreation. Hard mode, and it copies more than it should.",
-        "Level three: extract the reference's design DNA, typography, colour, spacing, layout, ratios, then rebuild something original from that blueprint. This is the one that matches the desk.",
+        "Level three: extract the reference’s design DNA, typography, colour, spacing, layout, ratios, then rebuild something original from that blueprint. This is the one that matches the desk.",
         "Open on max effort for the first build, then drop to medium for everything after. Design judgment is where the effort dial matters.",
         "Awwwards is the place he finds references. Higgsfield or Kie.ai when the hero needs a video."
       ],
@@ -2559,7 +2559,7 @@ window.DESIGN_LIBRARY = {
         "principles"
       ],
       "url": "https://www.figma.com/resource-library/ui-design-principles/",
-      "title": "Figma's UI design principles",
+      "title": "Figma’s UI design principles",
       "why": "A friendly modern overview. Good shared vocabulary.",
       "added": "2026-09-24",
       "source": "manual",
@@ -2639,7 +2639,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://atomicdesign.bradfrost.com/",
       "title": "Atomic Design",
-      "why": "Brad Frost's free full book behind modern design systems: atoms to molecules to organisms to pages.",
+      "why": "Brad Frost’s free full book behind modern design systems: atoms to molecules to organisms to pages.",
       "added": "2026-09-24",
       "source": "manual",
       "thumb": "assets/design/thumbs/atomicdesign.bradfrost.com.jpg",
@@ -2732,7 +2732,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://ui.aceternity.com",
       "title": "Aceternity UI",
-      "why": "Animated heroes, spotlight cards, parallax grids. Jack's UI sniping arsenal: snipe it, then make it obey the system.",
+      "why": "Animated heroes, spotlight cards, parallax grids. Jack’s UI sniping arsenal: snipe it, then make it obey the system.",
       "added": "2026-09-24",
       "source": "manual",
       "thumb": "assets/design/thumbs/ui.aceternity.com.jpg",
@@ -2764,7 +2764,7 @@ window.DESIGN_LIBRARY = {
       ],
       "url": "https://www.relume.io",
       "title": "Relume",
-      "why": "AI sitemaps and wireframes. Only useful after the five questions are answered, which is the whole point of Jack's guide.",
+      "why": "AI sitemaps and wireframes. Only useful after the five questions are answered, which is the whole point of Jack’s guide.",
       "added": "2026-09-24",
       "source": "manual",
       "thumb": "assets/design/thumbs/relume.io.jpg",
@@ -2819,7 +2819,7 @@ window.DESIGN_LIBRARY = {
         "react-native",
         "expo"
       ],
-      "summary": "Emil Kowalski's AI Skills for Design Engineers is a collection of agent skills for improving UI craft, especially animation and design-engineering polish.",
+      "summary": "Emil Kowalski’s AI Skills for Design Engineers is a collection of agent skills for improving UI craft, especially animation and design-engineering polish.",
       "takeaways": [
         "Useful for making AI-built interfaces feel less flat and generic after the first build exists.",
         "The broader skill set includes design-engineering guidance, animation creation, animation review, animation improvement audits, motion opportunity finding, prototyping variants, animation vocabulary, Apple-style motion principles, and UI library picking.",
@@ -2890,7 +2890,7 @@ window.DESIGN_LIBRARY = {
       "domain": "thenounproject.com",
       "kind": "tool",
       "section": "resources",
-      "summary": "🎨 Find & download nearly 10M SVG & PNG icons from the web's most diverse collection. Noun Project offers both free options & unlimited access with Icon Pro.",
+      "summary": "🎨 Find & download nearly 10M SVG & PNG icons from the web’s most diverse collection. Noun Project offers both free options & unlimited access with Icon Pro.",
       "hasTranscript": false,
       "thumb": "assets/design/thumbs/2026-07-25-free-icons-download-10m-svg-png-icons-noun-project.jpg",
       "clippedAt": "2026-07-25T13:07:58.956Z",
@@ -3060,7 +3060,7 @@ window.DESIGN_LIBRARY = {
         "design-inspiration",
         "visual-inspiration"
       ],
-      "summary": "Behance is the world's largest creative network for showcasing and discovering creative work",
+      "summary": "Behance is the world’s largest creative network for showcasing and discovering creative work",
       "hasTranscript": false,
       "thumb": "assets/design/thumbs/behance.net-onboarding-hirercreative.jpg",
       "clippedAt": "2026-07-25T12:29:22.648Z",
@@ -3230,7 +3230,7 @@ window.DESIGN_LIBRARY = {
       "tags": [
         "biotech"
       ],
-      "summary": "We've combined lab-grown neurons with silicon chips and made it available to anyone, for first time ever..",
+      "summary": "We’ve combined lab-grown neurons with silicon chips and made it available to anyone, for first time ever..",
       "hasTranscript": false,
       "thumb": "assets/design/thumbs/2026-07-25-cortical-labs.jpg",
       "clippedAt": "2026-07-25T12:28:47.328Z",
@@ -3333,7 +3333,7 @@ window.DESIGN_LIBRARY = {
       "thumb": "assets/design/thumbs/2026-07-25-stitch-design-with-ai.png",
       "clippedAt": "2026-07-25T12:28:12.197Z",
       "source": "magpie+manual",
-      "why": "Google's AI UI ideation tool. Treat the output as a sketch, not a spec."
+      "why": "Google’s AI UI ideation tool. Treat the output as a sketch, not a spec."
     },
     {
       "id": "phathompharma.com",
@@ -3409,7 +3409,7 @@ window.DESIGN_LIBRARY = {
       "tags": [
         "biotech"
       ],
-      "summary": "Dive into Recursion's innovative approach to decoding biology. Join our mission & explore what AI drug discovery companies can do. Contact us today!",
+      "summary": "Dive into Recursion’s innovative approach to decoding biology. Join our mission & explore what AI drug discovery companies can do. Contact us today!",
       "hasTranscript": false,
       "thumb": "assets/design/thumbs/recursion.com.jpg",
       "clippedAt": "2026-07-25T12:25:38.400Z",
@@ -3585,7 +3585,7 @@ window.DESIGN_LIBRARY = {
       "domain": "land-book.com",
       "kind": "gallery",
       "section": "resources",
-      "summary": "Find the best hand-picked website design inspiration. We're a curated website design gallery for Creatives, updated daily.",
+      "summary": "Find the best hand-picked website design inspiration. We’re a curated website design gallery for Creatives, updated daily.",
       "hasTranscript": false,
       "thumb": "assets/design/thumbs/land-book.com.jpg",
       "clippedAt": "2026-07-03T00:37:31.305000+00:00",

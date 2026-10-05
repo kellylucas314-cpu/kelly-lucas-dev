@@ -39,8 +39,8 @@ if (poster && $("[data-place-img]", poster) && $("[data-place-name]", poster)) {
     { src: "travel/torres-del-paine.webp", w: 1600, h: 1103, name: "Torres del Paine, Patagonia", alt: "A drawing of the three granite towers of Torres del Paine, pink in the morning light, above a glacial lake." },
     { src: "travel/santorini.webp", w: 1600, h: 1034, name: "Santorini, Greece", alt: "A drawing of white Santorini houses stepping down a cliff, a church with a navy dome, and coral bougainvillea." },
     { src: "travel/iceland.webp", w: 1600, h: 1021, name: "Kirkjufell, Iceland", alt: "A drawing of Kirkjufell, the cone-shaped mountain, above a stepped waterfall." },
-    { src: "travel/florence.webp", w: 1464, h: 1188, name: "Florence, Italy", alt: "A drawing of Brunelleschi's coral dome beside Giotto's bell tower, above tiled roofs and a cypress." },
-    { src: "pretzel-prague.webp", w: 1600, h: 990, name: "Prague, redrawn from " + pretzel, alt: "A drawing of a stone arcade looking out over Prague's coral rooftops to the castle, with an olive tree and a suitcase." },
+    { src: "travel/florence.webp", w: 1464, h: 1188, name: "Florence, Italy", alt: "A drawing of Brunelleschi’s coral dome beside Giotto’s bell tower, above tiled roofs and a cypress." },
+    { src: "pretzel-prague.webp", w: 1600, h: 990, name: "Prague, redrawn from " + pretzel, alt: "A drawing of a stone arcade looking out over Prague’s coral rooftops to the castle, with an olive tree and a suitcase." },
     { src: "travel/copenhagen.webp", w: 1600, h: 904, name: "Nyhavn, Copenhagen", alt: "A drawing of Nyhavn harbor: tall painted townhouses along the canal and a coral sailboat." },
     { src: "travel/rome.webp", w: 1523, h: 1100, name: "Rome, Italy", alt: "A drawing of the Colosseum beside a Roman umbrella pine." },
     { src: "travel/istanbul.webp", w: 1600, h: 1093, name: "Istanbul, Türkiye", alt: "A drawing of a mosque with teal domes and four minarets across the Bosphorus, with a small ferry." },
@@ -54,10 +54,12 @@ if (poster && $("[data-place-img]", poster) && $("[data-place-name]", poster)) {
   const nameEl = $("[data-place-name]", poster);
   const next = $("[data-place-next]", poster);
   // the two small places orbiting the sun: if the big drawing is one of them, that circle shows Torres instead
+  // the satellites show the 480px copy of each drawing (a "-sm.webp" next to the full one)
+  const sm = (src) => src.replace(/\.webp$/, "-sm.webp");
   const sats = $$(".sat img", poster).map((im) => ({ im, src: im.getAttribute("src"), alt: im.alt }));
   const syncSats = (p) => sats.forEach((s) => {
-    const dup = ART + p.src === s.src;
-    const want = dup ? ART + PLACES[0].src : s.src;
+    const dup = ART + sm(p.src) === s.src;
+    const want = dup ? ART + sm(PLACES[0].src) : s.src;
     if (s.im.getAttribute("src") !== want) { s.im.src = want; s.im.alt = dup ? PLACES[0].alt : s.alt; }
   });
 
@@ -118,7 +120,7 @@ if (list && pvImg) {
     const t = $(".row__t", li).firstChild.textContent.trim();
     const num = $(".row__n > span", li).textContent;
     pvImg.src = "/assets/collection/" + li.dataset.img + ".webp";
-    pvImg.alt = "A screenshot of " + t + ".";
+    pvImg.alt = li.dataset.alt || "A screenshot of " + t + ".";
     if (n) n.textContent = num + " / " + t;
     if (meta) meta.textContent = li.dataset.kind + " / " + li.dataset.status;
     if (what) what.textContent = $(".row__w", li).textContent;
@@ -272,7 +274,7 @@ if (scene) {
     });
   };
 
-  if (button) button.addEventListener("click", () => clip(true));
+  if (button) { button.hidden = false; button.addEventListener("click", () => clip(true)); }
   $$("[data-clip-hint]").forEach((el) => { el.hidden = false; });
 
   // the page's one authored moment: the first clip plays by itself when the scene is seen
@@ -280,7 +282,7 @@ if (scene) {
     const io = new IntersectionObserver((seen) => {
       if (seen.some((s) => s.isIntersecting)) {
         io.disconnect();
-        setTimeout(() => clip(false), 900);
+        setTimeout(() => { if (!busy && !flying) clip(false); }, 900);
       }
     }, { threshold: 0.6 });
     io.observe(scene);
