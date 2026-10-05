@@ -13,7 +13,7 @@ web
 
 ## Product Purpose
 
-kellylucas.dev is the shelf where Kelly's real projects live. It replaced a playful "lab" that read like a toy box. Success: a visitor leaves knowing Kelly builds useful software for how she works, with Magpie as the clearest proof, and Kelly can add the next project without redesigning anything.
+kellylucas.dev is the home where Kelly's real projects live. It replaced a playful "lab" that read like a toy box, and it now borrows the calm, drawn look of Heliopolis, the HelioFlux team space Kelly designed. Success: a visitor leaves knowing Kelly builds useful software for how she works, with Magpie as the clearest proof, and Kelly can add the next project without redesigning anything.
 
 ## Positioning
 
@@ -21,7 +21,7 @@ Kelly builds personal tools she runs every day, then puts them on the shelf. The
 
 ## Operating Context
 
-- Static HTML, CSS and vanilla JS on Vercel, auto-deploying from `main`. GSAP 3.13 from jsdelivr is the one allowed library. No build step.
+- Static HTML, CSS and vanilla JS on Vercel, auto-deploying from `main`. No build step. The site pages use no libraries; only the playground rooms load GSAP 3.13 from jsdelivr.
 - Magpie is Kelly's personal web clipper: a Chrome extension (feather button, tags, notes, a desk-pile guess), a bulk workbench (paste text or drop screenshots, local OCR, dedupe), a Python companion server, Markdown notes in an Obsidian vault plus `library.json`, a gallery, a galaxy star map, YouTube transcripts, open-access paper archiving, and automatic sorting into the five design desk piles. A hosted Magpie Collector handles phone and paste capture.
 - The private library at `/brain/gallery.html` and `/api/magpie-*` are password-gated and must stay private.
 
@@ -35,17 +35,19 @@ Kelly builds personal tools she runs every day, then puts them on the shelf. The
 ## Brand Commitments
 
 - Name: Kelly Lucas. Domain kellylucas.dev.
-- Heliora is the house typeface, chosen after auditioning 97 fonts.
-- The mint, cream and lilac tints and the deep ink green are Kelly's recognizable color family.
+- Lato is the house typeface, the same face Heliopolis uses. (Heliora won the 2026 audition of 97 fonts and was the face of v0.5 to v0.9.)
+- Six colors, chosen by Kelly from a Huemint palette and tuned for contrast: paper `#f8f6f1`, navy `#1f355e`, pale teal `#d4e7e5`, pale coral `#f6dcd8`, coral `#d6605b`, teal `#5a9e9a`. Navy carries all text.
+- Drawings in Kelly's Heliopolis style lead every page: places she loves (Torres del Paine opens the homepage), the Pretzel Protocol cities, and three magpies.
 - Voice: direct, lowercase-leaning, sentence case, warm, a little funny. No em dashes anywhere in copy.
 - Keep some personality (a couple of easter eggs and her voice). It must not look like a generic SaaS template.
-- Magpie's mark is the rainbow-and-warm feather (`magpie/extension/icons/magpie-feather.svg` in kip-workspace), with accent blue `#3e7be8`.
+- Magpie's mark is the rainbow-and-warm feather (`magpie/extension/icons/magpie-feather.svg` in kip-workspace). On this site it appears only inside the redrawn Magpie popup.
 
 ## Evidence on Hand
 
 - Magpie numbers from `kip-workspace/magpie/library.json`: 279 clips, 258 sites, 257 tags, 8 transcripts, 10 papers, 31 personal notes, clipped 2026-02-24 to 2026-08-19. 147 clips are tagged stumbleupon (an imported archive), and all 51 tagged weird are among them.
 - Design desk: 128 cards, 54 fed by Magpie, 117 public thumbnails in `assets/design/thumbs/`.
 - `assets/ai-workspace-field-guide.png`, the field guide map.
+- The drawings in `assets/art/` were made with an image model in Kelly's style and say so in the colophon and in their prompt sidecars.
 - There are no screenshots of the Magpie UI. Any depiction of it must be built from public desk thumbnails and labeled as an illustration.
 - No testimonials, users, or metrics beyond the above. Do not invent any.
 

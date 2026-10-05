@@ -4,50 +4,54 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Magpie · Kelly Lucas</title>
-  <meta name="description" content="Magpie is Kelly Lucas's web clipper and private library. One click files a page into her Obsidian vault and a searchable gallery at once." />
-  <meta name="theme-color" content="#f4f2ec" />
-  <link rel="icon" href="/assets/collection/magpie-feather.svg" type="image/svg+xml" />
-  <link rel="preload" href="/assets/fonts/Heliora-Regular.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/assets/fonts/Heliora-Medium.woff2" as="font" type="font/woff2" crossorigin />
+  <meta name="description" content="Magpie, Kelly Lucas’s web clipper and private library. One click files a page into her Obsidian vault and a searchable gallery at once." />
+  <meta name="theme-color" content="#f8f6f1" />
+  <meta property="og:title" content="Magpie · Kelly Lucas" />
+  <meta property="og:description" content="Magpie, Kelly Lucas’s web clipper and private library. One click files a page into her Obsidian vault and a searchable gallery at once." />
+  <meta property="og:image" content="https://kellylucas.dev/assets/art/og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/assets/art/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="/assets/fonts/Lato-Light.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/Lato-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="/style.css" />
-</head>
-<body>
-  <!--
-    Object record for plate 01. Same catalog world as the index: crumbs,
-    a large plate, a data list like a museum record, then chapters.
-    FORM: catalog record, seed key 407b5ec5.
-  -->
+</head><body>
   <a class="skip-link" href="#main">Skip to content</a>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-down" viewBox="0 0 12 12"><path d="M6 1.5v9M2.5 7 6 10.5 9.5 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 12 12"><path d="M1.5 6h9M7 2.5 10.5 6 7 9.5"/></symbol>
+    <symbol id="i-out" viewBox="0 0 12 12"><path d="M3 9 9 3M4.2 3H9v4.8"/></symbol>
+    <symbol id="i-up" viewBox="0 0 12 12"><path d="M6 10.5v-9M2.5 5 6 1.5 9.5 5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 12 12"><rect x="2.4" y="5.4" width="7.2" height="5.2" rx="1"/><path d="M4 5.4V4a2 2 0 0 1 4 0v1.4"/></symbol>
+    <symbol id="i-cycle" viewBox="0 0 12 12"><path d="M10.2 6.6A4.3 4.3 0 1 1 8.9 2.9M10.4 1.4v2.4H8"/></symbol>
+  </svg>
 
   <header class="site-header" id="top">
     <div class="wrap site-header__inner">
-      <a href="/" class="wordmark" aria-label="Kelly Lucas, home">Kelly Lucas <span class="wordmark__sub">the collection</span></a>
+      <a href="/" class="wordmark" aria-label="Kelly Lucas, home">Kelly Lucas</a>
       <nav class="site-nav" aria-label="Primary">
-        <a href="/#index">Index</a>
         <a href="/magpie.html" aria-current="page">Magpie</a>
-        <a href="/playground.html">Playground</a>
+        <a href="/#projects">Projects</a>
         <a href="/log.html" class="nav-wide">Log</a>
-        <a href="#contact" class="nav-wide">Contact</a>
+        <a href="/playground.html">Playground</a>
       </nav>
     </div>
   </header>
 
   <main id="main">
     <div class="wrap">
-      <nav class="crumbs" aria-label="Breadcrumb">
-        <a href="/">Collection</a><span aria-hidden="true">/</span>
-        <a href="/#index">Index</a><span aria-hidden="true">/</span>
-        <span aria-current="page">Plate 01</span>
-      </nav>
-
-      <section class="record" aria-labelledby="record-title">
-        <div class="record__title">
+      <section class="page-head" aria-labelledby="record-title">
+        <div class="page-head__text">
           <h1 class="display" id="record-title">Magpie</h1>
+          <p class="feature__meta"><span class="status status--use">In use since February 2026</span><span>Built for one</span></p>
           <p class="lede">My web clipper and private library. It collects shiny things from the web and drops them into two nests at once: a full note in my Obsidian vault, and a card in a gallery I can search.</p>
         </div>
+        <figure class="page-head__art">
+          <img src="/assets/art/magpie-drawer.webp" width="1200" height="1326" fetchpriority="high" decoding="async" alt="A drawing of a magpie perched on an open card-index drawer, holding a tiny coral key." />
+        </figure>
+      </section>
 
-        <figure class="plate plate--magpie record__plate">
-          <div class="plate__field plate__field--magpie">
+      <figure class="scene" aria-label="The clipper and the gallery, redrawn">
+        <div class="scene__frame">
           <div class="mp-scene" data-clip-scene>
             <div class="mp-gallery" aria-hidden="true">
               <div class="mp-gallery__bar">
@@ -90,21 +94,23 @@
             </div>
           </div>
         </div>
-<figcaption>
-            <div class="plate__cap"><span>Plate 01. The clipper and the gallery, redrawn in HTML. Press Clip it.</span><span>KL 2026.01</span></div>
-          </figcaption>
-        </figure>
+        <figcaption>The clipper and the gallery, redrawn in HTML in this site’s colors. The real ones are mine alone. Press Clip it.</figcaption>
+      </figure>
 
-        <div class="record__data">
+      <section class="chapter" aria-labelledby="ch-record">
+        <div class="chapter__head">
+          <h2 class="h2" id="ch-record">The record</h2>
+          <p>What it is, and what it’s made of.</p>
+        </div>
+        <div class="chapter__body">
           <dl class="datalist">
-            <div><dt>Accession</dt><dd>KL 2026.01</dd></div>
-            <div><dt>Object</dt><dd>A Chrome extension, a bulk workbench, a companion server, a gallery and a galaxy map</dd></div>
+            <div><dt>What it is</dt><dd>A Chrome extension, a bulk workbench, a companion server, a gallery and a galaxy map</dd></div>
             <div><dt>Made with</dt><dd>JavaScript (Manifest V3), Python, Swift for local OCR, Markdown</dd></div>
             <div><dt>Lives in</dt><dd>My Obsidian vault, plus a private copy of the library on this site</dd></div>
-            <div><dt>Holds</dt><dd>279 clips from 258 sites</dd></div>
+            <div><dt>Holds</dt><dd>279 clips from 258 sites, counted Aug 19, 2026</dd></div>
             <div><dt>Dates</dt><dd>February 2026 to now</dd></div>
             <div><dt>Status</dt><dd><span class="status status--use">In use</span></dd></div>
-            <div><dt>Credit</dt><dd>Collection of the maker. Built with Claude and Kip.</dd></div>
+            <div><dt>Credit</dt><dd>Built with Claude and Kip</dd></div>
           </dl>
         </div>
       </section>
@@ -138,12 +144,12 @@
 
       <section class="chapter" aria-labelledby="ch-kinds">
         <div class="chapter__head">
-          <h2 class="h2" id="ch-kinds">It knows what it's looking at</h2>
+          <h2 class="h2" id="ch-kinds">It knows what it’s looking at</h2>
           <p>Every clip gets an honest label and the right kind of keepsake.</p>
         </div>
         <div class="chapter__body">
           <ul class="bench">
-            <li><b>Pages</b><p>The preview comes from the page's own image, then from a screenshot taken at clip time, then a plain title card.</p></li>
+            <li><b>Pages</b><p>The preview comes from the page’s own image, then from a screenshot taken at clip time, then a plain title card.</p></li>
             <li><b>Videos</b><p>YouTube clips bring their transcript along, read from the browser with yt-dlp as the fallback.</p></li>
             <li><b>Papers</b><p>The open-access PDF and a searchable text copy. When no free PDF exists, it says abstract only. It never goes around a paywall.</p></li>
             <li><b>Repos</b><p>GitHub repositories are labeled as repos, not web pages, so they file with the tools.</p></li>
@@ -168,11 +174,11 @@
 
       <section class="chapter" aria-labelledby="ch-count">
         <div class="chapter__head">
-          <h2 class="h2" id="ch-count">The collection so far</h2>
+          <h2 class="h2" id="ch-count">The library so far</h2>
           <p>Counted from the library on August 19, 2026.</p>
         </div>
         <div class="chapter__body">
-          <dl class="holdings">
+          <dl class="datalist datalist--counts">
             <div><dt>Clips</dt><dd>279</dd></div>
             <div><dt>Different sites</dt><dd>258</dd></div>
             <div><dt>Tags</dt><dd>257</dd></div>
@@ -190,20 +196,20 @@
           <p>Magpie is a personal tool.</p>
         </div>
         <div class="chapter__body">
-          <div class="private-note">
-            <p>It isn't something you can install, and the library stays behind a password. The design half of it is public, though: everything Magpie files for the design desk shows up there.</p>
+          <div class="prose">
+            <p>It isn’t something you can install, and the library stays behind a password. The design half of it is public, though: everything Magpie files for the design desk shows up there.</p>
           </div>
-          <div class="actions record-actions">
-            <a class="action" href="/design.html">See the design desk <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-            <a class="action" href="/brain/gallery.html"><span class="lock"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="2.5" y="6" width="9" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6V4.5a2.5 2.5 0 0 1 5 0V6" stroke="currentColor" stroke-width="1.2"/></svg>Open the library (staff only)</span><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="tlinks" style="margin-top: 28px">
+            <a class="tlink" href="/design.html">See the design desk <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a>
+            <a class="tlink" href="/brain/gallery.html"><svg class="ico ico--lock" aria-hidden="true"><use href="#i-lock"/></svg>My library, private</a>
           </div>
         </div>
       </section>
 
       <a class="next-object" href="/design.html">
         <span class="h2 next-object__title">Design desk</span>
-        <span class="next-object__meta">Next in the index, plate 02</span>
-        <svg class="arrow" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8h11M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="next-object__meta">Next project, 02</span>
+        <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg>
       </a>
     </div>
   </main>
@@ -211,42 +217,23 @@
   <footer class="site-footer" id="contact">
     <div class="wrap">
       <div class="footer-top">
+        <figure class="footer-art">
+          <img src="/assets/art/magpie-books.webp" width="1200" height="1059" loading="lazy" decoding="async" alt="" />
+        </figure>
         <div class="footer-say">
-          <h2 class="h2">Say hi.</h2>
-          <p>Questions about anything here, or just hello.</p>
-          <a class="footer-mail" href="mailto:hello@kellylucas.dev">hello@kellylucas.dev</a>
-        </div>
-        <div class="footer-cols">
-          <div>
-            <h2>Collection</h2>
-            <ul>
-              <li><a href="/#index">Index</a></li>
-              <li><a href="/magpie.html">Magpie</a></li>
-              <li><a href="/design.html">Design desk</a></li>
-              <li><a href="/log.html">Log</a></li>
-              <li><a href="/colophon.html">Colophon</a></li>
-            </ul>
-          </div>
-          <div>
-            <h2>Playground</h2>
-            <ul>
-              <li><a href="/playground.html">All rooms</a></li>
-              <li><a href="/quotes.html">Spark notes</a></li>
-              <li><a href="/all-fonts.html">Audition room</a></li>
-            </ul>
-          </div>
-          <div>
-            <h2>Staff only</h2>
-            <ul>
-              <li><a class="lock" href="/brain/gallery.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="2.5" y="6" width="9" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6V4.5a2.5 2.5 0 0 1 5 0V6" stroke="currentColor" stroke-width="1.2"/></svg>Magpie library</a></li>
-              <li><a class="lock" href="https://agentcommons.kellylucas.dev"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="2.5" y="6" width="9" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6V4.5a2.5 2.5 0 0 1 5 0V6" stroke="currentColor" stroke-width="1.2"/></svg>Agent Commons</a></li>
-            </ul>
-          </div>
+          <h2 class="h2">Say hello</h2>
+          <p>Questions, ideas, a project you think I’d like. My inbox is open.</p>
+          <a class="footer-mail" href="mailto:hello@kellylucas.dev">hello@kellylucas.dev <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a>
         </div>
       </div>
       <div class="footer-bottom">
-        <span>&copy; <span data-year>2026</span> Kelly Lucas</span>
-        <span>v1.0 · catalogued Oct 4, 2026 · made in public</span>
+        <span>&copy; <span data-year>2026</span> Kelly Lucas. Drawings in my Heliopolis style.</span>
+        <nav aria-label="Footer">
+          <a href="/design.html">Design desk</a>
+          <a href="/colophon.html">Colophon</a>
+          <a href="/brain/gallery.html"><svg class="ico ico--lock lock-ico" aria-hidden="true"><use href="#i-lock"/></svg>My library</a>
+          <a href="#top">Back to top <svg class="ico ico--up" aria-hidden="true"><use href="#i-up"/></svg></a>
+        </nav>
       </div>
     </div>
   </footer>

@@ -24,3 +24,5 @@ assets/avatars/source/
 .claude/
 assets/collection/**/*.webp.json
 assets/collection/*.webp.json
+assets/art/*.webp.json
+assets/art/**/*.webp.json

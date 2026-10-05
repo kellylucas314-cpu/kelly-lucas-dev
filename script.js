@@ -1,23 +1,21 @@
-/* kellylucas.dev · the collection
-   Shared by every collection page (index, magpie, playground, log,
-   colophon, design, 404). Each feature null-checks its targets, and the
-   pages read fine with no JavaScript at all. The toy rooms use lab.js. */
+/* kellylucas.dev
+   Shared by every page that uses style.css (home, magpie, design, playground,
+   log, colophon, 404). Each feature null-checks its targets, and the pages
+   read fine with no JavaScript at all. The playground rooms use lab.js. */
 
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 
+/* storage can be missing or blocked (private windows, previews); never let it break a page */
+const store = {
+  get(key) { try { return window.localStorage.getItem(key); } catch (e) { return null; } },
+  set(key, value) { try { window.localStorage.setItem(key, value); } catch (e) { /* fine */ } },
+};
+
 /* ---------- Footer year ---------- */
 $$("[data-year]").forEach((el) => { el.textContent = new Date().getFullYear(); });
-
-/* ---------- Header rule once the page scrolls ---------- */
-const header = $(".site-header");
-if (header) {
-  const onScroll = () => header.classList.toggle("is-scrolled", window.scrollY > 8);
-  onScroll();
-  window.addEventListener("scroll", onScroll, { passive: true });
-}
 
 /* ---------- Toast ---------- */
 const toastEl = $("[data-toast]");
@@ -36,89 +34,92 @@ document.addEventListener("visibilitychange", () => {
   document.title = document.hidden ? "something shiny is waiting" : baseTitle;
 });
 
-/* ---------- The index: hover or focus a row, the plate viewer follows ---------- */
-const viewer = $("[data-viewer]");
-const entries = $$(".entry");
-if (viewer && entries.length) {
-  const field = $("[data-v-field]", viewer);
-  const img = $("[data-v-img]", viewer);
-  const parts = {
-    plate: $("[data-v-plate]", viewer),
-    acc: $("[data-v-acc]", viewer),
-    title: $("[data-v-title]", viewer),
-    what: $("[data-v-what]", viewer),
-    medium: $("[data-v-medium]", viewer),
-    status: $("[data-v-status]", viewer),
-  };
-  let current = null;
-  let swapTimer;
+/* ---------- Home: a different place each visit, Torres del Paine first ---------- */
+const place = $("[data-place]");
+if (place && $("[data-place-img]", place) && $("[data-place-name]", place)) {
+  const ART = "/assets/art/";
+  const pretzel = '<a href="https://pretzel.thetravelprotocol.com" target="_blank" rel="noopener noreferrer">the Pretzel Protocol</a>';
+  const PLACES = [
+    { src: "travel/torres-del-paine.webp", w: 1600, h: 1103, name: "Torres del Paine, Patagonia", alt: "A drawing of the three granite towers of Torres del Paine, pink in the morning light, above a glacial lake." },
+    { src: "travel/santorini.webp", w: 1600, h: 1034, name: "Santorini, Greece", alt: "A drawing of white Santorini houses stepping down a cliff, a church with a navy dome, and coral bougainvillea." },
+    { src: "travel/iceland.webp", w: 1600, h: 1021, name: "Kirkjufell, Iceland", alt: "A drawing of Kirkjufell, the cone-shaped mountain, above a stepped waterfall." },
+    { src: "travel/florence.webp", w: 1464, h: 1188, name: "Florence, Italy", alt: "A drawing of Brunelleschi's coral dome beside Giotto's bell tower, above tiled roofs and a cypress." },
+    { src: "pretzel-prague.webp", w: 1600, h: 990, name: "Prague, drawn for " + pretzel, alt: "A drawing of a stone arcade looking out over Prague's coral rooftops to the castle, with an olive tree and a suitcase." },
+    { src: "travel/copenhagen.webp", w: 1600, h: 904, name: "Nyhavn, Copenhagen", alt: "A drawing of Nyhavn harbor: tall painted townhouses along the canal and a coral sailboat." },
+    { src: "travel/rome.webp", w: 1523, h: 1100, name: "Rome, Italy", alt: "A drawing of the Colosseum beside a Roman umbrella pine." },
+    { src: "travel/istanbul.webp", w: 1600, h: 1093, name: "Istanbul, Türkiye", alt: "A drawing of a mosque with teal domes and four minarets across the Bosphorus, with a small ferry." },
+    { src: "pretzel-munich.webp", w: 1600, h: 1004, name: "Munich, drawn for " + pretzel, alt: "A drawing of Marienplatz and the Neues Rathaus seen through a stone archway, with flowers and a bread basket." },
+    { src: "travel/athens.webp", w: 1600, h: 1010, name: "Athens, Greece", alt: "A drawing of the Parthenon on the Acropolis rock, with an olive tree in front." },
+    { src: "travel/edinburgh.webp", w: 1600, h: 1036, name: "Edinburgh, Scotland", alt: "A drawing of Edinburgh Castle on its rock, with a small coral flag." },
+    { src: "pretzel-berlin.webp", w: 1600, h: 874, name: "Berlin, drawn for " + pretzel, alt: "A drawing of the East Side Gallery wall and the Oberbaum Bridge over the Spree." },
+    { src: "pretzel-amsterdam.webp", w: 1600, h: 876, name: "Amsterdam, drawn for " + pretzel, alt: "A drawing of Amsterdam canal houses, an arched bridge, a bicycle and a stroopwafel." },
+  ];
+  const img = $("[data-place-img]", place);
+  const nameEl = $("[data-place-name]", place);
+  const next = $("[data-place-next]", place);
+  const KEY = "kl-place";
 
-  const show = (entry) => {
-    if (!entry || entry === current) return;
-    current = entry;
-    entries.forEach((e) => e.classList.toggle("is-active", e === entry));
-    const d = entry.dataset;
+  const show = (i, animate) => {
+    const p = PLACES[i];
     const apply = () => {
-      field.className = "plate__field tint-" + d.tint;
-      img.src = d.plate;
-      img.alt = d.alt || "";
-      parts.plate.textContent = "Plate " + d.no;
-      parts.acc.textContent = "KL 2026." + d.no;
-      parts.title.textContent = d.title;
-      parts.what.textContent = d.what;
-      parts.medium.textContent = d.medium;
-      parts.status.textContent = d.status;
-      parts.status.className = "status" + (d.statusKind === "live" ? "" : " status--" + d.statusKind);
-      viewer.classList.remove("is-swapping");
+      img.src = ART + p.src;
+      img.width = p.w;
+      img.height = p.h;
+      img.alt = p.alt;
+      nameEl.innerHTML = p.name;
     };
-    clearTimeout(swapTimer);
-    if (reducedMotion) { apply(); return; }
-    viewer.classList.add("is-swapping");
-    swapTimer = setTimeout(apply, 160);
+    if (!animate || reducedMotion || !img.animate) { apply(); return; }
+    img.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, easing: "ease-out", fill: "forwards" }).finished.then(() => {
+      apply();
+      const fadeIn = () => img.animate([{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 520, easing: EASE, fill: "forwards" });
+      img.complete ? fadeIn() : img.addEventListener("load", fadeIn, { once: true });
+    });
   };
 
-  entries.forEach((entry) => {
-    entry.addEventListener("mouseenter", () => show(entry));
-    entry.addEventListener("focus", () => show(entry));
-  });
-  current = entries.find((e) => e.hasAttribute("data-default")) || entries[0];
-  current.classList.add("is-active");
+  // first visit shows Torres del Paine (already in the HTML); every visit after moves one place on
+  const last = parseInt(store.get(KEY), 10);
+  let current = Number.isInteger(last) && last >= 0 ? (last + 1) % PLACES.length : 0;
+  if (current !== 0) show(current, false);
+  store.set(KEY, String(current));
 
-  // warm the plate images once the page is idle, so swaps are instant
-  const warm = () => entries.forEach((e) => { const i = new Image(); i.src = e.dataset.plate; });
-  ("requestIdleCallback" in window) ? requestIdleCallback(warm) : setTimeout(warm, 1500);
-}
-
-/* ---------- The index: filters ---------- */
-const filters = $$("[data-filter]");
-const entryList = $("[data-entries]");
-const countEl = $("[data-count]");
-if (filters.length && entryList) {
-  filters.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const group = btn.dataset.filter;
-      filters.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
-      let shown = 0;
-      $$("li", entryList).forEach((li) => {
-        const match = group === "all" || li.dataset.group === group;
-        li.hidden = !match;
-        if (match) shown++;
-      });
-      if (countEl) countEl.textContent = shown + (shown === 1 ? " object" : " objects");
+  if (next) {
+    next.hidden = false;
+    // warm the next drawing so the swap is instant
+    const warm = (i) => { const im = new Image(); im.src = ART + PLACES[i].src; };
+    ("requestIdleCallback" in window) ? requestIdleCallback(() => warm((current + 1) % PLACES.length)) : setTimeout(() => warm((current + 1) % PLACES.length), 1500);
+    next.addEventListener("click", () => {
+      current = (current + 1) % PLACES.length;
+      store.set(KEY, String(current));
+      show(current, true);
+      warm((current + 1) % PLACES.length);
     });
+  }
+}
+
+/* ---------- Magpie's shortcut, which only works in my browser ---------- */
+const reflex = $("[data-reflex]");
+if (reflex) {
+  let reflexTimer;
+  document.addEventListener("keydown", (e) => {
+    if (e.altKey && e.shiftKey && (e.code === "KeyM" || (e.key || "").toLowerCase() === "m")) {
+      e.preventDefault();
+      reflex.textContent = "Nice reflexes. That shortcut only works in my browser.";
+      clearTimeout(reflexTimer);
+      reflexTimer = setTimeout(() => { reflex.textContent = ""; }, 4200);
+    }
   });
 }
 
-/* ---------- Plate 01: the Magpie popup actually clips (a picture of) a page ---------- */
+/* ---------- Magpie page: the popup actually clips (a picture of) a page ---------- */
 const scene = $("[data-clip-scene]");
 if (scene) {
   const wall = $(".mp-wall", scene);
   const source = $("[data-clip-source]", scene);
   const button = $("[data-clip-button]", scene);
   const queue = [
-    { img: "assets/collection/clips/refero.webp", title: "Refero: UI and UX inspiration", domain: "refero.design" },
-    { img: "assets/collection/clips/linear.webp", title: "Linear", domain: "linear.app" },
-    { img: "assets/collection/clips/savee.webp", title: "Savee", domain: "savee.com" },
+    { img: "/assets/collection/clips/refero.webp", title: "Refero: UI and UX inspiration", domain: "refero.design" },
+    { img: "/assets/collection/clips/linear.webp", title: "Linear", domain: "linear.app" },
+    { img: "/assets/collection/clips/savee.webp", title: "Savee", domain: "savee.com" },
   ];
   let step = 0;
   let busy = false;
@@ -147,7 +148,6 @@ if (scene) {
   const reset = () => {
     clearTimeout(resetTimer);
     setPreview(queue[step % queue.length]);
-    button.classList.remove("is-done");
     button.textContent = "Clip it";
     busy = false;
   };
@@ -164,7 +164,6 @@ if (scene) {
 
     const finish = () => {
       flying = false;
-      button.classList.add("is-done");
       button.innerHTML = check + "Clipped";
       if (announce) toast("Clipped. Filed under shiny things.");
       step++;
@@ -174,8 +173,7 @@ if (scene) {
     const from = $(".mp-card__img", source).getBoundingClientRect();
     const before = new Map($$(".mp-card", wall).map((c) => [c, c.getBoundingClientRect()]));
     wall.prepend(card);
-    const extra = $$(".mp-card", wall).slice(6);
-    extra.forEach((c) => c.remove());
+    $$(".mp-card", wall).slice(6).forEach((c) => c.remove());
 
     // the older clips slide over to make room
     if (!reducedMotion && card.animate) {
@@ -224,7 +222,7 @@ if (scene) {
 
   if (button) button.addEventListener("click", () => clip(true));
 
-  // one authored moment: the first clip plays by itself when the plate is seen
+  // the page's one authored moment: the first clip plays by itself when the scene is seen
   if (!reducedMotion && "IntersectionObserver" in window) {
     const io = new IntersectionObserver((seen) => {
       if (seen.some((s) => s.isIntersecting)) {

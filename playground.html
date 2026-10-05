@@ -3,26 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The playground · Kelly Lucas</title>
-  <meta name="description" content="Side rooms Kelly Lucas built for fun while learning the web: a pixel garden, a pet, a quantum wing and more." />
-  <meta name="theme-color" content="#f4f2ec" />
-  <link rel="icon" href="/assets/collection/magpie-feather.svg" type="image/svg+xml" />
-  <link rel="preload" href="/assets/fonts/Heliora-Regular.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/assets/fonts/Heliora-Medium.woff2" as="font" type="font/woff2" crossorigin />
+  <title>Playground · Kelly Lucas</title>
+  <meta name="description" content="The playground: side rooms Kelly Lucas built for fun while learning the web. A pixel garden, a pet, a panel, a noise room, a quantum wing and more." />
+  <meta name="theme-color" content="#f8f6f1" />
+  <meta property="og:title" content="Playground · Kelly Lucas" />
+  <meta property="og:description" content="The playground: side rooms Kelly Lucas built for fun while learning the web. A pixel garden, a pet, a panel, a noise room, a quantum wing and more." />
+  <meta property="og:image" content="https://kellylucas.dev/assets/art/og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/assets/art/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="/assets/fonts/Lato-Light.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/Lato-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="/style.css" />
-</head>
-<body>
+</head><body>
   <a class="skip-link" href="#main">Skip to content</a>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-down" viewBox="0 0 12 12"><path d="M6 1.5v9M2.5 7 6 10.5 9.5 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 12 12"><path d="M1.5 6h9M7 2.5 10.5 6 7 9.5"/></symbol>
+    <symbol id="i-out" viewBox="0 0 12 12"><path d="M3 9 9 3M4.2 3H9v4.8"/></symbol>
+    <symbol id="i-up" viewBox="0 0 12 12"><path d="M6 10.5v-9M2.5 5 6 1.5 9.5 5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 12 12"><rect x="2.4" y="5.4" width="7.2" height="5.2" rx="1"/><path d="M4 5.4V4a2 2 0 0 1 4 0v1.4"/></symbol>
+    <symbol id="i-cycle" viewBox="0 0 12 12"><path d="M10.2 6.6A4.3 4.3 0 1 1 8.9 2.9M10.4 1.4v2.4H8"/></symbol>
+  </svg>
 
   <header class="site-header" id="top">
     <div class="wrap site-header__inner">
-      <a href="/" class="wordmark" aria-label="Kelly Lucas, home">Kelly Lucas <span class="wordmark__sub">the collection</span></a>
+      <a href="/" class="wordmark" aria-label="Kelly Lucas, home">Kelly Lucas</a>
       <nav class="site-nav" aria-label="Primary">
-        <a href="/#index">Index</a>
         <a href="/magpie.html">Magpie</a>
-        <a href="/playground.html" aria-current="page">Playground</a>
+        <a href="/#projects">Projects</a>
         <a href="/log.html" class="nav-wide">Log</a>
-        <a href="#contact" class="nav-wide">Contact</a>
+        <a href="/playground.html" aria-current="page">Playground</a>
       </nav>
     </div>
   </header>
@@ -30,89 +40,76 @@
   <main id="main">
     <div class="wrap">
       <section class="page-head" aria-labelledby="pg-title">
-        <h1 class="display" id="pg-title">The playground</h1>
-        <p class="lede">Side rooms I built for fun while I was learning the web. None of them are useful, and all of them work. They keep the old lab look on purpose, since this is where the site started.</p>
+        <div class="page-head__text">
+          <h1 class="display" id="pg-title">The playground</h1>
+          <p class="lede">Side rooms I built for fun while I was learning the web. None of them are useful, and all of them work. They keep the old lab look on purpose, since this is where the site started.</p>
+        </div>
+        <figure class="page-head__art">
+          <img src="/assets/art/travel/santorini.webp" width="1600" height="1034" fetchpriority="high" decoding="async" alt="" />
+        </figure>
       </section>
-      <div class="room-grid">
-        <a class="room" href="/claude.html">
-          <span class="room__tile"><img src="/assets/collection/rooms/claude.webp" alt="" width="640" height="400" loading="lazy" /></span>
-          <span class="room__text"><span class="room__title">Pixel garden</span><span class="room__what">A tiny generative garden Claude planted. Plant a thought and see what grows.</span></span>
-        </a>
-        <a class="room" href="/pet.html">
-          <span class="room__tile"><img src="/assets/collection/rooms/pet.webp" alt="" width="640" height="400" loading="lazy" /></span>
-          <span class="room__text"><span class="room__title">The pet</span><span class="room__what">Small, round, lives in your browser, judges nothing. It has a gene lab now.</span></span>
-        </a>
-        <a class="room" href="/panel.html">
-          <span class="room__tile"><img src="/assets/collection/rooms/panel.webp" alt="" width="640" height="400" loading="lazy" /></span>
-          <span class="room__text"><span class="room__title">The panel</span><span class="room__what">Switches and dials, and one button you should not press.</span></span>
-        </a>
-        <a class="room" href="/noise.html">
-          <span class="room__tile"><img src="/assets/collection/rooms/noise.webp" alt="" width="640" height="400" loading="lazy" /></span>
-          <span class="room__text"><span class="room__title">The noise room</span><span class="room__what">Five notes, eight steps, zero wrong answers.</span></span>
-        </a>
-        <a class="room" href="/quantum.html">
-          <span class="room__tile"><img src="/assets/collection/rooms/quantum.webp" alt="" width="640" height="400" loading="lazy" /></span>
-          <span class="room__text"><span class="room__title">The quantum wing</span><span class="room__what">A double slit you fire one particle at a time, a cat in a box, and a universe splitter.</span></span>
-        </a>
-        <a class="room" href="/qrng.html">
-          <span class="room__tile"><img src="/assets/collection/rooms/qrng.webp" alt="" width="640" height="400" loading="lazy" /></span>
-          <span class="room__text"><span class="room__title">The entropy tap</span><span class="room__what">Homemade quantum randomness, straight from your camera’s photons.</span></span>
-        </a>
-        <a class="room" href="/quotes.html">
-          <span class="room__tile"><img src="/assets/collection/rooms/quotes.webp" alt="" width="640" height="400" loading="lazy" /></span>
-          <span class="room__text"><span class="room__title">Spark notes</span><span class="room__what">A living quote wall. Borrowed courage and saved lines.</span></span>
-        </a>
-        <a class="room" href="/all-fonts.html">
-          <span class="room__tile"><img src="/assets/collection/rooms/all-fonts.webp" alt="" width="640" height="400" loading="lazy" /></span>
-          <span class="room__text"><span class="room__title">The audition room</span><span class="room__what">97 fonts walked in. Heliora walked out.</span></span>
-        </a>
-        <a class="room" href="/a-door-that-does-not-exist">
-          <span class="room__tile room__tile--empty"><span>Empty case</span></span>
-          <span class="room__text"><span class="room__title">A missing door</span><span class="room__what">Leads nowhere. On purpose.</span></span>
-        </a>
-      </div>
+
+      <ul class="rooms">
+          <li><a class="room" href="/claude.html">
+            <span class="room__tile"><img src="/assets/collection/rooms/claude.webp" alt="" width="640" height="400" loading="lazy" decoding="async" /></span>
+            <span><span class="room__title">Pixel garden</span><span class="room__what">A tiny generative garden Claude planted. Plant a thought and see what grows.</span></span>
+            <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a></li>
+          <li><a class="room" href="/pet.html">
+            <span class="room__tile"><img src="/assets/collection/rooms/pet.webp" alt="" width="640" height="400" loading="lazy" decoding="async" /></span>
+            <span><span class="room__title">The pet</span><span class="room__what">Small, round, lives in your browser, judges nothing. It has a gene lab now.</span></span>
+            <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a></li>
+          <li><a class="room" href="/panel.html">
+            <span class="room__tile"><img src="/assets/collection/rooms/panel.webp" alt="" width="640" height="400" loading="lazy" decoding="async" /></span>
+            <span><span class="room__title">The panel</span><span class="room__what">Switches and dials, and one button you should not press.</span></span>
+            <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a></li>
+          <li><a class="room" href="/noise.html">
+            <span class="room__tile"><img src="/assets/collection/rooms/noise.webp" alt="" width="640" height="400" loading="lazy" decoding="async" /></span>
+            <span><span class="room__title">The noise room</span><span class="room__what">Five notes, eight steps, zero wrong answers.</span></span>
+            <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a></li>
+          <li><a class="room" href="/quantum.html">
+            <span class="room__tile"><img src="/assets/collection/rooms/quantum.webp" alt="" width="640" height="400" loading="lazy" decoding="async" /></span>
+            <span><span class="room__title">The quantum wing</span><span class="room__what">A double slit you fire one particle at a time, a cat in a box, and a universe splitter.</span></span>
+            <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a></li>
+          <li><a class="room" href="/qrng.html">
+            <span class="room__tile"><img src="/assets/collection/rooms/qrng.webp" alt="" width="640" height="400" loading="lazy" decoding="async" /></span>
+            <span><span class="room__title">The entropy tap</span><span class="room__what">Homemade quantum randomness, straight from your camera’s photons.</span></span>
+            <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a></li>
+          <li><a class="room" href="/quotes.html">
+            <span class="room__tile"><img src="/assets/collection/rooms/quotes.webp" alt="" width="640" height="400" loading="lazy" decoding="async" /></span>
+            <span><span class="room__title">Spark notes</span><span class="room__what">A living quote wall. Borrowed courage and saved lines.</span></span>
+            <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a></li>
+          <li><a class="room" href="/all-fonts.html">
+            <span class="room__tile"><img src="/assets/collection/rooms/all-fonts.webp" alt="" width="640" height="400" loading="lazy" decoding="async" /></span>
+            <span><span class="room__title">The audition room</span><span class="room__what">97 fonts walked in. Heliora walked out, and later handed the job to Lato.</span></span>
+            <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a></li>
+          <li><a class="room" href="/a-door-that-does-not-exist">
+            <span class="room__tile room__tile--empty"><span>Nothing here</span></span>
+            <span><span class="room__title">A missing door</span><span class="room__what">Leads nowhere. On purpose.</span></span>
+            <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a></li>
+      </ul>
     </div>
   </main>
 
   <footer class="site-footer" id="contact">
     <div class="wrap">
       <div class="footer-top">
+        <figure class="footer-art">
+          <img src="/assets/art/magpie-books.webp" width="1200" height="1059" loading="lazy" decoding="async" alt="" />
+        </figure>
         <div class="footer-say">
-          <h2 class="h2">Say hi.</h2>
-          <p>Questions about anything here, or just hello.</p>
-          <a class="footer-mail" href="mailto:hello@kellylucas.dev">hello@kellylucas.dev</a>
-        </div>
-        <div class="footer-cols">
-          <div>
-            <h2>Collection</h2>
-            <ul>
-              <li><a href="/#index">Index</a></li>
-              <li><a href="/magpie.html">Magpie</a></li>
-              <li><a href="/design.html">Design desk</a></li>
-              <li><a href="/log.html">Log</a></li>
-              <li><a href="/colophon.html">Colophon</a></li>
-            </ul>
-          </div>
-          <div>
-            <h2>Playground</h2>
-            <ul>
-              <li><a href="/playground.html">All rooms</a></li>
-              <li><a href="/quotes.html">Spark notes</a></li>
-              <li><a href="/all-fonts.html">Audition room</a></li>
-            </ul>
-          </div>
-          <div>
-            <h2>Staff only</h2>
-            <ul>
-              <li><a class="lock" href="/brain/gallery.html"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="2.5" y="6" width="9" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6V4.5a2.5 2.5 0 0 1 5 0V6" stroke="currentColor" stroke-width="1.2"/></svg>Magpie library</a></li>
-              <li><a class="lock" href="https://agentcommons.kellylucas.dev"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="2.5" y="6" width="9" height="6.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6V4.5a2.5 2.5 0 0 1 5 0V6" stroke="currentColor" stroke-width="1.2"/></svg>Agent Commons</a></li>
-            </ul>
-          </div>
+          <h2 class="h2">Say hello</h2>
+          <p>Questions, ideas, a project you think I’d like. My inbox is open.</p>
+          <a class="footer-mail" href="mailto:hello@kellylucas.dev">hello@kellylucas.dev <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a>
         </div>
       </div>
       <div class="footer-bottom">
-        <span>&copy; <span data-year>2026</span> Kelly Lucas</span>
-        <span>v1.0 · catalogued Oct 4, 2026 · made in public</span>
+        <span>&copy; <span data-year>2026</span> Kelly Lucas. Drawings in my Heliopolis style.</span>
+        <nav aria-label="Footer">
+          <a href="/design.html">Design desk</a>
+          <a href="/colophon.html">Colophon</a>
+          <a href="/brain/gallery.html"><svg class="ico ico--lock lock-ico" aria-hidden="true"><use href="#i-lock"/></svg>My library</a>
+          <a href="#top">Back to top <svg class="ico ico--up" aria-hidden="true"><use href="#i-up"/></svg></a>
+        </nav>
       </div>
     </div>
   </footer>

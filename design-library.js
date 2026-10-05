@@ -5,40 +5,40 @@ window.DESIGN_LIBRARY = {
   "updatedAt": "2026-09-25",
   "systems": [
     {
-      "name": "The collection",
+      "name": "kellylucas.dev",
       "site": "kellylucas.dev",
       "status": "live",
       "palette": [
         {
           "name": "paper",
-          "hex": "#f4f2ec"
+          "hex": "#f8f6f1"
         },
         {
-          "name": "ink",
-          "hex": "#14201a"
+          "name": "navy",
+          "hex": "#1f355e"
         },
         {
-          "name": "mint",
-          "hex": "#c9e6c9"
+          "name": "pale teal",
+          "hex": "#d4e7e5"
         },
         {
-          "name": "lilac",
-          "hex": "#e3e3ee"
+          "name": "pale coral",
+          "hex": "#f6dcd8"
         },
         {
-          "name": "sand",
-          "hex": "#ebe3cf"
+          "name": "coral",
+          "hex": "#d6605b"
         },
         {
-          "name": "sky",
-          "hex": "#d9eaf3"
+          "name": "teal",
+          "hex": "#5a9e9a"
         }
       ],
-      "type": "Heliora for everything. Hierarchy from size and weight, never a second face.",
+      "type": "Lato for everything, the same face as Heliopolis: light for the big words, regular for reading.",
       "rules": [
-        "The site is a collection: every project gets a plate, a tombstone label and a number.",
-        "Mint, lilac, sand and sky are plate backdrops, not decoration.",
-        "The Magpie feather is the only rainbow on the page.",
+        "Drawings lead: one per view, in the Heliopolis style, never boxed in or cropped.",
+        "Navy carries every word. Pale teal and pale coral fill the drawings; teal and coral are small accents.",
+        "A fine pen: hairline navy rules, flat fills, no shadows.",
         "Real over cute. The toys live in the playground, which keeps the old lab look.",
         "No em dashes. Mobile first, tested at 390px."
       ],
