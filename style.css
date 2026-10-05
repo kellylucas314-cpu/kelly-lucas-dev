@@ -142,6 +142,8 @@ time,
   border: 0;
 }
 
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
 .skip-link {
   position: absolute;
   left: var(--gutter);
@@ -246,6 +248,7 @@ time,
 
 /* standalone links: underlined label, small drawn arrow (Heliopolis style) */
 .tlinks { display: flex; flex-wrap: wrap; gap: 14px 30px; }
+.tlinks--after { margin-top: 28px; }
 .tlink {
   display: inline-flex;
   align-items: center;
