@@ -389,7 +389,7 @@ The band tints. A band is one of these from edge to edge, with a wave or scallop
 - **Lede** (400, 22px, 1.42, -0.005em): the paragraph under a display title, max 600px wide; also "Where to next" above the pills. 20px in the hero at 1299 and below, 19px on a phone. Section intros under a headline are 20px (18px on a phone).
 - **Body** (400, 16px, 1.5): running text, the does list, the stats, door copy (17px), ledger entries (18px), prose max 40em.
 - **Big number** (400, 120px, 0.85, -0.04em): the clip count on the homepage (96px on a phone); the counts list on the Magpie page uses it at 72px (56px on a phone).
-- **Pill** (400, 64px, 1, -0.025em): the Where to next pills at home; 40px in the small set on inner pages; 52px at 1180 and below; 38px on a phone for both.
+- **Pill** (400, 64px, 1, -0.025em): the base pill size (the homepage set was removed); 40px in the small set on inner pages; 52px at 1180 and below; 38px on a phone for both.
 - **Subhead** (500, 20px, 1.3, -0.01em): the does list keys; journey step titles at 22px, bench terms and the preview’s "what" at 18px, footer column heads at 16px, ledger lead-ins and the desk’s card titles. 500 is the loudest weight in the system.
 - **Button** (400, 18px, 1.25): pills; 16px in the small and phone sizes.
 - **Link** (400, 18px, underline 1px at a 4px offset): standalone text links (`.tlink`), thickening to 2px on hover.
@@ -512,10 +512,10 @@ The homepage hero’s right half, `.poster[data-place]`.
 
 ### Magpie at home
 - **Head (`.sec-head`):** headline, a 20px intro 22px below, then the status row (`.mp-meta`, 16px, 22px above). Section heads are at most 760px wide.
-- **Does (`.does`):** five rows, 44px round tile / text, 16px gap, 20px of padding, a 1px navy rule under each. Tiles are `.bg-coral`, `.bg-honey`, `.bg-pale-coral`, `.bg-navy`, `.bg-sage` with a 24px navy (or paper) shape inside. Keys at 20px weight 500, lines at 16px.
+- **Does (`.does`):** three rows (Clip, Two nests at once, Find it again; the rest is on the Magpie page), 44px round tile / text, 16px gap, 20px of padding, a 1px navy rule under each. Tiles are `.bg-coral`, `.bg-honey`, `.bg-sage` with a 24px navy (or paper) shape inside. Keys at 20px weight 500, lines at 16px.
 - **Art (`.mp-art`):** at most 680px: a coral cog behind the flying magpie turning in reverse over 240s (`.spin--rev`), the drawing at 86%, a sage plus at the top right (13%) and a navy asterisk at the bottom left (15%). 480px at 960, 340px on a phone.
 - **Reflex (`.reflex`):** a 15px navy soft line, 14px below the grid, that answers Alt+Shift+M for 4.2s.
-- **Stats (`.mp-stats`):** 1.15fr / 1fr / 1fr with 48px gaps, 88px below, a 1px navy rule above with 28px of padding: the big number and its sentence; "Made with" and chips; "Private" and a pill button. One column on a phone with 36px gaps.
+- **Stats (`.mp-stats`):** 1.15fr / 1fr with 48px gaps, 72px below, a 1px navy rule above with 28px of padding: the big number and its sentence; "Private" and the two buttons ("Made with" lives on the Magpie page). One column on a phone with 36px gaps.
 - **Chips (`.chips li`):** 15px, 4px by 13px padding, 1px navy border, 999px radius, paper at 50%.
 
 ### Projects (signature)
@@ -535,10 +535,10 @@ The homepage hero’s right half, `.poster[data-place]`.
 ### Pills (the "Where to next" nav)
 - **Style (`.pill`):** a 64px word in a 999px pill, padded 10px / 34px / 14px / 12px, with a 64px round tile (`.ptile`) holding a 38px shape at the left and an 18px gap. Hover lifts 3px and tilts -1 degree over 0.2s. The small set (`.pills--sm`, on inner pages) is 40px with a 48px tile and 28px shape; 52px at 1180; 38px with a 42px tile on a phone for both.
 - **Variants:** `.pill--navy` (paper text, coral tile), `.pill--sage` (sage tint, paper tile), `.pill--coral` (coral, pale coral tile, navy text: large only), `.pill--honey` (honey, navy tile), `.pill--dcoral` (deep coral, paper text, paper tile).
-- **Section (`.pills-sec`, `.next-sec`):** "Where to next" as a 22px lede, pills 30px below with 22px by 34px gaps (14px on a phone), 120px below the section. `.next-sec` is itself a paper band with a wave on top, so the colored band above it never ends in a straight cut. Under 360px the big pills drop to 30px and the small set to 26px so "All ten projects" stays on one line.
+- **Section (`.next-sec`):** inner pages only; the homepage has no pills, since the top nav and footer already cover every place. "Where to next" as a 22px lede, pills 30px below with 22px by 34px gaps (14px on a phone). `.next-sec` is itself a paper band with a wave on top, so the colored band above it never ends in a straight cut. Under 360px the big pills drop to 30px and the small set to 26px so "All ten projects" stays on one line.
 
 ### Say hello
-- **Style (`.hello`):** a pale coral band, centered, 140px padding (96px above, 230px below on a phone): "Say hello" at 96px, a 22px line at most 640px wide, a navy pill 36px below. A coral sun (200px) at the top right, a navy asterisk (110px) at the bottom right, a sage plus (90px) at the top left, and the magpie on books (240px) at the bottom left; at 1180 and below the books move to the bottom center and the band pads 300px below.
+- **Style (`.hello`):** a pale coral band, centered, 104px above and 112px below (80px above, 210px below on a phone): "Say hello" at 96px, a 22px line at most 640px wide, a navy pill 36px below. A coral sun (200px) at the top right, a navy asterisk (90px) at the bottom right, a sage plus (90px) at the top left, and the magpie on books (240px) at the bottom left; at 1180 and below the books move to the bottom center and the band pads 270px below.
 
 ### Footer
 - **Style (`.foot`):** paper with a scallop top, 90px above and 40px below: the wordmark at 40px, three 16px weight-500 column heads with 15px links (a 12px lock before the private library), then a 1px `line` rule and a 14px navy soft base line 70px below. Two columns on a phone.
