@@ -37,12 +37,12 @@
     </div>
   </header>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
     <section class="hero" aria-labelledby="hello">
       <div class="wrap hero__grid">
         <div class="hero__text">
           <h1 class="display display--hero" id="hello">Hello,<br />I’m Kelly.</h1>
-          <p class="lede">I’m the founder of <a href="https://helioflux.co" target="_blank" rel="noopener noreferrer">HelioFlux</a>, where we read the light your cells emit to catch cancer early. On the side I build software for myself and use it every day.</p>
+          <p class="lede">I’m the founder of <a href="https://helioflux.co" target="_blank" rel="noopener noreferrer">HelioFlux<span class="visually-hidden"> (opens in a new tab)</span></a>, where we read the light your cells emit to catch cancer early. On the side I build software for myself and use it every day.</p>
           <div class="tlinks">
             <a class="tlink" href="#magpie">Magpie <svg class="ico ico--down" aria-hidden="true"><use href="#i-down"/></svg></a>
             <a class="tlink" href="#projects">All ten projects <svg class="ico ico--down" aria-hidden="true"><use href="#i-down"/></svg></a>
@@ -82,16 +82,16 @@
           <li><span class="does__k">Two nests at once</span><span class="does__v">A full Markdown note lands in my Obsidian vault, and a card lands in a searchable gallery. Clip it again and it updates instead of duplicating.</span></li>
           <li><span class="does__k">Transcripts and papers</span><span class="does__v">YouTube clips bring their transcripts. Papers bring the open-access PDF, and it never goes around a paywall.</span></li>
           <li><span class="does__k">Bulk workbench</span><span class="does__v">Takes a pasted pile or a stack of screenshots, read with OCR on my own Mac.</span></li>
-          <li><span class="does__k">Galaxy map</span><span class="does__v">Clusters everything I’ve clipped. Design clips also sort themselves onto the public <a class="text-link" href="/design.html">design desk</a>.</span></li>
+          <li><span class="does__k">Find it again</span><span class="does__v">A searchable gallery and a galaxy map of everything I’ve clipped. Design clips sort themselves onto the public <a class="text-link" href="/design.html">design desk</a>.</span></li>
         </ul>
         <p class="reflex" data-reflex aria-live="polite"></p>
 
         <div class="strip">
           <span class="strip__n">279</span>
-          <p>clips from 258 sites, with 257 tags, 31 of them carrying my notes, 10 papers and 8 video transcripts. Counted Aug 19, 2026.</p>
+          <p>clips from 258 sites. 31 carry my own notes, 10 are papers and 8 are videos with transcripts, filed under 257 tags. Counted Aug 19, 2026.</p>
         </div>
         <dl class="meta">
-          <div><dt class="label">Built with</dt><dd>Chrome extension (MV3), Python, Markdown, Obsidian</dd></div>
+          <div><dt class="label">Made with</dt><dd>A Chrome extension (Manifest V3), Python, Swift for local OCR, and Markdown in Obsidian</dd></div>
           <div><dt class="label">Lives in</dt><dd>My Obsidian vault, plus a private copy of the library on this site</dd></div>
           <div><dt class="label">Private</dt><dd>The library sits behind a password. You can’t install Magpie; it’s built for exactly one person.</dd></div>
         </dl>
@@ -199,6 +199,7 @@
         <span>&copy; <span data-year>2026</span> Kelly Lucas. Drawings in my Heliopolis style.</span>
         <nav aria-label="Footer">
           <a href="/design.html">Design desk</a>
+          <a href="/log.html">Log</a>
           <a href="/colophon.html">Colophon</a>
           <a href="/brain/gallery.html"><svg class="ico ico--lock lock-ico" aria-hidden="true"><use href="#i-lock"/></svg>My library</a>
           <a href="#top">Back to top <svg class="ico ico--up" aria-hidden="true"><use href="#i-up"/></svg></a>

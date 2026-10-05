@@ -101,7 +101,7 @@ Keep it clean. No backup files, no version-numbered copies.
   GitHub Pages). Edit the art there, not here.
 
 ## Design desk
-- `design.html` (plate 02) is the public swipe file, in five piles: the HelioFlux
+- `design.html` (the design desk) is the public swipe file, in five piles: the HelioFlux
   website, Heliopolis, Pretzel Protocol, resources, examples (plus "the lab
   itself", shown as "This site", for this site's own rules). It renders
   `design-library.js`, a

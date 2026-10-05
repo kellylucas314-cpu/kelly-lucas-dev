@@ -38,21 +38,21 @@ document.addEventListener("visibilitychange", () => {
 const place = $("[data-place]");
 if (place && $("[data-place-img]", place) && $("[data-place-name]", place)) {
   const ART = "/assets/art/";
-  const pretzel = '<a href="https://pretzel.thetravelprotocol.com" target="_blank" rel="noopener noreferrer">the Pretzel Protocol</a>';
+  const pretzel = '<a href="https://pretzel.thetravelprotocol.com" target="_blank" rel="noopener noreferrer">the Pretzel Protocol<span class="visually-hidden"> (opens in a new tab)</span></a>';
   const PLACES = [
     { src: "travel/torres-del-paine.webp", w: 1600, h: 1103, name: "Torres del Paine, Patagonia", alt: "A drawing of the three granite towers of Torres del Paine, pink in the morning light, above a glacial lake." },
     { src: "travel/santorini.webp", w: 1600, h: 1034, name: "Santorini, Greece", alt: "A drawing of white Santorini houses stepping down a cliff, a church with a navy dome, and coral bougainvillea." },
     { src: "travel/iceland.webp", w: 1600, h: 1021, name: "Kirkjufell, Iceland", alt: "A drawing of Kirkjufell, the cone-shaped mountain, above a stepped waterfall." },
     { src: "travel/florence.webp", w: 1464, h: 1188, name: "Florence, Italy", alt: "A drawing of Brunelleschi's coral dome beside Giotto's bell tower, above tiled roofs and a cypress." },
-    { src: "pretzel-prague.webp", w: 1600, h: 990, name: "Prague, drawn for " + pretzel, alt: "A drawing of a stone arcade looking out over Prague's coral rooftops to the castle, with an olive tree and a suitcase." },
+    { src: "pretzel-prague.webp", w: 1600, h: 990, name: "Prague, redrawn from " + pretzel, alt: "A drawing of a stone arcade looking out over Prague's coral rooftops to the castle, with an olive tree and a suitcase." },
     { src: "travel/copenhagen.webp", w: 1600, h: 904, name: "Nyhavn, Copenhagen", alt: "A drawing of Nyhavn harbor: tall painted townhouses along the canal and a coral sailboat." },
     { src: "travel/rome.webp", w: 1523, h: 1100, name: "Rome, Italy", alt: "A drawing of the Colosseum beside a Roman umbrella pine." },
     { src: "travel/istanbul.webp", w: 1600, h: 1093, name: "Istanbul, Türkiye", alt: "A drawing of a mosque with teal domes and four minarets across the Bosphorus, with a small ferry." },
-    { src: "pretzel-munich.webp", w: 1600, h: 1004, name: "Munich, drawn for " + pretzel, alt: "A drawing of Marienplatz and the Neues Rathaus seen through a stone archway, with flowers and a bread basket." },
+    { src: "pretzel-munich.webp", w: 1600, h: 1004, name: "Munich, redrawn from " + pretzel, alt: "A drawing of Marienplatz and the Neues Rathaus seen through a stone archway, with flowers and a bread basket." },
     { src: "travel/athens.webp", w: 1600, h: 1010, name: "Athens, Greece", alt: "A drawing of the Parthenon on the Acropolis rock, with an olive tree in front." },
     { src: "travel/edinburgh.webp", w: 1600, h: 1036, name: "Edinburgh, Scotland", alt: "A drawing of Edinburgh Castle on its rock, with a small coral flag." },
-    { src: "pretzel-berlin.webp", w: 1600, h: 874, name: "Berlin, drawn for " + pretzel, alt: "A drawing of the East Side Gallery wall and the Oberbaum Bridge over the Spree." },
-    { src: "pretzel-amsterdam.webp", w: 1600, h: 876, name: "Amsterdam, drawn for " + pretzel, alt: "A drawing of Amsterdam canal houses, an arched bridge, a bicycle and a stroopwafel." },
+    { src: "pretzel-berlin.webp", w: 1600, h: 874, name: "Berlin, redrawn from " + pretzel, alt: "A drawing of the East Side Gallery wall and the Oberbaum Bridge over the Spree." },
+    { src: "pretzel-amsterdam.webp", w: 1600, h: 876, name: "Amsterdam, redrawn from " + pretzel, alt: "A drawing of Amsterdam canal houses, an arched bridge, a bicycle and a stroopwafel." },
   ];
   const img = $("[data-place-img]", place);
   const nameEl = $("[data-place-name]", place);
@@ -69,10 +69,17 @@ if (place && $("[data-place-img]", place) && $("[data-place-name]", place)) {
       nameEl.innerHTML = p.name;
     };
     if (!animate || reducedMotion || !img.animate) { apply(); return; }
-    img.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, easing: "ease-out", fill: "forwards" }).finished.then(() => {
+    const out = img.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, easing: "ease-out", fill: "forwards" });
+    out.finished.then(() => {
       apply();
-      const fadeIn = () => img.animate([{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 520, easing: EASE, fill: "forwards" });
-      img.complete ? fadeIn() : img.addEventListener("load", fadeIn, { once: true });
+      // fade back in when the new drawing loads, or fails: the frame is never left empty
+      const fadeIn = () => {
+        out.cancel();
+        img.animate([{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 520, easing: EASE });
+      };
+      if (img.complete) { fadeIn(); return; }
+      img.addEventListener("load", fadeIn, { once: true });
+      img.addEventListener("error", fadeIn, { once: true });
     });
   };
 
@@ -116,12 +123,17 @@ if (scene) {
   const wall = $(".mp-wall", scene);
   const source = $("[data-clip-source]", scene);
   const button = $("[data-clip-button]", scene);
+  // pages waiting to be clipped; a card that falls off the wall joins the back of the line
   const queue = [
     { img: "/assets/collection/clips/refero.webp", title: "Refero: UI and UX inspiration", domain: "refero.design" },
     { img: "/assets/collection/clips/linear.webp", title: "Linear", domain: "linear.app" },
     { img: "/assets/collection/clips/savee.webp", title: "Savee", domain: "savee.com" },
   ];
-  let step = 0;
+  const cardItem = (card) => ({
+    img: $("img", card).getAttribute("src"),
+    title: $(".mp-card__t", card).textContent,
+    domain: $(".mp-card__d", card).textContent,
+  });
   let busy = false;
   let flying = false;
   let resetTimer;
@@ -147,7 +159,7 @@ if (scene) {
 
   const reset = () => {
     clearTimeout(resetTimer);
-    setPreview(queue[step % queue.length]);
+    setPreview(queue[0]);
     button.textContent = "Clip it";
     busy = false;
   };
@@ -158,7 +170,7 @@ if (scene) {
     if (busy) reset();
     busy = true;
     flying = true;
-    const item = queue[step % queue.length];
+    const item = queue.shift();
     const card = makeCard(item);
     $$(".mp-card.is-new", wall).forEach((c) => c.classList.remove("is-new"));
 
@@ -166,14 +178,13 @@ if (scene) {
       flying = false;
       button.innerHTML = check + "Clipped";
       if (announce) toast("Clipped. Filed under shiny things.");
-      step++;
       resetTimer = setTimeout(reset, 1600);
     };
 
     const from = $(".mp-card__img", source).getBoundingClientRect();
     const before = new Map($$(".mp-card", wall).map((c) => [c, c.getBoundingClientRect()]));
     wall.prepend(card);
-    $$(".mp-card", wall).slice(6).forEach((c) => c.remove());
+    $$(".mp-card", wall).slice(6).forEach((c) => { queue.push(cardItem(c)); c.remove(); });
 
     // the older clips slide over to make room
     if (!reducedMotion && card.animate) {
@@ -221,6 +232,7 @@ if (scene) {
   };
 
   if (button) button.addEventListener("click", () => clip(true));
+  $$("[data-clip-hint]").forEach((el) => { el.hidden = false; });
 
   // the page's one authored moment: the first clip plays by itself when the scene is seen
   if (!reducedMotion && "IntersectionObserver" in window) {
