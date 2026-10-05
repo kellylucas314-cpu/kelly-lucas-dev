@@ -6,68 +6,77 @@ Magpie up front. Still a place to build web skills in public.
 Hosted on Vercel, auto-deploys from main.
 
 ## Design Direction
-"Drawn in the Heliopolis style" (v1.0, 2026-10-05). The site is where Kelly's
-real projects live, with Magpie up front. It borrows the look of Heliopolis
-(the HelioFlux team space Kelly designed): warm paper, a fine navy pen, one
-drawing per view, lots of calm space. It has its own six colors. It replaced
-the v0.5 to v0.9 "lab" (stacked slabs, stickers, confetti), which now lives on
-only in the playground rooms. Product truth lives in `PRODUCT.md`; the built
-visual system is recorded in `DESIGN.md`.
+"A poster of a place" (v1.0, 2026-10-05). The site is where Kelly's real
+projects live, with Magpie up front. The structure and shape language come
+from figma.com/slides (a calm frame, big regular-weight type, chunky flat
+shapes, bands of color); the pictures are Kelly's travel drawings in her
+Heliopolis style, never square UI mockups. It has eight colors: her six plus
+honey and sage. It replaced the v0.5 to v0.9 "lab" (stacked slabs, stickers,
+confetti), which now lives on only in the playground rooms. Product truth
+lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
 
 ### Visual rules
-- Six colors. Paper `#f8f6f1` and navy `#1f355e` do the work. Pale teal
-  `#d4e7e5` and pale coral `#f6dcd8` fill the drawings; teal `#5a9e9a` and
-  coral `#d6605b` are small accents. Navy carries every word: coral and teal
-  fail contrast as text, so they are only marks (link underlines, status
-  dots, the active nav line). Focus rings are navy.
-- Drawings lead. Every page opens with one drawing from `assets/art/`, never
-  boxed in or cropped, with paper all around it. The homepage hero shows a
-  different place each visit (Torres del Paine first) with a caption and an
-  "Another place" button; the list lives in `script.js` (`PLACES`).
-- One typeface, Lato (Heliopolis's face): Light 300 for display and section
-  titles, Regular 400 for reading, Medium 500 for small tracked labels, Bold
-  700 for standalone links. Hierarchy from size and weight. No eyebrows or
-  kickers above headings; metadata goes after the title.
-- A fine pen: 1px navy rules between sections, hairline `--rule-2` rows,
-  flat fills, no shadows anywhere. Standalone links are underlined labels
-  with a small drawn arrow (`.tlink`); running-text links are navy with a
-  coral underline. No pill buttons.
-- Status is Kelly's 9px square dot, always with its word: coral "In use",
-  teal "Live", navy outline "Private".
+- Eight colors. Paper `#f8f6f1` and navy `#1f355e` carry every word. Teal
+  `#5a9e9a`, coral `#d6605b`, honey `#f0bf4c` and sage `#9fb78f` carry the
+  shapes. Pale teal `#d4e7e5`, pale coral `#f6dcd8` and the honey and sage
+  tints are the bands. Navy on coral or teal is only for large text (the
+  pills); never body copy. No bright blue, no violet.
+- A poster, not a hero. Every page opens with one of Kelly's drawings on a big
+  round shape (the home poster: Torres del Paine on a honey sun, two small
+  places orbiting, an "Another place" button that cycles 13 places on click;
+  Torres shows on every load). Drawings are never boxed in or cropped.
+- Round, never square. Shapes are SVG symbols (sun, rays, cog, blob, bean,
+  arch, circle, asterisk, plus, quatrefoil, squiggle) in the sprite at the top
+  of every page, colored with `.c-*` classes. Buttons are pills (`.btn`). Bands
+  (`.band`) end in waves or scallops (`.edge`, `.edge--scallop`). Screenshots
+  show through a soft blob (`#blob-clip`). No shadows, no rectangles with
+  corners.
+- One typeface, Instrument Sans (variable, 400 to 700), at a regular weight
+  and big where it matters: `.h1` 86px, `.h2` 52px, `.lede` 22px, body 16px.
+  DM Mono only for dates, numbers and small labels. No eyebrows or kickers
+  above headings; metadata goes after the title.
+- Status is a round dot with its word: navy "In use", deep teal "Live",
+  deep coral "Private".
 - Copy is direct, warm, sentence case, curly apostrophes. Honest labels: the
   Magpie popup says it is redrawn in HTML, counts say when they were counted,
-  the colophon says the drawings were made with an image model.
-- Personality budget: the tab-title message, "Another place", the Alt+Shift+M
-  reflex on the homepage, the "Clip it" demo on the Magpie page, the magpie
-  404, and the playground. Keep it to a handful.
-- Motion: one authored moment per page (the place crossfade at home, the clip
-  on the Magpie page), plus small hover transitions. Always respects
-  `prefers-reduced-motion`, never hides content.
+  the places band and the colophon say the drawings were made with an image
+  model in Kelly's style.
+- Personality budget: the tab-title message, "Another place", the "Kelly"
+  cursor tag on the poster, the Alt+Shift+M reflex on the homepage, the
+  "Clip it" demo on the Magpie page, the magpie 404, and the playground.
+- Motion: the suns turn very slowly (the spin lives on the svg root), the
+  orbiting places bob, the poster crossfades on click, the clip demo plays
+  once on the Magpie page. `prefers-reduced-motion` turns all of it off and
+  nothing is hidden behind JS.
 
 ## Drawings
 - Made in Kelly's Heliopolis style with an image model (gpt_image_2_5 on
   Higgsfield, the Heliopolis courtyard, plant-books and library images as
-  style references), then recolored into the six colors and snapped to the
-  exact palette. Each WebP in `assets/art/` has a `.webp.json` sidecar with
-  its prompt (kept off the deploy by `.vercelignore`).
+  style references), then recolored by meaning into the site's colors and
+  snapped to the exact palette. Each WebP in `assets/art/` has a `.webp.json`
+  sidecar with its prompt (kept off the deploy by `.vercelignore`).
 - A new drawing: generate it in the Heliopolis three colors (navy, lime,
-  cream) with no sun, then recolor it by meaning into the six colors (water
-  and leaves teal, stone and roofs coral, small accents only), snap it to the
-  palette, trim it and save it as WebP with alpha. Show Kelly before it ships.
+  cream) with no sun, then recolor it by meaning (water and leaves teal,
+  stone and roofs coral, small accents only), snap it to the palette, trim it
+  and save it as WebP with alpha. Show Kelly before it ships.
+- A new place on the homepage: add it to `PLACES` in `script.js` (file,
+  size, caption, alt) and, if it should appear in the scatter, to the places
+  list in `index.html`.
 
 ## Adding a project
 1. Add an `<li>` to the projects list in `index.html` (copy a row): number,
-   title, one-line "what", kind, status dot. External links open in a new tab
-   with a visually hidden "(opens in a new tab)".
+   title, one-line "what", kind, status dot, `data-img` (a 1200x750 screenshot
+   in `assets/collection/`, privacy-checked), `data-kind` and `data-status`
+   for the preview. External links open in a new tab with a visually hidden
+   "(opens in a new tab)".
 2. Update "All ten projects" and "Ten things I've made" to the new count.
-3. Add a line to the homepage log and to `log.html`.
+3. Add a line to the homepage log door and to `log.html`.
 
 ## Tech
 - Static HTML/CSS/JS, no frameworks and no build step.
 - Site pages (index, magpie, design, playground, log, colophon, 404) use
   `style.css` and `script.js`: vanilla JS and the Web Animations API, no
   GSAP. Every feature null-checks its targets; pages read fine without JS.
-  `localStorage` (the place rotation) is wrapped in try/catch.
 - Playground rooms (claude, pet, panel, noise, quantum, qrng, quotes) keep the
   old look on `lab.css` and `lab.js`, which still load GSAP 3.13.0 from
   jsdelivr (core, ScrollTrigger, Draggable; free plugins only).
@@ -76,11 +85,12 @@ visual system is recorded in `DESIGN.md`.
 - Mobile responsive from the start.
 
 ## Typography
-- **Lato** 2.0 (OFL) for everything, self-hosted as Latin-subset WOFF2 in
-  `assets/fonts/` (`Lato-Light`, `-Regular`, `-Medium`, `-Bold`), cut from the
-  Heliopolis art library's TTFs with `pyftsubset`.
-- `assets/fonts/` also holds Heliora (the face of v0.5 to v0.9) and the other
-  auditioned fonts used by the `all-fonts.html` audition room and the lab rooms.
+- **Instrument Sans** (OFL, variable 400 to 700) for everything and
+  **DM Mono** (OFL) for small labels, self-hosted as WOFF2 in `assets/fonts/`
+  with their licenses next to them.
+- `assets/fonts/` also holds Lato (Heliopolis's face), Heliora (the face of
+  v0.5 to v0.9) and the other auditioned fonts used by the `all-fonts.html`
+  audition room and the lab rooms.
 
 ## File Structure
 Keep it clean. No backup files, no version-numbered copies.
@@ -90,6 +100,9 @@ Keep it clean. No backup files, no version-numbered copies.
 - `lab.css`, `lab.js`: the playground rooms' old lab styles and interactions
 - `assets/art/`: the drawings (`travel/`, the Pretzel cities, three magpies),
   the favicon and the share card
+- The seven site pages share one header, footer and SVG sprite; keep them
+  identical across pages when editing (a small generator outside the repo
+  wrote them, but they are plain HTML and can be edited by hand)
 - `assets/collection/`: project screenshots, the Magpie feather, clip and room
   thumbnails
 - `PRODUCT.md` (product truth), `DESIGN.md` (the built visual system)
@@ -129,7 +142,7 @@ Keep it clean. No backup files, no version-numbered copies.
   which is the honest state.
 - Cards are picture first, like a database's gallery view: the whole card
   is one link; a 16:10 tile, a kind pill in the site's tints (gallery pale
-  teal, tool pale coral, reading paper, site outline, repo navy), the title, and the why
+  teal, tool pale coral, reading honey tint, site outline, repo navy), the title, and the why
   clamped to two or three lines. Four across on desktop, two on a phone.
   Filter chips carry counts. No OPEN buttons on cards, no ruled cells.
   The resources shelf shows its newest 16 and folds the rest behind
@@ -155,6 +168,7 @@ Keep it clean. No backup files, no version-numbered copies.
 ## Rules
 1. No em dashes anywhere in copy.
 2. Mobile-first: test at 390px width.
-3. Keep CSS in `style.css`, not inline.
+3. Keep CSS in `style.css`, not inline. (Per-item values such as `--c`,
+   `--r`, `--s` and `--t` on a list item are data, not rules, and are fine.)
 4. Commit working states to Git before making big changes.
 5. When I say "push," push to main without asking.

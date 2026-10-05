@@ -11,49 +11,68 @@
   <meta property="og:image" content="https://kellylucas.dev/assets/art/og.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="/assets/art/favicon.svg" type="image/svg+xml" />
-  <link rel="preload" href="/assets/fonts/Lato-Light.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/assets/fonts/Lato-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/InstrumentSans-Variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/art/travel/copenhagen.webp" as="image" type="image/webp" fetchpriority="high" />
   <link rel="stylesheet" href="/style.css" />
 </head><body>
   <a class="skip-link" href="#main">Skip to content</a>
   <svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
-    <symbol id="i-down" viewBox="0 0 12 12"><path d="M6 1.5v9M2.5 7 6 10.5 9.5 7"/></symbol>
-    <symbol id="i-right" viewBox="0 0 12 12"><path d="M1.5 6h9M7 2.5 10.5 6 7 9.5"/></symbol>
-    <symbol id="i-out" viewBox="0 0 12 12"><path d="M3 9 9 3M4.2 3H9v4.8"/></symbol>
-    <symbol id="i-up" viewBox="0 0 12 12"><path d="M6 10.5v-9M2.5 5 6 1.5 9.5 5"/></symbol>
-    <symbol id="i-lock" viewBox="0 0 12 12"><rect x="2.4" y="5.4" width="7.2" height="5.2" rx="1"/><path d="M4 5.4V4a2 2 0 0 1 4 0v1.4"/></symbol>
-    <symbol id="i-cycle" viewBox="0 0 12 12"><path d="M10.2 6.6A4.3 4.3 0 1 1 8.9 2.9M10.4 1.4v2.4H8"/></symbol>
+    <defs>
+      <symbol id="s-sun" viewBox="-100 -100 200 200"><polygon fill="currentColor" stroke="currentColor" stroke-width="14" stroke-linejoin="round" points="0.0,-92.0 12.9,-56.5 39.9,-82.9 36.2,-45.3 71.9,-57.4 52.3,-25.2 89.7,-20.5 58.0,0.0 89.7,20.5 52.3,25.2 71.9,57.4 36.2,45.3 39.9,82.9 12.9,56.5 0.0,92.0 -12.9,56.5 -39.9,82.9 -36.2,45.3 -71.9,57.4 -52.3,25.2 -89.7,20.5 -58.0,0.0 -89.7,-20.5 -52.3,-25.2 -71.9,-57.4 -36.2,-45.3 -39.9,-82.9 -12.9,-56.5"/></symbol>
+      <symbol id="s-rays" viewBox="-100 -100 200 200"><circle r="60" fill="currentColor"/><g stroke="currentColor" stroke-width="16" stroke-linecap="round"><line x1="75" y1="0" x2="91" y2="0"/><line x1="65" y1="37.5" x2="78.8" y2="45.5"/><line x1="37.5" y1="65" x2="45.5" y2="78.8"/><line x1="0" y1="75" x2="0" y2="91"/><line x1="-37.5" y1="65" x2="-45.5" y2="78.8"/><line x1="-65" y1="37.5" x2="-78.8" y2="45.5"/><line x1="-75" y1="0" x2="-91" y2="0"/><line x1="-65" y1="-37.5" x2="-78.8" y2="-45.5"/><line x1="-37.5" y1="-65" x2="-45.5" y2="-78.8"/><line x1="0" y1="-75" x2="0" y2="-91"/><line x1="37.5" y1="-65" x2="45.5" y2="-78.8"/><line x1="65" y1="-37.5" x2="78.8" y2="-45.5"/></g></symbol>
+      <symbol id="s-cog" viewBox="-100 -100 200 200"><g fill="currentColor"><circle r="64"/><circle cx="66.0" cy="0.0" r="22"/><circle cx="55.5" cy="35.7" r="22"/><circle cx="27.4" cy="60.0" r="22"/><circle cx="-9.4" cy="65.3" r="22"/><circle cx="-43.2" cy="49.9" r="22"/><circle cx="-63.3" cy="18.6" r="22"/><circle cx="-63.3" cy="-18.6" r="22"/><circle cx="-43.2" cy="-49.9" r="22"/><circle cx="-9.4" cy="-65.3" r="22"/><circle cx="27.4" cy="-60.0" r="22"/><circle cx="55.5" cy="-35.7" r="22"/></g></symbol>
+      <symbol id="s-blob" viewBox="-100 -100 200 200"><g stroke="currentColor" stroke-width="34" stroke-linecap="round"><line x1="0" y1="0" x2="74.5" y2="23.1"/><line x1="0" y1="0" x2="34.7" y2="53.8"/><line x1="0" y1="0" x2="-10.5" y2="83.3"/><line x1="0" y1="0" x2="-51.4" y2="47.6"/><line x1="0" y1="0" x2="-57.9" y2="2.8"/><line x1="0" y1="0" x2="-63.7" y2="-48.4"/><line x1="0" y1="0" x2="-14.6" y2="-64.4"/><line x1="0" y1="0" x2="33.8" y2="-65.8"/><line x1="0" y1="0" x2="55.3" y2="-23.3"/></g><circle r="46" fill="currentColor"/></symbol>
+      <symbol id="s-bean" viewBox="-100 -100 200 200"><path fill="currentColor" d="M-64-46C-40-86 30-94 64-60C94-30 92 24 68 58C42 94-24 96-60 66C-94 40-88-8-64-46Z"/></symbol>
+      <symbol id="s-arch" viewBox="-100 -100 200 200"><path fill="currentColor" d="M-76 84V-20A76 76 0 0 1 76-20V84Q76 100 60 100H-60Q-76 100-76 84Z"/></symbol>
+      <symbol id="s-circle" viewBox="-100 -100 200 200"><circle r="96" fill="currentColor"/></symbol>
+      <symbol id="s-ast" viewBox="-100 -100 200 200"><g stroke="currentColor" stroke-width="34" stroke-linecap="round"><line x1="0" y1="-72" x2="0" y2="72"/><line x1="-62.4" y1="-36" x2="62.4" y2="36"/><line x1="-62.4" y1="36" x2="62.4" y2="-36"/></g></symbol>
+      <symbol id="s-plus" viewBox="-100 -100 200 200"><g stroke="currentColor" stroke-width="44" stroke-linecap="round"><line x1="0" y1="-66" x2="0" y2="66"/><line x1="-66" y1="0" x2="66" y2="0"/></g></symbol>
+      <symbol id="s-quat" viewBox="-100 -100 200 200"><g fill="currentColor"><circle cx="-40" cy="0" r="42"/><circle cx="40" cy="0" r="42"/><circle cx="0" cy="-40" r="42"/><circle cx="0" cy="40" r="42"/></g></symbol>
+      <symbol id="s-squig" viewBox="-100 -100 200 200"><path fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" d="M-82 10 C-70 -40 -42 -40 -36 0 S-6 44 2 0 S38 -44 46 0 S78 40 86 -10"/></symbol>
+      <symbol id="s-arrow" viewBox="0 0 20 20"><path d="M2.5 1.8 L16.8 9.2 L10.2 10.6 L7.2 16.9 Z" stroke-linejoin="round"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 12 12"><rect x="2.4" y="5.4" width="7.2" height="5.2" rx="1"/><path d="M4 5.4V4a2 2 0 0 1 4 0v1.4"/></symbol>
+      <clipPath id="blob-clip" clipPathUnits="objectBoundingBox"><path d="M0.963 0.570 C0.969 0.644 1.017 0.758 1.000 0.828 C0.983 0.897 0.923 0.960 0.860 0.988 C0.797 1.015 0.695 0.993 0.622 0.994 C0.550 0.995 0.495 0.993 0.426 0.993 C0.356 0.992 0.274 1.010 0.203 0.992 C0.132 0.974 0.031 0.945 0.000 0.883 C-0.031 0.821 0.006 0.695 0.016 0.620 C0.025 0.545 0.059 0.508 0.057 0.433 C0.054 0.358 -0.013 0.244 0.000 0.172 C0.013 0.101 0.072 0.033 0.134 0.004 C0.197 -0.024 0.303 -0.010 0.375 0.000 C0.447 0.010 0.492 0.066 0.566 0.066 C0.639 0.066 0.745 -0.008 0.817 0.000 C0.890 0.008 0.975 0.053 1.000 0.117 C1.025 0.181 0.971 0.309 0.965 0.385 C0.959 0.460 0.957 0.496 0.963 0.570Z"/></clipPath>
+    </defs>
   </svg>
 
-  <header class="site-header" id="top">
-    <div class="wrap site-header__inner">
-      <a href="/" class="wordmark" aria-label="Kelly Lucas, home">Kelly Lucas</a>
-      <nav class="site-nav" aria-label="Primary">
+  <header class="top">
+    <div class="wrap top__in">
+      <a class="mark" href="/" aria-label="Kelly Lucas, home"><svg class="shape c-coral" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-sun"/><circle r="30" fill="var(--navy)"/></svg><span>Kelly Lucas</span></a>
+      <nav class="nav" aria-label="Primary">
         <a href="/magpie.html">Magpie</a>
         <a href="/#projects">Projects</a>
-        <a href="/log.html" class="nav-wide" aria-current="page">Log</a>
+        <a href="/log.html" aria-current="page">Log</a>
         <a href="/playground.html">Playground</a>
       </nav>
+      <a class="btn btn--sm" href="mailto:hello@kellylucas.dev">Say hello</a>
     </div>
   </header>
 
   <main id="main" tabindex="-1">
-    <div class="wrap">
-      <section class="page-head" aria-labelledby="log-title">
-        <div class="page-head__text">
-          <h1 class="display" id="log-title">The log</h1>
+    <section class="page-hero" aria-labelledby="log-title">
+      <div class="wrap page-hero__grid">
+        <div class="page-hero__text">
+          <h1 class="h1" id="log-title">The log</h1>
           <p class="lede">What shipped, what broke, and what got learned, newest first. Building in public means keeping the receipts.</p>
         </div>
-        <figure class="page-head__art">
-          <img src="/assets/art/travel/copenhagen.webp" width="1600" height="904" fetchpriority="high" decoding="async" alt="" />
+        <figure class="poster page-hero__art">
+          <div class="poster__stage">
+            <svg class="shape poster__sun spin c-sage" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-arch"/></svg>
+          <svg class="shape orb orb--ast c-coral" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-ast"/></svg>
+          <svg class="shape orb orb--quat c-honey" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-quat"/></svg>
+          <svg class="shape orb orb--splat c-pale-coral" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-blob"/></svg>
+            <img class="poster__art" src="/assets/art/travel/copenhagen.webp" width="1600" height="904" fetchpriority="high" decoding="async" alt="A drawing of Nyhavn harbor: tall painted townhouses along the canal and a coral sailboat." />
+          </div>
         </figure>
-      </section>
+      </div>
+    </section>
 
-      <section aria-label="Entries">
+    <section class="band band--tint edge edge--scallop" aria-label="Entries">
+      <div class="wrap">
         <ol class="ledger">
           <li>
             <time datetime="2026-10-05">Oct 5, 2026</time>
-            <p><span class="ledger__v">v1.0</span> <b>The lab grew up.</b> Real projects up front, Magpie first, and the toys moved to the playground. New drawings of places I love, in my Heliopolis style and this site’s own six colors. Lato for everything, the same face Heliopolis uses.</p>
+            <p><span class="ledger__v">v1.0</span> <b>The lab grew up.</b> Real projects up front, Magpie first, and the toys moved to the playground. A poster of a place on a big sun, my drawings on round shapes, and bands of color. My six colors plus honey and sage, set in Instrument Sans.</p>
           </li>
           <li>
             <time datetime="2026-09-24">Sep 24, 2026</time>
@@ -89,39 +108,41 @@
           </li>
           <li>
             <time datetime="2026-05-07">May 7, 2026</time>
-            <p><span class="ledger__v">type</span> <b>97 fonts auditioned.</b> Three batches. Heliora survived and was the face of the site until Lato took over in v1.0.</p>
+            <p><span class="ledger__v">type</span> <b>97 fonts auditioned.</b> Three batches. Heliora survived and was the face of the site until v1.0.</p>
           </li>
           <li>
             <span class="ledger__when">Before the log</span>
             <p><b>The first experiment left the lab.</b> The YouTube Transcript Generator.</p>
           </li>
         </ol>
-      </section>
-    </div>
+      </div>
+    </section>
+    <section class="next-sec" aria-labelledby="go-title">
+      <div class="wrap">
+        <h2 class="lede" id="go-title">Where to next</h2>
+      <nav class="pills pills--sm" aria-labelledby="go-title">
+        <a class="pill pill--navy" href="/magpie.html"><span class="ptile bg-coral"><svg class="shape c-navy" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-ast"/></svg></span>Magpie</a>
+        <a class="pill pill--coral" href="/playground.html"><span class="ptile bg-pale-coral"><svg class="shape c-navy" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-squig"/></svg></span>Playground</a>
+        <a class="pill pill--sage" href="/colophon.html"><span class="ptile bg-paper"><svg class="shape c-navy" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-cog"/></svg></span>Colophon</a>
+      </nav>
+      </div>
+    </section>
+
   </main>
 
-  <footer class="site-footer" id="contact">
+  <footer class="foot edge edge--scallop">
     <div class="wrap">
-      <div class="footer-top">
-        <figure class="footer-art">
-          <img src="/assets/art/magpie-books.webp" width="1200" height="1059" loading="lazy" decoding="async" alt="" />
-        </figure>
-        <div class="footer-say">
-          <h2 class="h2">Say hello</h2>
-          <p>Questions, ideas, a project you think I’d like. My inbox is open.</p>
-          <a class="footer-mail" href="mailto:hello@kellylucas.dev">hello@kellylucas.dev <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a>
-        </div>
+      <div class="foot__grid">
+        <div class="foot__brand"><p class="foot__mark"><svg class="shape c-coral" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-sun"/><circle r="30" fill="var(--navy)"/></svg>Kelly Lucas</p></div>
+        <nav aria-labelledby="f1"><h2 id="f1">This site</h2><ul>
+          <li><a href="/magpie.html">Magpie</a></li><li><a href="/#projects">Projects</a></li><li><a href="/#places">Places, drawn</a></li><li><a href="/playground.html">Playground</a></li><li><a href="/log.html">Log</a></li></ul></nav>
+        <nav aria-labelledby="f2"><h2 id="f2">More</h2><ul>
+          <li><a href="/design.html">Design desk</a></li><li><a href="/heliopolis/index.html">Heliopolis art library</a></li><li><a href="/colophon.html">Colophon</a></li>
+          <li><a href="/brain/gallery.html"><svg class="lock" viewBox="0 0 12 12" aria-hidden="true"><use href="#i-lock"/></svg>My library</a></li></ul></nav>
+        <nav aria-labelledby="f3"><h2 id="f3">Say hello</h2><ul>
+          <li><a href="mailto:hello@kellylucas.dev">hello@kellylucas.dev</a></li><li><a href="https://helioflux.co" target="_blank" rel="noopener noreferrer">HelioFlux<span class="sr-only"> (opens in a new tab)</span></a></li><li><a href="#main">Back to top</a></li></ul></nav>
       </div>
-      <div class="footer-bottom">
-        <span>&copy; <span data-year>2026</span> Kelly Lucas. Drawings in my Heliopolis style.</span>
-        <nav aria-label="Footer">
-          <a href="/design.html">Design desk</a>
-          <a href="/log.html">Log</a>
-          <a href="/colophon.html">Colophon</a>
-          <a href="/brain/gallery.html"><svg class="ico ico--lock lock-ico" aria-hidden="true"><use href="#i-lock"/></svg>My library</a>
-          <a href="#top">Back to top <svg class="ico ico--up" aria-hidden="true"><use href="#i-up"/></svg></a>
-        </nav>
-      </div>
+      <div class="foot__base"><span>&copy; <span data-year>2026</span> Kelly Lucas. Drawings in my Heliopolis style.</span><span>Set in Instrument Sans and DM Mono.</span></div>
     </div>
   </footer>
 

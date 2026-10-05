@@ -11,231 +11,248 @@
   <meta property="og:image" content="https://kellylucas.dev/assets/art/og.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="/assets/art/favicon.svg" type="image/svg+xml" />
-  <link rel="preload" href="/assets/fonts/Lato-Light.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/assets/fonts/Lato-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/InstrumentSans-Variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/art/magpie-drawer.webp" as="image" type="image/webp" fetchpriority="high" />
   <link rel="stylesheet" href="/style.css" />
 </head><body>
   <a class="skip-link" href="#main">Skip to content</a>
   <svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
-    <symbol id="i-down" viewBox="0 0 12 12"><path d="M6 1.5v9M2.5 7 6 10.5 9.5 7"/></symbol>
-    <symbol id="i-right" viewBox="0 0 12 12"><path d="M1.5 6h9M7 2.5 10.5 6 7 9.5"/></symbol>
-    <symbol id="i-out" viewBox="0 0 12 12"><path d="M3 9 9 3M4.2 3H9v4.8"/></symbol>
-    <symbol id="i-up" viewBox="0 0 12 12"><path d="M6 10.5v-9M2.5 5 6 1.5 9.5 5"/></symbol>
-    <symbol id="i-lock" viewBox="0 0 12 12"><rect x="2.4" y="5.4" width="7.2" height="5.2" rx="1"/><path d="M4 5.4V4a2 2 0 0 1 4 0v1.4"/></symbol>
-    <symbol id="i-cycle" viewBox="0 0 12 12"><path d="M10.2 6.6A4.3 4.3 0 1 1 8.9 2.9M10.4 1.4v2.4H8"/></symbol>
+    <defs>
+      <symbol id="s-sun" viewBox="-100 -100 200 200"><polygon fill="currentColor" stroke="currentColor" stroke-width="14" stroke-linejoin="round" points="0.0,-92.0 12.9,-56.5 39.9,-82.9 36.2,-45.3 71.9,-57.4 52.3,-25.2 89.7,-20.5 58.0,0.0 89.7,20.5 52.3,25.2 71.9,57.4 36.2,45.3 39.9,82.9 12.9,56.5 0.0,92.0 -12.9,56.5 -39.9,82.9 -36.2,45.3 -71.9,57.4 -52.3,25.2 -89.7,20.5 -58.0,0.0 -89.7,-20.5 -52.3,-25.2 -71.9,-57.4 -36.2,-45.3 -39.9,-82.9 -12.9,-56.5"/></symbol>
+      <symbol id="s-rays" viewBox="-100 -100 200 200"><circle r="60" fill="currentColor"/><g stroke="currentColor" stroke-width="16" stroke-linecap="round"><line x1="75" y1="0" x2="91" y2="0"/><line x1="65" y1="37.5" x2="78.8" y2="45.5"/><line x1="37.5" y1="65" x2="45.5" y2="78.8"/><line x1="0" y1="75" x2="0" y2="91"/><line x1="-37.5" y1="65" x2="-45.5" y2="78.8"/><line x1="-65" y1="37.5" x2="-78.8" y2="45.5"/><line x1="-75" y1="0" x2="-91" y2="0"/><line x1="-65" y1="-37.5" x2="-78.8" y2="-45.5"/><line x1="-37.5" y1="-65" x2="-45.5" y2="-78.8"/><line x1="0" y1="-75" x2="0" y2="-91"/><line x1="37.5" y1="-65" x2="45.5" y2="-78.8"/><line x1="65" y1="-37.5" x2="78.8" y2="-45.5"/></g></symbol>
+      <symbol id="s-cog" viewBox="-100 -100 200 200"><g fill="currentColor"><circle r="64"/><circle cx="66.0" cy="0.0" r="22"/><circle cx="55.5" cy="35.7" r="22"/><circle cx="27.4" cy="60.0" r="22"/><circle cx="-9.4" cy="65.3" r="22"/><circle cx="-43.2" cy="49.9" r="22"/><circle cx="-63.3" cy="18.6" r="22"/><circle cx="-63.3" cy="-18.6" r="22"/><circle cx="-43.2" cy="-49.9" r="22"/><circle cx="-9.4" cy="-65.3" r="22"/><circle cx="27.4" cy="-60.0" r="22"/><circle cx="55.5" cy="-35.7" r="22"/></g></symbol>
+      <symbol id="s-blob" viewBox="-100 -100 200 200"><g stroke="currentColor" stroke-width="34" stroke-linecap="round"><line x1="0" y1="0" x2="74.5" y2="23.1"/><line x1="0" y1="0" x2="34.7" y2="53.8"/><line x1="0" y1="0" x2="-10.5" y2="83.3"/><line x1="0" y1="0" x2="-51.4" y2="47.6"/><line x1="0" y1="0" x2="-57.9" y2="2.8"/><line x1="0" y1="0" x2="-63.7" y2="-48.4"/><line x1="0" y1="0" x2="-14.6" y2="-64.4"/><line x1="0" y1="0" x2="33.8" y2="-65.8"/><line x1="0" y1="0" x2="55.3" y2="-23.3"/></g><circle r="46" fill="currentColor"/></symbol>
+      <symbol id="s-bean" viewBox="-100 -100 200 200"><path fill="currentColor" d="M-64-46C-40-86 30-94 64-60C94-30 92 24 68 58C42 94-24 96-60 66C-94 40-88-8-64-46Z"/></symbol>
+      <symbol id="s-arch" viewBox="-100 -100 200 200"><path fill="currentColor" d="M-76 84V-20A76 76 0 0 1 76-20V84Q76 100 60 100H-60Q-76 100-76 84Z"/></symbol>
+      <symbol id="s-circle" viewBox="-100 -100 200 200"><circle r="96" fill="currentColor"/></symbol>
+      <symbol id="s-ast" viewBox="-100 -100 200 200"><g stroke="currentColor" stroke-width="34" stroke-linecap="round"><line x1="0" y1="-72" x2="0" y2="72"/><line x1="-62.4" y1="-36" x2="62.4" y2="36"/><line x1="-62.4" y1="36" x2="62.4" y2="-36"/></g></symbol>
+      <symbol id="s-plus" viewBox="-100 -100 200 200"><g stroke="currentColor" stroke-width="44" stroke-linecap="round"><line x1="0" y1="-66" x2="0" y2="66"/><line x1="-66" y1="0" x2="66" y2="0"/></g></symbol>
+      <symbol id="s-quat" viewBox="-100 -100 200 200"><g fill="currentColor"><circle cx="-40" cy="0" r="42"/><circle cx="40" cy="0" r="42"/><circle cx="0" cy="-40" r="42"/><circle cx="0" cy="40" r="42"/></g></symbol>
+      <symbol id="s-squig" viewBox="-100 -100 200 200"><path fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" d="M-82 10 C-70 -40 -42 -40 -36 0 S-6 44 2 0 S38 -44 46 0 S78 40 86 -10"/></symbol>
+      <symbol id="s-arrow" viewBox="0 0 20 20"><path d="M2.5 1.8 L16.8 9.2 L10.2 10.6 L7.2 16.9 Z" stroke-linejoin="round"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 12 12"><rect x="2.4" y="5.4" width="7.2" height="5.2" rx="1"/><path d="M4 5.4V4a2 2 0 0 1 4 0v1.4"/></symbol>
+      <clipPath id="blob-clip" clipPathUnits="objectBoundingBox"><path d="M0.963 0.570 C0.969 0.644 1.017 0.758 1.000 0.828 C0.983 0.897 0.923 0.960 0.860 0.988 C0.797 1.015 0.695 0.993 0.622 0.994 C0.550 0.995 0.495 0.993 0.426 0.993 C0.356 0.992 0.274 1.010 0.203 0.992 C0.132 0.974 0.031 0.945 0.000 0.883 C-0.031 0.821 0.006 0.695 0.016 0.620 C0.025 0.545 0.059 0.508 0.057 0.433 C0.054 0.358 -0.013 0.244 0.000 0.172 C0.013 0.101 0.072 0.033 0.134 0.004 C0.197 -0.024 0.303 -0.010 0.375 0.000 C0.447 0.010 0.492 0.066 0.566 0.066 C0.639 0.066 0.745 -0.008 0.817 0.000 C0.890 0.008 0.975 0.053 1.000 0.117 C1.025 0.181 0.971 0.309 0.965 0.385 C0.959 0.460 0.957 0.496 0.963 0.570Z"/></clipPath>
+    </defs>
   </svg>
 
-  <header class="site-header" id="top">
-    <div class="wrap site-header__inner">
-      <a href="/" class="wordmark" aria-label="Kelly Lucas, home">Kelly Lucas</a>
-      <nav class="site-nav" aria-label="Primary">
+  <header class="top">
+    <div class="wrap top__in">
+      <a class="mark" href="/" aria-label="Kelly Lucas, home"><svg class="shape c-coral" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-sun"/><circle r="30" fill="var(--navy)"/></svg><span>Kelly Lucas</span></a>
+      <nav class="nav" aria-label="Primary">
         <a href="/magpie.html" aria-current="page">Magpie</a>
         <a href="/#projects">Projects</a>
-        <a href="/log.html" class="nav-wide">Log</a>
+        <a href="/log.html">Log</a>
         <a href="/playground.html">Playground</a>
       </nav>
+      <a class="btn btn--sm" href="mailto:hello@kellylucas.dev">Say hello</a>
     </div>
   </header>
 
   <main id="main" tabindex="-1">
-    <div class="wrap">
-      <section class="page-head" aria-labelledby="record-title">
-        <div class="page-head__text">
-          <h1 class="display" id="record-title">Magpie</h1>
-          <p class="feature__meta"><span class="status status--use">In use since February 2026</span><span>Built for one</span></p>
+    <section class="page-hero" aria-labelledby="magpie-title">
+      <div class="wrap page-hero__grid">
+        <div class="page-hero__text">
+          <h1 class="h1" id="magpie-title">Magpie</h1>
+          <p class="status-row"><span class="status"><span class="dot dot-use"></span>In use since February 2026</span><span class="status">Built for one</span></p>
           <p class="lede">My web clipper and private library. It collects shiny things from the web and drops them into two nests at once: a full note in my Obsidian vault, and a card in a gallery I can search.</p>
         </div>
-        <figure class="page-head__art">
-          <img src="/assets/art/magpie-drawer.webp" width="1200" height="1326" fetchpriority="high" decoding="async" alt="A drawing of a magpie perched on an open card-index drawer, holding a tiny coral key." />
+        <figure class="poster page-hero__art">
+          <div class="poster__stage">
+            <svg class="shape poster__sun spin c-honey" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-cog"/></svg>
+          <svg class="shape orb orb--ast c-sage" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-ast"/></svg>
+          <svg class="shape orb orb--splat c-coral" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-blob"/></svg>
+          <svg class="shape orb orb--squig c-navy" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-squig"/></svg>
+            <img class="poster__art" src="/assets/art/magpie-drawer.webp" width="1200" height="1326" fetchpriority="high" decoding="async" alt="A drawing of a magpie perched on an open card-index drawer, holding a tiny coral key." />
+          </div>
         </figure>
-      </section>
+      </div>
+    </section>
 
-      <figure class="scene" aria-label="The clipper and the gallery, redrawn">
-        <div class="scene__frame">
-          <div class="mp-scene" data-clip-scene>
-            <div class="mp-gallery" aria-hidden="true">
-              <div class="mp-gallery__bar">
-                <img src="/assets/collection/magpie-feather.svg" alt="" width="20" height="20" />
-                <span class="mp-gallery__word">Magpie</span>
-                <span class="mp-gallery__count">279 clips</span>
-              </div>
-              <div class="mp-gallery__search">Search titles, notes, sites, tags</div>
-              <div class="mp-gallery__tags"><span class="is-on">all</span><span>website-inspiration</span><span>helioflux</span><span>papers</span><span>weird</span></div>
-              <div class="mp-wall">
-                <div class="mp-card"><div class="mp-card__img"><img src="/assets/collection/clips/godly.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Godly</div><div class="mp-card__d">godly.website</div></div></div>
-                <div class="mp-card"><div class="mp-card__img"><img src="/assets/collection/clips/lawsofux.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Laws of UX</div><div class="mp-card__d">lawsofux.com</div></div></div>
-                <div class="mp-card"><div class="mp-card__img"><img src="/assets/collection/clips/cosmos.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Cosmos, explore</div><div class="mp-card__d">cosmos.so</div></div></div>
-                <div class="mp-card"><div class="mp-card__img"><img src="/assets/collection/clips/ciechanowski.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Mechanical Watch</div><div class="mp-card__d">ciechanow.ski</div></div></div>
-                <div class="mp-card"><div class="mp-card__img"><img src="/assets/collection/clips/iso.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Isomorphic Labs</div><div class="mp-card__d">isomorphiclabs.com</div></div></div>
-                <div class="mp-card"><div class="mp-card__img"><img src="/assets/collection/clips/minimal.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Minimal Gallery</div><div class="mp-card__d">minimal.gallery</div></div></div>
-              </div>
-            </div>
-
-            <div class="mp-pop">
-              <div class="mp-pop__head">
-                <img src="/assets/collection/magpie-feather.svg" alt="" width="24" height="24" />
-                <span class="mp-pop__word">Magpie</span>
-                <span class="mp-pop__badge">web page</span>
-              </div>
-              <div class="mp-pop__preview" data-clip-source>
-                <div class="mp-card__img"><img src="/assets/collection/clips/refero.webp" alt="" width="400" height="250" /></div>
-                <div>
-                  <div class="mp-pop__pt">Refero: UI and UX inspiration</div>
-                  <div class="mp-pop__pd">refero.design</div>
+    <section class="band band--pteal edge edge--scallop" aria-labelledby="ch-demo">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 class="h2" id="ch-demo">One click, two nests.</h2>
+          <p>The popup on the right clips the page behind it. The card lands in the gallery, and a note lands in the vault at the same moment.</p>
+        </div>
+        <figure class="scene" aria-label="The clipper and the gallery, redrawn">
+          <div class="scene__frame">
+            <div class="mp-scene" data-clip-scene>
+              <div class="mp-gallery" aria-hidden="true">
+                <div class="mp-gallery__bar">
+                  <img src="/assets/collection/magpie-feather.svg" alt="" width="20" height="20" />
+                  <span class="mp-gallery__word">Magpie</span>
+                  <span class="mp-gallery__count">279 clips</span>
+                </div>
+                <div class="mp-gallery__search">Search titles, notes, sites, tags</div>
+                <div class="mp-gallery__tags"><span class="is-on">all</span><span>website-inspiration</span><span>helioflux</span><span>papers</span><span>weird</span></div>
+                <div class="mp-wall">
+                  <div class="mp-card"><div class="mp-card__img"><img src="/assets/collection/clips/godly.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Godly</div><div class="mp-card__d">godly.website</div></div></div>
+                  <div class="mp-card"><div class="mp-card__img"><img src="/assets/collection/clips/lawsofux.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Laws of UX</div><div class="mp-card__d">lawsofux.com</div></div></div>
+                  <div class="mp-card"><div class="mp-card__img"><img src="/assets/collection/clips/cosmos.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Cosmos, explore</div><div class="mp-card__d">cosmos.so</div></div></div>
+                  <div class="mp-card"><div class="mp-card__img"><img src="/assets/collection/clips/ciechanowski.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Mechanical Watch</div><div class="mp-card__d">ciechanow.ski</div></div></div>
+                  <div class="mp-card"><div class="mp-card__img"><img src="/assets/collection/clips/iso.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Isomorphic Labs</div><div class="mp-card__d">isomorphiclabs.com</div></div></div>
+                  <div class="mp-card"><div class="mp-card__img"><img src="/assets/collection/clips/minimal.webp" alt="" width="400" height="250" /></div><div class="mp-card__meta"><div class="mp-card__t">Minimal Gallery</div><div class="mp-card__d">minimal.gallery</div></div></div>
                 </div>
               </div>
-              <div class="mp-pop__label">Tags</div>
-              <div class="mp-pop__field"><span class="mp-pop__chip">references</span><span class="mp-pop__chip">ui</span></div>
-              <div class="mp-pop__label">Design desk</div>
-              <div class="mp-pop__field"><span class="mp-pop__guess">Auto: Resources</span></div>
-              <div class="mp-pop__label">My notes</div>
-              <div class="mp-pop__field"><span class="mp-pop__note">for the site redesign</span></div>
-              <button class="mp-pop__btn" type="button" data-clip-button>Clip it</button>
+              <div class="mp-pop">
+                <div class="mp-pop__head">
+                  <img src="/assets/collection/magpie-feather.svg" alt="" width="24" height="24" />
+                  <span class="mp-pop__word">Magpie</span>
+                  <span class="mp-pop__badge">web page</span>
+                </div>
+                <div class="mp-pop__preview" data-clip-source>
+                  <div class="mp-card__img"><img src="/assets/collection/clips/refero.webp" alt="" width="400" height="250" /></div>
+                  <div>
+                    <div class="mp-pop__pt">Refero: UI and UX inspiration</div>
+                    <div class="mp-pop__pd">refero.design</div>
+                  </div>
+                </div>
+                <div class="mp-pop__label">Tags</div>
+                <div class="mp-pop__field"><span class="mp-pop__chip">references</span><span class="mp-pop__chip">ui</span></div>
+                <div class="mp-pop__label">Design desk</div>
+                <div class="mp-pop__field"><span class="mp-pop__guess">Auto: Resources</span></div>
+                <div class="mp-pop__label">My notes</div>
+                <div class="mp-pop__field"><span class="mp-pop__note">for the site redesign</span></div>
+                <button class="mp-pop__btn" type="button" data-clip-button>Clip it</button>
+              </div>
             </div>
           </div>
-        </div>
-        <figcaption>The clipper and the gallery, redrawn in HTML in this site’s colors. The real ones are mine alone.<span data-clip-hint hidden> Press Clip it.</span></figcaption>
-      </figure>
+          <figcaption>The clipper and the gallery, redrawn in HTML in this site’s colors. The real ones are mine alone.<span data-clip-hint hidden> Press Clip it.</span></figcaption>
+        </figure>
+      </div>
+    </section>
 
-      <section class="chapter" aria-labelledby="ch-record">
-        <div class="chapter__head">
-          <h2 class="h2" id="ch-record">The record</h2>
-          <p>What it is, and what it’s made of.</p>
-        </div>
-        <div class="chapter__body">
-          <dl class="datalist">
+    <section class="band band--paper edge" aria-label="The record and the path of one clip">
+      <div class="wrap">
+        <div class="chapter">
+          <div class="chapter__head">
+            <h2 class="h2">The record</h2>
+            <p>What it is, and what it’s made of.</p>
+          </div>
+          <dl class="datalist chapter__body">
             <div><dt>What it is</dt><dd>A Chrome extension, a bulk workbench, a companion server, a gallery and a galaxy map</dd></div>
             <div><dt>Made with</dt><dd>JavaScript (Manifest V3), Python, Swift for local OCR, Markdown</dd></div>
             <div><dt>Lives in</dt><dd>My Obsidian vault, plus a private copy of the library on this site</dd></div>
             <div><dt>Holds</dt><dd>279 clips from 258 sites, counted Aug 19, 2026</dd></div>
             <div><dt>Dates</dt><dd>February 2026 to now</dd></div>
-            <div><dt>Status</dt><dd><span class="status status--use">In use</span></dd></div>
+            <div><dt>Status</dt><dd><span class="status"><span class="dot dot-use"></span>In use</span></dd></div>
             <div><dt>Credit</dt><dd>Built with Claude and Kip</dd></div>
           </dl>
         </div>
-      </section>
 
-      <section class="chapter" aria-labelledby="ch-path">
-        <div class="chapter__head">
-          <h2 class="h2" id="ch-path">The path of one clip</h2>
-          <p>From the feather to the right shelf, without me filing anything.</p>
-        </div>
-        <div class="chapter__body">
-          <ol class="journey">
-            <li>
-              <h3 class="h3">Clip</h3>
-              <p>I press the feather, or Alt+Shift+M. The popup already knows what the page is (a web page, a video with a transcript, a paper with its PDF), shows a preview, and takes my tags and a note. If I select text first, only the selection is saved.</p>
-            </li>
-            <li>
-              <h3 class="h3">Two nests</h3>
-              <p>A small server on my Mac writes a Markdown note into the vault, with my notes, a page summary, the content and any transcript, and adds an entry to the library. Clipping a page twice updates it instead of making a copy. If the server is asleep, the clip downloads as a Markdown file, so nothing is lost.</p>
-            </li>
-            <li>
-              <h3 class="h3">Find it again</h3>
-              <p>The gallery searches titles, notes, sites and tags, filters by type and origin, and opens every note in a reader. The galaxy map draws the whole library as clusters of stars: drag to fly, tap a star to open it.</p>
-            </li>
-            <li>
-              <h3 class="h3">Put it to work</h3>
-              <p>Design clips sort themselves onto the <a class="text-link" href="/design.html">design desk</a>. One set of rules decides where a clip lands, and the popup shows its guess before I save: a desk tag wins, then my own sites, then project tags, then resource or example.</p>
-            </li>
+        <div class="chapter">
+          <div class="chapter__head">
+            <h2 class="h2">The path of one clip</h2>
+            <p>From the feather to the right shelf, without me filing anything.</p>
+          </div>
+          <ol class="journey chapter__body">
+            <li><div><h3>Clip</h3><p>I press the feather, or Alt+Shift+M. The popup already knows what the page is (a web page, a video with a transcript, a paper with its PDF), shows a preview, and takes my tags and a note. If I select text first, only the selection is saved.</p></div></li>
+            <li><div><h3>Two nests</h3><p>A small server on my Mac writes a Markdown note into the vault, with my notes, a page summary, the content and any transcript, and adds an entry to the library. Clipping a page twice updates it instead of making a copy. If the server is asleep, the clip downloads as a Markdown file, so nothing is lost.</p></div></li>
+            <li><div><h3>Find it again</h3><p>The gallery searches titles, notes, sites and tags, filters by type and origin, and opens every note in a reader. The galaxy map draws the whole library as clusters of stars: drag to fly, tap a star to open it.</p></div></li>
+            <li><div><h3>Put it to work</h3><p>Design clips sort themselves onto the <a href="/design.html">design desk</a>. One set of rules decides where a clip lands, and the popup shows its guess before I save: a desk tag wins, then my own sites, then project tags, then resource or example.</p></div></li>
           </ol>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="chapter" aria-labelledby="ch-kinds">
-        <div class="chapter__head">
-          <h2 class="h2" id="ch-kinds">It knows what it’s looking at</h2>
-          <p>Every clip gets an honest label and the right kind of keepsake.</p>
-        </div>
-        <div class="chapter__body">
-          <ul class="bench">
+    <section class="band band--pcoral edge" aria-label="What it clips">
+      <div class="wrap">
+        <div class="chapter">
+          <div class="chapter__head">
+            <h2 class="h2">It knows what it’s looking at</h2>
+            <p>Every clip gets an honest label and the right kind of keepsake.</p>
+          </div>
+          <ul class="bench chapter__body">
             <li><b>Pages</b><p>The preview comes from the page’s own image, then from a screenshot taken at clip time, then a plain title card.</p></li>
             <li><b>Videos</b><p>YouTube clips bring their transcript along, read from the browser with yt-dlp as the fallback.</p></li>
             <li><b>Papers</b><p>The open-access PDF and a searchable text copy. When no free PDF exists, it says abstract only. It never goes around a paywall.</p></li>
             <li><b>Repos</b><p>GitHub repositories are labeled as repos, not web pages, so they file with the tools.</p></li>
           </ul>
         </div>
-      </section>
 
-      <section class="chapter" aria-labelledby="ch-bulk">
-        <div class="chapter__head">
-          <h2 class="h2" id="ch-bulk">The bulk workbench</h2>
-          <p>For the days I have forty tabs and a camera roll of screenshots.</p>
+        <div class="chapter">
+          <div class="chapter__head">
+            <h2 class="h2">The bulk workbench</h2>
+            <p>For the days I have forty tabs and a camera roll of screenshots.</p>
+          </div>
+          <div class="chapter__body">
+            <p class="quote-line">Drop the whole pile.</p>
+            <ol class="bench">
+              <li><b>Gather</b><p>Paste a messy list or drop screenshots. Text recognition runs on my Mac with Apple Vision, so nothing leaves the machine.</p></li>
+              <li><b>Review</b><p>Magpie finds the links, cleans them up, skips duplicates, unchecks anything already saved, and asks what the pile is for.</p></li>
+              <li><b>Clip</b><p>Each link is clipped in a background tab with the labels I picked. It ends with a cheerful YAY, done.</p></li>
+            </ol>
+          </div>
         </div>
-        <div class="chapter__body">
-          <p class="quote-line">Drop the whole pile.</p>
-          <ol class="bench">
-            <li><b>Gather</b><p>Paste a messy list or drop screenshots. Text recognition runs on my Mac with Apple Vision, so nothing leaves the machine.</p></li>
-            <li><b>Review</b><p>Magpie finds the links, cleans them up, skips duplicates, unchecks anything already saved, and asks what the pile is for.</p></li>
-            <li><b>Clip</b><p>Each link is clipped in a background tab with the labels I picked. It ends with a cheerful YAY, done.</p></li>
-          </ol>
-        </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="chapter" aria-labelledby="ch-count">
-        <div class="chapter__head">
-          <h2 class="h2" id="ch-count">The library so far</h2>
-          <p>Counted from the library on August 19, 2026.</p>
+    <section class="band band--tint edge" aria-labelledby="ch-count">
+      <div class="wrap">
+        <div class="chapter">
+          <div class="chapter__head">
+            <h2 class="h2" id="ch-count">The library so far</h2>
+            <p>Counted from the library on August 19, 2026.</p>
+          </div>
+          <div class="chapter__body">
+            <dl class="counts">
+              <div><dt>clips</dt><dd class="big-n">279</dd></div>
+              <div><dt>different sites</dt><dd class="big-n">258</dd></div>
+              <div><dt>tags</dt><dd class="big-n">257</dd></div>
+              <div><dt>clips with my own notes</dt><dd class="big-n">31</dd></div>
+              <div><dt>papers</dt><dd class="big-n">10</dd></div>
+              <div><dt>video transcripts</dt><dd class="big-n">8</dd></div>
+            </dl>
+            <p class="tally-note">147 of the clips came in from an old StumbleUpon archive, and all 51 tagged weird are among them.</p>
+          </div>
         </div>
-        <div class="chapter__body">
-          <dl class="datalist datalist--counts">
-            <div><dt>Clips</dt><dd>279</dd></div>
-            <div><dt>Different sites</dt><dd>258</dd></div>
-            <div><dt>Tags</dt><dd>257</dd></div>
-            <div><dt>Clips with my own notes</dt><dd>31</dd></div>
-            <div><dt>Papers</dt><dd>10</dd></div>
-            <div><dt>Video transcripts</dt><dd>8</dd></div>
-          </dl>
-          <p class="tally-note">147 of the clips came in from an old StumbleUpon archive, and all 51 tagged weird are among them.</p>
-        </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="chapter" aria-labelledby="ch-private">
-        <div class="chapter__head">
-          <h2 class="h2" id="ch-private">Built for one</h2>
-          <p>Magpie is a personal tool.</p>
-        </div>
-        <div class="chapter__body">
-          <div class="prose">
+    <section class="band band--sage edge edge--scallop" aria-labelledby="ch-private">
+      <div class="wrap">
+        <div class="chapter">
+          <div class="chapter__head">
+            <h2 class="h2" id="ch-private">Built for one</h2>
+            <p>Magpie is a personal tool.</p>
+          </div>
+          <div class="chapter__body prose">
             <p>It isn’t something you can install, and the library stays behind a password. The design half of it is public, though: everything Magpie files for the design desk shows up there.</p>
-          </div>
-          <div class="tlinks tlinks--after">
-            <a class="tlink" href="/design.html">See the design desk <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a>
-            <a class="tlink" href="/brain/gallery.html"><svg class="ico ico--lock" aria-hidden="true"><use href="#i-lock"/></svg>My library, private</a>
+            <div class="btn-row btn-row--after">
+              <a class="btn" href="/design.html">See the design desk</a>
+              <a class="btn btn--line" href="/brain/gallery.html"><svg viewBox="0 0 12 12" aria-hidden="true"><use href="#i-lock"/></svg>My library, private</a>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <a class="next-object" href="/design.html">
-        <span class="h2 next-object__title">Design desk</span>
-        <span class="next-object__meta">Next project, 02</span>
-        <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg>
-      </a>
-    </div>
+    <section class="next-sec" aria-labelledby="go-title">
+      <div class="wrap">
+        <h2 class="lede" id="go-title">Where to next</h2>
+      <nav class="pills pills--sm" aria-labelledby="go-title">
+        <a class="pill pill--sage" href="/design.html"><span class="ptile bg-paper"><svg class="shape c-navy" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-quat"/></svg></span>Design desk</a>
+        <a class="pill pill--honey" href="/#projects"><span class="ptile bg-navy"><svg class="shape c-paper" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-plus"/></svg></span>All ten projects</a>
+        <a class="pill pill--coral" href="/playground.html"><span class="ptile bg-pale-coral"><svg class="shape c-navy" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-squig"/></svg></span>Playground</a>
+      </nav>
+      </div>
+    </section>
+
   </main>
 
-  <footer class="site-footer" id="contact">
+  <footer class="foot edge edge--scallop">
     <div class="wrap">
-      <div class="footer-top">
-        <figure class="footer-art">
-          <img src="/assets/art/magpie-books.webp" width="1200" height="1059" loading="lazy" decoding="async" alt="" />
-        </figure>
-        <div class="footer-say">
-          <h2 class="h2">Say hello</h2>
-          <p>Questions, ideas, a project you think I’d like. My inbox is open.</p>
-          <a class="footer-mail" href="mailto:hello@kellylucas.dev">hello@kellylucas.dev <svg class="ico ico--right" aria-hidden="true"><use href="#i-right"/></svg></a>
-        </div>
+      <div class="foot__grid">
+        <div class="foot__brand"><p class="foot__mark"><svg class="shape c-coral" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-sun"/><circle r="30" fill="var(--navy)"/></svg>Kelly Lucas</p></div>
+        <nav aria-labelledby="f1"><h2 id="f1">This site</h2><ul>
+          <li><a href="/magpie.html">Magpie</a></li><li><a href="/#projects">Projects</a></li><li><a href="/#places">Places, drawn</a></li><li><a href="/playground.html">Playground</a></li><li><a href="/log.html">Log</a></li></ul></nav>
+        <nav aria-labelledby="f2"><h2 id="f2">More</h2><ul>
+          <li><a href="/design.html">Design desk</a></li><li><a href="/heliopolis/index.html">Heliopolis art library</a></li><li><a href="/colophon.html">Colophon</a></li>
+          <li><a href="/brain/gallery.html"><svg class="lock" viewBox="0 0 12 12" aria-hidden="true"><use href="#i-lock"/></svg>My library</a></li></ul></nav>
+        <nav aria-labelledby="f3"><h2 id="f3">Say hello</h2><ul>
+          <li><a href="mailto:hello@kellylucas.dev">hello@kellylucas.dev</a></li><li><a href="https://helioflux.co" target="_blank" rel="noopener noreferrer">HelioFlux<span class="sr-only"> (opens in a new tab)</span></a></li><li><a href="#main">Back to top</a></li></ul></nav>
       </div>
-      <div class="footer-bottom">
-        <span>&copy; <span data-year>2026</span> Kelly Lucas. Drawings in my Heliopolis style.</span>
-        <nav aria-label="Footer">
-          <a href="/design.html">Design desk</a>
-          <a href="/log.html">Log</a>
-          <a href="/colophon.html">Colophon</a>
-          <a href="/brain/gallery.html"><svg class="ico ico--lock lock-ico" aria-hidden="true"><use href="#i-lock"/></svg>My library</a>
-          <a href="#top">Back to top <svg class="ico ico--up" aria-hidden="true"><use href="#i-up"/></svg></a>
-        </nav>
-      </div>
+      <div class="foot__base"><span>&copy; <span data-year>2026</span> Kelly Lucas. Drawings in my Heliopolis style.</span><span>Set in Instrument Sans and DM Mono.</span></div>
     </div>
   </footer>
 

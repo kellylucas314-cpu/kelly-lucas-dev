@@ -18,27 +18,35 @@ window.DESIGN_LIBRARY = {
           "hex": "#1f355e"
         },
         {
-          "name": "pale teal",
-          "hex": "#d4e7e5"
-        },
-        {
-          "name": "pale coral",
-          "hex": "#f6dcd8"
+          "name": "teal",
+          "hex": "#5a9e9a"
         },
         {
           "name": "coral",
           "hex": "#d6605b"
         },
         {
-          "name": "teal",
-          "hex": "#5a9e9a"
+          "name": "honey",
+          "hex": "#f0bf4c"
+        },
+        {
+          "name": "sage",
+          "hex": "#9fb78f"
+        },
+        {
+          "name": "pale teal",
+          "hex": "#d4e7e5"
+        },
+        {
+          "name": "pale coral",
+          "hex": "#f6dcd8"
         }
       ],
-      "type": "Lato for everything, the same face as Heliopolis: light for the big words, regular for reading.",
+      "type": "Instrument Sans for everything, at a regular weight and big where it matters. DM Mono for dates and numbers.",
       "rules": [
-        "Drawings lead: one per view, in the Heliopolis style, never boxed in or cropped.",
-        "Navy carries every word. Pale teal and pale coral fill the drawings; teal and coral are small accents.",
-        "A fine pen: hairline navy rules, flat fills, no shadows.",
+        "A poster, not a hero: every page opens with one of my drawings on a big round shape, never boxed in or cropped.",
+        "Round, never square: suns, blobs and arches do the decorating, buttons are pills, bands end in waves and scallops.",
+        "Paper and navy carry every word. Teal, coral, honey and sage carry the shapes. The pale tints are the bands.",
         "Real over cute. The toys live in the playground, which keeps the old lab look.",
         "No em dashes. Mobile first, tested at 390px."
       ],

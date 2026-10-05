@@ -13,7 +13,7 @@ web
 
 ## Product Purpose
 
-kellylucas.dev is the home where Kelly's real projects live. It replaced a playful "lab" that read like a toy box, and it now borrows the calm, drawn look of Heliopolis, the HelioFlux team space Kelly designed. Success: a visitor leaves knowing Kelly builds useful software for how she works, with Magpie as the clearest proof, and Kelly can add the next project without redesigning anything.
+kellylucas.dev is the home where Kelly's real projects live. It replaced a playful "lab" that read like a toy box. Its look is a poster: her travel drawings on big round shapes, bands of color, big friendly type, modeled on figma.com/slides but drawn in her own hand. Success: a visitor leaves knowing Kelly builds useful software for how she works, with Magpie as the clearest proof, and Kelly can add the next project without redesigning anything.
 
 ## Positioning
 
@@ -35,9 +35,9 @@ Kelly builds personal tools she runs every day, then puts them on the shelf. The
 ## Brand Commitments
 
 - Name: Kelly Lucas. Domain kellylucas.dev.
-- Lato is the house typeface, the same face Heliopolis uses. (Heliora won the 2026 audition of 97 fonts and was the face of v0.5 to v0.9.)
-- Six colors, chosen by Kelly from a Huemint palette and tuned for contrast: paper `#f8f6f1`, navy `#1f355e`, pale teal `#d4e7e5`, pale coral `#f6dcd8`, coral `#d6605b`, teal `#5a9e9a`. Navy carries all text.
-- Drawings in Kelly's Heliopolis style lead every page: places she loves (Torres del Paine opens the homepage), the Pretzel Protocol cities, and three magpies.
+- Instrument Sans is the house typeface, with DM Mono for small labels. (Heliora won the 2026 audition of 97 fonts and was the face of v0.5 to v0.9; Lato was tried for the Heliopolis-style pass.)
+- Eight colors: Kelly's six, chosen from a Huemint palette and tuned for contrast (paper `#f8f6f1`, navy `#1f355e`, pale teal `#d4e7e5`, pale coral `#f6dcd8`, coral `#d6605b`, teal `#5a9e9a`), plus honey `#f0bf4c` and sage `#9fb78f`, which Kelly picked over ochre and apricot and over mustard and olive. Navy carries all text. She asked for no bright blue and no violet.
+- Drawings in Kelly's Heliopolis style lead every page, on round shapes: places she loves (Torres del Paine opens the homepage on a honey sun), the Pretzel Protocol cities, and three magpies. She asked for "color and a bit of chaos and like shapes", and for her travel drawings instead of square SaaS visuals.
 - Voice: direct, lowercase-leaning, sentence case, warm, a little funny. No em dashes anywhere in copy.
 - Keep some personality (a couple of easter eggs and her voice). It must not look like a generic SaaS template.
 - Magpie's mark is the rainbow-and-warm feather (`magpie/extension/icons/magpie-feather.svg` in kip-workspace). On this site it appears only inside the redrawn Magpie popup.

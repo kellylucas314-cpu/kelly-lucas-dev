@@ -8,12 +8,6 @@ const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 
-/* storage can be missing or blocked (private windows, previews); never let it break a page */
-const store = {
-  get(key) { try { return window.localStorage.getItem(key); } catch (e) { return null; } },
-  set(key, value) { try { window.localStorage.setItem(key, value); } catch (e) { /* fine */ } },
-};
-
 /* ---------- Footer year ---------- */
 $$("[data-year]").forEach((el) => { el.textContent = new Date().getFullYear(); });
 
@@ -34,11 +28,13 @@ document.addEventListener("visibilitychange", () => {
   document.title = document.hidden ? "something shiny is waiting" : baseTitle;
 });
 
-/* ---------- Home: a different place each visit, Torres del Paine first ---------- */
-const place = $("[data-place]");
-if (place && $("[data-place-img]", place) && $("[data-place-name]", place)) {
+/* ---------- Home: the poster. Torres del Paine every time, another place on click ---------- */
+const poster = $("[data-place]");
+if (poster && $("[data-place-img]", poster) && $("[data-place-name]", poster)) {
   const ART = "/assets/art/";
-  const pretzel = '<a href="https://pretzel.thetravelprotocol.com" target="_blank" rel="noopener noreferrer">the Pretzel Protocol<span class="visually-hidden"> (opens in a new tab)</span></a>';
+  const pretzel = '<a href="https://pretzel.thetravelprotocol.com" target="_blank" rel="noopener noreferrer">the Pretzel Protocol<span class="sr-only"> (opens in a new tab)</span></a>';
+  // the sun stays strong: honey, coral or teal, never a pastel
+  const SUNS = ["var(--honey)", "var(--coral)", "var(--teal)"];
   const PLACES = [
     { src: "travel/torres-del-paine.webp", w: 1600, h: 1103, name: "Torres del Paine, Patagonia", alt: "A drawing of the three granite towers of Torres del Paine, pink in the morning light, above a glacial lake." },
     { src: "travel/santorini.webp", w: 1600, h: 1034, name: "Santorini, Greece", alt: "A drawing of white Santorini houses stepping down a cliff, a church with a navy dome, and coral bougainvillea." },
@@ -54,10 +50,16 @@ if (place && $("[data-place-img]", place) && $("[data-place-name]", place)) {
     { src: "pretzel-berlin.webp", w: 1600, h: 874, name: "Berlin, redrawn from " + pretzel, alt: "A drawing of the East Side Gallery wall and the Oberbaum Bridge over the Spree." },
     { src: "pretzel-amsterdam.webp", w: 1600, h: 876, name: "Amsterdam, redrawn from " + pretzel, alt: "A drawing of Amsterdam canal houses, an arched bridge, a bicycle and a stroopwafel." },
   ];
-  const img = $("[data-place-img]", place);
-  const nameEl = $("[data-place-name]", place);
-  const next = $("[data-place-next]", place);
-  const KEY = "kl-place";
+  const img = $("[data-place-img]", poster);
+  const nameEl = $("[data-place-name]", poster);
+  const next = $("[data-place-next]", poster);
+  // the two small places orbiting the sun: if the big drawing is one of them, that circle shows Torres instead
+  const sats = $$(".sat img", poster).map((im) => ({ im, src: im.getAttribute("src"), alt: im.alt }));
+  const syncSats = (p) => sats.forEach((s) => {
+    const dup = ART + p.src === s.src;
+    const want = dup ? ART + PLACES[0].src : s.src;
+    if (s.im.getAttribute("src") !== want) { s.im.src = want; s.im.alt = dup ? PLACES[0].alt : s.alt; }
+  });
 
   const show = (i, animate) => {
     const p = PLACES[i];
@@ -67,15 +69,17 @@ if (place && $("[data-place-img]", place) && $("[data-place-name]", place)) {
       img.height = p.h;
       img.alt = p.alt;
       nameEl.innerHTML = p.name;
+      poster.style.setProperty("--poster-c", SUNS[i % SUNS.length]);
+      syncSats(p);
     };
     if (!animate || reducedMotion || !img.animate) { apply(); return; }
-    const out = img.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, easing: "ease-out", fill: "forwards" });
+    const out = img.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: "ease-out", fill: "forwards" });
     out.finished.then(() => {
       apply();
-      // fade back in when the new drawing loads, or fails: the frame is never left empty
+      // fade back in when the new drawing loads, or fails: the sun is never left empty
       const fadeIn = () => {
         out.cancel();
-        img.animate([{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 520, easing: EASE });
+        img.animate([{ opacity: 0, transform: "translateY(8px)" }, { opacity: 1, transform: "none" }], { duration: 460, easing: EASE });
       };
       if (img.complete) { fadeIn(); return; }
       img.addEventListener("load", fadeIn, { once: true });
@@ -83,24 +87,61 @@ if (place && $("[data-place-img]", place) && $("[data-place-name]", place)) {
     });
   };
 
-  // first visit shows Torres del Paine (already in the HTML); every visit after moves one place on
-  const last = parseInt(store.get(KEY), 10);
-  let current = Number.isInteger(last) && last >= 0 ? (last + 1) % PLACES.length : 0;
-  if (current !== 0) show(current, false);
-  store.set(KEY, String(current));
-
+  let current = 0;
   if (next) {
     next.hidden = false;
-    // warm the next drawing so the swap is instant
-    const warm = (i) => { const im = new Image(); im.src = ART + PLACES[i].src; };
-    ("requestIdleCallback" in window) ? requestIdleCallback(() => warm((current + 1) % PLACES.length)) : setTimeout(() => warm((current + 1) % PLACES.length), 1500);
+    const warmed = new Set();
+    const warm = (i) => { if (warmed.has(i)) return; warmed.add(i); const im = new Image(); im.src = ART + PLACES[i].src; };
+    const warmNext = () => warm((current + 1) % PLACES.length);
+    next.addEventListener("pointerenter", warmNext);
+    next.addEventListener("focus", warmNext);
     next.addEventListener("click", () => {
       current = (current + 1) % PLACES.length;
-      store.set(KEY, String(current));
       show(current, true);
-      warm((current + 1) % PLACES.length);
+      warmNext();
     });
   }
+}
+
+/* ---------- Home: the project preview follows the row you point at ---------- */
+const list = $("[data-list]");
+const pvImg = $("[data-pv-img]");
+if (list && pvImg) {
+  const n = $("[data-pv-n]");
+  const meta = $("[data-pv-meta]");
+  const what = $("[data-pv-what]");
+  const btn = $("[data-pv-btn]");
+  const items = $$("li", list);
+  const show = (li) => {
+    items.forEach((i) => i.classList.toggle("is-on", i === li));
+    const a = $("a", li);
+    const t = $(".row__t", li).firstChild.textContent.trim();
+    const num = $(".row__n > span", li).textContent;
+    pvImg.src = "/assets/collection/" + li.dataset.img + ".webp";
+    pvImg.alt = "A screenshot of " + t + ".";
+    if (n) n.textContent = num + " / " + t;
+    if (meta) meta.textContent = li.dataset.kind + " / " + li.dataset.status;
+    if (what) what.textContent = $(".row__w", li).textContent;
+    if (btn && a) {
+      btn.href = a.href;
+      btn.textContent = "Open " + t;
+      if (a.target) {
+        btn.target = a.target;
+        btn.rel = a.rel;
+        const sr = document.createElement("span");
+        sr.className = "sr-only";
+        sr.textContent = " (opens in a new tab)";
+        btn.append(sr);
+      } else {
+        btn.removeAttribute("target");
+        btn.removeAttribute("rel");
+      }
+    }
+  };
+  items.forEach((li) => {
+    li.addEventListener("mouseenter", () => show(li));
+    li.addEventListener("focusin", () => show(li));
+  });
 }
 
 /* ---------- Magpie's shortcut, which only works in my browser ---------- */
