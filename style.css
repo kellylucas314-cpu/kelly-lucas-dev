@@ -588,9 +588,9 @@ kbd {
 .bg-sage { background: var(--sage); }
 
 /* ---------- Home: the race car. Kelly's drawing, parked at the foot of the hero; laps now and then (script.js) ---------- */
-.hero:has(.racer) { padding-bottom: 150px; }
-.racer { position: absolute; left: 0; right: 0; bottom: 28px; height: 104px; overflow: hidden; pointer-events: none; }
-.racer__car { position: absolute; right: max(var(--gutter), calc((100% - var(--wrap)) / 2)); bottom: 0; width: 290px; }
+.hero:has(.racer) { padding-bottom: 124px; }
+.racer { position: absolute; left: 0; right: 0; bottom: 28px; height: 80px; overflow: hidden; pointer-events: none; }
+.racer__car { position: absolute; right: max(var(--gutter), calc((100% - var(--wrap)) / 2)); bottom: 0; width: 220px; }
 .racer__car img { display: block; width: 100%; height: auto; }
 .racer__wheel { position: absolute; left: var(--x); top: var(--y); width: 14.7%; aspect-ratio: 1; translate: -50% -50%; fill: none; stroke: #042444; stroke-width: 3; stroke-linecap: round; }
 .racer.is-driving .racer__wheel { animation: spin .35s linear infinite reverse; }
@@ -662,9 +662,9 @@ kbd {
   .note__t { font-size: 22px; }
   .note__d { font-size: 16px; }
   .poster__cap { font-size: 18px; margin-top: 16px; }
-  .hero:has(.racer) { padding-bottom: 116px; }
-  .racer { height: 72px; bottom: 22px; }
-  .racer__car { width: 200px; }
+  .hero:has(.racer) { padding-bottom: 100px; }
+  .racer { height: 58px; bottom: 22px; }
+  .racer__car { width: 160px; }
   .poster__cap [data-place-name] { display: grid; align-content: end; min-height: 3em; }
   .orb--quat { right: 28%; }
   .cur b { font-size: 12px; padding: 2px 8px; }
