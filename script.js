@@ -289,8 +289,9 @@ if (car && !reducedMotion && car.animate && "IntersectionObserver" in window) {
   const next = (ms) => { clearTimeout(timer); timer = setTimeout(drive, ms); };
   function drive() {
     if (!inView || document.hidden) { next(4000); return; }
-    const start = -car.offsetLeft - car.offsetWidth - 20;
-    const end = racer.clientWidth - car.offsetLeft + 20;
+    // the car faces left, so it comes in from the right
+    const start = racer.clientWidth - car.offsetLeft + 20;
+    const end = -car.offsetLeft - car.offsetWidth - 20;
     racer.classList.add("is-driving");
     lap = car.animate(
       [{ transform: `translateX(${start}px)` }, { transform: `translateX(${end}px)` }],
@@ -298,8 +299,8 @@ if (car && !reducedMotion && car.animate && "IntersectionObserver" in window) {
     );
     lap.onfinish = () => { racer.classList.remove("is-driving"); next(22000 + Math.random() * 20000); };
   }
-  // off the grid before the first lap; it comes in from the left
-  car.style.transform = "translateX(-120vw)";
+  // off the grid before the first lap
+  car.style.transform = "translateX(120vw)";
   new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; }).observe(racer);
   next(1800);
 }
