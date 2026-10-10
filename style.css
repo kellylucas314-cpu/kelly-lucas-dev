@@ -587,6 +587,14 @@ kbd {
 .bg-honey { background: var(--honey); }
 .bg-sage { background: var(--sage); }
 
+/* ---------- Home: the race car. Parked at the foot of the hero; laps now and then (script.js) ---------- */
+.racer { position: absolute; left: 0; right: 0; bottom: 30px; height: 64px; overflow: hidden; pointer-events: none; }
+.racer__car { position: absolute; left: max(var(--gutter), calc((100% - var(--wrap)) / 2)); bottom: 0; width: 220px; height: auto; overflow: visible; }
+.racer__wheel { transform-box: fill-box; transform-origin: center; }
+.racer.is-driving .racer__wheel { animation: spin .45s linear infinite; }
+.racer.is-driving .racer__body { animation: rumble .3s ease-in-out infinite; }
+@keyframes rumble { 50% { transform: translateY(-1.5px); } }
+
 /* ---------- Motion ---------- */
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes bob { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(6px, -5px); } }
@@ -652,6 +660,9 @@ kbd {
   .note__t { font-size: 22px; }
   .note__d { font-size: 16px; }
   .poster__cap { font-size: 18px; margin-top: 16px; }
+  .hero { padding-bottom: 104px; }
+  .racer { height: 44px; bottom: 24px; }
+  .racer__car { width: 150px; }
   .poster__cap [data-place-name] { display: grid; align-content: end; min-height: 3em; }
   .orb--quat { right: 28%; }
   .cur b { font-size: 12px; padding: 2px 8px; }
