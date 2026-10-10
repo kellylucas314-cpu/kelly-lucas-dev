@@ -42,10 +42,14 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
   the places band and the colophon say the drawings were made with an image
   model in Kelly's style.
 - Personality budget: the tab-title message, "Another place", the "Kelly"
-  cursor tag on the poster, the Alt+Shift+M reflex on the homepage, the
+  cursor tag on the poster, the race car (Kelly's side-view drawing, red dinos and HelioFlux in place of the Red Bull marks)
+  that laps the foot of the homepage hero now and then, the Alt+Shift+M
+  reflex on the homepage, the
   "Clip it" demo on the Magpie page, the magpie 404, and the playground.
 - Motion: the suns turn very slowly (the spin lives on the svg root), the
-  cursor tag bobs, the poster crossfades on click, the clip demo plays
+  cursor tag bobs, the race car drives across with its wheels spinning
+  (parked at the right without JS or with reduced motion), the poster
+  crossfades on click, the clip demo plays
   once on the Magpie page. `prefers-reduced-motion` turns all of it off and
   nothing is hidden behind JS.
 
