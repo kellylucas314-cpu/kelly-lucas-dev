@@ -278,3 +278,29 @@ if (scene) {
     io.observe(scene);
   }
 }
+
+/* ---------- Home: the race car. A lap across the foot of the hero now and then ---------- */
+const racer = $("[data-racer]");
+const car = racer && $(".racer__car", racer);
+if (car && !reducedMotion && car.animate && "IntersectionObserver" in window) {
+  let inView = false;
+  let timer;
+  let lap;
+  const next = (ms) => { clearTimeout(timer); timer = setTimeout(drive, ms); };
+  function drive() {
+    if (!inView || document.hidden) { next(4000); return; }
+    // the car faces left, so it comes in from the right
+    const start = racer.clientWidth - car.offsetLeft + 20;
+    const end = -car.offsetLeft - car.offsetWidth - 20;
+    racer.classList.add("is-driving");
+    lap = car.animate(
+      [{ transform: `translateX(${start}px)` }, { transform: `translateX(${end}px)` }],
+      { duration: Math.max(4500, racer.clientWidth * 4.2), easing: "cubic-bezier(.45,.05,.55,.95)", fill: "both" }
+    );
+    lap.onfinish = () => { racer.classList.remove("is-driving"); next(22000 + Math.random() * 20000); };
+  }
+  // off the grid before the first lap
+  car.style.transform = "translateX(120vw)";
+  new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; }).observe(racer);
+  next(1800);
+}
