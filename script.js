@@ -279,28 +279,43 @@ if (scene) {
   }
 }
 
-/* ---------- Home: the race car. A lap across the foot of the hero now and then ---------- */
+/* ---------- Home: the race. Lights out from the grid, then lap after lap while the hero is on screen ---------- */
 const racer = $("[data-racer]");
-const car = racer && $(".racer__car", racer);
-if (car && !reducedMotion && car.animate && "IntersectionObserver" in window) {
+const cars = racer ? $$(".racer__car", racer) : [];
+if (cars.length && !reducedMotion && cars[0].animate && "IntersectionObserver" in window) {
   let inView = false;
-  let timer;
-  let lap;
-  const next = (ms) => { clearTimeout(timer); timer = setTimeout(drive, ms); };
-  function drive() {
-    if (!inView || document.hidden) { next(4000); return; }
-    // the car faces left, so it comes in from the right
-    const start = racer.clientWidth - car.offsetLeft + 20;
-    const end = -car.offsetLeft - car.offsetWidth - 20;
-    racer.classList.add("is-driving");
-    lap = car.animate(
-      [{ transform: `translateX(${start}px)` }, { transform: `translateX(${end}px)` }],
-      { duration: Math.max(4500, racer.clientWidth * 4.2), easing: "cubic-bezier(.45,.05,.55,.95)", fill: "both" }
+  let started = false;
+  const running = new Set();
+  const waiting = new Set();
+  // px per ms: each car has its own pace, so places change over a few laps
+  const pace = cars.map((_, i) => 0.26 - i * 0.006 + Math.random() * 0.012);
+  const live = () => inView && !document.hidden;
+  function lap(car, i, fromGrid) {
+    if (!live()) { waiting.add(i); return; }
+    // the cars face left, so they come in from the right
+    const from = fromGrid ? 0 : racer.clientWidth - car.offsetLeft + 20;
+    const to = -car.offsetLeft - car.offsetWidth - 20;
+    const speed = pace[i] * (0.93 + Math.random() * 0.14);
+    car.classList.add("is-driving");
+    const run = car.animate(
+      [{ transform: `translateX(${from}px)` }, { transform: `translateX(${to}px)` }],
+      { duration: (from - to) / speed, easing: fromGrid ? "cubic-bezier(.5,0,.8,1)" : "linear", fill: "both" }
     );
-    lap.onfinish = () => { racer.classList.remove("is-driving"); next(22000 + Math.random() * 20000); };
+    running.add(run);
+    run.onfinish = () => { running.delete(run); setTimeout(() => lap(car, i, false), 300 + Math.random() * 2400); };
   }
-  // off the grid before the first lap
-  car.style.transform = "translateX(120vw)";
-  new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; }).observe(racer);
-  next(1800);
+  function update() {
+    if (!live()) { running.forEach((r) => r.pause()); return; }
+    if (!started) {
+      started = true;
+      // lights out: the grid launches a beat after the hero comes into view
+      setTimeout(() => cars.forEach((car, i) => lap(car, i, true)), 1600);
+      return;
+    }
+    running.forEach((r) => r.play());
+    waiting.forEach((i) => lap(cars[i], i, false));
+    waiting.clear();
+  }
+  new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; update(); }).observe(racer);
+  document.addEventListener("visibilitychange", update);
 }
