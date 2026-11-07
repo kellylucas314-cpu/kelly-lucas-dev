@@ -39,8 +39,10 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
   deep coral "Private".
 - Copy is direct, warm, sentence case, curly apostrophes. Honest labels: the
   Magpie popup says it is redrawn in HTML, counts say when they were counted,
-  the places band and the colophon say the drawings were made with an image
-  model in Kelly's style.
+  the colophon says the drawings were made with an image model in Kelly's
+  style. The homepage has no places band (Kelly, 2026-11-07: a whole section
+  for the art wasted space); the drawings live on the poster and in the
+  Heliopolis art library, linked from the projects list and the footer.
 - Personality budget: the tab-title message, "Another place", the "Kelly"
   cursor tag on the poster, the Alt+Shift+M reflex on the homepage, the
   "Clip it" demo on the Magpie page, the magpie 404, and the playground.
@@ -60,8 +62,7 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
   stone and roofs coral, small accents only), snap it to the palette, trim it
   and save it as WebP with alpha. Show Kelly before it ships.
 - A new place on the homepage: add it to `PLACES` in `script.js` (file,
-  size, caption, alt) and, if it should appear in the scatter, to the places
-  list in `index.html`.
+  size, caption, alt).
 - `magpie-drawer-sm.webp` is the 480px copy of the drawer magpie for the
   Magpie note, and the project screenshots in `assets/collection/` have
   320px `-sm.webp` copies for the phone thumbnails. They are derived files
