@@ -12,8 +12,10 @@ Once this folder is merged into main, almost nothing. Only these:
    `~/Documents/New project/kelly-lucas-dev`:
    `codex/font-lab-recovered-20260818`, `codex/private-magpie-library`,
    `rescue/live-site-pre-sync-20260818`. To keep them, push each one to GitHub.
-2. **The Magpie gallery restyle and vault**, only on your Mac in
-   `kip-workspace/tools/magpie`. To keep it, commit and push kip-workspace.
+2. **The Magpie vault** (your clips, library.json, the generated
+   gallery.html), on purpose: it's private and stays on your Mac in
+   `~/Documents/GitHub/kip-workspace/magpie`. The restyle code itself is now
+   saved (see "Magpie restyle" below).
 3. **The Monday "Weekly site check" routine.** Routines don't move between
    projects. Recreate it in the new project from the text below.
 
@@ -65,7 +67,8 @@ Magpie (private clipping library) and side experiments.
 - Branch claude/lounge-turn-script (3463387): Agent Commons launcher. Only if
   it comes back.
 - Magpie gallery shelves: waiting on Kelly's rule for which clip goes on which
-  shelf (shelfFor() in build_gallery.py, kip-workspace)
+  shelf (shelfFor() in build_gallery.py, kip-workspace branch
+  claude/magpie-restyle-handoff)
 - Bird where the bubbles were: yes or no?
 - Impeccable skill: recommended skip
 - 6 merged branches can be deleted
@@ -77,8 +80,15 @@ Magpie (private clipping library) and side experiments.
 - Old Mac-only branches: codex/font-lab-recovered-20260818,
   codex/private-magpie-library, rescue/live-site-pre-sync-20260818. Save: push
   each to GitHub from ~/Documents/New project/kelly-lucas-dev.
-- Magpie restyle + vault: only on the Mac (kip-workspace/tools/magpie, local
-  server 127.0.0.1:8765). Save: commit and push kip-workspace.
+- Magpie restyle: SAVED Nov 7, 2026. Repo kellylucas314-cpu/kip-workspace,
+  branch `claude/magpie-restyle-handoff` (commit 93ab880): build_gallery.py
+  (shelfFor() still unfinished), magpie-hero.svg, 14 shelf icons, Lato fonts +
+  license. Not merged, no PR yet. The vault (clips, library.json,
+  gallery.html) was left out on purpose and stays on the Mac. Local server is
+  127.0.0.1:8765.
+- On the Mac, kip-workspace shows SECURITY.md and
+  SECURITY-ROTATION-CHECKLIST.md as deleted but not committed. Kelly to
+  confirm whether that was on purpose.
 
 ## 6. Rules to keep (project instructions)
 
