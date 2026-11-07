@@ -86,9 +86,9 @@ Magpie (private clipping library) and side experiments.
   license. Not merged, no PR yet. The vault (clips, library.json,
   gallery.html) was left out on purpose and stays on the Mac. Local server is
   127.0.0.1:8765.
-- On the Mac, kip-workspace shows SECURITY.md and
-  SECURITY-ROTATION-CHECKLIST.md as deleted but not committed. Kelly to
-  confirm whether that was on purpose.
+- SECURITY.md and SECURITY-ROTATION-CHECKLIST.md: Kelly meant to delete
+  them. The deletion is committed on the same kip-workspace branch (e830afb);
+  they leave master when that branch is merged.
 
 ## 6. Rules to keep (project instructions)
 
