@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Kelly's sample app previews</title>
+  <style>
+    :root { font: 16px/1.5 system-ui, -apple-system, sans-serif; color: #17344b; background: #faf6ed; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    h1, h2, p, figure { margin: 0; }
+    a { color: inherit; text-underline-offset: 3px; }
+    a:focus-visible, summary:focus-visible, input:focus-visible { outline: 3px solid #006c80; outline-offset: 4px; }
+    .page { width: min(100% - 32px, 1312px); margin: 0 auto; padding: 22px 0 52px; }
+    .topline { display: flex; justify-content: space-between; gap: 6px 24px; flex-wrap: wrap; border-bottom: 1px solid #cbbdaa; padding-bottom: 14px; color: #385a6a; font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .topline strong { color: #16344b; }
+    .intro { display: flex; align-items: end; justify-content: space-between; gap: 20px; padding: 30px 2px 25px; }
+    .intro h1 { font-size: clamp(2.35rem, 5.3vw, 4.6rem); font-weight: 670; letter-spacing: -.065em; line-height: 1.02; }
+    .intro p { max-width: 38ch; color: #536677; font-size: 1rem; }
+    .desk-controls { display: flex; justify-content: space-between; gap: 10px 24px; align-items: center; flex-wrap: wrap; margin: 0 3px 13px; color: #365463; font-size: .9rem; }
+    .desk-controls label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 650; }
+    .desk-controls input { width: 18px; height: 18px; accent-color: #006c80; cursor: pointer; }
+    .scene { position: relative; isolation: isolate; width: 100%; aspect-ratio: 3 / 2; }
+    .scene-base { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .piece { position: absolute; z-index: 2; aspect-ratio: var(--ratio); }
+    .piece > img { display: block; position: absolute; width: var(--image-width); height: var(--image-height); max-width: none; left: var(--image-left); top: var(--image-top); pointer-events: none; transition: transform .2s ease, filter .2s ease; }
+    .piece:hover > img, .piece:focus-within > img { transform: translateY(-6px); filter: drop-shadow(0 8px 7px rgba(34, 42, 45, .18)); }
+    .piece--magpie { left: 4%; top: 31%; width: 27%; --ratio: 1156 / 870; --image-width: 132.9%; --image-height: 117.7%; --image-left: -16.3%; --image-top: -10.5%; }
+    .piece--heliopolis { left: 37%; top: 17%; width: 15%; --ratio: 707 / 787; --image-width: 181.6%; --image-height: 155.7%; --image-left: -42.1%; --image-top: -29.9%; }
+    .piece--tasks { left: 34%; top: 41%; width: 31%; --ratio: 1469 / 663; --image-width: 120.8%; --image-height: 133.8%; --image-left: -11.5%; --image-top: -20.1%; }
+    .piece--schedule { left: 59%; top: 24%; width: 13.5%; --ratio: 914 / 766; --image-width: 156%; --image-height: 144%; --image-left: -28.3%; --image-top: -23.9%; }
+    .piece--portfolio { left: 73%; top: 28%; width: 16%; --ratio: 1259 / 692; --image-width: 122%; --image-height: 148%; --image-left: -11.8%; --image-top: -26.7%; }
+    .piece--portfolio > img { filter: drop-shadow(0 5px 3px rgba(34, 42, 45, .21)); }
+    .piece--napoleon { left: 74.5%; top: 41%; width: 22%; --ratio: 1264 / 788; --image-width: 121.5%; --image-height: 129.9%; --image-left: -10.8%; --image-top: -20.2%; }
+    .piece:has(details[open]) { z-index: 10; }
+    .object, .object details, .object summary { position: absolute; inset: 0; }
+    .object { z-index: 1; display: block; cursor: pointer; text-decoration: none; border-radius: 10px; }
+    .object:focus-visible, .object summary:focus-visible { outline: 3px solid #005d72; outline-offset: 5px; }
+    .object details { display: block; }
+    .object summary { display: block; cursor: pointer; list-style: none; border-radius: 10px; }
+    .object summary::-webkit-details-marker { display: none; }
+    .object-label { position: absolute; z-index: 2; left: 50%; top: calc(100% + 4px); width: max-content; max-width: 190px; transform: translateX(-50%); padding: 6px 10px; border: 1px solid #c7bbab; border-radius: 5px; background: #fffdf6; box-shadow: 0 4px 9px rgba(30, 51, 67, .17); color: #17344b; font-size: clamp(.72rem, 1vw, .89rem); font-weight: 750; line-height: 1.2; text-align: center; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .16s ease, visibility .16s ease; }
+    .piece:hover .object-label, .piece:focus-within .object-label, .show-names .scene .object-label { opacity: 1; visibility: visible; }
+    .object-menu { position: absolute; z-index: 5; left: 50%; top: calc(100% + 38px); display: grid; width: 248px; gap: 1px; transform: translateX(-50%); padding: 5px 7px; border: 1px solid #c7bbab; border-radius: 7px; background: #fffdf6; box-shadow: 0 9px 18px rgba(30, 51, 67, .22); }
+    .object-menu a { display: flex; align-items: center; min-height: 42px; padding: 7px 8px; border-radius: 4px; color: #164356; font-size: .87rem; font-weight: 680; line-height: 1.2; text-decoration: none; }
+    .object-menu a:hover, .object-menu a:focus-visible { background: #e9f3f0; }
+    .object-menu a::after { content: "↗"; margin-left: auto; padding-left: 10px; }
+    .scene-hint { display: flex; justify-content: space-between; gap: 8px 24px; flex-wrap: wrap; margin: 17px 3px 18px; color: #536776; font-size: .86rem; }
+    .scene-hint strong { color: #17344b; }
+    .project-directory { margin: 23px 3px 26px; }
+    .directory-heading { display: flex; justify-content: space-between; align-items: end; gap: 12px 30px; margin-bottom: 18px; padding-top: 25px; border-top: 1px solid #c9cbbb; }
+    .directory-heading .eyebrow { margin-bottom: 4px; color: #42695e; font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .directory-heading h2 { color: #17344b; font-size: clamp(1.65rem, 2.7vw, 2.25rem); font-weight: 680; letter-spacing: -.04em; line-height: 1.1; }
+    .directory-heading > p { max-width: 38ch; color: #536677; font-size: .9rem; }
+    .project-grid { display: block; }
+    .project-card { display: grid; grid-template-columns: 76px minmax(0, 1fr) 100px; gap: 22px; align-items: start; min-width: 0; padding: 22px 0 24px; border-top: 1px solid #d1d1c5; }
+    .project-card:last-child { border-bottom: 1px solid #d1d1c5; }
+    .project-card--heliopolis { grid-template-columns: 76px minmax(220px, .8fr) minmax(420px, 1.35fr); padding: 28px 0 33px; }
+    .row-number { padding-top: 5px; color: #668077; font-size: .7rem; font-weight: 800; letter-spacing: .12em; white-space: nowrap; }
+    .project-card h3 { margin: 0; color: #183a4b; font-size: 1.28rem; font-weight: 720; letter-spacing: -.035em; line-height: 1.18; }
+    .project-card--heliopolis h3 { font-size: 1.7rem; }
+    .project-card p { max-width: 43ch; margin-top: 6px; color: #4e626e; font-size: .94rem; line-height: 1.45; }
+    .status { display: block; margin-top: 10px; color: #54736a; font-size: .68rem; font-weight: 740; letter-spacing: .105em; text-transform: uppercase; }
+    .card-open, .heliopolis-pages a { display: inline-flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; color: #14586a; font-size: .9rem; font-weight: 730; text-decoration: none; }
+    .card-open { align-self: center; justify-self: end; min-width: 72px; border-bottom: 1px solid #87a6a2; }
+    .card-open::after { content: "↗"; color: #006c80; }
+    .card-open:hover, .heliopolis-pages a:hover { color: #063d4a; border-color: #063d4a; }
+    .heliopolis-pages { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 26px; align-self: start; }
+    .heliopolis-pages a { min-width: 0; border-bottom: 1px solid #d1d1c5; }
+    .heliopolis-pages a span { flex: 0 0 auto; color: #006c80; font-size: .78rem; }
+    .review-note { display: flex; gap: 14px 28px; align-items: start; padding: 18px 0 0; border-top: 1px solid #d1d1c5; color: #4e626e; font-size: .86rem; }
+    .review-note strong { flex: 0 0 auto; color: #315c55; font-size: .71rem; letter-spacing: .1em; text-transform: uppercase; }
+    .review-note a { color: #005c70; font-weight: 700; }
+    .footer { display: flex; justify-content: space-between; gap: 12px 30px; flex-wrap: wrap; margin-top: 28px; padding-top: 16px; border-top: 1px solid #d1d1c5; color: #536775; font-size: .81rem; }
+    .footer a { color: #1e5f70; }
+    @media (max-width: 900px) {
+      .intro { align-items: start; flex-direction: column; gap: 10px; }
+      .object-label { font-size: .72rem; }
+      .project-card--heliopolis { grid-template-columns: 64px minmax(0, 1fr); }
+      .project-card--heliopolis .heliopolis-pages { grid-column: 2; }
+    }
+    @media (max-width: 700px) {
+      .page { width: min(100% - 24px, 520px); padding-top: 16px; }
+      .intro { padding: 25px 2px 19px; }
+      .intro h1 { font-size: clamp(2.55rem, 10.6vw, 3.5rem); }
+      .scene .object { display: none; }
+      .scene-hint { margin-bottom: 18px; }
+      .desk-controls label { display: none; }
+      .directory-heading { align-items: start; flex-direction: column; }
+      .project-card, .project-card--heliopolis { grid-template-columns: 42px minmax(0, 1fr); gap: 11px 13px; padding: 20px 0 21px; }
+      .project-card--heliopolis .heliopolis-pages { grid-column: 2; }
+      .heliopolis-pages { grid-template-columns: 1fr; }
+      .card-open { grid-column: 2; justify-self: start; align-self: start; margin-top: -4px; min-width: 72px; }
+      .project-card p { max-width: 36ch; }
+      .review-note { flex-wrap: wrap; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .piece > img, .object-label { transition: none; }
+      .piece:hover > img, .piece:focus-within > img { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="topline"><strong>Kelly's desk</strong><span>October 19 · sample previews</span></div>
+    <header class="intro"><h1>The app desk.</h1><p>A few projects from the weekend, collected on one illustrated desk. Every interactive demo uses sample data.</p></header>
+    <div class="desk-controls"><span>Choose an object to open a project.</span><label for="show-names"><input id="show-names" type="checkbox" onchange="document.body.classList.toggle('show-names', this.checked)">Show project names</label></div>
+    <figure class="scene">
+      <img class="scene-base" src="layers/desk_base_transparent_e.png" alt="Illustrated ivory desk with a green lamp and plant." width="1536" height="1024">
+      <div class="piece piece--magpie"><img src="layers/desk_bird_e.png" alt="" width="1536" height="1024"><a class="object" href="magpie/" target="_blank" rel="noopener" aria-label="Magpie"><span class="object-label" aria-hidden="true">Magpie</span></a></div>
+      <div class="piece piece--tasks"><img src="layers/desk_notebook_e.png" alt="" width="1774" height="887"><a class="object" href="open-loops/" target="_blank" rel="noopener" aria-label="Open Loops"><span class="object-label" aria-hidden="true">Open Loops</span></a></div>
+      <div class="piece piece--schedule"><img src="layers/desk_calendar_e.png" alt="" width="1426" height="1103"><a class="object" href="scheduling/" target="_blank" rel="noopener" aria-label="Team scheduling"><span class="object-label" aria-hidden="true">Team scheduling</span></a></div>
+      <div class="piece piece--portfolio"><img src="layers/desk_folio_e.png" alt="" width="1536" height="1024"><a class="object" href="portfolio/" target="_blank" rel="noopener" aria-label="Portfolio showcase"><span class="object-label" aria-hidden="true">Portfolio showcase</span></a></div>
+      <div class="piece piece--napoleon"><img src="layers/desk_hat_e.png" alt="" width="1536" height="1024"><a class="object" href="napoleon/" target="_blank" rel="noopener" aria-label="Clue d'État: Napoleon"><span class="object-label" aria-hidden="true">Clue d'État: Napoleon</span></a></div>
+    </figure>
+    <div class="scene-hint"><span><strong>On the table:</strong> five objects open sample previews; the lamp and plant are scenery.</span><span>Sample-only previews</span></div>
+    <section class="project-directory" aria-labelledby="directory-title">
+      <div class="directory-heading"><div><p class="eyebrow">App preview index</p><h2 id="directory-title">Projects on the desk</h2></div><p>Choose an app to try or preview.</p></div>
+      <div class="project-grid">
+        <article class="project-card"><span class="row-number">01 / 05</span><div class="row-copy"><h3>Magpie</h3><p>Save the ideas you notice, then read and rediscover them.</p><span class="status">Sample demo</span></div><a class="card-open" href="magpie/" target="_blank" rel="noopener" aria-label="Open Magpie">Open</a></article>
+        <article class="project-card"><span class="row-number">02 / 05</span><div class="row-copy"><h3>Open Loops</h3><p>Tasks and things you want to return to, gathered in one place.</p><span class="status">Sample demo</span></div><a class="card-open" href="open-loops/" target="_blank" rel="noopener" aria-label="Open Open Loops">Open</a></article>
+        <article class="project-card"><span class="row-number">03 / 05</span><div class="row-copy"><h3>Team scheduling</h3><p>Read-only preview of a fictional team booking flow.</p><span class="status">Sample demo</span></div><a class="card-open" href="scheduling/" target="_blank" rel="noopener" aria-label="Open team scheduling">Open</a></article>
+        <article class="project-card"><span class="row-number">04 / 05</span><div class="row-copy"><h3>Clue d'État: Napoleon</h3><p>A history quiz game set in Napoleon's world.</p><span class="status">Sample demo</span></div><a class="card-open" href="napoleon/" target="_blank" rel="noopener" aria-label="Open Clue d'État: Napoleon">Open</a></article>
+        <article class="project-card"><span class="row-number">05 / 05</span><div class="row-copy"><h3>Portfolio showcase</h3><p>A focused showcase of Kelly Lucas.dev.</p><span class="status">Sample showcase</span></div><a class="card-open" href="portfolio/" target="_blank" rel="noopener" aria-label="Open portfolio showcase">Open</a></article>
+      </div>
+    </section>
+    <footer class="footer"><span>Personal tasks, saved reading, calendars and company materials are not connected to these previews.</span><span>Built from the completed local review versions.</span></footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Open Loops — local review prototype</title>
+    <!-- Local-only prototype: no external fonts, scripts, or network calls. -->
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#view-region">Skip to the current view</a>
+
+    <p class="fixture-banner" role="note">
+      <strong>Fictional samples · local only.</strong> Agent entries are snapshots; nothing is sent.
+    </p>
+
+    <header class="app-header">
+      <div class="app-header__row">
+        <div class="app-title__group">
+          <div class="app-title">
+            <h1>Open Loops</h1>
+            <p class="app-title__sub">A calm home base for open loops.</p>
+          </div>
+          <img class="app-title__art" src="./assets/art/task-home-v1.png" alt="" width="240" height="160" />
+        </div>
+        <div class="save-area">
+          <p id="save-status" class="save-status" role="status">Loading local state…</p>
+          <button type="button" id="help-button" class="btn btn--quiet" aria-haspopup="dialog">
+            Help
+          </button>
+        </div>
+      </div>
+
+      <form id="capture-form" class="capture" novalidate>
+        <label class="capture__label" for="capture-input">Quick capture</label>
+        <div class="capture__row">
+          <input
+            id="capture-input"
+            name="title"
+            class="capture__input"
+            type="text"
+            autocomplete="off"
+            enterkeyhint="done"
+            placeholder="What is the open loop?"
+            aria-describedby="capture-hint"
+          />
+          <button type="submit" class="btn btn--primary">Capture</button>
+        </div>
+        <p id="capture-hint" class="hint">
+          Lands in Inbox as a title only. No dates, no scores. Press <kbd>C</kbd> to come back here.
+        </p>
+      </form>
+
+      <nav id="view-nav" class="views" aria-label="Views"></nav>
+
+      <button type="button" id="filter-toggle" class="btn btn--quiet filter-toggle" aria-controls="filter-form" aria-expanded="false">
+        <span id="filter-toggle-label">Refine results</span>
+      </button>
+      <form id="filter-form" class="filters" role="search" novalidate>
+        <div class="filters__field">
+          <label for="search-input">Search</label>
+          <input
+            id="search-input"
+            type="search"
+            autocomplete="off"
+            placeholder="title, note, next action, person, tag"
+          />
+        </div>
+        <div class="filters__field">
+          <label for="project-filter">Project</label>
+          <select id="project-filter"></select>
+        </div>
+        <div class="filters__field">
+          <label for="tag-filter">Tag</label>
+          <select id="tag-filter"></select>
+        </div>
+        <button type="button" id="clear-filters" class="btn btn--quiet">Clear</button>
+      </form>
+
+    </header>
+
+    <div id="flash" class="flash" role="status" hidden>
+      <span id="flash-message" class="flash__message"></span>
+      <button type="button" id="undo-button" class="btn btn--quiet" hidden>Undo</button>
+    </div>
+
+    <main class="app-main">
+      <section id="view-region" class="view" tabindex="-1" aria-labelledby="view-heading">
+        <!-- Rendered by src/app.js -->
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <details class="disclosure">
+        <summary>What is real and what is fixture</summary>
+        <ul>
+          <li><strong>Real:</strong> capture, clarify, edit, move, complete, undo, search, filters, project grouping, and local persistence in this browser.</li>
+          <li><strong>Fixture:</strong> all projects, tasks, people and links, including everything in Agent work and Needs Kelly. Agent snapshots are static sample text with a fixed snapshot time.</li>
+          <li><strong>Absent on purpose:</strong> due dates, reminders, streaks, scores, an all-tasks wall, and any connection to another service. This sample demo has no sync or account connection.</li>
+        </ul>
+      </details>
+      <div class="app-footer__actions">
+        <button type="button" id="reset-button" class="btn btn--quiet">Reset to sample data</button>
+        <span class="hint" id="storage-note"></span>
+      </div>
+    </footer>
+
+    <dialog id="help-dialog" class="dialog" aria-labelledby="help-title">
+      <h2 id="help-title">Keyboard and pointer</h2>
+      <dl class="shortcuts">
+        <dt><kbd>C</kbd></dt><dd>Focus quick capture</dd>
+        <dt><kbd>/</kbd></dt><dd>Focus search</dd>
+        <dt><kbd>1</kbd>–<kbd>8</kbd></dt><dd>Switch view in the order shown in the navigation</dd>
+        <dt><kbd>U</kbd></dt><dd>Undo the last change</dd>
+        <dt><kbd>?</kbd></dt><dd>Open this help</dd>
+        <dt><kbd>Esc</kbd></dt><dd>Close this help, or close an open edit panel</dd>
+        <dt><kbd>Tab</kbd></dt><dd>Move through capture, views, search, then each item's buttons</dd>
+      </dl>
+      <p class="hint">
+        Every action is also a button or select, sized for touch. Nothing needs a hover or a drag.
+      </p>
+      <button type="button" id="help-close" class="btn btn--primary">Close</button>
+    </dialog>
+
+    <script src="./src/state.js"></script>
+    <script src="./src/fixtures.js"></script>
+    <script src="./src/storage.js"></script>
+    <script src="./src/app.js"></script>
+  </body>
+</html>

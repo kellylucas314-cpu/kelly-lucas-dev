@@ -26,3 +26,6 @@ assets/collection/**/*.webp.json
 assets/collection/*.webp.json
 assets/art/*.webp.json
 assets/art/**/*.webp.json
+
+# Handoff bundle from the old Claude project: keep it in Git, keep it off the website
+handoff/

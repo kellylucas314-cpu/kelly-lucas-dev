@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light" />
+<title>Magpie — clip, read &amp; resurface (local fictional demo)</title>
+<meta name="description" content="A local, offline portfolio prototype: save a link, read it, highlight a passage, annotate it, and meet a few of those highlights again tomorrow. All documents, people and links are fictional." />
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to the main view</a>
+
+<div class="demo-ribbon" role="note">
+  <strong>Local fictional demo.</strong>
+  <span>Nothing here is real or synced — no accounts, no network, no imported clips. Links end in <code>.example</code> on purpose.</span>
+</div>
+
+<header class="masthead">
+  <div class="masthead__inner">
+    <div class="masthead__text">
+      <div class="wordmark">
+        <span class="wordmark__name">Magpie</span>
+        <span class="wordmark__rule" aria-hidden="true"></span>
+        <span class="wordmark__tagline">clip, read &amp; resurface</span>
+      </div>
+      <p class="masthead__blurb">
+        A small collection for things worth keeping: save a link, read it, mark the passage that mattered,
+        and meet a few of those passages again later.
+      </p>
+      <div class="masthead__actions">
+        <button type="button" class="btn btn--primary" id="add-clip">
+          <span aria-hidden="true">+</span> Add a clip
+        </button>
+      </div>
+    </div>
+    <img
+      class="masthead__art"
+      src="assets/art/magpie-reading-bird-v1.png"
+      alt=""
+      width="1536"
+      height="1024"
+      decoding="async" />
+  </div>
+
+  <nav class="viewnav" aria-label="Views">
+    <div class="viewnav__inner">
+      <button type="button" class="viewnav__tab" data-view="library" aria-current="page">
+        Library <span class="viewnav__count" id="count-library">0</span>
+      </button>
+      <button type="button" class="viewnav__tab" data-view="today">
+        Today <span class="viewnav__count" id="count-today">0</span>
+      </button>
+      <button type="button" class="viewnav__tab" data-view="highlights">
+        Highlights <span class="viewnav__count" id="count-highlights">0</span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<main class="shell" id="main" tabindex="-1">
+
+  <!-- Honest status banners (storage / load / migration problems) -->
+  <div id="banners" class="banners" aria-live="polite"></div>
+
+  <!-- ═════════════════════ Library ═════════════════════ -->
+  <section class="view" id="view-library" aria-labelledby="clips-title">
+
+    <section class="guide" id="guide" aria-labelledby="guide-title">
+      <div class="guide__head">
+        <h2 class="guide__title" id="guide-title">Clip → highlight → revisit</h2>
+        <button type="button" class="btn btn--ghost btn--small" id="show-guide" aria-controls="guide-details" aria-expanded="false">Help</button>
+        <button type="button" class="btn btn--ghost btn--small" id="dismiss-guide" aria-controls="guide-details" aria-expanded="true" hidden>Hide help</button>
+      </div>
+      <div id="guide-details" hidden>
+      <ol class="guide__steps">
+        <li>
+          <span class="guide__num" aria-hidden="true">1</span>
+          <strong>Clip something.</strong> Choose <em>Add a clip</em> and paste a fictional link such as
+          <code>paper-kettle.example/the-long-middle</code>, then write the note you'd want to read in six months.
+        </li>
+        <li>
+          <span class="guide__num" aria-hidden="true">2</span>
+          <strong>Read it.</strong> Open <em>Read</em> on any card. Select a sentence and choose
+          <em>Highlight selection</em> — or use <em>Mark a passage</em> on a paragraph if you'd rather not drag.
+        </li>
+        <li>
+          <span class="guide__num" aria-hidden="true">3</span>
+          <strong>Annotate and find it.</strong> Add a note and tags to the highlight, then search for a word from
+          either — the search covers titles, body text, highlights and highlight notes.
+        </li>
+        <li>
+          <span class="guide__num" aria-hidden="true">4</span>
+          <strong>Meet it again.</strong> <em>Today</em> offers up to five highlights, the same five all day.
+          <em>Keep</em> rests one for a fortnight, <em>Later</em> brings it back tomorrow, <em>Hide</em> retires it.
+        </li>
+      </ol>
+      <p class="guide__kbd">
+        Keyboard: <kbd>/</kbd> jumps to search, <kbd>N</kbd> starts a new clip, <kbd>↑</kbd><kbd>↓</kbd> move through
+        cards, <kbd>Enter</kbd> opens one, <kbd>Esc</kbd> closes a dialog.
+        <kbd>L</kbd> / <kbd>T</kbd> / <kbd>H</kbd> switch between Library, Today and Highlights.
+      </p>
+      </div>
+    </section>
+
+    <div class="layout">
+
+      <!-- ───────────── Filters ───────────── -->
+      <aside class="sidebar" aria-labelledby="filters-title">
+        <details class="filters" id="filters-panel" open>
+          <summary class="filters__summary">
+            <h2 class="filters__title" id="filters-title">Filters</h2>
+            <span class="filters__count" id="filters-active-count" hidden></span>
+            <span class="filters__chev" aria-hidden="true"></span>
+          </summary>
+
+          <div class="filters__body">
+            <fieldset class="field-group">
+              <legend class="label">Collection</legend>
+              <div class="radio-list" id="collection-filter"><!-- rendered --></div>
+            </fieldset>
+
+            <fieldset class="field-group">
+              <legend class="label">Tags <span class="label__hint">match any</span></legend>
+              <div class="chips" id="tag-filter"><!-- rendered --></div>
+            </fieldset>
+
+            <fieldset class="field-group">
+              <legend class="label">Refine</legend>
+              <label class="check">
+                <input type="checkbox" id="only-notes" />
+                <span>Only clips with a note</span>
+              </label>
+              <label class="check">
+                <input type="checkbox" id="only-highlighted" />
+                <span>Only clips I've highlighted</span>
+              </label>
+            </fieldset>
+
+            <div class="field-group">
+              <label class="label" for="sort">Sort</label>
+              <select id="sort" class="select">
+                <option value="newest">Newest saved first</option>
+                <option value="oldest">Oldest saved first</option>
+                <option value="title">Title A–Z</option>
+                <option value="highlights">Most highlighted</option>
+              </select>
+            </div>
+
+            <button type="button" class="btn btn--ghost btn--small" id="clear-filters" hidden>
+              Clear search &amp; filters
+            </button>
+          </div>
+        </details>
+      </aside>
+
+      <!-- ───────────── Clips ───────────── -->
+      <section class="content" aria-labelledby="clips-title">
+        <div class="toolbar">
+          <h2 class="clips-title" id="clips-title">Your clips</h2>
+          <div class="search">
+            <label class="label" for="search">Search titles, notes, body text, highlights and sources</label>
+            <div class="search__row">
+              <span class="search__icon" aria-hidden="true">⌕</span>
+              <input
+                type="search"
+                id="search"
+                class="search__input"
+                placeholder="e.g. glaze, rereading, archives"
+                autocomplete="off"
+                spellcheck="false"
+                aria-describedby="result-summary"
+              />
+              <button type="button" class="search__clear" id="clear-search" hidden>
+                <span aria-hidden="true">×</span><span class="sr-only">Clear search</span>
+              </button>
+            </div>
+          </div>
+          <p class="result-summary" id="result-summary" role="status">&nbsp;</p>
+          <p class="crosslink" id="library-crosslink" hidden></p>
+          <div class="active-filters" id="active-filters"></div>
+        </div>
+
+        <ul class="clips" id="clips"><!-- rendered --></ul>
+        <div class="empty" id="empty" hidden><!-- rendered --></div>
+      </section>
+    </div>
+  </section>
+
+  <!-- ═════════════════════ Reader ═════════════════════ -->
+  <section class="view" id="view-reader" aria-labelledby="reader-title" hidden>
+    <div class="readerbar">
+      <button type="button" class="btn btn--ghost btn--small" id="reader-back">
+        <span aria-hidden="true">←</span> Back
+      </button>
+      <div class="readerbar__actions">
+        <button type="button" class="btn btn--primary btn--small" id="reader-highlight" disabled>
+          Highlight selection
+        </button>
+        <button type="button" class="btn btn--ghost btn--small" id="reader-details">Clip details</button>
+      </div>
+    </div>
+    <!-- Updated on every selection change, so deliberately not a live region. -->
+    <p class="readerbar__hint" id="reader-hint"></p>
+
+    <div class="readerlayout">
+      <article class="reader">
+        <header class="reader__head">
+          <p class="reader__eyebrow" id="reader-eyebrow"></p>
+          <h2 class="reader__title" id="reader-title" tabindex="-1"></h2>
+          <p class="reader__meta" id="reader-meta"></p>
+          <p class="reader__generated" id="reader-generated" hidden></p>
+          <div class="reader__note" id="reader-note" hidden>
+            <h3 class="label">Your note on this clip</h3>
+            <p id="reader-note-text"></p>
+          </div>
+        </header>
+        <div class="reader__body" id="reader-body"><!-- rendered --></div>
+        <footer class="reader__foot">
+          <p class="reader__source" id="reader-source"></p>
+        </footer>
+      </article>
+
+      <aside class="reader__side" aria-labelledby="reader-side-title">
+        <h3 class="reader__side-title" id="reader-side-title">Highlights in this piece</h3>
+        <div id="reader-side-list"><!-- rendered --></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ═════════════════════ Highlights ═════════════════════ -->
+  <section class="view" id="view-highlights" aria-labelledby="highlights-title" hidden>
+    <div class="toolbar">
+      <h2 class="clips-title" id="highlights-title">Your highlights</h2>
+      <div class="search">
+        <label class="label" for="hl-search">Search highlights, their notes, tags and documents</label>
+        <div class="search__row">
+          <span class="search__icon" aria-hidden="true">⌕</span>
+          <input
+            type="search"
+            id="hl-search"
+            class="search__input"
+            placeholder="e.g. terracotta, backlog, anecdote"
+            autocomplete="off"
+            spellcheck="false"
+            aria-describedby="hl-summary"
+          />
+          <button type="button" class="search__clear" id="hl-clear-search" hidden>
+            <span aria-hidden="true">×</span><span class="sr-only">Clear search</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="hl-filters">
+        <div class="field">
+          <label class="label" for="hl-doc">Document</label>
+          <select id="hl-doc" class="select"><!-- rendered --></select>
+        </div>
+        <div class="field">
+          <label class="label" for="hl-state">Review state</label>
+          <select id="hl-state" class="select">
+            <option value="all">All highlights</option>
+            <option value="active">Active</option>
+            <option value="resting">Resting (kept or snoozed)</option>
+            <option value="hidden">Hidden from Today</option>
+            <option value="detached">Detached from the text</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="label" for="hl-sort">Sort</label>
+          <select id="hl-sort" class="select">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="document">By document, in reading order</option>
+          </select>
+        </div>
+      </div>
+
+      <p class="result-summary" id="hl-summary" role="status">&nbsp;</p>
+      <p class="crosslink" id="highlights-crosslink" hidden></p>
+    </div>
+
+    <ul class="highlights" id="highlight-list"><!-- rendered --></ul>
+    <div class="empty" id="highlights-empty" hidden><!-- rendered --></div>
+  </section>
+
+  <!-- ═════════════════════ Today ═════════════════════ -->
+  <section class="view" id="view-today" aria-labelledby="today-title" hidden>
+    <div class="today__head">
+      <p class="today__eyebrow" id="today-date"></p>
+      <h2 class="clips-title" id="today-title">Today's highlights</h2>
+      <p class="today__blurb" id="today-why"></p>
+      <p class="result-summary" id="today-progress" role="status">&nbsp;</p>
+    </div>
+
+    <ul class="today" id="today-list"><!-- rendered --></ul>
+    <div class="empty" id="today-empty" hidden><!-- rendered --></div>
+
+    <p class="today__foot" id="today-foot" hidden></p>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__line" aria-hidden="true"></div>
+    <div class="footer__body">
+      <p>
+        <strong>Magpie clip, read &amp; resurface</strong> — a local fictional demo built for portfolio review.
+        Documents and highlights are stored only in this browser profile. There is no server, no sign-in and no sync,
+        and the demo never leaves the page.
+      </p>
+      <p class="footer__future">
+        The reading text, the people and the publications are invented for this prototype. Resurfacing here is a
+        simple date-seeded rota, not a memory model — scheduling is still an open research question.
+      </p>
+      <details class="demo-controls">
+        <summary>Demo controls</summary>
+        <div class="demo-controls__body">
+          <label class="check">
+            <input type="checkbox" id="simulate-failure" />
+            <span>Simulate a save failure (to see the error state)</span>
+          </label>
+          <div class="demo-controls__buttons">
+            <button type="button" class="btn btn--ghost btn--small" id="restore-demo">Restore the demo library</button>
+            <button type="button" class="btn btn--ghost btn--small" id="remove-all">Remove everything</button>
+            <button type="button" class="btn btn--ghost btn--small" id="open-data">Export &amp; import…</button>
+          </div>
+          <p class="demo-controls__note" id="storage-note"></p>
+        </div>
+      </details>
+    </div>
+  </footer>
+</main>
+
+<!-- ───────────── Clip detail ───────────── -->
+<dialog class="sheet sheet--detail" id="detail-dialog" aria-labelledby="detail-title">
+  <article class="detail">
+    <header class="detail__head">
+      <p class="detail__eyebrow" id="detail-collection"></p>
+      <h2 class="detail__title" id="detail-title" tabindex="-1"></h2>
+      <p class="detail__meta" id="detail-meta"></p>
+      <button type="button" class="sheet__close" id="detail-close">
+        <span aria-hidden="true">×</span><span class="sr-only">Close clip detail</span>
+      </button>
+    </header>
+
+    <div class="detail__body">
+      <section class="detail__note" aria-labelledby="detail-note-label">
+        <h3 class="label" id="detail-note-label">Note</h3>
+        <p id="detail-note"></p>
+      </section>
+
+      <section aria-labelledby="detail-highlights-label">
+        <h3 class="label" id="detail-highlights-label">Highlights</h3>
+        <p id="detail-highlights"></p>
+      </section>
+
+      <section class="detail__source" aria-labelledby="detail-source-label">
+        <h3 class="label" id="detail-source-label">Source</h3>
+        <p class="detail__url" id="detail-url"></p>
+        <p class="detail__hint">
+          Fictional <code>.example</code> link — it deliberately doesn't resolve. Copy it to follow the flow.
+        </p>
+        <button type="button" class="btn btn--ghost btn--small" id="copy-url">Copy link</button>
+      </section>
+
+      <section class="detail__tags" aria-labelledby="detail-tags-label">
+        <h3 class="label" id="detail-tags-label">Tags</h3>
+        <div class="chips chips--static" id="detail-tags"></div>
+      </section>
+    </div>
+
+    <footer class="detail__foot">
+      <button type="button" class="btn btn--primary" id="read-clip">Read it</button>
+      <button type="button" class="btn btn--ghost" id="edit-clip">Edit clip</button>
+      <button type="button" class="btn btn--danger" id="remove-clip">Remove clip</button>
+    </footer>
+  </article>
+</dialog>
+
+<!-- ───────────── Add / edit form ───────────── -->
+<dialog class="sheet sheet--form" id="form-dialog" aria-labelledby="form-title">
+  <form id="clip-form" novalidate>
+    <header class="sheet__head">
+      <h2 class="sheet__title" id="form-title">Add a clip</h2>
+      <p class="sheet__sub" id="form-sub">Fictional links only. Nothing is fetched, uploaded or shared.</p>
+      <button type="button" class="sheet__close" id="form-close">
+        <span aria-hidden="true">×</span><span class="sr-only">Close form</span>
+      </button>
+    </header>
+
+    <div class="sheet__body">
+      <div class="form-error-summary" id="form-error-summary" role="alert" hidden></div>
+
+      <div class="field">
+        <label class="label" for="field-url">Link <span class="req">required</span></label>
+        <input type="text" id="field-url" class="input" inputmode="url" autocomplete="off" spellcheck="false"
+               aria-describedby="hint-url" placeholder="paper-kettle.example/the-long-middle" />
+        <p class="hint" id="hint-url">Must end in <code>.example</code> — this demo only accepts made-up links.</p>
+        <p class="field-error" id="error-url" hidden></p>
+      </div>
+
+      <div class="field">
+        <label class="label" for="field-title">Title <span class="req">required</span></label>
+        <input type="text" id="field-title" class="input" maxlength="120" autocomplete="off"
+               aria-describedby="hint-title" placeholder="Notes from the long middle of a project" />
+        <p class="hint" id="hint-title">Up to 120 characters.</p>
+        <p class="field-error" id="error-title" hidden></p>
+      </div>
+
+      <div class="field">
+        <label class="label" for="field-note">Note</label>
+        <textarea id="field-note" class="input textarea" rows="4" maxlength="600"
+                  aria-describedby="hint-note" placeholder="Why this is worth keeping, in your own words."></textarea>
+        <p class="hint" id="hint-note">
+          Optional, but it's the part that makes a clip findable later. <span id="note-count">0 / 600</span>
+        </p>
+        <p class="field-error" id="error-note" hidden></p>
+      </div>
+
+      <div class="field">
+        <label class="label" for="field-body">Reading text</label>
+        <textarea id="field-body" class="input textarea textarea--tall" rows="6" maxlength="6000"
+                  aria-describedby="hint-body" placeholder="Paste or write the passage you want to read and highlight. One blank line between paragraphs."></textarea>
+        <p class="hint" id="hint-body">
+          Optional. Nothing is ever fetched from the link, so leaving this empty makes the demo generate placeholder
+          reading text on this device instead. Blank lines separate paragraphs, <code>##</code> starts a subhead and
+          <code>&gt;</code> a pull quote. <span id="body-count">0 / 6000</span>
+        </p>
+        <p class="field-error" id="error-body" hidden></p>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="label" for="field-collection">Collection</label>
+          <select id="field-collection" class="select"><!-- rendered --></select>
+        </div>
+        <div class="field">
+          <label class="label" for="field-tags">Tags</label>
+          <input type="text" id="field-tags" class="input" autocomplete="off" aria-describedby="hint-tags"
+                 placeholder="design, calm tech" />
+          <p class="hint" id="hint-tags">Comma separated, up to 5.</p>
+          <p class="field-error" id="error-tags" hidden></p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="sheet__foot">
+      <button type="submit" class="btn btn--primary" id="form-submit">Save clip</button>
+      <button type="button" class="btn btn--ghost" id="form-cancel">Cancel</button>
+    </footer>
+  </form>
+</dialog>
+
+<!-- ───────────── Highlight note / review state ───────────── -->
+<dialog class="sheet sheet--form" id="note-dialog" aria-labelledby="note-dialog-title">
+  <form id="note-form" novalidate>
+    <header class="sheet__head">
+      <h2 class="sheet__title" id="note-dialog-title">Highlight</h2>
+      <p class="sheet__sub" id="note-dialog-sub"></p>
+      <button type="button" class="sheet__close" id="note-close">
+        <span aria-hidden="true">×</span><span class="sr-only">Close highlight</span>
+      </button>
+    </header>
+
+    <div class="sheet__body">
+      <div class="form-error-summary" id="note-error" role="alert" hidden></div>
+
+      <div>
+        <blockquote class="quote" id="note-quote"></blockquote>
+        <p class="hint" id="note-anchor-status"></p>
+      </div>
+
+      <div class="field">
+        <label class="label" for="field-hl-note">Your note</label>
+        <textarea id="field-hl-note" class="input textarea" rows="4" maxlength="600"
+                  aria-describedby="hint-hl-note" placeholder="This matters because…"></textarea>
+        <p class="hint" id="hint-hl-note">
+          The line you'll recognise when this comes back in Today. <span id="hl-note-count">0 / 600</span>
+        </p>
+      </div>
+
+      <div class="field">
+        <label class="label" for="field-hl-tags">Tags</label>
+        <input type="text" id="field-hl-tags" class="input" autocomplete="off" aria-describedby="hint-hl-tags"
+               placeholder="method, product" />
+        <p class="hint" id="hint-hl-tags">Comma separated, up to 5.</p>
+        <p class="field-error" id="error-hl-tags" hidden></p>
+      </div>
+
+      <fieldset class="field-group field-group--boxed">
+        <legend class="label">In the Today rota</legend>
+        <label class="radio">
+          <input type="radio" name="hl-state" value="active" />
+          <span>Active — may come back in Today</span>
+        </label>
+        <label class="radio">
+          <input type="radio" name="hl-state" value="resting" />
+          <span>Resting — skip it for a fortnight</span>
+        </label>
+        <label class="radio">
+          <input type="radio" name="hl-state" value="hidden" />
+          <span>Hidden — never resurface this one</span>
+        </label>
+        <p class="hint" id="hl-state-hint"></p>
+      </fieldset>
+    </div>
+
+    <footer class="sheet__foot">
+      <button type="submit" class="btn btn--primary" id="note-save">Save highlight</button>
+      <button type="button" class="btn btn--ghost" id="note-goto">Open in reader</button>
+      <button type="button" class="btn btn--danger" id="note-delete">Delete highlight</button>
+    </footer>
+  </form>
+</dialog>
+
+<!-- ───────────── Mark a passage (keyboard-friendly highlighting) ───────────── -->
+<dialog class="sheet sheet--form" id="passage-dialog" aria-labelledby="passage-title">
+  <form id="passage-form" novalidate>
+    <header class="sheet__head">
+      <h2 class="sheet__title" id="passage-title">Mark a passage</h2>
+      <p class="sheet__sub">
+        Tick the sentences you want to keep. The highlight runs from the first ticked sentence to the last.
+      </p>
+      <button type="button" class="sheet__close" id="passage-close">
+        <span aria-hidden="true">×</span><span class="sr-only">Close passage picker</span>
+      </button>
+    </header>
+
+    <div class="sheet__body">
+      <div class="form-error-summary" id="passage-error" role="alert" hidden></div>
+      <div class="passage-list" id="passage-list"><!-- rendered --></div>
+      <div>
+        <h3 class="label">Preview</h3>
+        <blockquote class="quote quote--preview" id="passage-preview">Nothing ticked yet.</blockquote>
+      </div>
+    </div>
+
+    <footer class="sheet__foot">
+      <button type="submit" class="btn btn--primary" id="passage-submit">Highlight this passage</button>
+      <button type="button" class="btn btn--ghost" id="passage-cancel">Cancel</button>
+    </footer>
+  </form>
+</dialog>
+
+<!-- ───────────── Export & import ───────────── -->
+<dialog class="sheet sheet--form" id="data-dialog" aria-labelledby="data-title">
+  <div class="data">
+    <header class="sheet__head">
+      <h2 class="sheet__title" id="data-title">Export &amp; import</h2>
+      <p class="sheet__sub">
+        Files are built and read in this tab. Nothing is uploaded, and the demo has nowhere to upload it to.
+      </p>
+      <button type="button" class="sheet__close" id="data-close">
+        <span aria-hidden="true">×</span><span class="sr-only">Close export and import</span>
+      </button>
+    </header>
+
+    <div class="sheet__body">
+      <section aria-labelledby="export-label">
+        <h3 class="label" id="export-label">Export</h3>
+        <p class="hint">
+          JSON is the round trip — export it, import it back, and you get the same documents, highlights, notes and
+          review states. Markdown is a one-way reading copy.
+        </p>
+        <div class="demo-controls__buttons">
+          <button type="button" class="btn btn--ghost btn--small" id="export-json">Download JSON</button>
+          <button type="button" class="btn btn--ghost btn--small" id="export-markdown">Download Markdown</button>
+          <button type="button" class="btn btn--ghost btn--small" id="copy-json">Copy JSON</button>
+        </div>
+      </section>
+
+      <section aria-labelledby="import-label">
+        <h3 class="label" id="import-label">Import JSON</h3>
+        <div class="form-error-summary" id="import-error" role="alert" hidden></div>
+        <div class="field">
+          <label class="label label--plain" for="import-file">Choose a file</label>
+          <input type="file" id="import-file" class="input" accept="application/json,.json" />
+        </div>
+        <div class="field">
+          <label class="label label--plain" for="import-text">…or paste the JSON</label>
+          <textarea id="import-text" class="input textarea" rows="5" spellcheck="false"
+                    placeholder='{ "format": "magpie-clip-and-find-demo", … }'></textarea>
+        </div>
+        <p class="hint">
+          Importing <strong>replaces</strong> everything currently in the demo. You get one undo from the toast.
+        </p>
+        <button type="button" class="btn btn--primary btn--small" id="import-run">Replace demo data</button>
+      </section>
+    </div>
+  </div>
+</dialog>
+
+<!-- ───────────── Confirm ───────────── -->
+<dialog class="sheet sheet--confirm" id="confirm-dialog" aria-labelledby="confirm-title">
+  <div class="confirm">
+    <h2 class="sheet__title" id="confirm-title">Remove this clip?</h2>
+    <p class="confirm__body" id="confirm-body"></p>
+    <div class="sheet__foot">
+      <button type="button" class="btn btn--danger" id="confirm-ok">Remove clip</button>
+      <button type="button" class="btn btn--ghost" id="confirm-cancel">Keep it</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script src="assets/data.js"></script>
+<script src="assets/core.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
