@@ -22,7 +22,7 @@ Kelly builds personal tools she runs every day, then puts them on the shelf. The
 ## Operating Context
 
 - Static HTML, CSS and vanilla JS on Vercel, auto-deploying from `main`. No build step. The site pages use no libraries; only the playground rooms load GSAP 3.13 from jsdelivr.
-- Magpie is Kelly's personal web clipper: a Chrome extension (feather button, tags, notes, a desk-pile guess), a bulk workbench (paste text or drop screenshots, local OCR, dedupe), a Python companion server, Markdown notes in an Obsidian vault plus `library.json`, a gallery, a galaxy star map, YouTube transcripts, open-access paper archiving, and automatic sorting into the five design desk piles. A hosted Magpie Collector handles phone and paste capture.
+- Magpie is Kelly's personal web clipper: a Chrome extension (feather button, tags, notes, a desk-pile guess), a bulk workbench (paste text or drop screenshots, local OCR, dedupe), a Python companion server, Markdown notes in an Obsidian vault plus `library.json`, a gallery, a galaxy star map, YouTube transcripts, open-access paper archiving, and automatic sorting into the five design desk piles. Since 2026-11-08 the one library is `/brain/gallery.html` on this site, shaped like Raindrop.io (Unsorted inbox, nested collections, picture grid, Trash): the feather saves straight to it from any computer, a bookmarklet and an Add box cover the phone, and the Mac copies new clips into Obsidian in the background.
 - The private library at `/brain/gallery.html` and `/api/magpie-*` are password-gated and must stay private.
 
 ## Capabilities and Constraints
