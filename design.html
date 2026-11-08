@@ -54,12 +54,12 @@
         <div class="page-hero__text">
           <h1 class="h1" id="desk-title">Design desk</h1>
           <p class="lede">A swipe file for UI, kept in public. I learn design by paying attention, and this is where I keep what I notice. <a href="/magpie.html">Magpie</a> files every new clip into the right pile on its own.</p>
-          <nav class="pile-nav" aria-label="The piles">
-            <a href="#website">The website</a>
-            <a href="#heliopolis">Heliopolis</a>
-            <a href="#pretzel">Pretzel</a>
-            <a href="#resources">Resources</a>
-            <a href="#examples">Examples</a>
+          <nav class="pile-pills" aria-label="The piles">
+            <a class="pile-pill pile-pill--website" href="#website"><span class="pile-pill__tile"><svg class="shape " viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-sun"/></svg></span><span class="pile-pill__label">HelioFlux</span><span class="pile-pill__n mono" data-pile-count="website"></span></a>
+            <a class="pile-pill pile-pill--heliopolis" href="#heliopolis"><span class="pile-pill__tile"><svg class="shape " viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-arch"/></svg></span><span class="pile-pill__label">Heliopolis</span><span class="pile-pill__n mono" data-pile-count="heliopolis"></span></a>
+            <a class="pile-pill pile-pill--pretzel" href="#pretzel"><span class="pile-pill__tile"><svg class="shape " viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-quat"/></svg></span><span class="pile-pill__label">Pretzel</span><span class="pile-pill__n mono" data-pile-count="pretzel"></span></a>
+            <a class="pile-pill pile-pill--resources" href="#resources"><span class="pile-pill__tile"><svg class="shape " viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-cog"/></svg></span><span class="pile-pill__label">Resources</span><span class="pile-pill__n mono" data-pile-count="resources"></span></a>
+            <a class="pile-pill pile-pill--examples" href="#examples"><span class="pile-pill__tile"><svg class="shape " viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-ast"/></svg></span><span class="pile-pill__label">Examples</span><span class="pile-pill__n mono" data-pile-count="examples"></span></a>
           </nav>
           <noscript><p class="desk-note">The piles are filled in by JavaScript. Without it, the notebook pages below are what’s here.</p></noscript>
         </div>
@@ -75,10 +75,23 @@
       </div>
     </section>
 
-      <section id="website" class="desk-section band band--paper" data-section="website">
+    <nav class="pilebar" aria-label="Jump to a pile">
+      <div class="wrap pilebar__in">
+        <a class="pilebar__link pilebar__link--website" href="#website"><span class="pilebar__dot" aria-hidden="true"></span>HelioFlux</a>
+        <a class="pilebar__link pilebar__link--heliopolis" href="#heliopolis"><span class="pilebar__dot" aria-hidden="true"></span>Heliopolis</a>
+        <a class="pilebar__link pilebar__link--pretzel" href="#pretzel"><span class="pilebar__dot" aria-hidden="true"></span>Pretzel</a>
+        <a class="pilebar__link pilebar__link--resources" href="#resources"><span class="pilebar__dot" aria-hidden="true"></span>Resources</a>
+        <a class="pilebar__link pilebar__link--videos" href="#videos"><span class="pilebar__dot" aria-hidden="true"></span>Videos</a>
+        <a class="pilebar__link pilebar__link--notebook" href="#notebook"><span class="pilebar__dot" aria-hidden="true"></span>Notebook</a>
+        <a class="pilebar__link pilebar__link--examples" href="#examples"><span class="pilebar__dot" aria-hidden="true"></span>Examples</a>
+        <a class="pilebar__link pilebar__link--lab" href="#lab"><span class="pilebar__dot" aria-hidden="true"></span>This site</a>
+      </div>
+    </nav>
+
+      <section id="website" class="desk-section band band--navy edge" data-section="website">
         <div class="wrap">
         <div class="desk-section__head">
-          <h2 class="h2">The HelioFlux website</h2>
+          <h2 class="h2"><svg class="shape desk-badge c-honey" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-sun"/></svg>The HelioFlux website</h2>
           <p class="desk-section__meta"><a class="text-link" href="https://helioflux.co" target="_blank" rel="noopener noreferrer">helioflux.co<span class="sr-only"> (opens in a new tab)</span></a> <span aria-hidden="true">·</span> the live look, and the next one<span class="desk-count js-count" aria-live="polite"></span></p>
         </div>
         <div class="desk-part">
@@ -101,10 +114,10 @@
         </div>
       </section>
 
-      <section id="heliopolis" class="desk-section band band--sage edge" data-section="heliopolis">
+      <section id="heliopolis" class="desk-section band band--sagefull edge" data-section="heliopolis">
         <div class="wrap">
         <div class="desk-section__head">
-          <h2 class="h2">Heliopolis</h2>
+          <h2 class="h2"><svg class="shape desk-badge c-paper" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-arch"/></svg>Heliopolis</h2>
           <p class="desk-section__meta">myheliopolis.com <span aria-hidden="true">·</span> the team site, where the drawings lead<span class="desk-count js-count" aria-live="polite"></span></p>
         </div>
         <div class="desk-part">
@@ -127,10 +140,10 @@
         </div>
       </section>
 
-      <section id="pretzel" class="desk-section band band--paper edge" data-section="pretzel">
+      <section id="pretzel" class="desk-section band band--honey edge" data-section="pretzel">
         <div class="wrap">
         <div class="desk-section__head">
-          <h2 class="h2">Pretzel Protocol</h2>
+          <h2 class="h2"><svg class="shape desk-badge c-coral" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-quat"/></svg>Pretzel Protocol</h2>
           <p class="desk-section__meta"><a class="text-link" href="https://pretzel.thetravelprotocol.com" target="_blank" rel="noopener noreferrer">pretzel.thetravelprotocol.com<span class="sr-only"> (opens in a new tab)</span></a> <span aria-hidden="true">·</span> a family trip atlas<span class="desk-count js-count" aria-live="polite"></span></p>
         </div>
         <div class="desk-part">
@@ -153,10 +166,10 @@
         </div>
       </section>
 
-      <section id="resources" class="desk-section band band--tint edge edge--scallop desk-shelf" data-section="resources" data-part="shelf">
+      <section id="resources" class="desk-section band band--pteal edge edge--scallop desk-shelf" data-section="resources" data-part="shelf">
         <div class="wrap">
         <div class="desk-section__head">
-          <h2 class="h2">Resources</h2>
+          <h2 class="h2"><svg class="shape desk-badge c-teal" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-cog"/></svg>Resources</h2>
           <p class="desk-section__meta">Galleries I raid, tools I reach for, things I read, repos I keep. Each one has a line on why it is here.</p>
         </div>
         <div class="desk-controls">
@@ -173,25 +186,25 @@
         </div>
       </section>
 
-      <section class="desk-section band band--tint band--cont desk-rewatch" data-section="resources" data-part="videos" aria-labelledby="rewatch-title">
+      <section id="videos" class="desk-section band band--dteal edge desk-rewatch" data-section="resources" data-part="videos" aria-labelledby="rewatch-title">
         <div class="wrap">
         <div class="desk-section__head">
-          <h2 class="h2" id="rewatch-title">Videos I keep going back to</h2>
+          <h2 class="h2" id="rewatch-title"><svg class="shape desk-badge c-honey" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-circle"/></svg>Videos I keep going back to</h2>
           <p class="desk-section__meta">Some of these notes are still cooking.</p>
         </div>
         <div class="video-grid js-videos" id="videoGrid"></div>
         </div>
       </section>
 
-      <section class="desk-section band band--paper edge desk-notebook" aria-labelledby="notebook-title">
+      <section id="notebook" class="desk-section band band--paper edge desk-notebook" aria-labelledby="notebook-title">
         <div class="wrap">
         <div class="desk-section__head">
-          <h2 class="h2" id="notebook-title">Three pages, transcribed</h2>
+          <h2 class="h2" id="notebook-title"><svg class="shape desk-badge c-coral" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-squig"/></svg>Three pages, transcribed</h2>
           <p class="desk-section__meta">Red pen, blue pen, pink pen. Tap a page to see the real thing.</p>
         </div>
 
         <div class="notebook-grid">
-          <article class="notepage">
+          <article class="notepage notepage--red">
             <a class="notepage__photo" href="/assets/design/notebook-01.jpg" target="_blank" rel="noopener"><img src="/assets/design/notebook-01.jpg" width="900" height="1200" loading="lazy" alt="Notebook page in red pen: presentation of design" /><span class="sr-only"> (opens in a new tab)</span></a>
             <h3>Presentation of design</h3>
             <p class="notepage__pen">Page 1, red pen</p>
@@ -205,7 +218,7 @@
             </ul>
           </article>
 
-          <article class="notepage">
+          <article class="notepage notepage--blue">
             <a class="notepage__photo" href="/assets/design/notebook-02.jpg" target="_blank" rel="noopener"><img src="/assets/design/notebook-02.jpg" width="900" height="1200" loading="lazy" alt="Notebook page in blue pen: what makes Linear so good" /><span class="sr-only"> (opens in a new tab)</span></a>
             <h3>What makes Linear so good?</h3>
             <p class="notepage__pen">Page 2, blue pen. Answer: clarity.</p>
@@ -217,7 +230,7 @@
             </ul>
           </article>
 
-          <article class="notepage">
+          <article class="notepage notepage--pink">
             <a class="notepage__photo" href="/assets/design/notebook-03.jpg" target="_blank" rel="noopener"><img src="/assets/design/notebook-03.jpg" width="900" height="1200" loading="lazy" alt="Notebook page in pink pen: Fibonacci in design" /><span class="sr-only"> (opens in a new tab)</span></a>
             <h3>Fibonacci in design</h3>
             <p class="notepage__pen">Page 3, pink pen</p>
@@ -250,10 +263,10 @@
         </div>
       </section>
 
-      <section id="examples" class="desk-section band band--pcoral edge" data-section="examples">
+      <section id="examples" class="desk-section band band--dcoral edge" data-section="examples">
         <div class="wrap">
         <div class="desk-section__head">
-          <h2 class="h2">Examples</h2>
+          <h2 class="h2"><svg class="shape desk-badge c-honey" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-ast"/></svg>Examples</h2>
           <p class="desk-section__meta">The sites I open when I forget what good looks like.<span class="desk-count js-count" aria-live="polite"></span></p>
         </div>
         <div class="desk-part">
@@ -266,7 +279,7 @@
       <section id="lab" class="desk-section band band--paper edge" data-section="lab">
         <div class="wrap">
         <div class="desk-section__head">
-          <h2 class="h2">This site</h2>
+          <h2 class="h2"><svg class="shape desk-badge c-coral" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-sun"/></svg>This site</h2>
           <p class="desk-section__meta">This site’s own rules, and the rooms next door.</p>
         </div>
         <div class="desk-part">
@@ -322,6 +335,16 @@
     </div>
   </footer>
 
+  <dialog class="lightbox" id="lightbox" aria-label="Picture viewer">
+    <figure class="lightbox__fig">
+      <img id="lightboxImg" alt="" />
+      <figcaption class="lightbox__cap"><span id="lightboxCap"></span> <span class="mono" id="lightboxPos"></span></figcaption>
+    </figure>
+    <button class="lightbox__btn lightbox__prev" id="lightboxPrev" type="button" aria-label="Previous picture"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4 6.5 10l6 6"/></svg></button>
+    <button class="lightbox__btn lightbox__next" id="lightboxNext" type="button" aria-label="Next picture"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4 6 6-6 6"/></svg></button>
+    <a class="lightbox__open" id="lightboxOpen" target="_blank" rel="noopener">Open full size<span class="sr-only"> (opens in a new tab)</span></a>
+    <button class="lightbox__btn lightbox__close" id="lightboxClose" type="button" aria-label="Close the picture"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15"/></svg></button>
+  </dialog>
   <div class="toast" data-toast role="status" aria-live="polite"></div>
   <script defer src="/design-library.js"></script>
   <script defer src="/script.js"></script>

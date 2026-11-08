@@ -3,7 +3,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:magpie": "node scripts/build-private-magpie.mjs",
     "dashboard:tokens": "node scripts/generate-dashboard-tokens.mjs",
     "room:local": "node scripts/agent-room-local.mjs",
     "room:list": "node scripts/agent-room-cli.mjs list",
@@ -20,6 +19,7 @@
     "test:room": "node --test tests/agent-room-*.test.mjs",
     "test:room:browser": "node scripts/agent-room-browser-qa.mjs",
     "test:magpie": "node --test tests/magpie-auth.test.mjs",
+    "preview:magpie": "node tests/magpie-preview.mjs",
     "eval:army": "node scripts/eval-army.mjs",
     "magpie:password": "node scripts/set-magpie-password.mjs",
     "sync:design": "node scripts/sync-design-library.mjs",

@@ -1,606 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,nofollow,noarchive">
-<title>Magpie Private Library</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233e7be8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.2 4.8a6.3 6.3 0 0 0-8.9 0L5 11v7h7l6.2-6.3a6.3 6.3 0 0 0 0-8.9z'/%3E%3Cpath d='M17 8 4 21'/%3E%3Cpath d='M15.5 13.5H9'/%3E%3C/svg%3E">
-<style>
-  :root {
-    --paper: #faf7f0; --paper-2: #f3efe6; --card: #ffffff;
-    --ink: #2a2620; --muted: #8a8378; --faint: #b3ab9e;
-    --line: #ece6da; --line-2: #e0d9ca;
-    --accent: #3e7be8; --accent-ink: #2c5fbf; --accent-soft: #edf2fd;
-    --tag-ink: #a8703a;
-    --shadow: 0 1px 2px rgba(80,64,40,.05), 0 4px 14px rgba(80,64,40,.05);
-    --shadow-lift: 0 6px 16px rgba(80,64,40,.10), 0 14px 40px rgba(80,64,40,.10);
-    --serif: "Palatino Linotype", Palatino, "Iowan Old Style", Georgia, serif;
-    --radius: 16px;
-  }
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    margin: 0; padding: 0 24px 72px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    color: var(--ink); min-height: 100vh;
-    background:
-      radial-gradient(1200px 420px at 80% -140px, #fdf6ea 0%, rgba(253,246,234,0) 70%),
-      var(--paper);
-    -webkit-font-smoothing: antialiased;
-  }
-  .wrap { max-width: 1180px; margin: 0 auto; }
-
-  /* ---- header ---- */
-  header { padding: 34px 0 20px; }
-  .brandrow { display: flex; align-items: center; gap: 15px; }
-  .feather { flex-shrink: 0; filter: drop-shadow(0 3px 8px rgba(120,80,40,.14)); }
-  .wordmark { font-family: var(--serif); font-size: 33px; line-height: 1; letter-spacing: -.01em; }
-  .kicker { font-size: 11px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase;
-            color: var(--faint); margin-left: 12px; align-self: flex-end; padding-bottom: 4px; }
-  .rule { height: 1px; margin: 16px 0 0; background: var(--line-2); position: relative; }
-  .rule::after { content: ""; position: absolute; left: 0; top: -1px; height: 3px; width: 64px;
-    border-radius: 3px; background: linear-gradient(90deg,#3ec9a7,#3e7be8,#8a5be0,#ef7a48); }
-  .tagline { margin: 13px 2px 0; color: var(--muted); font-size: 14.5px; }
-  .tagline b { color: var(--ink); font-weight: 600; }
-
-  /* ---- controls ---- */
-  .controls { position: sticky; top: 10px; z-index: 5; padding: 12px;
-    background: rgba(250,247,240,.96); backdrop-filter: blur(14px);
-    border: 1px solid var(--line-2); border-radius: 17px;
-    box-shadow: 0 8px 30px rgba(80,64,40,.09); margin-bottom: 20px; }
-  .searchwrap { position: relative; }
-  .searchwrap svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-    width: 17px; height: 17px; stroke: var(--faint); pointer-events: none; }
-  input[type="search"] {
-    width: 100%; padding: 13px 16px 13px 42px; font-size: 15px; font-family: inherit;
-    background: var(--card); border: 1px solid var(--line-2); border-radius: 13px; color: var(--ink);
-    box-shadow: var(--shadow); transition: border-color .15s, box-shadow .15s;
-  }
-  input[type="search"]::placeholder { color: var(--faint); }
-  input[type="search"]:focus { outline: none; border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-soft); }
-  .filterrow { display: flex; align-items: center; gap: 9px; margin-top: 10px; }
-  .filterrow label { display: flex; align-items: center; gap: 6px; color: var(--muted);
-    font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-  .filterrow select {
-    appearance: none; font-family: inherit; font-size: 12px; font-weight: 600;
-    line-height: 1.2; color: #675f54; background: var(--card);
-    border: 1px solid var(--line-2); border-radius: 9px; padding: 7px 28px 7px 10px;
-    background-image: linear-gradient(45deg,transparent 50%,#9b9285 50%),
-      linear-gradient(135deg,#9b9285 50%,transparent 50%);
-    background-position: calc(100% - 13px) 12px, calc(100% - 9px) 12px;
-    background-size: 4px 4px, 4px 4px; background-repeat: no-repeat;
-  }
-  .filterrow select:focus { outline: none; border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-soft); }
-  .clearfilters { border: 0; background: transparent; color: var(--accent); cursor: pointer;
-    font-family: inherit; font-size: 12px; font-weight: 650; line-height: 1;
-    padding: 8px 5px; }
-  .clearfilters:hover { text-decoration: underline; }
-  .tagbar { display: flex; gap: 7px; flex-wrap: nowrap; align-items: center; margin-top: 10px;
-    overflow-x: auto; padding: 1px 1px 3px; scrollbar-width: thin; }
-  .tag {
-    font-family: inherit; font-size: 12px; font-weight: 500; line-height: 1.2;
-    padding: 5px 13px; border-radius: 99px; cursor: pointer;
-    background: var(--card); border: 1px solid var(--line-2); color: #6f675b;
-    user-select: none; transition: all .13s; white-space: nowrap;
-  }
-  .tag:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
-  .tag.active { background: var(--accent); color: #fff; border-color: var(--accent);
-    font-weight: 650; box-shadow: 0 3px 10px rgba(62,123,232,.28); }
-  .count { color: var(--faint); font-size: 12.5px; margin-left: auto; font-variant-numeric: tabular-nums;
-    align-self: center; white-space: nowrap; }
-
-  /* ---- grid + cards ---- */
-  .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); }
-  .card {
-    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
-    overflow: hidden; display: flex; flex-direction: column;
-    box-shadow: var(--shadow); transition: transform .16s ease, box-shadow .16s ease, border-color .16s;
-  }
-  .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); border-color: var(--line-2); }
-  .thumbwrap { position: relative; aspect-ratio: 16/10; background: var(--paper-2); display: block; overflow: hidden; }
-  .thumbsource { position: absolute; inset: 0; z-index: 1; display: block; color: inherit; }
-  .thumbsource img { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%;
-    object-fit: cover; display: block;
-    transition: transform .4s ease; }
-  .card:hover .thumbsource img { transform: scale(1.045); }
-  .thumbwrap .ph { position: absolute; inset: 0; display: flex; flex-direction: column;
-    align-items: flex-start; justify-content: flex-end; gap: 9px; padding: 24px 17px 17px;
-    color: #736b5f; background:
-      radial-gradient(320px 150px at 100% 0%, rgba(62,123,232,.13), transparent 68%),
-      repeating-linear-gradient(135deg, #f6f1e7 0 12px, #f1ebe0 12px 24px); }
-  .ph-top { width: 100%; display: flex; align-items: center; gap: 8px; color: #9e9587; }
-  .ph-icon { width: 23px; height: 23px; flex: 0 0 auto; }
-  .ph-icon svg { width: 100%; height: 100%; }
-  .ph-domain { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    font-size: 10px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
-  .ph-title { color: #4f493f; font-family: var(--serif); font-size: 18px; line-height: 1.14;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .type { position: absolute; z-index: 4; top: 10px; left: 10px; font-size: 10px; font-weight: 700;
-    padding: 3px 9px; border-radius: 99px; background: rgba(255,255,255,.94); color: #6f675b;
-    text-transform: uppercase; letter-spacing: .06em; box-shadow: 0 1px 4px rgba(80,64,40,.14);
-    backdrop-filter: blur(4px); }
-  .open-source, .read-note {
-    position: absolute; bottom: 10px; z-index: 4; min-height: 31px;
-    border-radius: 99px; padding: 7px 11px; font-family: inherit;
-    font-size: 10.5px; font-weight: 720; letter-spacing: .015em;
-    box-shadow: 0 3px 12px rgba(27,23,18,.20); backdrop-filter: blur(7px);
-  }
-  .open-source { left: 10px; color: #fff; background: rgba(39,34,28,.78); }
-  .read-note {
-    right: 10px; cursor: pointer; color: #315fae; background: rgba(255,255,255,.94);
-    border: 1px solid rgba(255,255,255,.72); transition: transform .14s, background .14s;
-  }
-  .read-note:hover { transform: translateY(-1px); background: #fff; }
-  .read-note:focus-visible, .thumbsource:focus-visible, .linkbutton:focus-visible {
-    outline: 3px solid rgba(62,123,232,.38); outline-offset: 2px;
-  }
-  .body { padding: 13px 15px 15px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
-  .title { font-size: 14.5px; font-weight: 640; line-height: 1.32; color: var(--ink);
-    text-decoration: none; letter-spacing: -.005em;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .title:hover { color: var(--accent); }
-  .desc { font-size: 12.5px; color: var(--muted); line-height: 1.5; display: -webkit-box;
-    -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-  .cardtags { font-size: 11px; color: var(--tag-ink); line-height: 1.4;
-    display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
-  .origin { display: flex; align-items: center; gap: 6px; color: #8b8275; font-size: 10.5px; }
-  .origin::before { content: ""; width: 6px; height: 6px; flex: 0 0 auto; border-radius: 50%;
-    background: linear-gradient(135deg,#3ec9a7,#3e7be8); box-shadow: 0 0 0 3px var(--accent-soft); }
-  .meta { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--line);
-    font-size: 11px; color: var(--faint); display: flex; justify-content: space-between;
-    align-items: center; gap: 8px; }
-  .meta .site { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .links a, .linkbutton { color: var(--accent); text-decoration: none; font-weight: 650;
-    white-space: nowrap; font: inherit; }
-  .links a:hover, .linkbutton:hover { text-decoration: underline; }
-  .linkbutton { border: 0; padding: 0; background: transparent; cursor: pointer; }
-
-  /* ---- note reader ---- */
-  .note-dialog {
-    width: min(880px, calc(100vw - 36px)); height: min(82vh, 840px);
-    padding: 0; border: 1px solid var(--line-2); border-radius: 20px;
-    color: var(--ink); background: var(--paper); box-shadow: 0 28px 90px rgba(44,35,23,.28);
-  }
-  .note-dialog::backdrop { background: rgba(36,31,25,.46); backdrop-filter: blur(5px); }
-  .note-shell { width: 100%; min-width: 0; height: 100%; display: grid;
-    grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr);
-    overflow: hidden; }
-  .note-head { min-width: 0; max-width: 100%; display: flex; align-items: center;
-    gap: 14px; padding: 17px 20px;
-    border-bottom: 1px solid var(--line-2); background: rgba(250,247,240,.96); }
-  .note-heading { min-width: 0; flex: 1; }
-  .note-kicker { display: block; color: var(--tag-ink); font-size: 9.5px; font-weight: 750;
-    letter-spacing: .12em; text-transform: uppercase; margin-bottom: 3px; }
-  .note-title { margin: 0; font-family: var(--serif); font-size: 20px; font-weight: 500;
-    line-height: 1.18; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .note-actions { display: flex; align-items: center; gap: 7px; }
-  .note-actions a, .note-close { min-height: 34px; display: inline-flex; align-items: center;
-    justify-content: center; border-radius: 99px; padding: 7px 11px; font-family: inherit;
-    font-size: 11px; font-weight: 680; white-space: nowrap; }
-  .note-actions a { color: var(--accent-ink); background: var(--accent-soft);
-    text-decoration: none; border: 1px solid #d9e3fa; }
-  .note-close { width: 34px; padding: 0; cursor: pointer; color: #675f54;
-    background: var(--card); border: 1px solid var(--line-2); font-size: 20px; line-height: 1; }
-  .note-content { width: 100%; min-width: 0; max-width: 100%; margin: 0;
-    padding: 28px clamp(20px, 5vw, 54px) 54px; overflow: auto;
-    white-space: pre-wrap; overflow-wrap: anywhere; color: #413b33;
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-    font-size: 13px; line-height: 1.72; tab-size: 2; background:
-      linear-gradient(90deg, transparent 0 31px, rgba(224,217,202,.48) 31px 32px, transparent 32px),
-      var(--paper); }
-  .note-content.loading { color: var(--muted); font-family: inherit; font-style: italic; }
-
-  /* ---- empty ---- */
-  .empty { text-align: center; color: var(--muted); padding: 90px 20px; display: none; }
-  .empty .feather { margin: 0 auto 18px; opacity: .55; }
-  .empty h2 { font-family: var(--serif); font-weight: 500; font-size: 21px; margin: 0 0 6px; color: var(--ink); }
-  .empty p { margin: 0; font-size: 14px; }
-
-  footer { text-align: center; color: var(--faint); font-size: 12px; margin-top: 46px;
-    padding-top: 22px; border-top: 1px solid var(--line); }
-  footer b { color: var(--muted); font-weight: 600; }
-  @media (max-width: 560px) {
-    body { padding: 0 16px 60px; } .wordmark { font-size: 27px; }
-    .kicker { display: none; } .controls { top: 6px; }
-    .filterrow { flex-wrap: wrap; } .count { order: 3; width: 100%; margin-left: 0; }
-    .note-dialog { width: 100vw; height: 100dvh; max-width: none; max-height: none;
-      margin: 0; border: 0; border-radius: 0; }
-    .note-head { padding: 13px 14px; } .note-title { font-size: 17px; }
-    .note-actions a.obsidian-action { display: none; }
-    .note-content { padding: 22px 18px 44px; background: var(--paper); font-size: 12.5px; }
-  }
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } html { scroll-behavior: auto; } }
-  .feather-home { display: inline-flex; flex-shrink: 0; border-radius: 10px; }
-  .feather-home:focus-visible { outline: 3px solid var(--accent-soft); }
-  .private-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-  .private-pill, .lock-button {
-    min-height: 34px; display: inline-flex; align-items: center; justify-content: center;
-    padding: 7px 13px; border-radius: 99px; font: 700 11px/1 inherit;
-  }
-  .private-pill {
-    border: 1px solid #dbe9dd; color: #2c8e68; background: #f3faf5;
-    letter-spacing: .06em; text-transform: uppercase;
-  }
-  .lock-button {
-    border: 1px solid var(--line-2); color: var(--muted); background: var(--card);
-    cursor: pointer; box-shadow: var(--shadow);
-  }
-  .lock-button:hover { color: var(--accent); border-color: var(--accent); }
-  .loading-library {
-    min-height: 240px; display: grid; place-items: center; color: var(--muted);
-    font-family: var(--serif); font-size: 18px;
-  }
-  .loading-library.error { color: #a84843; text-align: center; }
-  @media (max-width: 560px) {
-    .private-pill { display: none; }
-    .lock-button { padding-inline: 12px; }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>My library · Magpie</title>
+  <meta name="theme-color" content="#f8f6f1" />
+  <link rel="icon" href="/assets/art/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="/assets/fonts/InstrumentSans-Variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/style.css" />
 </head>
-<body>
-<div class="wrap">
-  <header>
-    <div class="brandrow">
-      <a class="feather-home" href="/brain/gallery.html" aria-label="Magpie library home"><svg width="44" height="44" viewBox="0 0 120 120" aria-hidden="true" class="feather">
-  <defs>
-    <linearGradient id="hdrA" x1="20%" y1="90%" x2="80%" y2="10%">
-      <stop offset="0%" stop-color="#e8654f"/><stop offset="22%" stop-color="#8a5be0"/>
-      <stop offset="48%" stop-color="#3e7be8"/><stop offset="75%" stop-color="#3ec9a7"/>
-      <stop offset="100%" stop-color="#2fae94"/>
-    </linearGradient>
-    <linearGradient id="hdrB" x1="0%" y1="100%" x2="60%" y2="0%">
-      <stop offset="0%" stop-color="#f2913d"/><stop offset="60%" stop-color="#ef7a48"/>
-      <stop offset="100%" stop-color="#f5a552"/>
-    </linearGradient>
-    <linearGradient id="hdrC" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#2a4a8a"/><stop offset="100%" stop-color="#1d6f6a"/>
-    </linearGradient>
-  </defs>
-  <g transform="rotate(36 60 60)">
-    <path fill="url(#hdrB)" d="M60 8 C76 24 84 44 82 64 C81 80 72 96 60 104 L60 8 Z"/>
-    <path fill="url(#hdrA)" d="M60 8 C44 24 36 44 38 64 C39 80 48 96 60 104 L60 8 Z"/>
-    <g stroke="#faf7f0" stroke-linecap="round" fill="none">
-      <path stroke-width="3.4" d="M42 38 Q52 42 59 41"/><path stroke-width="3.4" d="M39 54 Q51 58 59 56"/>
-      <path stroke-width="3.4" d="M40 70 Q51 74 59 71"/><path stroke-width="3.4" d="M46 86 Q54 88 59 85"/>
-      <path stroke-width="3.4" d="M78 30 Q68 35 61 34"/><path stroke-width="3.4" d="M81 46 Q69 51 61 49"/>
-      <path stroke-width="3.4" d="M80 62 Q69 66 61 64"/><path stroke-width="3.4" d="M74 79 Q66 81 61 78"/>
-    </g>
-    <path fill="none" stroke="url(#hdrC)" stroke-width="2.6" stroke-linecap="round"
-      d="M60 10 C60 40 60 70 58 88 C57 98 54 108 48 116"/>
-  </g>
-</svg></a>
-      <span class="wordmark">Magpie</span>
-      <span class="kicker">vault gallery</span>
-      <div class="private-actions">
-        <span class="private-pill">Private library</span>
-        <button class="lock-button" id="lockbutton" type="button">Lock</button>
-      </div>
+<body class="lib-page">
+  <a class="skip-link" href="#results">Skip to the clips</a>
+  <svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="s-sun" viewBox="-100 -100 200 200"><polygon fill="currentColor" stroke="currentColor" stroke-width="14" stroke-linejoin="round" points="0.0,-92.0 12.9,-56.5 39.9,-82.9 36.2,-45.3 71.9,-57.4 52.3,-25.2 89.7,-20.5 58.0,0.0 89.7,20.5 52.3,25.2 71.9,57.4 36.2,45.3 39.9,82.9 12.9,56.5 0.0,92.0 -12.9,56.5 -39.9,82.9 -36.2,45.3 -71.9,57.4 -52.3,25.2 -89.7,20.5 -58.0,0.0 -89.7,-20.5 -52.3,-25.2 -71.9,-57.4 -36.2,-45.3 -39.9,-82.9 -12.9,-56.5"/></symbol>
+      <symbol id="s-rays" viewBox="-100 -100 200 200"><circle r="60" fill="currentColor"/><g stroke="currentColor" stroke-width="16" stroke-linecap="round"><line x1="75" y1="0" x2="91" y2="0"/><line x1="65" y1="37.5" x2="78.8" y2="45.5"/><line x1="37.5" y1="65" x2="45.5" y2="78.8"/><line x1="0" y1="75" x2="0" y2="91"/><line x1="-37.5" y1="65" x2="-45.5" y2="78.8"/><line x1="-65" y1="37.5" x2="-78.8" y2="45.5"/><line x1="-75" y1="0" x2="-91" y2="0"/><line x1="-65" y1="-37.5" x2="-78.8" y2="-45.5"/><line x1="-37.5" y1="-65" x2="-45.5" y2="-78.8"/><line x1="0" y1="-75" x2="0" y2="-91"/><line x1="37.5" y1="-65" x2="45.5" y2="-78.8"/><line x1="65" y1="-37.5" x2="78.8" y2="-45.5"/></g></symbol>
+      <symbol id="s-cog" viewBox="-100 -100 200 200"><g fill="currentColor"><circle r="64"/><circle cx="66.0" cy="0.0" r="22"/><circle cx="55.5" cy="35.7" r="22"/><circle cx="27.4" cy="60.0" r="22"/><circle cx="-9.4" cy="65.3" r="22"/><circle cx="-43.2" cy="49.9" r="22"/><circle cx="-63.3" cy="18.6" r="22"/><circle cx="-63.3" cy="-18.6" r="22"/><circle cx="-43.2" cy="-49.9" r="22"/><circle cx="-9.4" cy="-65.3" r="22"/><circle cx="27.4" cy="-60.0" r="22"/><circle cx="55.5" cy="-35.7" r="22"/></g></symbol>
+      <symbol id="s-blob" viewBox="-100 -100 200 200"><g stroke="currentColor" stroke-width="34" stroke-linecap="round"><line x1="0" y1="0" x2="74.5" y2="23.1"/><line x1="0" y1="0" x2="34.7" y2="53.8"/><line x1="0" y1="0" x2="-10.5" y2="83.3"/><line x1="0" y1="0" x2="-51.4" y2="47.6"/><line x1="0" y1="0" x2="-57.9" y2="2.8"/><line x1="0" y1="0" x2="-63.7" y2="-48.4"/><line x1="0" y1="0" x2="-14.6" y2="-64.4"/><line x1="0" y1="0" x2="33.8" y2="-65.8"/><line x1="0" y1="0" x2="55.3" y2="-23.3"/></g><circle r="46" fill="currentColor"/></symbol>
+      <symbol id="s-bean" viewBox="-100 -100 200 200"><path fill="currentColor" d="M-64-46C-40-86 30-94 64-60C94-30 92 24 68 58C42 94-24 96-60 66C-94 40-88-8-64-46Z"/></symbol>
+      <symbol id="s-arch" viewBox="-100 -100 200 200"><path fill="currentColor" d="M-76 84V-20A76 76 0 0 1 76-20V84Q76 100 60 100H-60Q-76 100-76 84Z"/></symbol>
+      <symbol id="s-circle" viewBox="-100 -100 200 200"><circle r="96" fill="currentColor"/></symbol>
+      <symbol id="s-ast" viewBox="-100 -100 200 200"><g stroke="currentColor" stroke-width="34" stroke-linecap="round"><line x1="0" y1="-72" x2="0" y2="72"/><line x1="-62.4" y1="-36" x2="62.4" y2="36"/><line x1="-62.4" y1="36" x2="62.4" y2="-36"/></g></symbol>
+      <symbol id="s-plus" viewBox="-100 -100 200 200"><g stroke="currentColor" stroke-width="44" stroke-linecap="round"><line x1="0" y1="-66" x2="0" y2="66"/><line x1="-66" y1="0" x2="66" y2="0"/></g></symbol>
+      <symbol id="s-quat" viewBox="-100 -100 200 200"><g fill="currentColor"><circle cx="-40" cy="0" r="42"/><circle cx="40" cy="0" r="42"/><circle cx="0" cy="-40" r="42"/><circle cx="0" cy="40" r="42"/></g></symbol>
+      <symbol id="s-squig" viewBox="-100 -100 200 200"><path fill="none" stroke="currentColor" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" d="M-82 10 C-70 -40 -42 -40 -36 0 S-6 44 2 0 S38 -44 46 0 S78 40 86 -10"/></symbol>
+      <symbol id="s-arrow" viewBox="0 0 20 20"><path d="M2.5 1.8 L16.8 9.2 L10.2 10.6 L7.2 16.9 Z" stroke-linejoin="round"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 12 12"><rect x="2.4" y="5.4" width="7.2" height="5.2" rx="1"/><path d="M4 5.4V4a2 2 0 0 1 4 0v1.4"/></symbol>
+      <clipPath id="blob-clip" clipPathUnits="objectBoundingBox"><path d="M0.963 0.570 C0.969 0.644 1.017 0.758 1.000 0.828 C0.983 0.897 0.923 0.960 0.860 0.988 C0.797 1.015 0.695 0.993 0.622 0.994 C0.550 0.995 0.495 0.993 0.426 0.993 C0.356 0.992 0.274 1.010 0.203 0.992 C0.132 0.974 0.031 0.945 0.000 0.883 C-0.031 0.821 0.006 0.695 0.016 0.620 C0.025 0.545 0.059 0.508 0.057 0.433 C0.054 0.358 -0.013 0.244 0.000 0.172 C0.013 0.101 0.072 0.033 0.134 0.004 C0.197 -0.024 0.303 -0.010 0.375 0.000 C0.447 0.010 0.492 0.066 0.566 0.066 C0.639 0.066 0.745 -0.008 0.817 0.000 C0.890 0.008 0.975 0.053 1.000 0.117 C1.025 0.181 0.971 0.309 0.965 0.385 C0.959 0.460 0.957 0.496 0.963 0.570Z"/></clipPath>
+    </defs>
+  </svg>
+
+  <header class="lib-top">
+    <div class="wrap lib-top__in">
+      <a class="lib-mark" href="/brain/gallery.html" aria-label="Magpie, my library"><svg class="feather" viewBox="0 0 120 120" aria-hidden="true"><g transform="rotate(36 60 60)"><path fill="var(--coral)" d="M60 8 C76 24 84 44 82 64 C81 80 72 96 60 104 L60 8 Z"/><path fill="var(--teal)" d="M60 8 C44 24 36 44 38 64 C39 80 48 96 60 104 L60 8 Z"/><g stroke="var(--paper)" stroke-width="3.4" stroke-linecap="round" fill="none"><path d="M42 38 Q52 42 59 41"/><path d="M39 54 Q51 58 59 56"/><path d="M40 70 Q51 74 59 71"/><path d="M46 86 Q54 88 59 85"/><path d="M78 30 Q68 35 61 34"/><path d="M81 46 Q69 51 61 49"/><path d="M80 62 Q69 66 61 64"/><path d="M74 79 Q66 81 61 78"/></g><path fill="none" stroke="var(--navy)" stroke-width="3" stroke-linecap="round" d="M60 10 C60 40 60 70 58 88 C57 98 54 108 48 116"/></g></svg><span>Magpie</span></a>
+      <span class="status lib-private"><span class="dot dot-priv"></span>Private</span>
+      <a class="lib-top__home" href="/">kellylucas.dev</a>
+      <button class="btn btn--sm btn--line" id="lockButton" type="button"><svg class="lock" viewBox="0 0 12 12" aria-hidden="true"><use href="#i-lock"/></svg>Lock</button>
     </div>
-    <div class="rule"></div>
-    <p class="tagline">Every useful page, video, and source you've saved: <b id="tagline-count"></b>, searchable and synced to your vault.</p>
   </header>
 
-  <div class="controls">
-    <div class="searchwrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      <input type="search" id="searchbox" placeholder="Search titles, notes, sites, tags…">
-    </div>
-    <div class="filterrow">
-      <label>Type <select id="typefilter"><option value="">All types</option></select></label>
-      <label>Origin <select id="originfilter"><option value="">All origins</option></select></label>
-      <button class="clearfilters" id="clearfilters" type="button">Clear filters</button>
-      <span class="count" id="count"></span>
-    </div>
-    <div class="tagbar" id="tagbar"></div>
-  </div>
-
-  <div class="loading-library" id="loading">Opening your private library…</div>
-  <div class="grid" id="grid"></div>
-  <div class="empty" id="empty">
-    <svg width="56" height="56" viewBox="0 0 120 120" aria-hidden="true" class="feather">
-  <defs>
-    <linearGradient id="empA" x1="20%" y1="90%" x2="80%" y2="10%">
-      <stop offset="0%" stop-color="#e8654f"/><stop offset="22%" stop-color="#8a5be0"/>
-      <stop offset="48%" stop-color="#3e7be8"/><stop offset="75%" stop-color="#3ec9a7"/>
-      <stop offset="100%" stop-color="#2fae94"/>
-    </linearGradient>
-    <linearGradient id="empB" x1="0%" y1="100%" x2="60%" y2="0%">
-      <stop offset="0%" stop-color="#f2913d"/><stop offset="60%" stop-color="#ef7a48"/>
-      <stop offset="100%" stop-color="#f5a552"/>
-    </linearGradient>
-    <linearGradient id="empC" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#2a4a8a"/><stop offset="100%" stop-color="#1d6f6a"/>
-    </linearGradient>
-  </defs>
-  <g transform="rotate(36 60 60)">
-    <path fill="url(#empB)" d="M60 8 C76 24 84 44 82 64 C81 80 72 96 60 104 L60 8 Z"/>
-    <path fill="url(#empA)" d="M60 8 C44 24 36 44 38 64 C39 80 48 96 60 104 L60 8 Z"/>
-    <g stroke="#faf7f0" stroke-linecap="round" fill="none">
-      <path stroke-width="3.4" d="M42 38 Q52 42 59 41"/><path stroke-width="3.4" d="M39 54 Q51 58 59 56"/>
-      <path stroke-width="3.4" d="M40 70 Q51 74 59 71"/><path stroke-width="3.4" d="M46 86 Q54 88 59 85"/>
-      <path stroke-width="3.4" d="M78 30 Q68 35 61 34"/><path stroke-width="3.4" d="M81 46 Q69 51 61 49"/>
-      <path stroke-width="3.4" d="M80 62 Q69 66 61 64"/><path stroke-width="3.4" d="M74 79 Q66 81 61 78"/>
-    </g>
-    <path fill="none" stroke="url(#empC)" stroke-width="2.6" stroke-linecap="round"
-      d="M60 10 C60 40 60 70 58 88 C57 98 54 108 48 116"/>
-  </g>
-</svg>
-    <h2>Nothing matches: yet</h2>
-    <p>Save another useful source, or clear the filters.</p>
-  </div>
-
-  <dialog class="note-dialog" id="notedialog" aria-labelledby="notetitle">
-    <div class="note-shell">
-      <div class="note-head">
-        <div class="note-heading">
-          <span class="note-kicker">Saved Markdown</span>
-          <h2 class="note-title" id="notetitle">Magpie note</h2>
+  <main id="main" tabindex="-1">
+    <section class="lib-hero" aria-labelledby="lib-title">
+      <div class="wrap lib-hero__grid">
+        <div class="lib-hero__text">
+          <h1 class="h1" id="lib-title">My library</h1>
+          <p class="lede">Everything I’ve clipped with Magpie, from the feather button, the Collector and the old StumbleUpon box. Search it, sort it, read the notes.</p>
+          <ul class="lib-stats" id="libStats" aria-label="The library in numbers">
+            <li><b class="mono" data-stat="clips">…</b><span>clips</span></li>
+            <li><b class="mono" data-stat="sites">…</b><span>sites</span></li>
+            <li><b class="mono" data-stat="tags">…</b><span>tags</span></li>
+            <li><b class="mono" data-stat="notes">…</b><span>notes</span></li>
+          </ul>
+          <div class="btn-row lib-hero__acts">
+            <button class="btn" id="surpriseButton" type="button" disabled><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-ast"/></svg>Surprise me</button>
+            <p class="lib-hero__since mono" id="libSince"></p>
+          </div>
         </div>
-        <div class="note-actions">
-          <a id="notesource" target="_blank" rel="noopener">Source ↗</a>
-          <a class="obsidian-action" id="noteobsidian">Obsidian ↗</a>
-          <button class="note-close" id="noteclose" type="button" aria-label="Close note">×</button>
+        <figure class="poster lib-hero__art" aria-hidden="true">
+          <div class="poster__stage">
+            <svg class="shape poster__sun spin c-honey" viewBox="-100 -100 200 200"><use x="-100" y="-100" width="200" height="200" href="#s-sun"/></svg>
+            <svg class="shape orb orb--ast c-coral" viewBox="-100 -100 200 200"><use x="-100" y="-100" width="200" height="200" href="#s-ast"/></svg>
+            <svg class="shape orb orb--quat c-teal" viewBox="-100 -100 200 200"><use x="-100" y="-100" width="200" height="200" href="#s-quat"/></svg>
+            <svg class="shape orb orb--squig c-navy" viewBox="-100 -100 200 200"><use x="-100" y="-100" width="200" height="200" href="#s-squig"/></svg>
+            <img class="poster__art" src="/assets/art/magpie-books.webp" width="1200" height="1059" decoding="async" alt="" />
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <section class="lib-bar" aria-label="Find a clip">
+      <div class="wrap">
+        <div class="lib-bar__row">
+          <label class="lib-search">
+            <span class="sr-only">Search the library</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20.5 20.5-4.2-4.2"/></svg>
+            <input type="search" id="searchBox" placeholder="Search titles, notes, sites, tags" autocomplete="off" spellcheck="false" />
+            <kbd class="lib-search__key" aria-hidden="true">/</kbd>
+          </label>
+          <label class="lib-select">
+            <span class="sr-only">Where it came from</span>
+            <select id="originSelect"><option value="">Every origin</option></select>
+          </label>
+          <label class="lib-select">
+            <span class="sr-only">Sort</span>
+            <select id="sortSelect">
+              <option value="new">Newest first</option>
+              <option value="old">Oldest first</option>
+              <option value="az">A to Z</option>
+            </select>
+          </label>
+          <div class="lib-view" role="group" aria-label="Layout">
+            <button type="button" data-view="grid" aria-pressed="true" title="Cards"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="7" height="7" rx="3.5"/><rect x="11" y="2" width="7" height="7" rx="3.5"/><rect x="2" y="11" width="7" height="7" rx="3.5"/><rect x="11" y="11" width="7" height="7" rx="3.5"/></svg><span class="sr-only">Cards</span></button>
+            <button type="button" data-view="list" aria-pressed="false" title="List"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="3" width="16" height="3" rx="1.5"/><rect x="2" y="8.5" width="16" height="3" rx="1.5"/><rect x="2" y="14" width="16" height="3" rx="1.5"/></svg><span class="sr-only">List</span></button>
+          </div>
+        </div>
+        <div class="lib-shelves" id="shelfRow" role="group" aria-label="Shelves"></div>
+      </div>
+    </section>
+
+    <section class="lib-results" id="results" tabindex="-1" aria-label="Clips">
+      <div class="wrap">
+        <div class="lib-tags" id="tagRow" role="group" aria-label="Tags"></div>
+        <div class="lib-alltags" id="allTags" hidden>
+          <label class="lib-alltags__find"><span class="sr-only">Find a tag</span><input type="search" id="tagFind" placeholder="Find a tag" autocomplete="off" /></label>
+          <div class="lib-alltags__list" id="allTagList"></div>
+        </div>
+        <div class="lib-status">
+          <p class="lib-count" id="resultCount" aria-live="polite">Opening the library…</p>
+          <div class="lib-active" id="activeFilters"></div>
+        </div>
+        <div class="lib-grid is-loading" id="grid" aria-busy="true">
+          <div class="clip clip--ghost"></div><div class="clip clip--ghost"></div><div class="clip clip--ghost"></div><div class="clip clip--ghost"></div>
+          <div class="clip clip--ghost"></div><div class="clip clip--ghost"></div><div class="clip clip--ghost"></div><div class="clip clip--ghost"></div>
+        </div>
+        <div class="lib-more" id="moreRow" hidden><button class="btn btn--line" id="moreButton" type="button">Show more</button></div>
+        <div class="lib-empty" id="emptyState" hidden>
+          <img src="/assets/art/magpie-flying.webp" width="1200" height="1267" alt="" loading="lazy" />
+          <h2 class="h3" id="emptyTitle">Nothing matches</h2>
+          <p id="emptyText">Try fewer letters, or clear the filters.</p>
+          <button class="btn" id="emptyButton" type="button">Clear filters</button>
         </div>
       </div>
-      <pre class="note-content" id="notecontent" tabindex="0"></pre>
+    </section>
+  </main>
+
+  <dialog class="sheet" id="sheet" aria-labelledby="sheetTitle">
+    <div class="sheet__in">
+      <div class="sheet__head">
+        <div class="sheet__nav">
+          <button class="sheet__btn" id="sheetPrev" type="button" aria-label="Previous note"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4 6.5 10l6 6"/></svg></button>
+          <span class="sheet__pos mono" id="sheetPos"></span>
+          <button class="sheet__btn" id="sheetNext" type="button" aria-label="Next note"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4 6 6-6 6"/></svg></button>
+        </div>
+        <button class="sheet__btn sheet__close" id="sheetClose" type="button" aria-label="Close the note"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15"/></svg></button>
+      </div>
+      <div class="sheet__scroll" id="sheetScroll" tabindex="0">
+        <div class="sheet__pic" id="sheetPic"></div>
+        <p class="clip__meta" id="sheetMeta"></p>
+        <h2 class="sheet__title" id="sheetTitle">Magpie note</h2>
+        <div class="btn-row sheet__acts">
+          <a class="btn btn--sm" id="sheetSource" target="_blank" rel="noopener noreferrer">Open the page<span class="sr-only"> (opens in a new tab)</span></a>
+          <a class="btn btn--sm btn--line" id="sheetObsidian">Open in Obsidian</a>
+        </div>
+        <ul class="clip__tags sheet__tags" id="sheetTags"></ul>
+        <div class="md" id="sheetBody"></div>
+      </div>
     </div>
   </dialog>
 
-  <footer>Part of Kelly's agentic OS · <b>Magpie</b> captures, the wiki compiles, Kip remembers.</footer>
-</div>
-<script type="module">
-let ITEMS = [];
-try {
-  const response = await fetch("/api/magpie-library", {
-    credentials: "same-origin",
-    cache: "no-store",
-  });
-  if (response.status === 401) {
-    const returnTo = location.pathname + location.search;
-    location.replace("/brain/login.html?returnTo=" + encodeURIComponent(returnTo));
-    throw new Error("Authentication required");
-  }
-  if (!response.ok) throw new Error("Library unavailable");
-  const payload = await response.json();
-  ITEMS = Array.isArray(payload.items) ? payload.items : [];
-} catch (error) {
-  if (error.message !== "Authentication required") {
-    document.getElementById("loading").textContent =
-      "Magpie could not open the private library. Please refresh and try again.";
-    document.getElementById("loading").classList.add("error");
-  }
-  throw error;
-}
-document.getElementById("loading").hidden = true;
-const VAULT_NAME = "kip-workspace";
-let activeTag = null;
+  <footer class="lib-foot">
+    <div class="wrap lib-foot__in">
+      <p>Magpie clips it, the vault keeps it, this page reads it. Private, and never indexed.</p>
+      <p><a href="/design.html">Design desk</a> <span aria-hidden="true">·</span> <a href="/magpie.html">About Magpie</a></p>
+    </div>
+  </footer>
 
-const I = (paths) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
-const TYPE_ICON = {
-  video: I('<circle cx="12" cy="12" r="9"/><path d="m10 8.8 5 3.2-5 3.2z"/>'),
-  article: I('<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 12h5M10 16h5"/>'),
-  "web page": I('<circle cx="12" cy="12" r="9"/><path d="M3.5 12h17M12 3c2.4 2.5 3.6 5.5 3.6 9S14.4 18.5 12 21M12 3C9.6 5.5 8.4 8.5 8.4 12S9.6 18.5 12 21"/>'),
-  "github repo": I('<path d="M8 4 3 12l5 8M16 4l5 8-5 8M14 3l-4 18"/>'),
-  "github gist": I('<path d="M7 4h10v16H7z"/><path d="M10 8h4M10 12h4M10 16h3"/>'),
-  image: I('<rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9.5" cy="9.5" r="1.5"/><path d="m4.5 17 5-5 4 4 2.5-2.5 3.5 3.5"/>'),
-  note: I('<path d="M5 4h14v12l-4 4H5z"/><path d="M15 20v-4h4"/>'),
-  clip: I('<path d="M12 4v16M4 12h16"/>'),
-};
-
-function safeHttpUrl(value) {
-  if (!value) return "#";
-  try {
-    const url = new URL(value, location.href);
-    return ["http:", "https:"].includes(url.protocol) ? url.href : "#";
-  } catch { return "#"; }
-}
-
-function displayType(it) {
-  const raw = String(it.type || "").toLowerCase().trim();
-  let url;
-  try { url = new URL(it.url || "", location.href); } catch {}
-  const host = (url?.hostname || "").replace(/^www\./, "").toLowerCase();
-  if (host === "youtube.com" || host === "youtu.be") return "video";
-  if (host === "gist.github.com") return "github gist";
-  if (host === "github.com") {
-    const parts = (url?.pathname || "").split("/").filter(Boolean);
-    if (parts.length >= 2) return "github repo";
-    return "web page";
-  }
-  if (raw === "video" || raw === "article" || raw === "image" || raw === "note") return raw;
-  if (raw === "github" || raw === "github repo") return "github repo";
-  return "web page";
-}
-
-function originLabel(it) {
-  const source = String(it.captureSource || "").toLowerCase().trim();
-  const tags = (it.tags || []).map((tag) => String(tag).toLowerCase());
-  if (source.includes("browser")) return "Browser clipper";
-  if (source.includes("stumbleupon") || tags.includes("stumbleupon")) return "StumbleUpon archive";
-  if (source.includes("collector") || tags.includes("collector")) return "Magpie Collector";
-  if (source) return it.captureSource;
-  if (String(it.type || "").toLowerCase() === "bookmark") return "Imported bookmark";
-  return "Origin not recorded";
-}
-
-function obsidianLink(file) {
-  return "obsidian://open?vault=" + encodeURIComponent(VAULT_NAME) +
-         "&file=" + encodeURIComponent(file.replace(/\.md$/, ""));
-}
-
-const noteDialog = document.getElementById("notedialog");
-const noteTitle = document.getElementById("notetitle");
-const noteContent = document.getElementById("notecontent");
-const noteSource = document.getElementById("notesource");
-const noteObsidian = document.getElementById("noteobsidian");
-const noteServer = "";
-
-async function openNote(it) {
-  noteTitle.textContent = it.title || "Magpie note";
-  noteSource.href = safeHttpUrl(it.url || "");
-  noteObsidian.href = obsidianLink(it.file);
-  noteContent.textContent = "Loading saved Markdown…";
-  noteContent.classList.add("loading");
-  if (typeof noteDialog.showModal === "function") noteDialog.showModal();
-  else noteDialog.setAttribute("open", "");
-  try {
-    const endpoint = noteServer + "/api/magpie-note?file=" + encodeURIComponent(it.file) +
-      "&t=" + Date.now();
-    const response = await fetch(endpoint);
-    if (response.status === 401) {
-      location.replace("/brain/login.html?returnTo=" + encodeURIComponent(location.pathname + location.search));
-      return;
-    }
-    if (!response.ok) throw new Error("note unavailable");
-    noteContent.textContent = await response.text();
-    noteContent.classList.remove("loading");
-    noteContent.scrollTop = 0;
-  } catch (_error) {
-    noteContent.textContent =
-      "Magpie could not load this note in the gallery. The Obsidian button above still opens the saved Markdown.";
-  }
-}
-
-document.getElementById("noteclose").addEventListener("click", () => noteDialog.close());
-noteDialog.addEventListener("click", (event) => {
-  if (event.target === noteDialog) noteDialog.close();
-});
-
-const tagCounts = {};
-ITEMS.forEach(it => (it.tags || []).forEach(t => { if (t !== "magpie") tagCounts[t] = (tagCounts[t]||0)+1; }));
-const topTags = Object.entries(tagCounts).sort((a,b) => b[1]-a[1]).slice(0, 20).map(([t]) => t);
-const tagbar = document.getElementById("tagbar");
-topTags.forEach(t => {
-  const el = document.createElement("button");
-  el.type = "button"; el.className = "tag"; el.textContent = t;
-  el.onclick = () => { activeTag = activeTag === t ? null : t; render(); };
-  tagbar.appendChild(el);
-});
-
-function addOptions(selectId, values) {
-  const select = document.getElementById(selectId);
-  [...new Set(values)].sort().forEach((value) => {
-    const option = document.createElement("option");
-    option.value = value; option.textContent = value;
-    select.appendChild(option);
-  });
-}
-addOptions("typefilter", ITEMS.map(displayType));
-addOptions("originfilter", ITEMS.map(originLabel));
-
-function render() {
-  const q = document.getElementById("searchbox").value.toLowerCase().trim();
-  const wantedType = document.getElementById("typefilter").value;
-  const wantedOrigin = document.getElementById("originfilter").value;
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
-  document.querySelectorAll(".tag").forEach(el =>
-    el.classList.toggle("active", el.textContent === activeTag));
-  let shown = 0;
-  [...ITEMS].sort((a,b) => (b.clippedAt||"").localeCompare(a.clippedAt||"")).forEach(it => {
-    const cardType = displayType(it);
-    const origin = originLabel(it);
-    const hay = [
-      it.title, it.description, it.excerpt, it.note, it.site, cardType, origin,
-      (it.tags||[]).join(" ")
-    ].join(" ").toLowerCase();
-    if (q && !hay.includes(q)) return;
-    if (activeTag && !(it.tags||[]).includes(activeTag)) return;
-    if (wantedType && cardType !== wantedType) return;
-    if (wantedOrigin && origin !== wantedOrigin) return;
-    shown++;
-    const card = document.createElement("div");
-    card.className = "card";
-    const targetUrl = safeHttpUrl(it.url || "");
-    const thumbName = String(it.thumbLocal || "").split("/").pop();
-    const thumb = thumbName
-      ? safeHttpUrl("/api/magpie-thumb?name=" + encodeURIComponent(thumbName))
-      : "#";
-    card.innerHTML = `
-      <div class="thumbwrap">
-        <div class="ph">
-          <div class="ph-top"><span class="ph-icon"></span><span class="ph-domain"></span></div>
-          <div class="ph-title"></div>
-        </div>
-        <a class="thumbsource" target="_blank" rel="noopener">
-          <span class="open-source">Open source ↗</span>
-        </a>
-        <button class="read-note" type="button" hidden>Read note</button>
-        <span class="type"></span>
-      </div>
-      <div class="body">
-        <a class="title" target="_blank" rel="noopener"></a>
-        <div class="desc"></div>
-        <div class="cardtags"></div>
-        <div class="origin"></div>
-        <div class="meta">
-          <span class="site"></span>
-          <span class="links"></span>
-        </div>
-      </div>`;
-    const thumbLink = card.querySelector(".thumbsource");
-    const titleLink = card.querySelector(".title");
-    thumbLink.href = targetUrl; titleLink.href = targetUrl;
-    if (thumb !== "#") {
-      const image = document.createElement("img");
-      image.loading = "lazy"; image.alt = ""; image.src = thumb;
-      image.addEventListener("error", () => image.remove(), { once: true });
-      thumbLink.appendChild(image);
-    }
-    card.querySelector(".ph-icon").innerHTML = TYPE_ICON[cardType] || TYPE_ICON.clip;
-    card.querySelector(".ph-domain").textContent = it.site || "Saved source";
-    card.querySelector(".ph-title").textContent = it.title || it.url || "Untitled";
-    card.querySelector(".type").textContent =
-      cardType + (it.hasTranscript ? " · transcript" : "");
-    titleLink.textContent = it.title || it.url || "Untitled";
-    card.querySelector(".desc").textContent = it.note || it.description || it.excerpt || "";
-    card.querySelector(".cardtags").textContent = (it.tags||[])
-      .filter(t => t !== "magpie").map(t => "#" + t).join("  ");
-    card.querySelector(".origin").textContent = origin;
-    card.querySelector(".site").textContent =
-      (it.site || "Unknown site") + " · " + (it.clippedAt || "").slice(0,10);
-    if (it.file) {
-      const readNote = card.querySelector(".read-note");
-      readNote.hidden = false;
-      readNote.addEventListener("click", () => openNote(it));
-      const noteLink = document.createElement("button");
-      noteLink.type = "button";
-      noteLink.className = "linkbutton";
-      noteLink.textContent = "Read note";
-      noteLink.addEventListener("click", () => openNote(it));
-      card.querySelector(".links").appendChild(noteLink);
-    }
-    grid.appendChild(card);
-  });
-  document.getElementById("count").textContent = shown === ITEMS.length
-    ? shown + " items" : shown + " of " + ITEMS.length;
-  document.getElementById("empty").style.display = shown ? "none" : "block";
-  document.getElementById("grid").style.display = shown ? "grid" : "none";
-}
-document.getElementById("tagline-count").textContent = ITEMS.length + " items";
-document.getElementById("searchbox").addEventListener("input", render);
-document.getElementById("typefilter").addEventListener("change", render);
-document.getElementById("originfilter").addEventListener("change", render);
-document.getElementById("clearfilters").addEventListener("click", () => {
-  document.getElementById("searchbox").value = "";
-  document.getElementById("typefilter").value = "";
-  document.getElementById("originfilter").value = "";
-  activeTag = null;
-  render();
-});
-document.getElementById("lockbutton").addEventListener("click", async () => {
-  await fetch("/api/magpie-logout", {
-    method: "POST",
-    credentials: "same-origin",
-  });
-  location.replace("/brain/login.html");
-});
-const preset = new URLSearchParams(location.search).get("q");
-if (preset) document.getElementById("searchbox").value = preset;
-render();
-</script>
+  <script src="/brain/library.js" defer></script>
 </body>
 </html>

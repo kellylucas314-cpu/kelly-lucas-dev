@@ -129,8 +129,16 @@ Keep it clean. No backup files, no version-numbered copies.
   libraries) and `docs` (style PDFs, boards, image strips; files live under
   `assets/design/<pile>/`) are hand-written and pass through the sync
   untouched. Every entry carries a `section`. Each pile is a `.band` with
-  its own `.wrap`, paper and tints alternating with wave edges, and the
-  cards are flat fills with no borders, like the rest of the site.
+  its own `.wrap` and its own color pair, with wave edges between them:
+  navy and honey (HelioFlux), sage (Heliopolis), honey (Pretzel), pale teal
+  (resources), deep teal (videos), paper (notebook), deep coral (examples),
+  paper (this site). These are the only full-strength bands on the site;
+  paper words on navy, deep teal and deep coral, navy words on sage and
+  honey. Cards are always paper, flat, no borders, so they read on any band.
+- Mechanics: the hero's pile pills carry counts; a sticky pile bar lights
+  up the pile you're reading; the shelf has kind chips, a search box ("/"
+  jumps to it, Escape clears it) and folds to 16; art strips and notebook
+  pages open in a picture viewer (arrows, Escape, "Open full size").
 - Where a clip lands is decided once, in `lib/desk-sort.mjs` from
   `lib/desk-rules.json`: Kelly's own sites go to their pile; sites tagged or
   described for a project go there; anything with a design signal is a
@@ -154,6 +162,24 @@ Keep it clean. No backup files, no version-numbered copies.
   Filter chips carry counts. No OPEN buttons on cards, no ruled cells.
   The resources shelf shows its newest 16 and folds the rest behind
   "Show all"; any filter or search shows every match.
+
+## Magpie library (private)
+- `/brain/gallery.html` is the private library, behind the Magpie password
+  (`/brain/login.html`). The page and `brain/library.js` live in this repo
+  and own the look; the vault only supplies data. `npm run sync:magpie`
+  (on the Mac) uploads `library.json`, previews and notes to private Blob
+  storage, and `/api/magpie-*` serves them to a signed-in session only.
+  The old `build:magpie` step, which copied the Mac's generated gallery
+  over this page, is retired: never copy that page in again.
+- Shelves group Magpie's types (pages, reading, videos, code, pictures,
+  notes), each in its own color pair. Search, shelves, tags, origin, sort
+  and cards or list all live in the URL. "Read note" opens a side sheet
+  that renders the saved Markdown safely (escaped first), with arrows to
+  step through notes. "Surprise me" opens a random note.
+- Test it without the password: `npm run preview:magpie` serves the site on
+  http://127.0.0.1:4410 with a stand-in library built from the design
+  desk's public clips. Any password works except "wrong";
+  `?empty=1` and `?fail=1` show the empty and broken states.
 
 ## Skills in the lab
 - `.claude/skills/` holds Claude Code skills from Jack Roberts' design loop, kept
