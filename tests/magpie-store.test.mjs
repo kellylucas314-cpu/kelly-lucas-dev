@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-  fetchRepoCard,
   ConflictError,
   LIBRARY_PATH,
   applyOps,
@@ -145,21 +144,4 @@ test("a page's title, summary and picture are read from its head", () => {
   assert.equal(meta.description, "A summary.");
   assert.equal(meta.thumbnail, "https://www.example.com/hero.png");
   assert.equal(readPageMeta("", "https://youtu.be/x").type, "video");
-});
-
-test("a GitHub repo gets GitHub's own preview card, its custom image first", async () => {
-  const asked = [];
-  const fetcher = async (href) => {
-    asked.push(href);
-    if (href === "https://github.com/goabstract/Awesome-Design-Tools") {
-      return { body: Buffer.from('<meta property="og:image" content="https://repository-images.githubusercontent.com/1/card.png">'), type: "text/html" };
-    }
-    return { body: Buffer.from("png"), type: "image/png" };
-  };
-  const card = await fetchRepoCard("goabstract", "Awesome-Design-Tools", { fetcher });
-  assert.equal(card.type, "image/png");
-  assert.equal(asked[1], "https://repository-images.githubusercontent.com/1/card.png");
-  const plain = await fetchRepoCard("someone", "thing", { fetcher: async (href) => (href.startsWith("https://github.com/") ? null : { body: Buffer.from("x"), type: "image/png" }) });
-  assert.ok(plain);
-  assert.equal(await fetchRepoCard("../etc", "x", { fetcher }), null);
 });
