@@ -222,7 +222,7 @@ kbd {
 
 /* ---------- Home: hello and the poster ---------- */
 .hero { position: relative; padding: 26px 0 56px; }
-.hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 640px); gap: 40px; align-items: center; }
+.hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 600px); gap: 40px; align-items: center; }
 .hero__text { position: relative; z-index: 2; max-width: 640px; }
 .hero .lede { margin-top: 30px; max-width: 600px; }
 .hero__acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 38px; }
@@ -238,6 +238,18 @@ kbd {
 .note:hover .note__art img { transform: translateY(-3px); }
 .note__t, .note__d { display: block; }
 .note__d { margin-top: 8px; font-size: 19px; line-height: 1.4; }
+/* side by side, the text column runs the poster's full height: hello at the top, the Magpie note level with the caption */
+@media (min-width: 961px) {
+  .hero__grid { align-items: stretch; }
+  .hero__text { display: flex; flex-direction: column; }
+  .hero__acts { margin-bottom: 56px; }
+  .hero .note { margin-top: auto; }
+}
+@media (min-width: 1300px) {
+  .hero .note__art { width: 212px; }
+  .hero .note__t { font-size: 40px; }
+  .hero .note__d { font-size: 20px; }
+}
 
 /* the poster: one big place on a sun */
 .poster { position: relative; }
