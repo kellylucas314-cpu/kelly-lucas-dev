@@ -336,23 +336,7 @@
     return list;
   }
 
-  /* A repo gets a drawn tile instead of a tiny screenshot of GitHub. */
-  const REPO_SHAPES = [["s-sun", "honey"], ["s-cog", "teal"], ["s-blob", "coral"], ["s-quat", "sage"], ["s-ast", "honey"], ["s-bean", "teal"]];
-  function buildRepoTile(item, className) {
-    let hash = 0;
-    for (const ch of item.repo.owner + "/" + item.repo.name) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
-    const [shapeName, color] = REPO_SHAPES[hash % REPO_SHAPES.length];
-    const pic = el("span", className + " clip__pic--repo repo--" + color);
-    pic.appendChild(shape(shapeName, "repo__shape"));
-    const words = el("span", "repo__words");
-    words.appendChild(el("span", "repo__owner", item.repo.owner + " /"));
-    words.appendChild(el("span", "repo__name", humanName(item.repo.name)));
-    pic.appendChild(words);
-    return pic;
-  }
-
   function buildPicture(item, className) {
-    if (item.repo) return buildRepoTile(item, className);
     const pic = el("span", className + " clip__pic--" + item.shelf);
     const ph = el("span", "clip__ph");
     ph.appendChild(shape(SHELF[item.shelf].shape, "clip__shape"));
@@ -365,7 +349,12 @@
       img.decoding = "async";
       img.src = item.thumb;
       img.addEventListener("error", () => img.remove(), { once: true });
-      img.addEventListener("load", () => pic.classList.add("has-img"), { once: true });
+      img.addEventListener("load", () => {
+        pic.classList.add("has-img");
+        /* A screenshot of a repo page is zoomed into its top corner, where the
+           name is; a designed share card (about 2:1) is shown whole, uncropped. */
+        if (item.repo) pic.classList.add(img.naturalWidth / img.naturalHeight < 1.85 ? "clip__pic--zoom" : "clip__pic--whole");
+      }, { once: true });
       pic.appendChild(img);
     }
     return pic;
