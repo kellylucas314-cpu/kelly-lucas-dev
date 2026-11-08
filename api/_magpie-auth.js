@@ -90,6 +90,29 @@ export function isAuthenticated(request) {
   }
 }
 
+/* The feather's key. Derived from the session secret, so there is no new
+   secret to store: the signed-in library shows it once for pasting into the
+   Chrome feather, and changing MAGPIE_SESSION_SECRET retires it. */
+export function clipKey() {
+  return "mgp_" + sign("magpie-clip-key-v1");
+}
+
+export function hasClipKey(request) {
+  try {
+    const authorization = header(request, "authorization");
+    if (!authorization.startsWith("Bearer ")) return false;
+    const token = authorization.slice(7).trim();
+    return token.length > 20 && token.length < 200 && safeEqual(token, clipKey());
+  } catch {
+    return false;
+  }
+}
+
+/* A signed-in browser, or the feather or the Mac with the key. */
+export function canUseLibrary(request) {
+  return isAuthenticated(request) || hasClipKey(request);
+}
+
 function dashboardTokenHashes() {
   try {
     const parsed = JSON.parse(process.env.DASHBOARD_AGENT_TOKEN_HASHES || "{}");

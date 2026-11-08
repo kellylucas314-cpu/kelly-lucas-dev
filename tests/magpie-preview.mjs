@@ -7,10 +7,14 @@
 // The stand-in library is built from the design desk's public clips
 // (design-library.js), so nothing private is ever read or served. Sign in
 // with any password except "wrong". /brain/gallery.html?empty=1 serves an
-// empty library and ?fail=1 a broken one, to test those states.
+// empty library and ?fail=1 a broken one, to test those states. Saving,
+// filing and collections use the real API code against a temp folder;
+// GET /api/magpie-preview-key gives the feather key for testing a clip.
 
 import { createServer } from "node:http";
-import { readFile, stat } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, stat, writeFile } from "node:fs/promises";
+import { randomBytes } from "node:crypto";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import vm from "node:vm";
 
@@ -73,13 +77,46 @@ async function sampleLibrary() {
   return { items };
 }
 
-const library = await sampleLibrary();
-const sessions = new Set();
+/* The real API handlers run here against a throwaway folder instead of
+   private Blob storage, so saving, filing and collections behave exactly as
+   they will on the site. Nothing is written outside the temp folder. */
+process.env.MAGPIE_SESSION_SECRET ||= randomBytes(32).toString("base64url");
+const { clearSessionCookie, createSessionCookie, clipKey } = await import("../api/_magpie-auth.js");
+const { ConflictError, LIBRARY_PATH } = await import("../lib/magpie-store.mjs");
+const handlers = {
+  "magpie-session": (await import("../api/magpie-session.js")).default,
+  "magpie-library": (await import("../api/magpie-library.js")).default,
+  "magpie-save": (await import("../api/magpie-save.js")).default,
+  "magpie-update": (await import("../api/magpie-update.js")).default,
+};
 
-function cookie(request) {
-  const match = /(?:^|;\s*)magpie_session=([^;]+)/.exec(request.headers.cookie || "");
-  return match && sessions.has(match[1]);
+const dataDir = await mkdtemp(path.join(tmpdir(), "magpie-preview-"));
+function fileBackend(dir) {
+  const full = (name) => path.join(dir, name);
+  const tag = (info) => `${info.mtimeMs}-${info.size}`;
+  return {
+    async read(name) {
+      try {
+        const [body, info] = await Promise.all([readFile(full(name)), stat(full(name))]);
+        return { body, etag: tag(info) };
+      } catch {
+        return null;
+      }
+    },
+    async write(name, body, { ifMatch } = {}) {
+      if (ifMatch) {
+        const info = await stat(full(name)).catch(() => null);
+        if (info && tag(info) !== ifMatch) throw new ConflictError("changed");
+      }
+      await mkdir(path.dirname(full(name)), { recursive: true });
+      await writeFile(full(name), body);
+    },
+  };
 }
+globalThis.__magpieBackend = fileBackend(dataDir);
+const sample = await sampleLibrary();
+await mkdir(path.join(dataDir, "magpie"), { recursive: true });
+await writeFile(path.join(dataDir, LIBRARY_PATH), JSON.stringify(sample));
 
 function json(response, body, status = 200, headers = {}) {
   response.writeHead(status, { "Content-Type": "application/json; charset=utf-8", ...headers });
@@ -92,39 +129,53 @@ async function readBody(request) {
   return data;
 }
 
+async function currentLibrary() {
+  return JSON.parse(await readFile(path.join(dataDir, LIBRARY_PATH), "utf8"));
+}
+
 async function api(request, response, url) {
   const name = url.pathname.replace("/api/", "");
   const referer = request.headers.referer || "";
   const variant = referer.includes("empty=1") ? "empty" : referer.includes("fail=1") ? "fail" : "";
-  if (name === "magpie-session") return json(response, { authenticated: cookie(request) });
   if (name === "magpie-login") {
     const body = JSON.parse((await readBody(request)) || "{}");
     await new Promise((resolve) => setTimeout(resolve, 350));
     if (body.password === "wrong" || !body.password) return json(response, { error: "That password did not work." }, 401);
-    const token = Math.random().toString(36).slice(2);
-    sessions.add(token);
-    return json(response, { ok: true }, 200, { "Set-Cookie": `magpie_session=${token}; Path=/; HttpOnly; SameSite=Lax` });
+    return json(response, { ok: true }, 200, { "Set-Cookie": createSessionCookie(request) });
   }
-  if (name === "magpie-logout") {
-    return json(response, { ok: true }, 200, { "Set-Cookie": "magpie_session=; Path=/; Max-Age=0" });
-  }
-  if (!cookie(request)) return json(response, { error: "Sign in required" }, 401);
-  if (name === "magpie-library") {
+  if (name === "magpie-logout") return json(response, { ok: true }, 200, { "Set-Cookie": clearSessionCookie(request) });
+  if (name === "magpie-preview-key") return json(response, { key: clipKey() });
+  if (name === "magpie-library" && variant) {
     await new Promise((resolve) => setTimeout(resolve, 250));
     if (variant === "fail") return json(response, { error: "Library is temporarily unavailable" }, 503);
-    return json(response, variant === "empty" ? { items: [] } : library);
+    return json(response, { items: [], collections: [] });
   }
+  if (handlers[name]) {
+    const raw = await readBody(request);
+    request.body = raw ? (() => { try { return JSON.parse(raw); } catch { return raw; } })() : undefined;
+    if (name === "magpie-library") await new Promise((resolve) => setTimeout(resolve, 200));
+    return handlers[name](request, response);
+  }
+  const { canUseLibrary } = await import("../api/_magpie-auth.js");
+  if (!canUseLibrary(request)) return json(response, { error: "Sign in required" }, 401);
   if (name === "magpie-thumb") {
     const thumb = path.basename(url.searchParams.get("name") || "");
-    return serveFile(response, path.join(root, "assets/design/thumbs", thumb));
+    const saved = path.join(dataDir, "magpie/thumbs", thumb);
+    const exists = await stat(saved).then(() => true, () => false);
+    return serveFile(response, exists ? saved : path.join(root, "assets/design/thumbs", thumb));
   }
   if (name === "magpie-note") {
     const file = url.searchParams.get("file") || "";
-    const item = library.items.find((entry) => entry.file === file);
+    const saved = path.join(dataDir, "magpie/notes", path.basename(file));
+    if (await stat(saved).then(() => true, () => false)) {
+      response.writeHead(200, { "Content-Type": "text/markdown; charset=utf-8" });
+      return response.end(await readFile(saved));
+    }
+    const item = (await currentLibrary()).items.find((entry) => entry.file === file);
     if (!item) return json(response, { error: "Note not found" }, 404);
     response.writeHead(200, { "Content-Type": "text/markdown; charset=utf-8" });
     return response.end(
-      `---\ntitle: "${item.title}"\nurl: ${item.url}\ntags: [${item.tags.join(", ")}]\nclipped: ${item.clippedAt}\n---\n\n# ${item.title}\n\n` +
+      `---\ntitle: "${item.title}"\nurl: ${item.url}\ntags: [${(item.tags || []).join(", ")}]\nclipped: ${item.clippedAt}\n---\n\n# ${item.title}\n\n` +
       `${item.description || "No description saved."}\n\n## Notes\n\n- This is a stand-in note from the local preview.\n- The real notes live in the vault on the Mac.\n\n## Excerpt\n\n> ${"Saved text from the page goes here. ".repeat(12)}\n`,
     );
   }
@@ -151,5 +202,5 @@ createServer(async (request, response) => {
   if (!file.startsWith(root)) return serveFile(response, "");
   return serveFile(response, url.pathname === "/" ? path.join(root, "index.html") : file);
 }).listen(port, "127.0.0.1", () => {
-  console.log(`Magpie preview on http://127.0.0.1:${port} (${library.items.length} sample clips)`);
+  console.log(`Magpie preview on http://127.0.0.1:${port} (${sample.items.length} sample clips, data in ${dataDir})`);
 });
