@@ -212,7 +212,10 @@
       clipped: String(item.clippedAt || ""),
       file: String(item.file || ""),
       transcript: Boolean(item.hasTranscript),
-      thumb: thumbName ? "/api/magpie-thumb?name=" + encodeURIComponent(thumbName) : "",
+      /* A repo shows GitHub's own preview card, not a screenshot of the repo page. */
+      thumb: repo
+        ? "/api/magpie-thumb?repo=" + encodeURIComponent(repo.owner + "/" + repo.name)
+        : thumbName ? "/api/magpie-thumb?name=" + encodeURIComponent(thumbName) : "",
       hay: [title, item.description, item.excerpt, item.note, site, KIND_WORD[shelf], origin, tags.join(" ")]
         .join(" ")
         .toLowerCase(),
@@ -336,24 +339,8 @@
     return list;
   }
 
-  /* A repo gets a drawn tile instead of a tiny screenshot of GitHub. */
-  const REPO_SHAPES = [["s-sun", "honey"], ["s-cog", "teal"], ["s-blob", "coral"], ["s-quat", "sage"], ["s-ast", "honey"], ["s-bean", "teal"]];
-  function buildRepoTile(item, className) {
-    let hash = 0;
-    for (const ch of item.repo.owner + "/" + item.repo.name) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
-    const [shapeName, color] = REPO_SHAPES[hash % REPO_SHAPES.length];
-    const pic = el("span", className + " clip__pic--repo repo--" + color);
-    pic.appendChild(shape(shapeName, "repo__shape"));
-    const words = el("span", "repo__words");
-    words.appendChild(el("span", "repo__owner", item.repo.owner + " /"));
-    words.appendChild(el("span", "repo__name", humanName(item.repo.name)));
-    pic.appendChild(words);
-    return pic;
-  }
-
   function buildPicture(item, className) {
-    if (item.repo) return buildRepoTile(item, className);
-    const pic = el("span", className + " clip__pic--" + item.shelf);
+    const pic = el("span", className + " clip__pic--" + item.shelf + (item.repo ? " clip__pic--repo" : ""));
     const ph = el("span", "clip__ph");
     ph.appendChild(shape(SHELF[item.shelf].shape, "clip__shape"));
     ph.appendChild(el("span", "clip__initials", initials(item.title, item.site)));

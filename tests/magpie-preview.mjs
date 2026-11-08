@@ -159,6 +159,8 @@ async function api(request, response, url) {
   const { canUseLibrary } = await import("../api/_magpie-auth.js");
   if (!canUseLibrary(request)) return json(response, { error: "Sign in required" }, 401);
   if (name === "magpie-thumb") {
+    // GitHub preview cards need the open web; locally the card shows its stand-in.
+    if (url.searchParams.get("repo")) return json(response, { error: "Image not found" }, 404);
     const thumb = path.basename(url.searchParams.get("name") || "");
     const saved = path.join(dataDir, "magpie/thumbs", thumb);
     const exists = await stat(saved).then(() => true, () => false);
