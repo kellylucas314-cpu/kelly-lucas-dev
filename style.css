@@ -1107,7 +1107,7 @@ kbd {
 /* the bar: search, origin, sort, layout and the shelves; it follows you down the page */
 .lib-bar { position: sticky; top: 0; z-index: 20; padding: 14px 0 12px; background: var(--paper); border-bottom: 1px solid var(--rule); }
 .lib-bar__row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-.lib-search { position: relative; flex: 1 1 340px; display: block; }
+.lib-search { position: relative; flex: 1 1 220px; display: block; }
 .lib-search svg { position: absolute; left: 18px; top: 50%; width: 20px; height: 20px; translate: 0 -50%; fill: none; stroke: var(--navy); stroke-width: 1.8; stroke-linecap: round; pointer-events: none; }
 .lib-search input {
   width: 100%; height: 52px; padding: 0 52px 0 50px;
@@ -1205,13 +1205,22 @@ kbd {
 .clip__shape { position: absolute; width: 58%; right: -10%; bottom: -24%; color: var(--tile-shape, var(--paper)); transition: transform 0.8s var(--ease); }
 .clip:hover .clip__shape { transform: rotate(30deg); }
 .clip__initials { position: relative; font-size: clamp(34px, 3.4vw, 52px); letter-spacing: -0.04em; line-height: 1; }
+.clip__pic--repo { container-type: inline-size; background: var(--navy); color: var(--paper); }
+.repo__shape { position: absolute; width: 46%; right: -8%; top: -14%; color: var(--repo-shape, var(--honey)); transition: transform 0.8s var(--ease); }
+.clip:hover .repo__shape { transform: rotate(30deg); }
+.repo--teal { --repo-shape: var(--teal); }
+.repo--coral { --repo-shape: var(--coral); }
+.repo--sage { --repo-shape: var(--sage); }
+.repo__words { position: absolute; left: 7%; right: 7%; bottom: 9%; display: grid; gap: 4px; }
+.repo__owner { font-family: var(--mono); font-size: clamp(10px, 4.4cqi, 14px); opacity: 0.75; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.repo__name { font-size: clamp(14px, 9.5cqi, 36px); line-height: 1.04; letter-spacing: -0.025em; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .clip__body { display: flex; flex-direction: column; flex: 1; padding: 14px 10px 0; }
 .clip__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 13px; }
 .clip__meta time { font-family: var(--mono); font-size: 12.5px; color: var(--navy-soft); }
 .kind { display: inline-block; padding: 2px 10px 3px; border-radius: 999px; background: var(--shelf-soft); font-size: 13px; line-height: 1.35; }
 .kind--code { background: var(--navy); color: var(--paper); }
 .kind--transcript { background: var(--honey); }
-.clip__title { margin-top: 10px; font-size: 19px; font-weight: 500; line-height: 1.25; letter-spacing: -0.015em; overflow-wrap: anywhere; }
+.clip__title { margin-top: 10px; font-size: 19px; font-weight: 500; line-height: 1.25; letter-spacing: -0.015em; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .clip__title a { text-decoration: none; }
 .clip__title a:hover { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
 .clip__text { margin-top: 6px; font-size: 15px; line-height: 1.45; color: var(--navy-hover); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
@@ -1635,6 +1644,10 @@ body.is-dragging .rail-row.is-drop { box-shadow: 0 0 0 2px var(--navy); }
 }
 @media (max-width: 1240px) {
   .lib-grid:not(.is-list) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lib-bar__row { flex-wrap: nowrap; }
+  .lib-bar .lib-select select { max-width: 190px; padding: 0 36px 0 16px; background-position: right 14px center; text-overflow: ellipsis; }
+  .lib-select-btn { justify-content: center; width: 52px; padding: 0; flex: none; }
+  .lib-select-btn span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
 @media (max-width: 900px) {
   .lib-layout { grid-template-columns: minmax(0, 1fr); gap: 18px; }

@@ -150,12 +150,47 @@
     return "Origin not recorded";
   }
 
+  /* GitHub repos: the owner and name, read from the address. */
+  function repoOf(url) {
+    const match = /^https?:\/\/(?:www\.)?github\.com\/([\w.-]+)\/([\w.-]+)\/?(?:[?#].*)?$/i.exec(url || "");
+    if (!match || /^(orgs|topics|collections|sponsors|marketplace|settings|features)$/i.test(match[1])) return null;
+    return { owner: match[1], name: match[2].replace(/\.git$/i, "") };
+  }
+  const humanName = (slug) => slug.replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim();
+  /* "drawio-skill" reads as "Drawio skill"; a bare "skills" borrows its owner. */
+  function repoTitle(repo) {
+    let name = humanName(repo.name);
+    if (!/\s/.test(name) && name.length <= 8) name = humanName(repo.owner) + " " + name;
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  }
+
+  /* A card title that reads at a glance. The full title stays in search and
+     in the side sheet; a title Kelly typed herself is never shortened. */
+  function shortTitle(title, repo, edited) {
+    if (edited) return { short: title, rest: "" };
+    if (repo) {
+      const slash = new RegExp("^\\s*" + repo.owner.replace(/[.]/g, "\\.") + "\\s*/\\s*" + repo.name.replace(/[.]/g, "\\.") + "\\s*(?::|\\s[-|]\\s|$)", "i");
+      const plain = /^[\w.-]+$/.test(title.trim()) && title.trim().toLowerCase() === repo.name.toLowerCase();
+      if (slash.test(title) || plain) {
+        return { short: repoTitle(repo), rest: title.replace(slash, "").trim() };
+      }
+    }
+    if (title.length <= 56) return { short: title, rest: "" };
+    const cut = /\s(?:[|\u2013\u2014\u00b7-])\s|:\s/.exec(title);
+    if (cut && cut.index >= 4 && cut.index <= 60) {
+      return { short: title.slice(0, cut.index).trim(), rest: title.slice(cut.index + cut[0].length).trim() };
+    }
+    return { short: title, rest: "" };
+  }
+
   function prepareOne(item, index) {
     const tags = Array.isArray(item.tags) ? item.tags.map(String).filter((tag) => tag && tag !== "magpie" && !tag.startsWith("desk:")) : [];
     const url = safeHttpUrl(item.url);
     const site = String(item.site || hostOf(url) || "");
     const title = String(item.title || site || item.url || "Untitled");
-    const text = String(item.note || item.description || item.excerpt || "").trim();
+    const repo = repoOf(url);
+    const { short, rest } = shortTitle(title, repo, Boolean(item.editedAt));
+    const text = String(item.note || item.description || item.excerpt || rest || "").trim();
     const shelf = shelfOf(item);
     const origin = originOf(item);
     const thumbName = String(item.thumbLocal || "").split("/").pop();
@@ -164,6 +199,8 @@
       order: index,
       raw: item,
       title,
+      short,
+      repo,
       url,
       site,
       text,
@@ -234,7 +271,7 @@
     state.shelf = SHELF[params.get("shelf")] ? params.get("shelf") : "";
     state.tag = params.get("tag") || "";
     state.origin = params.get("origin") || "";
-    state.sort = ["new", "old", "az"].includes(params.get("sort")) ? params.get("sort") : "new";
+    state.sort = ["new", "old", "az", "site"].includes(params.get("sort")) ? params.get("sort") : "new";
     state.view = params.get("view") === "list" ? "list" : "grid";
     state.col = params.get("col") || "";
   }
@@ -268,12 +305,15 @@
     if (skip !== "q" && words.some((word) => !item.hay.includes(word))) return false;
     if (skip !== "shelf" && state.shelf && item.shelf !== state.shelf) return false;
     if (skip !== "tag" && state.tag && !item.tags.includes(state.tag)) return false;
-    if (skip !== "origin" && state.origin && item.origin !== state.origin) return false;
+    if (skip !== "origin" && state.origin) {
+      if (state.origin === NOT_ARCHIVE ? item.origin === ARCHIVE : item.origin !== state.origin) return false;
+    }
     return true;
   }
   function sorted(list) {
     const copy = list.slice();
-    if (state.sort === "az") copy.sort((a, b) => a.title.localeCompare(b.title, "en", { sensitivity: "base" }));
+    if (state.sort === "site") copy.sort((a, b) => a.site.replace(/^www\./, "").localeCompare(b.site.replace(/^www\./, ""), "en", { sensitivity: "base" }) || b.clipped.localeCompare(a.clipped));
+    else if (state.sort === "az") copy.sort((a, b) => a.short.localeCompare(b.short, "en", { sensitivity: "base" }));
     else if (state.sort === "old") copy.sort((a, b) => a.clipped.localeCompare(b.clipped) || a.order - b.order);
     else copy.sort((a, b) => b.clipped.localeCompare(a.clipped) || b.order - a.order);
     return copy;
@@ -296,7 +336,23 @@
     return list;
   }
 
+  /* A repo gets a drawn tile instead of a tiny screenshot of GitHub. */
+  const REPO_SHAPES = [["s-sun", "honey"], ["s-cog", "teal"], ["s-blob", "coral"], ["s-quat", "sage"], ["s-ast", "honey"], ["s-bean", "teal"]];
+  function buildRepoTile(item, className) {
+    let hash = 0;
+    for (const ch of item.repo.owner + "/" + item.repo.name) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+    const [shapeName, color] = REPO_SHAPES[hash % REPO_SHAPES.length];
+    const pic = el("span", className + " clip__pic--repo repo--" + color);
+    pic.appendChild(shape(shapeName, "repo__shape"));
+    const words = el("span", "repo__words");
+    words.appendChild(el("span", "repo__owner", item.repo.owner + " /"));
+    words.appendChild(el("span", "repo__name", humanName(item.repo.name)));
+    pic.appendChild(words);
+    return pic;
+  }
+
   function buildPicture(item, className) {
+    if (item.repo) return buildRepoTile(item, className);
     const pic = el("span", className + " clip__pic--" + item.shelf);
     const ph = el("span", "clip__ph");
     ph.appendChild(shape(SHELF[item.shelf].shape, "clip__shape"));
@@ -361,8 +417,9 @@
     body.appendChild(meta);
 
     const heading = el("h3", "clip__title");
+    if (item.short !== item.title) heading.title = item.title;
     if (item.url) {
-      const a = el("a", null, item.title);
+      const a = el("a", null, item.short);
       a.href = item.url;
       a.target = "_blank";
       a.rel = "noopener noreferrer";
@@ -370,7 +427,7 @@
       a.appendChild(el("span", "sr-only", " (opens in a new tab)"));
       heading.appendChild(a);
     } else {
-      heading.textContent = item.title;
+      heading.textContent = item.short;
     }
     body.appendChild(heading);
     if (item.text) body.appendChild(el("p", "clip__text", item.text));
@@ -646,7 +703,7 @@
     if (state.q) pills.push(["q", "“" + state.q + "”"]);
     if (state.shelf) pills.push(["shelf", SHELF[state.shelf].label]);
     if (state.tag) pills.push(["tag", "#" + state.tag]);
-    if (state.origin) pills.push(["origin", state.origin]);
+    if (state.origin) pills.push(["origin", originLabel(state.origin)]);
     pills.forEach(([key, label]) => {
       const pill = el("button", "lib-pill");
       pill.type = "button";
@@ -711,7 +768,7 @@
     const inView = ITEMS.filter((item) => inPlace(item)).length;
     $("resultCount").textContent = filtered
       ? plural(visible.length, "clip") + " of " + inView.toLocaleString("en-US")
-      : plural(inView, "clip") + ", " + (state.sort === "az" ? "A to Z" : state.sort === "old" ? "oldest first" : "newest first");
+      : plural(inView, "clip") + ", " + (state.sort === "az" ? "A to Z" : state.sort === "site" ? "grouped by site" : state.sort === "old" ? "oldest first" : "newest first");
 
     const empty = $("emptyState");
     empty.hidden = visible.length > 0;
@@ -769,6 +826,10 @@
     if (since && dates.length) since.textContent = "since " + dateWord(dates[0]) + ", newest " + dateWord(dates[dates.length - 1]);
   }
 
+  const ARCHIVE = "StumbleUpon archive";
+  const NOT_ARCHIVE = "-archive";
+  const originLabel = (value) => (value === NOT_ARCHIVE ? "Not the StumbleUpon archive" : value);
+
   function fillOrigins() {
     const select = $("originSelect");
     if (!select) return;
@@ -777,12 +838,18 @@
     const all = el("option", null, "Every origin");
     all.value = "";
     select.appendChild(all);
+    if (counts.has(ARCHIVE)) {
+      const rest = live().length - counts.get(ARCHIVE);
+      const skipArchive = el("option", null, "Skip the StumbleUpon archive (" + rest + ")");
+      skipArchive.value = NOT_ARCHIVE;
+      select.appendChild(skipArchive);
+    }
     [...counts.keys()].sort().forEach((origin) => {
       const option = el("option", null, origin + " (" + counts.get(origin) + ")");
       option.value = origin;
       select.appendChild(option);
     });
-    if (state.origin && !counts.has(state.origin)) state.origin = "";
+    if (state.origin && !counts.has(state.origin) && !(state.origin === NOT_ARCHIVE && counts.has(ARCHIVE))) state.origin = "";
   }
 
   function render(options = {}) {
