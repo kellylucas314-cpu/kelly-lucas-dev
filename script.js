@@ -279,7 +279,7 @@ if (scene) {
   }
 }
 
-/* ---------- Home: the race. Lights out from the grid, then lap after lap while the hero is on screen ---------- */
+/* ---------- Home: the race. Lights out from the grid when the Say hello band scrolls into view, then a lap now and then ---------- */
 const racer = $("[data-racer]");
 const cars = racer ? $$(".racer__car", racer) : [];
 if (cars.length && !reducedMotion && cars[0].animate && "IntersectionObserver" in window) {
@@ -288,7 +288,7 @@ if (cars.length && !reducedMotion && cars[0].animate && "IntersectionObserver" i
   const running = new Set();
   const waiting = new Set();
   // px per ms: each car has its own pace, so places change over a few laps
-  const pace = cars.map((_, i) => 0.26 - i * 0.006 + Math.random() * 0.012);
+  const pace = cars.map((_, i) => 0.17 - i * 0.006 + Math.random() * 0.012);
   const live = () => inView && !document.hidden;
   function lap(car, i, fromGrid) {
     if (!live()) { waiting.add(i); return; }
@@ -302,13 +302,13 @@ if (cars.length && !reducedMotion && cars[0].animate && "IntersectionObserver" i
       { duration: (from - to) / speed, easing: fromGrid ? "cubic-bezier(.5,0,.8,1)" : "linear", fill: "both" }
     );
     running.add(run);
-    run.onfinish = () => { running.delete(run); setTimeout(() => lap(car, i, false), 300 + Math.random() * 2400); };
+    run.onfinish = () => { running.delete(run); setTimeout(() => lap(car, i, false), 4000 + Math.random() * 8000); };
   }
   function update() {
     if (!live()) { running.forEach((r) => r.pause()); return; }
     if (!started) {
       started = true;
-      // lights out: the grid launches a beat after the hero comes into view
+      // lights out: the grid launches a beat after the band comes into view
       setTimeout(() => cars.forEach((car, i) => lap(car, i, true)), 1600);
       return;
     }

@@ -42,17 +42,19 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
   the places band and the colophon say the drawings were made with an image
   model in Kelly's style.
 - Personality budget: the tab-title message, "Another place", the "Kelly"
-  cursor tag on the poster, the race at the foot of the homepage hero
-  (Kelly's side-view car on pole, red dinos and HelioFlux in place of the
-  Red Bull marks, plus four rivals whose leaves are recolored coral, honey,
-  sage and paper: `race-car-<color>.webp`, 480px, derived from
-  `race-car.webp`), the Alt+Shift+M
+  cursor tag on the poster, the little race at the foot of the homepage's
+  Say hello band (Kelly's side-view car, red dinos and HelioFlux in place of
+  the Red Bull marks, plus two rivals whose leaves are recolored coral and
+  honey; all three are 480px WebPs derived from `race-car.webp`:
+  `race-car-sm.webp`, `race-car-coral.webp`, `race-car-honey.webp`; kept
+  small and low down so it never competes with the poster), the Alt+Shift+M
   reflex on the homepage, the
   "Clip it" demo on the Magpie page, the magpie 404, and the playground.
 - Motion: the suns turn very slowly (the spin lives on the svg root), the
-  cursor tag bobs, the five cars sit on a starting grid, launch a beat
-  after the hero comes into view and then lap at their own paces while it
-  is on screen (parked on the grid without JS or with reduced motion), the poster
+  cursor tag bobs, the three race cars sit on a starting grid, launch a
+  beat after the Say hello band comes into view, then each laps again every
+  few seconds while it is on screen (parked on the grid without JS or with
+  reduced motion; images load lazily), the poster
   crossfades on click, the clip demo plays
   once on the Magpie page. `prefers-reduced-motion` turns all of it off and
   nothing is hidden behind JS.

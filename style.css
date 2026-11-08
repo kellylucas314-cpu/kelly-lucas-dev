@@ -221,7 +221,7 @@ kbd {
 }
 
 /* ---------- Home: hello and the poster ---------- */
-.hero { position: relative; padding: 26px 0 88px; }
+.hero { position: relative; padding: 26px 0 56px; }
 .hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 640px); gap: 40px; align-items: center; }
 .hero__text { position: relative; z-index: 2; max-width: 640px; }
 .hero .lede { margin-top: 30px; max-width: 600px; }
@@ -587,9 +587,11 @@ kbd {
 .bg-honey { background: var(--honey); }
 .bg-sage { background: var(--sage); }
 
-/* ---------- Home: the race. Kelly's car on pole and four rivals in the site's colors, on the grid at the foot of the hero; lights out and laps (script.js) ---------- */
-.hero:has(.racer) { padding-bottom: 156px; }
-.racer { --w: 200px; --step: 190px; --k: 1; position: absolute; left: 0; right: 0; bottom: 26px; height: calc(var(--w) * .36 + 40px * var(--k)); overflow: hidden; pointer-events: none; }
+/* ---------- Home: the race. Three small cars at the foot of the Say hello band; they leave the grid when it scrolls into view, then lap now and then (script.js) ---------- */
+.hello:has(.racer) { padding-bottom: 172px; }
+.hello:has(.racer) .books { bottom: 92px; }
+.hello:has(.racer) .d2 { bottom: 110px; }
+.racer { --w: 120px; --step: 112px; --k: 1; position: absolute; left: 0; right: 0; bottom: 30px; height: calc(var(--w) * .36 + 16px * var(--k)); overflow: hidden; pointer-events: none; }
 .racer__car { position: absolute; right: calc(max(var(--gutter), (100% - var(--wrap)) / 2) + var(--g) * var(--step)); bottom: calc(var(--b) * 1px * var(--k)); width: calc(var(--w) * var(--s)); z-index: var(--z); }
 .racer__car img { display: block; width: 100%; height: auto; }
 .racer__wheel { position: absolute; left: var(--x); top: var(--y); width: 14.7%; aspect-ratio: 1; translate: -50% -50%; fill: none; stroke: #042444; stroke-width: 3; stroke-linecap: round; }
@@ -662,8 +664,10 @@ kbd {
   .note__t { font-size: 22px; }
   .note__d { font-size: 16px; }
   .poster__cap { font-size: 18px; margin-top: 16px; }
-  .hero:has(.racer) { padding-bottom: 104px; }
-  .racer { --w: 128px; --step: 56px; --k: .6; bottom: 20px; }
+  .hero { padding-bottom: 40px; }
+  .hello:has(.racer) { padding-bottom: 320px; }
+  .hello:has(.racer) .books { bottom: 88px; }
+  .racer { --w: 92px; --step: 80px; --k: .7; bottom: 26px; }
   .poster__cap [data-place-name] { display: grid; align-content: end; min-height: 3em; }
   .orb--quat { right: 28%; }
   .cur b { font-size: 12px; padding: 2px 8px; }
