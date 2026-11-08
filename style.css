@@ -228,16 +228,16 @@ kbd {
 .hero__acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 38px; }
 
 /* the Magpie note under the hero text */
-.note { display: flex; align-items: center; gap: 22px; max-width: 580px; margin-top: 58px; border-radius: 12px; color: inherit; text-decoration: none; }
-.note__art { position: relative; flex: none; width: 118px; }
+.note { display: flex; align-items: center; gap: 28px; max-width: 660px; margin-top: 64px; border-radius: 12px; color: inherit; text-decoration: none; }
+.note__art { position: relative; flex: none; width: 176px; }
 .note__art .shape { position: absolute; left: 50%; top: 54%; width: 104%; translate: -50% -50%; color: var(--pale-teal); transition: color 0.2s, transform 0.3s; }
 .note__art img { position: relative; width: 100%; transition: transform 0.3s; }
-.note__t { font-size: 26px; line-height: 1.15; letter-spacing: -0.01em; text-decoration: underline transparent; text-decoration-thickness: 1.5px; text-underline-offset: 5px; transition: text-decoration-color 0.15s; }
+.note__t { font-size: 34px; line-height: 1.12; letter-spacing: -0.01em; text-decoration: underline transparent; text-decoration-thickness: 1.5px; text-underline-offset: 5px; transition: text-decoration-color 0.15s; }
 .note:hover .note__t, .note:focus-visible .note__t { text-decoration-color: currentColor; }
 .note:hover .note__art .shape { color: var(--honey); transform: rotate(14deg); }
 .note:hover .note__art img { transform: translateY(-3px); }
 .note__t, .note__d { display: block; }
-.note__d { margin-top: 6px; font-size: 17px; line-height: 1.4; }
+.note__d { margin-top: 8px; font-size: 19px; line-height: 1.4; }
 
 /* the poster: one big place on a sun */
 .poster { position: relative; }
@@ -253,9 +253,9 @@ kbd {
 .orb--splat { width: 12%; left: -4%; top: 57%; color: var(--coral); }
 .orb--squig { width: 13%; right: -2%; top: 40%; color: var(--navy); }
 /* two small places on round shapes, orbiting the sun */
-.poster__cap { position: relative; display: grid; justify-items: center; gap: 12px; margin-top: 22px; font-size: 20px; letter-spacing: -0.01em; text-align: center; }
+.poster__cap { position: relative; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 16px; margin-top: 10px; font-size: 18px; letter-spacing: -0.01em; text-align: center; }
 .poster__cap a { text-underline-offset: 3px; }
-.poster__cap .btn { width: 200px; justify-content: center; }
+.poster__cap .btn { justify-content: center; }
 
 /* the one cursor: a wink */
 .cur { position: absolute; z-index: 4; display: flex; align-items: flex-start; pointer-events: none; animation: bob 7s ease-in-out infinite; }
@@ -659,16 +659,16 @@ kbd {
   .h1 { font-size: 52px; }
   .hero .lede, .page-hero .lede { font-size: 19px; margin-top: 20px; }
   .hero__acts { margin-top: 26px; gap: 10px; }
-  .note { margin-top: 36px; gap: 16px; }
-  .note__art { width: 92px; }
-  .note__t { font-size: 22px; }
+  .note { margin-top: 40px; gap: 18px; }
+  .note__art { width: 116px; }
+  .note__t { font-size: 25px; }
   .note__d { font-size: 16px; }
-  .poster__cap { font-size: 18px; margin-top: 16px; }
+  .poster__cap { font-size: 16px; margin-top: 8px; gap: 8px 12px; }
+  .poster__cap .btn { font-size: 15px; padding: 8px 16px; }
   .hero { padding-bottom: 40px; }
   .hello:has(.racer) { padding-bottom: 320px; }
   .hello:has(.racer) .books { bottom: 88px; }
   .racer { --w: 92px; --step: 80px; --k: .7; bottom: 26px; }
-  .poster__cap [data-place-name] { display: grid; align-content: end; min-height: 3em; }
   .orb--quat { right: 28%; }
   .cur b { font-size: 12px; padding: 2px 8px; }
   .band { padding: 84px 0; }
