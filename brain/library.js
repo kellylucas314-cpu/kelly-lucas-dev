@@ -364,6 +364,7 @@
     owner.appendChild(icon("i-github", "repo-band__mark"));
     owner.appendChild(el("span", "repo-band__who", item.repo.owner + "/"));
     band.appendChild(owner);
+    band.appendChild(icon("i-code", "repo-band__code"));
     band.appendChild(el("span", "repo-band__name", item.short));
     band.appendChild(el("span", "repo-band__slug", item.repo.name));
     band.appendChild(waveEdge());
@@ -432,7 +433,7 @@
       time.dateTime = item.clipped.slice(0, 10);
       meta.appendChild(time);
     }
-    if (item.site) meta.appendChild(el("span", "clip__site", item.site));
+    if (item.site && !item.repo) meta.appendChild(el("span", "clip__site", item.site));
     body.appendChild(meta);
 
     const heading = el("h3", "clip__title");
@@ -1418,7 +1419,7 @@
     if (item.transcript) meta.appendChild(el("span", "kind kind--transcript", "transcript"));
     const when = dateWord(item.clipped);
     if (when) meta.appendChild(el("time", null, when));
-    if (item.site) meta.appendChild(el("span", "clip__site", item.site));
+    if (item.site && !item.repo) meta.appendChild(el("span", "clip__site", item.site));
 
     const pic = $("sheetPic");
     pic.textContent = "";

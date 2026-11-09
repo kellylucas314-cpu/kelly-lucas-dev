@@ -1211,10 +1211,12 @@ kbd {
 .repo-band--coral { --band: var(--pale-coral); }
 .repo-band--honey { --band: var(--honey-tint); }
 .repo-band--sage { --band: var(--sage-tint); }
-.repo-band__owner { flex: none; align-self: flex-start; margin: 0 0 auto -6px; max-width: calc(100% + 6px); display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 6px; border-radius: 999px; background: var(--paper); font-family: var(--mono); font-size: 12px; line-height: 1; }
+.repo-band__owner { flex: none; align-self: flex-start; margin: 0 0 auto -6px; max-width: calc(100% - 52px); display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 6px; border-radius: 999px; background: var(--paper); font-family: var(--mono); font-size: 12px; line-height: 1; }
 .repo-band__mark { flex: none; width: 18px; height: 18px; color: var(--navy); }
+.ico.repo-band__code { position: absolute; top: 8px; right: 12px; width: 46px; height: 46px; color: var(--code, var(--deep-teal)); }
+.repo-band--coral { --code: var(--deep-coral); } .repo-band--honey { --code: var(--coral); } .repo-band--sage { --code: var(--deep-teal); }
 .repo-band__who { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.repo-band__name { flex: none; position: relative; max-width: 100%; margin-top: 12px; font-size: clamp(28px, 2.9vw, 42px); line-height: 1; letter-spacing: -0.035em; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.repo-band__name { flex: none; position: relative; max-width: 100%; margin-top: 12px; font-size: clamp(20px, 1.9vw, 26px); line-height: 1.08; letter-spacing: -0.025em; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .repo-band__slug { flex: none; align-self: flex-start; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 2px 8px; border-radius: 6px; background: rgb(31 53 94 / 0.08); font-family: var(--mono); font-size: 12.5px; }
 .repo-band__slug::before { content: "~/"; opacity: 0.55; }
 .repo-band__edge { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 16px; fill: var(--paper); }
@@ -1225,7 +1227,7 @@ kbd {
 .sheet__picture.repo-band { border-radius: 19px; }
 .is-list .repo-band { aspect-ratio: 16 / 10; min-height: 0; padding: 8px; border-radius: 14px; }
 .is-list .clip--repo .clip__face { border-radius: 14px; }
-.is-list .repo-band__edge, .is-list .repo-band__who { display: none; }
+.is-list .repo-band__edge, .is-list .repo-band__who, .is-list .repo-band__code { display: none; }
 .is-list .repo-band__owner { margin: 0; padding: 7px; }
 .is-list .repo-band__mark { width: 22px; height: 22px; }
 .is-list .repo-band { justify-content: center; align-items: center; }
