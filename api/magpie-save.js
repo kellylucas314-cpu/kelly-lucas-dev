@@ -9,6 +9,7 @@ import {
   storePicture,
   upsertClip,
 } from "../lib/magpie-store.mjs";
+import { sectionFor, sectionTargets } from "../lib/magpie-sections.mjs";
 import {
   hasClipKey,
   isAuthenticated,
@@ -44,6 +45,25 @@ export default async function handler(request, response) {
     body = parseBody(request);
   } catch {
     return sendJson(response, { error: "That clip could not be read" }, 400);
+  }
+
+  /* { guess: true, url, title, tags, ... }: where Magpie would file this
+     clip. Nothing is saved; the feather shows the answer in its popup. */
+  if (body.guess) {
+    try {
+      const { lib } = await readLibrary();
+      const guess = lib.sectionsOn ? sectionFor(cleanClip(body)) : { section: "", why: "" };
+      const target = guess.section ? sectionTargets(lib).get(guess.section) : "";
+      const entry = target ? lib.collections.find((collection) => collection.id === target) : null;
+      return sendJson(response, {
+        ok: true,
+        on: Boolean(lib.sectionsOn),
+        section: entry ? { id: entry.id, name: entry.name, why: guess.why } : null,
+      });
+    } catch (error) {
+      const status = Number.isInteger(error?.status) ? error.status : 503;
+      return sendJson(response, { error: status === 400 ? error.message : "Magpie couldn't guess just now." }, status);
+    }
   }
 
   try {

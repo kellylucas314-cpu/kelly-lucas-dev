@@ -177,6 +177,21 @@ Keep it clean. No backup files, no version-numbered copies.
   HelioFlux, Design ideas, Read & watch, Weird & wonderful. Cards can be
   picked in bulk, filed, trashed, and edited in the side sheet (title, tags,
   note, collection), all with Undo.
+- Sections (Kelly, 2026-11-09: "you pick the sections"): seven collections
+  Magpie files into by itself, decided once in `lib/magpie-sections.mjs`
+  (first match wins): HelioFlux, Code & skills (anything on GitHub or another
+  code host), Science, Design tools, Inspo, Random fun, Read & watch. No
+  honest guess means Unsorted. Sorting existing clips is always a button
+  with Undo ("Sort into sections" / "File them"), never automatic: preview
+  deploys share the real library. Once `sectionsOn` is set, every new clip
+  (feather, Add box, Mac merge) files itself unless it names a collection;
+  `collection: "unsorted"` waits on purpose. Kelly's own filing always wins:
+  only new clips and Unsorted are ever touched. Tests:
+  `tests/magpie-sections.test.mjs`.
+- Site icons: `/api/magpie-thumb?icon=<host>` fetches a site's icon once,
+  keeps it in `magpie/icons/`, serves only sniffed PNG, JPEG, GIF, WebP or
+  ICO (never SVG) and answers 204 when there is none. The page's security
+  policy stays `img-src 'self'`; do not loosen it for favicons.
 - Saving: `POST /api/magpie-save` (the feather, the "Add a link" box, and the
   phone bookmarklet `?add=URL`). Editing: `POST /api/magpie-update` (signed-in
   session only). The feather's key is derived from `MAGPIE_SESSION_SECRET`

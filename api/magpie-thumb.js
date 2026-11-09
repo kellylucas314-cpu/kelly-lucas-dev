@@ -1,5 +1,6 @@
 import { get } from "@vercel/blob";
 import { Readable } from "node:stream";
+import { siteIcon } from "../lib/magpie-store.mjs";
 import {
   canUseLibrary,
   requestUrl,
@@ -8,6 +9,26 @@ import {
 } from "./_magpie-auth.js";
 
 const SAFE_IMAGE = /^[a-z0-9][a-z0-9._-]*\.(?:jpe?g|png|webp)$/i;
+const DAY = 86_400;
+
+/* ?icon=<host>: the site's own small icon, fetched once and kept. The
+   browser keeps the answer too (a week for an icon, a day for "none"), so a
+   page of cards asks once. */
+async function sendIcon(response, host) {
+  const icon = await siteIcon(host).catch(() => null);
+  response.setHeader("X-Content-Type-Options", "nosniff");
+  response.setHeader("Content-Security-Policy", "default-src 'none'; sandbox");
+  if (!icon) {
+    /* Nothing to show is not an error: the pill keeps the site's letter. */
+    response.statusCode = 204;
+    response.setHeader("Cache-Control", `private, max-age=${DAY}`);
+    return response.end();
+  }
+  response.statusCode = 200;
+  response.setHeader("Content-Type", icon.type);
+  response.setHeader("Cache-Control", `private, max-age=${7 * DAY}`);
+  return response.end(icon.body);
+}
 
 export default async function handler(request, response) {
   if (request.method !== "GET") {
@@ -15,7 +36,9 @@ export default async function handler(request, response) {
   }
   if (!canUseLibrary(request)) return unauthorized(response);
 
-  const name = requestUrl(request).searchParams.get("name") || "";
+  const query = requestUrl(request).searchParams;
+  if (query.has("icon")) return sendIcon(response, query.get("icon") || "");
+  const name = query.get("name") || "";
   if (!SAFE_IMAGE.test(name)) {
     return sendJson(response, { error: "Invalid image" }, 400);
   }
@@ -29,7 +52,7 @@ export default async function handler(request, response) {
     if (result.statusCode === 304) {
       response.statusCode = 304;
       response.setHeader("ETag", result.blob.etag);
-      response.setHeader("Cache-Control", "private, no-cache");
+      response.setHeader("Cache-Control", `private, max-age=${DAY}, stale-while-revalidate=${7 * DAY}`);
       return response.end();
     }
     if (result.statusCode !== 200) {
@@ -40,7 +63,7 @@ export default async function handler(request, response) {
       "Content-Type",
       result.blob.contentType || "application/octet-stream",
     );
-    response.setHeader("Cache-Control", "private, no-cache");
+    response.setHeader("Cache-Control", `private, max-age=${DAY}, stale-while-revalidate=${7 * DAY}`);
     response.setHeader("ETag", result.blob.etag);
     response.setHeader("X-Content-Type-Options", "nosniff");
     await new Promise((resolve, reject) => {

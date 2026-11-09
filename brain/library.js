@@ -19,8 +19,8 @@
   const LOGIN = "/brain/login.html";
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = window.matchMedia("(pointer: fine)").matches;
-  const COLORS = ["teal", "coral", "honey", "sage", "navy"];
-  const COLOR_NAME = { teal: "Teal", coral: "Coral", honey: "Honey", sage: "Sage", navy: "Navy" };
+  const COLORS = ["teal", "coral", "honey", "sage", "navy", "deep-teal", "deep-coral"];
+  const COLOR_NAME = { teal: "Teal", coral: "Coral", honey: "Honey", sage: "Sage", navy: "Navy", "deep-teal": "Deep teal", "deep-coral": "Deep coral" };
 
   /* Kinds group Magpie's types. Each one wears its own pair of colors (style.css). */
   const SHELVES = [
@@ -37,6 +37,10 @@
   const state = { q: "", shelf: "", tag: "", origin: "", sort: "new", view: "grid", col: "", limit: BATCH };
   let ITEMS = [];
   let COLLECTIONS = [];
+  /* Sections: Magpie files clips into collections by itself (lib/magpie-sections.mjs). */
+  let SECTIONS_ON = false;
+  let PLAN = null;
+  let sortResult = null;
   let visible = [];
   let tagTotals = [];
   let sheetList = [];
@@ -95,11 +99,6 @@
     } catch {
       return "";
     }
-  };
-  const initials = (title, site) => {
-    const words = String(title || site || "?").replace(/[^\p{L}\p{N} ]/gu, " ").trim().split(/\s+/).filter(Boolean);
-    if (words.length >= 2) return (words[0][0] + words[1][0]).toLowerCase();
-    return (words[0] || "?").slice(0, 2).toLowerCase();
   };
   const plural = (count, one, many) => count.toLocaleString("en-US") + " " + (count === 1 ? one : many || one + "s");
   const dateWord = (value) => {
@@ -197,6 +196,7 @@
     return {
       id: String(item.id || "i" + index),
       order: index,
+      host: hostOf(url).replace(/^www\./, ""),
       raw: item,
       title,
       short,
@@ -336,15 +336,20 @@
     return list;
   }
 
-  /* A GitHub repo has no picture worth showing, so its card is a label: a
-     soft color band on a dot grid with the owner, the name set big, the raw
-     repo name in mono and a wave edge (Kelly, 2026-11-09: "C's layout with A's big name"). The color
-     comes from the repo's own name, so a repo keeps it everywhere. */
-  const REPO_COLORS = ["teal", "coral", "honey", "sage"];
-  function repoColor(repo) {
+  /* Every card opens with a picture or a label, and both carry a small
+     paper pill that says where the link goes.
+
+     A page with a saved picture shows it, with the site's pill on top. A
+     page without one, and every GitHub repo (which has no picture worth
+     showing), is a label instead: a soft color band on a dot grid with the
+     name set in type and a wave edge (Kelly, 2026-11-09: "C's layout with
+     A's big name", then a thin </> for code). The color comes from the
+     site's or repo's own name, so it keeps it everywhere. */
+  const TINTS = ["teal", "coral", "honey", "sage"];
+  function tintOf(text) {
     let h = 0;
-    for (const ch of (repo.owner + "/" + repo.name).toLowerCase()) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-    return REPO_COLORS[h % REPO_COLORS.length];
+    for (const ch of String(text || "").toLowerCase()) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+    return TINTS[h % TINTS.length];
   }
   function waveEdge() {
     const ns = "http://www.w3.org/2000/svg";
@@ -358,8 +363,32 @@
     svg.appendChild(path);
     return svg;
   }
+  /* The site's own icon is fetched and kept by the library (never by this
+     page from the site itself); until it arrives, or if the site has none,
+     the pill shows the site's first letter. */
+  function sitePill(item) {
+    const host = item.host || item.site || "";
+    const pill = el("span", "site-pill");
+    const dot = el("span", "site-pill__dot site-pill__dot--" + tintOf(host));
+    dot.appendChild(el("span", "site-pill__letter", (host[0] || "?").toUpperCase()));
+    if (/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(item.host)) {
+      const img = el("img");
+      img.alt = "";
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.width = 18;
+      img.height = 18;
+      img.src = "/api/magpie-thumb?icon=" + encodeURIComponent(item.host.toLowerCase());
+      img.addEventListener("error", () => img.remove(), { once: true });
+      img.addEventListener("load", () => dot.classList.add("has-icon"), { once: true });
+      dot.appendChild(img);
+    }
+    pill.appendChild(dot);
+    if (host) pill.appendChild(el("span", "site-pill__name", host));
+    return pill;
+  }
   function buildRepoBand(item, className) {
-    const band = el("span", className + " repo-band repo-band--" + repoColor(item.repo));
+    const band = el("span", className + " repo-band repo-band--" + tintOf(item.repo.owner + "/" + item.repo.name));
     const owner = el("span", "repo-band__owner");
     owner.appendChild(icon("i-github", "repo-band__mark"));
     owner.appendChild(el("span", "repo-band__who", item.repo.owner + "/"));
@@ -373,26 +402,36 @@
 
   function buildPicture(item, className) {
     if (item.repo) return buildRepoBand(item, className);
-    const pic = el("span", className + " clip__pic--" + item.shelf);
-    const ph = el("span", "clip__ph");
-    ph.appendChild(shape(SHELF[item.shelf].shape, "clip__shape"));
-    ph.appendChild(el("span", "clip__initials", initials(item.title, item.site)));
-    pic.appendChild(ph);
+    const band = el("span", className + " repo-band repo-band--site repo-band--" + tintOf(item.host || item.title));
+    band.appendChild(sitePill(item));
+    if (item.shelf === "video") {
+      const play = el("span", "play-badge");
+      play.appendChild(icon("i-play"));
+      band.appendChild(play);
+    }
+    band.appendChild(el("span", "repo-band__name", item.short));
+    band.appendChild(waveEdge());
     if (item.thumb) {
-      const img = el("img");
+      band.classList.add("has-thumb");
+      const img = el("img", "repo-band__img");
       img.alt = "";
       img.loading = "lazy";
       img.decoding = "async";
       img.src = item.thumb;
-      img.addEventListener("error", () => img.remove(), { once: true });
-      img.addEventListener("load", () => pic.classList.add("has-img"), { once: true });
-      pic.appendChild(img);
+      /* A picture that won't load turns the card into a label. */
+      img.addEventListener("error", () => {
+        img.remove();
+        band.classList.remove("has-thumb");
+        const card = band.closest(".clip");
+        if (card) card.classList.add("clip--label");
+      }, { once: true });
+      band.appendChild(img);
     }
-    return pic;
+    return band;
   }
 
   function buildCard(item) {
-    const card = el("article", "clip clip--" + item.shelf + (item.repo ? " clip--repo" : ""));
+    const card = el("article", "clip clip--" + item.shelf + (item.repo ? " clip--repo" : "") + (item.repo || !item.thumb ? " clip--label" : ""));
     card.dataset.id = item.id;
     if (selected.has(item.id)) card.classList.add("is-picked");
     if (finePointer && !item.removed) card.draggable = true;
@@ -803,13 +842,15 @@
         button.dataset.act = "clear";
       } else if (!ITEMS.length) {
         $("emptyTitle").textContent = "Nothing clipped yet";
-        $("emptyText").textContent = "Clip a page with the feather, or add a link here, and it lands in Unsorted.";
+        $("emptyText").textContent = "Clip a page with the feather, or add a link here, and Magpie files it for you.";
         button.hidden = false;
         button.textContent = "Add a link";
         button.dataset.act = "add";
       } else if (state.col === "unsorted") {
         $("emptyTitle").textContent = "Unsorted is clear";
-        $("emptyText").textContent = "Everything new has a home. New clips will wait here until you file them.";
+        $("emptyText").textContent = SECTIONS_ON
+          ? "Everything has a home. Magpie files new clips into their sections; only the ones it can’t place wait here."
+          : "Everything new has a home. New clips will wait here until you file them.";
         button.hidden = false;
         button.textContent = "See everything";
         button.dataset.act = "all";
@@ -878,6 +919,7 @@
     if (!options.keepLimit) state.limit = BATCH;
     renderRail();
     renderHead();
+    renderSort();
     renderShelves();
     renderTags();
     if (!$("allTags").hidden) renderAllTags();
@@ -920,6 +962,113 @@
     closeRailOnPhone();
     render();
     scrollToResults();
+  }
+
+  /* ---------- sections: Magpie files clips for you ---------- */
+  const sortLater = () => { try { return localStorage.getItem("magpie-sort-later") === "1"; } catch { return false; } };
+  async function loadPlan() {
+    try {
+      const response = await fetch("/api/magpie-update", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: "sections" }),
+      });
+      if (!response.ok) throw new Error("no plan");
+      PLAN = await response.json();
+      SECTIONS_ON = Boolean(PLAN.on);
+    } catch {
+      PLAN = null;
+    }
+    renderSort();
+  }
+  function sortChips(counts, go) {
+    const list = el("ul", "lib-sort__chips");
+    counts.forEach((entry) => {
+      const li = el("li");
+      const chip = el(go ? "button" : "span", "lib-sort__chip col--" + entry.color);
+      if (go) { chip.type = "button"; chip.dataset.col = entry.target; }
+      chip.appendChild(el("span", "lib-sort__dot"));
+      chip.appendChild(el("span", null, entry.name));
+      if (entry.n) chip.appendChild(el("span", "lib-sort__n mono", String(entry.n)));
+      li.appendChild(chip);
+      list.appendChild(li);
+    });
+    return list;
+  }
+  function sortActions(...buttons) {
+    const row = el("div", "btn-row lib-sort__acts");
+    buttons.forEach(([label, act, line]) => {
+      const button = el("button", "btn btn--sm" + (line ? " btn--line" : ""), label);
+      button.type = "button";
+      button.dataset.sort = act;
+      row.appendChild(button);
+    });
+    return row;
+  }
+  function renderSort() {
+    const box = $("sortBanner");
+    const railButton = $("sortButton");
+    if (!box) return;
+    box.textContent = "";
+    box.hidden = true;
+    box.className = "lib-sort";
+    if (railButton) {
+      const offer = PLAN && !sortResult && (PLAN.first || PLAN.total > 0);
+      railButton.hidden = !offer;
+      if (offer) railButton.lastChild.textContent = PLAN.first ? "Sort into sections" : "File " + plural(PLAN.total, "unsorted clip");
+    }
+    if (sortResult) {
+      box.classList.add("lib-sort--done");
+      box.appendChild(shape("s-sun", "lib-sort__shape spin"));
+      const copy = el("div", "lib-sort__copy");
+      copy.appendChild(el("h3", "lib-sort__title", sortResult.n ? "Done. " + plural(sortResult.n, "clip") + " filed." : "Sections are on."));
+      copy.appendChild(el("p", "lib-sort__text", sortResult.n
+        ? "Have a look around. If a clip is in the wrong place, move it and it stays where you put it."
+        : "Nothing needed moving. New clips will be filed as they arrive."));
+      if (sortResult.counts.length) copy.appendChild(sortChips(sortResult.counts, true));
+      copy.appendChild(sortActions(["Looks good", "ok"], ["Undo", "undo", true]));
+      box.appendChild(copy);
+      box.hidden = false;
+      return;
+    }
+    if (!PLAN) return;
+    const filtered = state.q || state.shelf || state.tag || state.origin;
+    if (PLAN.first && (state.col === "" || state.col === "unsorted") && !filtered && !sortLater()) {
+      box.appendChild(shape("s-sun", "lib-sort__shape spin"));
+      const copy = el("div", "lib-sort__copy");
+      copy.appendChild(el("h3", "lib-sort__title", "Let Magpie sort this for you"));
+      copy.appendChild(el("p", "lib-sort__text", PLAN.total
+        ? "Seven sections, picked for what you save. Magpie can file " + plural(PLAN.total, "clip") + " right now, and every new clip after that. Anything you move yourself stays where you put it."
+        : "Seven sections, picked for what you save. Turn them on and Magpie files every new clip for you. Anything you move yourself stays where you put it."));
+      copy.appendChild(sortChips(PLAN.counts, false));
+      copy.appendChild(sortActions([PLAN.total ? "Sort my library" : "Turn on sections", "run"], ["Not now", "later", true]));
+      box.appendChild(copy);
+      box.hidden = false;
+    } else if (!PLAN.first && PLAN.total > 0 && state.col === "unsorted" && !filtered) {
+      box.classList.add("lib-sort--row");
+      box.appendChild(el("p", "lib-sort__text", "Magpie knows where " + plural(PLAN.total, "of these goes", "of these go") + "."));
+      box.appendChild(sortActions(["File them", "run"]));
+      box.hidden = false;
+    }
+  }
+  async function runSort() {
+    const plan = PLAN;
+    const answer = await change([{ op: "sections.sort" }], null, null);
+    if (!answer) return;
+    SECTIONS_ON = true;
+    sortResult = { n: answer.sorted || 0, undo: answer.undo || [], counts: plan ? plan.counts.filter((entry) => entry.n) : [] };
+    PLAN = { ...(plan || {}), on: true, first: false, total: 0, fromUnsorted: 0 };
+    refresh();
+    const box = $("sortBanner");
+    if (box && !box.hidden) box.querySelector("button")?.focus({ preventScroll: true });
+  }
+  async function undoSort() {
+    const ops = sortResult ? sortResult.undo : [];
+    sortResult = null;
+    if (ops.length) await change(ops, null, "Put back the way it was");
+    await loadPlan();
+    refresh();
   }
 
   /* ---------- saving changes ---------- */
@@ -988,7 +1137,7 @@
     const where = target ? colOf(target)?.name : "Unsorted";
     change(
       [{ op: "move", ids: items.map((item) => item.id), collection: target }],
-      () => items.forEach((item) => { setRaw(item, { collection: target, removed: undefined }); delete item.raw.removed; item.removed = false; }),
+      () => items.forEach((item) => { delete item.raw.filedBy; delete item.raw.filedWhy; setRaw(item, { collection: target, removed: undefined }); delete item.raw.removed; item.removed = false; }),
       (items.length === 1 ? "Filed in " : plural(items.length, "clip") + " filed in ") + where,
       undo,
     );
@@ -1383,6 +1532,11 @@
   function fillPlaceSelect(select, value, options = {}) {
     if (!select) return;
     select.textContent = "";
+    if (options.auto) {
+      const auto = el("option", null, "Let Magpie pick");
+      auto.value = "auto";
+      select.appendChild(auto);
+    }
     const unsorted = el("option", null, "Unsorted");
     unsorted.value = "";
     select.appendChild(unsorted);
@@ -1406,6 +1560,14 @@
     $("editNote").value = String(item.raw.note || "");
     $("editMsg").textContent = "";
     $("editTrash").textContent = item.removed ? "Restore" : "Move to Trash";
+    const filed = $("sheetFiled");
+    if (filed) {
+      const byMagpie = item.raw.filedBy === "magpie" && item.raw.filedWhy && item.collection && !item.removed;
+      filed.hidden = !byMagpie;
+      filed.textContent = byMagpie
+        ? "Magpie filed this in " + placeName(item.collection) + " because " + item.raw.filedWhy + ". Move it anywhere and it stays put."
+        : "";
+    }
   }
 
   async function showNote(item) {
@@ -1516,8 +1678,8 @@
     const dialog = $("addDialog");
     $("addUrl").value = prefill.url || "";
     $("addNote").value = prefill.note || "";
-    const here = colOf(state.col) ? state.col : "";
-    fillPlaceSelect($("addCol"), here);
+    const here = colOf(state.col) ? state.col : SECTIONS_ON ? "auto" : "";
+    fillPlaceSelect($("addCol"), here, { auto: SECTIONS_ON });
     $("addMsg").textContent = "";
     $("addMsg").className = "pop__msg";
     $("addSave").disabled = false;
@@ -1555,7 +1717,7 @@
         method: "POST",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, note: $("addNote").value.trim(), collection: $("addCol").value, captureSource: "library" }),
+        body: JSON.stringify({ url, note: $("addNote").value.trim(), collection: $("addCol").value || "unsorted", captureSource: "library" }),
       });
       if (response.status === 401) return goToLogin();
       const body = await response.json().catch(() => ({}));
@@ -1686,6 +1848,30 @@
       rail.classList.toggle("is-open", open);
     });
     $("connectButton").addEventListener("click", openConnect);
+    const sortBox = $("sortBanner");
+    if (sortBox) {
+      sortBox.addEventListener("click", (event) => {
+        const chip = event.target.closest("button[data-col]");
+        if (chip) return goTo(chip.dataset.col);
+        const button = event.target.closest("button[data-sort]");
+        if (!button) return;
+        const act = button.dataset.sort;
+        if (act === "run") { button.disabled = true; button.textContent = "Sorting…"; runSort(); }
+        else if (act === "undo") undoSort();
+        else if (act === "ok") { sortResult = null; renderSort(); }
+        else if (act === "later") {
+          try { localStorage.setItem("magpie-sort-later", "1"); } catch { /* it just comes back next time */ }
+          renderSort();
+          toast("No problem. “Sort into sections” stays in the list on the left.");
+        }
+      });
+    }
+    const sortButton = $("sortButton");
+    if (sortButton) sortButton.addEventListener("click", () => {
+      try { localStorage.removeItem("magpie-sort-later"); } catch { /* fine */ }
+      if (PLAN && PLAN.first) { goTo(""); $("sortBanner").scrollIntoView({ block: "center", behavior: reduced ? "auto" : "smooth" }); }
+      else runSort();
+    });
     $("placeCrumbs").addEventListener("click", (event) => {
       const crumb = event.target.closest("button[data-col]");
       if (crumb) goTo(crumb.dataset.col);
@@ -1834,6 +2020,7 @@
       if (target === "trash") return;
       moveClips([item.id], target);
       $("editTrash").textContent = "Move to Trash";
+      if ($("sheetFiled")) $("sheetFiled").hidden = true;
     });
     $("sheetEdit").addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -1951,6 +2138,7 @@
     const raw = Array.isArray(payload && payload.items) ? payload.items.filter((item) => item && typeof item === "object") : [];
     ITEMS = raw.map(prepareOne);
     COLLECTIONS = Array.isArray(payload.collections) ? payload.collections : [];
+    SECTIONS_ON = Boolean(payload.sectionsOn);
     const counts = computeTags();
     if (state.tag && !counts.has(state.tag)) state.tag = "";
 
@@ -1961,6 +2149,7 @@
     fillOrigins();
     wire();
     render();
+    loadPlan();
     if (adding.url) openAdd(adding);
   }
 

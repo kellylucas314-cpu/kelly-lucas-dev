@@ -63,6 +63,9 @@ async function sampleLibrary() {
       file: index % 5 === 3 ? "" : `clips/sample-${index}.md`,
       hasTranscript: clip.kind === "video" && index % 2 === 0,
       captureSource: origin === "stumbleupon" ? "" : origin,
+      deskSection: clip.section || "",
+      /* Like the real library: newer clips are still waiting in Unsorted. */
+      ...(index % 5 === 1 ? { collection: "" } : {}),
     };
   });
   items.push({
@@ -158,6 +161,11 @@ async function api(request, response, url) {
   }
   const { canUseLibrary } = await import("../api/_magpie-auth.js");
   if (!canUseLibrary(request)) return json(response, { error: "Sign in required" }, 401);
+  if (name === "magpie-thumb" && url.searchParams.has("icon")) {
+    /* No open web here, so every site shows its letter: the honest fallback. */
+    response.writeHead(204, { "Cache-Control": "no-store" });
+    return response.end();
+  }
   if (name === "magpie-thumb") {
     const thumb = path.basename(url.searchParams.get("name") || "");
     const saved = path.join(dataDir, "magpie/thumbs", thumb);
