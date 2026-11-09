@@ -188,6 +188,13 @@ Keep it clean. No backup files, no version-numbered copies.
   `collection: "unsorted"` waits on purpose. Kelly's own filing always wins:
   only new clips and Unsorted are ever touched. Tests:
   `tests/magpie-sections.test.mjs`.
+- "Save from anywhere" (the rail button, or `?connect=1`) lists the three
+  ways in. The feather (0.5.0, in `kip-workspace/magpie/extension`) leaves a
+  note on this page (`data-magpie-feather` on `<html>`) and connects in one
+  press: the page posts the key to it with `postMessage`, same origin only.
+  The popup asks `POST /api/magpie-save { guess: true }` where a page would
+  be filed and only asks a library whose `sectionsOn` is set, because an
+  older library would save the question as a clip.
 - Site icons: `/api/magpie-thumb?icon=<host>` fetches a site's icon once,
   keeps it in `magpie/icons/`, serves only sniffed PNG, JPEG, GIF, WebP or
   ICO (never SVG) and answers 204 when there is none. The page's security

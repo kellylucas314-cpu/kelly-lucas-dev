@@ -128,7 +128,7 @@
             <div class="rail-tree-wrap" id="railTree" tabindex="-1"></div>
             <ul class="rail-list rail-list--bottom" id="railBottom"></ul>
             <button class="rail-sort" id="sortButton" type="button" hidden><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-ast"/></svg><span>Sort into sections</span></button>
-            <button class="rail-connect" id="connectButton" type="button"><svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><use href="#i-feather"/></svg>Connect the feather</button>
+            <button class="rail-connect" id="connectButton" type="button"><svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><use href="#i-feather"/></svg>Save from anywhere</button>
           </div>
         </nav>
 
@@ -235,20 +235,50 @@
     </form>
   </dialog>
 
-  <dialog class="pop" id="connectDialog" aria-labelledby="connectTitle">
+  <dialog class="pop pop--ways" id="connectDialog" aria-labelledby="connectTitle">
     <div class="pop__in">
-      <h2 class="pop__title" id="connectTitle">Connect the feather</h2>
-      <p class="pop__lede">Once it’s connected, the Chrome feather saves straight into this library, so a clip shows up here and on your phone right away. It still saves to Obsidian when your Mac’s Magpie is running.</p>
-      <ol class="pop__steps">
-        <li>On the Mac, update the feather: in Chrome, open <span class="mono">chrome://extensions</span> and press the reload arrow on Magpie Web Clipper.</li>
-        <li>Open the feather, press <b>Connect</b>, and paste this key. Leave the address as <span class="mono" id="connectSite">kellylucas.dev</span>.</li>
-        <li>Clip something. It lands in Unsorted here.</li>
-      </ol>
-      <label class="sheet__field"><span>Your feather key</span>
-        <span class="pop__key"><input type="text" id="connectKey" readonly spellcheck="false" /><button class="btn btn--sm" id="connectCopy" type="button" disabled>Copy</button></span>
-      </label>
-      <p class="pop__fine">Treat it like a password: it can add to and read your library. It changes if the Magpie secret in Vercel is ever changed.</p>
-      <p class="pop__fine">On another computer without the feather, drag this to the bookmarks bar and press it on any page: <a class="pop__bookmarklet" id="connectBookmarklet" href="#">Save to Magpie</a></p>
+      <h2 class="pop__title" id="connectTitle">Save from anywhere</h2>
+      <p class="pop__lede">Three ways in. Every one lands in this library, and Magpie files it.</p>
+
+      <section class="way" aria-labelledby="wayChrome">
+        <h3 class="way__title" id="wayChrome"><svg class="shape c-teal" aria-hidden="true"><use href="#s-circle"/></svg>Chrome on your Mac <span class="way__state" id="featherState" hidden></span></h3>
+        <p class="way__text" id="featherText">The feather is the small Magpie button in Chrome. Press it on any page, or press Alt+Shift+M, and the page is saved.</p>
+        <ol class="pop__steps" id="featherSteps">
+          <li>In Chrome on the Mac, open <span class="mono">chrome://extensions</span> and press the reload arrow on Magpie Web Clipper.</li>
+          <li>Open this page there. A “Connect this Chrome” button shows up right here. Press it and you’re done.</li>
+        </ol>
+        <div class="btn-row way__acts" id="featherActs" hidden>
+          <button class="btn btn--sm" id="featherConnect" type="button">Connect this Chrome</button>
+          <span class="way__note" id="featherNote" role="status"></span>
+        </div>
+        <details class="way__more">
+          <summary>Paste the key by hand instead</summary>
+          <p class="pop__fine">Open the feather, choose <b>More</b>, then <b>Connect</b>, and paste this key. Leave the address as <span class="mono" id="connectSite">kellylucas.dev</span>.</p>
+          <label class="sheet__field"><span>Your feather key</span>
+            <span class="pop__key"><input type="text" id="connectKey" readonly spellcheck="false" /><button class="btn btn--sm" id="connectCopy" type="button" disabled>Copy</button></span>
+          </label>
+          <p class="pop__fine">Treat it like a password: it can add to and read your library. It changes if the Magpie secret in Vercel is ever changed.</p>
+        </details>
+      </section>
+
+      <section class="way" aria-labelledby="wayPhone">
+        <h3 class="way__title" id="wayPhone"><svg class="shape c-coral" aria-hidden="true"><use href="#s-circle"/></svg>iPhone and iPad</h3>
+        <p class="way__text">The quick way: copy a link, open Magpie, press <b>Add a link</b>. To save straight from the Share button, make a shortcut once:</p>
+        <ol class="pop__steps">
+          <li>In the Shortcuts app, press +. Add the action <b>URL Encode</b> and set it to <b>Shortcut Input</b>.</li>
+          <li>Add the action <b>Open URLs</b>. Paste this address, then add <b>URL Encoded Text</b> right after it:
+            <span class="pop__key"><input type="text" id="shareAddress" readonly spellcheck="false" aria-label="Address for the shortcut" /><button class="btn btn--sm" id="shareCopy" type="button">Copy</button></span>
+          </li>
+          <li>Name it “Save to Magpie”, press the round “i”, and turn on <b>Show in Share Sheet</b>.</li>
+        </ol>
+        <p class="pop__fine">From then on: Share, then “Save to Magpie”. Add this page to your Home Screen too and Magpie opens like an app.</p>
+      </section>
+
+      <section class="way" aria-labelledby="wayOther">
+        <h3 class="way__title" id="wayOther"><svg class="shape c-honey" aria-hidden="true"><use href="#s-circle"/></svg>Any other computer</h3>
+        <p class="way__text">Drag this to the bookmarks bar and press it on any page: <a class="pop__bookmarklet" id="connectBookmarklet" href="#">Save to Magpie</a></p>
+      </section>
+
       <div class="btn-row pop__acts"><button class="btn btn--line" id="connectClose" type="button">Done</button></div>
     </div>
   </dialog>

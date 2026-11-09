@@ -1744,6 +1744,75 @@
     }
   }
 
+  /* The feather (the Chrome extension) leaves a note on this page when it is
+     installed, so connecting is one press: this page hands it the key and
+     the feather answers. No feather here: the steps to get one show. */
+  function featherInfo() {
+    const data = document.documentElement.dataset;
+    return data.magpieFeather ? { version: data.magpieFeather, connected: data.magpieFeatherConnected === "1" } : null;
+  }
+  function renderFeather(note, isError) {
+    const info = featherInfo();
+    const stateBox = $("featherState");
+    const acts = $("featherActs");
+    if (!stateBox || !acts) return;
+    $("featherSteps").hidden = Boolean(info);
+    acts.hidden = !info;
+    stateBox.hidden = !info;
+    stateBox.className = "way__state" + (info && info.connected ? " is-on" : "");
+    if (info) {
+      stateBox.textContent = info.connected ? "Connected" : "Not connected yet";
+      $("featherText").textContent = info.connected
+        ? "The feather saves straight into this library. Press it on any page, or press Alt+Shift+M."
+        : "The feather is in this Chrome. One press and it saves straight into this library.";
+      const button = $("featherConnect");
+      button.textContent = info.connected ? "Connect again" : "Connect this Chrome";
+      button.classList.toggle("btn--line", info.connected);
+      button.disabled = false;
+    }
+    const noteBox = $("featherNote");
+    noteBox.textContent = note || "";
+    noteBox.classList.toggle("is-error", Boolean(isError));
+  }
+  async function clipKey() {
+    const response = await fetch("/api/magpie-session?key=1", { credentials: "same-origin", cache: "no-store" });
+    const body = await response.json();
+    if (!body.authenticated) { goToLogin(); return ""; }
+    if (!body.clipKey) throw new Error("no key");
+    return body.clipKey;
+  }
+  let featherWait = 0;
+  async function connectFeather() {
+    const button = $("featherConnect");
+    button.disabled = true;
+    renderFeather("Connecting…");
+    button.disabled = true;
+    try {
+      const key = await clipKey();
+      if (!key) return;
+      window.postMessage({ source: "magpie-library", kind: "connect", key }, location.origin);
+      clearTimeout(featherWait);
+      featherWait = setTimeout(() => renderFeather("The feather didn’t answer. Reload this page and try again.", true), 9000);
+    } catch {
+      renderFeather("The key didn’t load. Try again in a moment.", true);
+    }
+  }
+  window.addEventListener("message", (event) => {
+    if (event.source !== window || event.origin !== location.origin) return;
+    const data = event.data;
+    if (!data || data.source !== "magpie-feather") return;
+    if (data.kind === "hello") renderFeather();
+    if (data.kind === "connected") {
+      clearTimeout(featherWait);
+      if (data.ok) {
+        renderFeather("Done. Clip something and it lands here.");
+        toast("The feather is connected to this library.");
+      } else {
+        renderFeather(String(data.error || "That didn’t work. Try again.").slice(0, 160), true);
+      }
+    }
+  });
+
   async function openConnect() {
     const dialog = $("connectDialog");
     const field = $("connectKey");
@@ -1753,18 +1822,29 @@
     if (bookmarklet) {
       bookmarklet.href = "javascript:location.href='" + location.origin + "/brain/gallery.html?add='+encodeURIComponent(location.href)";
     }
+    const share = $("shareAddress");
+    if (share) share.value = location.origin + "/brain/gallery.html?add=";
+    renderFeather();
     openDialog(dialog);
     try {
-      const response = await fetch("/api/magpie-session?key=1", { credentials: "same-origin", cache: "no-store" });
-      const body = await response.json();
-      if (!body.authenticated) return goToLogin();
-      if (!body.clipKey) throw new Error("no key");
-      field.value = body.clipKey;
+      const key = await clipKey();
+      if (!key) return;
+      field.value = key;
       $("connectCopy").disabled = false;
-      $("connectSite").textContent = location.origin;
+      $("connectSite").textContent = location.host;
     } catch {
       field.value = "The key didn’t load. Close this and try again.";
     }
+  }
+  async function copyFrom(field, button) {
+    try {
+      await navigator.clipboard.writeText(field.value);
+    } catch {
+      field.select();
+      document.execCommand && document.execCommand("copy");
+    }
+    button.textContent = "Copied";
+    setTimeout(() => { button.textContent = "Copy"; }, 1800);
   }
 
   /* ---------- wiring ---------- */
@@ -2063,17 +2143,9 @@
     $("addForm").addEventListener("submit", saveAdd);
     $("addCancel").addEventListener("click", () => closeDialog($("addDialog")));
     $("connectClose").addEventListener("click", () => closeDialog($("connectDialog")));
-    $("connectCopy").addEventListener("click", async () => {
-      const field = $("connectKey");
-      try {
-        await navigator.clipboard.writeText(field.value);
-      } catch {
-        field.select();
-        document.execCommand && document.execCommand("copy");
-      }
-      $("connectCopy").textContent = "Copied";
-      setTimeout(() => { $("connectCopy").textContent = "Copy"; }, 1800);
-    });
+    $("connectCopy").addEventListener("click", () => copyFrom($("connectKey"), $("connectCopy")));
+    if ($("shareCopy")) $("shareCopy").addEventListener("click", () => copyFrom($("shareAddress"), $("shareCopy")));
+    if ($("featherConnect")) $("featherConnect").addEventListener("click", connectFeather);
     ["addDialog", "connectDialog"].forEach((id) => {
       const dialog = $(id);
       dialog.addEventListener("click", (event) => { if (event.target === dialog) closeDialog(dialog); });
@@ -2151,6 +2223,8 @@
     render();
     loadPlan();
     if (adding.url) openAdd(adding);
+    /* The feather's "Connect" opens this page with ?connect=1. */
+    else if (params.has("connect")) openConnect();
   }
 
   start();
