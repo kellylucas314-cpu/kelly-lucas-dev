@@ -23,7 +23,7 @@
     reading: "reading",
   };
   const KIND_ORDER = ["gallery", "site", "tool", "repo", "reading", "video"];
-  const TINTS = ["mint", "sand", "lilac", "sky"];
+  const TINTS = ["mint", "sand", "lilac", "sky", "ink"];
   const ARROW =
     '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M1.5 12H21M12.99 3.51L21.47 12L12.99 20.48" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"/></svg>';
   const PLAY =
@@ -377,6 +377,7 @@
     const systemBox = block.querySelector(".js-systems");
     const systemCount = fill(systemBox, mineSystems.map(buildSystem));
     hideWhenEmpty(systemBox, systemCount);
+    if (systemBox && systemCount === 1) systemBox.classList.add("system-grid--one");
 
     const docBox = block.querySelector(".js-docs");
     const docCount = fill(docBox, mineDocs.map(buildDoc));
@@ -526,6 +527,132 @@
     });
     const active = buttons.find((button) => button.classList.contains("is-active")) || buttons[0];
     if (active) apply(Number(active.dataset.ratio));
+  }
+
+  /* ---------- The hero's pile pills carry a count ---------- */
+  document.querySelectorAll("[data-pile-count]").forEach((node) => {
+    const id = node.dataset.pileCount;
+    const total =
+      items.filter((item) => sectionOfItem(item) === id).length +
+      systems.filter((system) => sectionOfOwn(system) === id).length +
+      libraries.filter((entry) => sectionOfOwn(entry) === id).length +
+      docs.filter((doc) => doc.section === id).length;
+    if (total) node.textContent = String(total);
+  });
+
+  /* ---------- The pile bar lights up the pile you're reading ---------- */
+  const barLinks = Array.from(document.querySelectorAll(".pilebar__link"));
+  const targets = barLinks
+    .map((anchor) => document.getElementById((anchor.getAttribute("href") || "").slice(1)))
+    .filter(Boolean);
+  const bar = document.querySelector(".pilebar__in");
+  let current = null;
+  const mark = (id) => {
+    if (id === current) return;
+    current = id;
+    barLinks.forEach((anchor) => {
+      const on = anchor.getAttribute("href") === "#" + id;
+      if (on) anchor.setAttribute("aria-current", "true");
+      else anchor.removeAttribute("aria-current");
+      /* keep the lit pill in view on a phone, without moving the page */
+      if (on && bar && bar.scrollWidth > bar.clientWidth) {
+        const left = anchor.offsetLeft - (bar.clientWidth - anchor.offsetWidth) / 2;
+        bar.scrollTo({ left, behavior: reduced ? "auto" : "smooth" });
+      }
+    });
+  };
+  const spy = () => {
+    const line = window.innerHeight * 0.35;
+    let id = null;
+    targets.forEach((section) => {
+      const box = section.getBoundingClientRect();
+      if (box.top <= line && box.bottom > line) id = section.id;
+    });
+    mark(id);
+  };
+  if (targets.length) {
+    let ticking = false;
+    window.addEventListener("scroll", () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { ticking = false; spy(); });
+    }, { passive: true });
+    window.addEventListener("resize", spy);
+    spy();
+  }
+
+  /* ---------- The picture viewer: art strips and notebook pages open here ---------- */
+  const box = document.getElementById("lightbox");
+  const isPicture = (href) => /\.(jpe?g|png|webp|gif|avif)(\?|#|$)/i.test(href || "");
+  if (box && typeof box.showModal === "function") {
+    const img = document.getElementById("lightboxImg");
+    const cap = document.getElementById("lightboxCap");
+    const pos = document.getElementById("lightboxPos");
+    const prev = document.getElementById("lightboxPrev");
+    const next = document.getElementById("lightboxNext");
+    const open = document.getElementById("lightboxOpen");
+    let group = [];
+    let at = 0;
+    let opener = null;
+    const show = (index) => {
+      at = Math.max(0, Math.min(group.length - 1, index));
+      const anchor = group[at];
+      const thumb = anchor.querySelector("img");
+      const caption = anchor.querySelector("figcaption");
+      img.src = anchor.href;
+      img.alt = (thumb && thumb.alt) || "";
+      cap.textContent = (caption && caption.textContent) || (thumb && thumb.alt) || "";
+      pos.textContent = group.length > 1 ? at + 1 + " of " + group.length : "";
+      prev.hidden = next.hidden = group.length < 2;
+      prev.disabled = at === 0;
+      next.disabled = at === group.length - 1;
+      open.href = anchor.href;
+    };
+    document.addEventListener("click", (event) => {
+      const anchor = event.target.closest(".art-strip a, .notepage__photo");
+      if (!anchor || !isPicture(anchor.getAttribute("href"))) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+      event.preventDefault();
+      const scope = anchor.closest(".art-strip") || anchor.closest(".notebook-grid") || document;
+      group = Array.from(scope.querySelectorAll(".art-strip a, .notepage__photo")).filter((a) => isPicture(a.getAttribute("href")));
+      opener = anchor;
+      show(group.indexOf(anchor));
+      box.showModal();
+      document.documentElement.classList.add("sheet-open");
+    });
+    prev.addEventListener("click", () => show(at - 1));
+    next.addEventListener("click", () => show(at + 1));
+    document.getElementById("lightboxClose").addEventListener("click", () => box.close());
+    box.addEventListener("click", (event) => { if (event.target === box) box.close(); });
+    box.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") { event.preventDefault(); show(at - 1); }
+      if (event.key === "ArrowRight") { event.preventDefault(); show(at + 1); }
+    });
+    box.addEventListener("close", () => {
+      document.documentElement.classList.remove("sheet-open");
+      img.removeAttribute("src");
+      if (opener) opener.focus({ preventScroll: true });
+    });
+  }
+
+  /* ---------- "/" jumps to the shelf search ---------- */
+  const shelfSearch = document.getElementById("shelfSearch");
+  if (shelfSearch) {
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey) return;
+      const active = document.activeElement;
+      if (active && (active.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName))) return;
+      if (box && box.open) return;
+      event.preventDefault();
+      shelfSearch.focus({ preventScroll: true });
+      shelfSearch.scrollIntoView({ block: "center", behavior: reduced ? "auto" : "smooth" });
+    });
+    shelfSearch.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && shelfSearch.value) {
+        shelfSearch.value = "";
+        shelfSearch.dispatchEvent(new Event("input"));
+      }
+    });
   }
 
   /* every link that opens a new tab says so */

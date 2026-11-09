@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { put } from "@vercel/blob";
+import { mergeVault, mutate } from "../lib/magpie-store.mjs";
 
 const sourceRoot = path.resolve(
   process.argv[2] ||
@@ -24,13 +25,10 @@ const noteNames = [...new Set(
     .filter(Boolean),
 )];
 
+/* The Mac's pictures and notes go up as files. The library itself is
+   merged, never overwritten: the website owns collections, trash and
+   Kelly's edits, and keeps clips the Mac has never seen (phone saves). */
 const tasks = [
-  {
-    pathname: "magpie/library.json",
-    file: libraryPath,
-    contentType: "application/json; charset=utf-8",
-    maxAge: 60,
-  },
   ...thumbNames.map((name) => ({
     pathname: `magpie/thumbs/${name}`,
     file: path.join(sourceRoot, "thumbs", name),
@@ -64,6 +62,9 @@ const workers = Array.from({ length: Math.min(8, tasks.length) }, async () => {
 });
 await Promise.all(workers);
 
+const { lib, result } = await mutate((cloud, stamp) => mergeVault(cloud, items, stamp));
+
 console.log(
-  `Synced ${items.length} items, ${thumbNames.length} previews, and ${noteNames.length} notes to private storage.`,
+  `Merged ${items.length} vault clips into the library (${result.added} new, ${result.updated} updated; ` +
+  `${lib.items.length} in all), with ${thumbNames.length} previews and ${noteNames.length} notes.`,
 );

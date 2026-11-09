@@ -1,7 +1,7 @@
 import { get } from "@vercel/blob";
 import { Readable } from "node:stream";
 import {
-  isAuthenticated,
+  canUseLibrary,
   requestUrl,
   sendJson,
   unauthorized,
@@ -13,7 +13,7 @@ export default async function handler(request, response) {
   if (request.method !== "GET") {
     return sendJson(response, { error: "Method not allowed" }, 405, { Allow: "GET" });
   }
-  if (!isAuthenticated(request)) return unauthorized(response);
+  if (!canUseLibrary(request)) return unauthorized(response);
 
   const name = requestUrl(request).searchParams.get("name") || "";
   if (!SAFE_IMAGE.test(name)) {

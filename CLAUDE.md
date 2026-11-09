@@ -140,8 +140,16 @@ Keep it clean. No backup files, no version-numbered copies.
   libraries) and `docs` (style PDFs, boards, image strips; files live under
   `assets/design/<pile>/`) are hand-written and pass through the sync
   untouched. Every entry carries a `section`. Each pile is a `.band` with
-  its own `.wrap`, paper and tints alternating with wave edges, and the
-  cards are flat fills with no borders, like the rest of the site.
+  its own `.wrap` and its own color pair, with wave edges between them:
+  navy and honey (HelioFlux), sage (Heliopolis), honey (Pretzel), pale teal
+  (resources), deep teal (videos), paper (notebook), deep coral (examples),
+  paper (this site). These are the only full-strength bands on the site;
+  paper words on navy, deep teal and deep coral, navy words on sage and
+  honey. Cards are always paper, flat, no borders, so they read on any band.
+- Mechanics: the hero's pile pills carry counts; a sticky pile bar lights
+  up the pile you're reading; the shelf has kind chips, a search box ("/"
+  jumps to it, Escape clears it) and folds to 16; art strips and notebook
+  pages open in a picture viewer (arrows, Escape, "Open full size").
 - Where a clip lands is decided once, in `lib/desk-sort.mjs` from
   `lib/desk-rules.json`: Kelly's own sites go to their pile; sites tagged or
   described for a project go there; anything with a design signal is a
@@ -165,6 +173,38 @@ Keep it clean. No backup files, no version-numbered copies.
   Filter chips carry counts. No OPEN buttons on cards, no ruled cells.
   The resources shelf shows its newest 16 and folds the rest behind
   "Show all"; any filter or search shows every match.
+
+## Magpie library (private)
+- `/brain/gallery.html` is THE Magpie library (Kelly, 2026-11-08: one
+  library, shaped like Raindrop.io), behind the Magpie password
+  (`/brain/login.html`). The page and `brain/library.js` own the look.
+  Everything lives in private Blob storage: `magpie/library.json`
+  (`{items, collections, ...}`), `magpie/notes/`, `magpie/thumbs/`, and a
+  daily copy in `magpie/backups/`. `lib/magpie-store.mjs` is the only code
+  that reads or writes it (ETag-checked, retried on a clash).
+- A sidebar holds Unsorted (new clips land here), Everything, nested
+  collections (rename, color, nest, delete inline; drag cards onto them)
+  and Trash. Four starter collections were filed by rule on first load:
+  HelioFlux, Design ideas, Read & watch, Weird & wonderful. Cards can be
+  picked in bulk, filed, trashed, and edited in the side sheet (title, tags,
+  note, collection), all with Undo.
+- Saving: `POST /api/magpie-save` (the feather, the "Add a link" box, and the
+  phone bookmarklet `?add=URL`). Editing: `POST /api/magpie-update` (signed-in
+  session only). The feather's key is derived from `MAGPIE_SESSION_SECRET`
+  (no new env var), shown only to a signed-in session under "Connect the
+  feather", and can save and read; never put it in code or chat.
+- `npm run sync:magpie` (on the Mac) still uploads vault notes and previews,
+  but MERGES the vault into `library.json` (`mergeVault`): Kelly's edits,
+  collections and Trash win. The Mac pulls website clips back into the vault
+  with `kip-workspace/tools/magpie/cloud_pull.py` every ten minutes.
+  The old `build:magpie` step is retired: never copy the Mac's gallery in.
+- Stay at 12 serverless functions or fewer (Hobby plan); there are 11.
+- Test it without the password: `npm run preview:magpie` serves the site on
+  http://127.0.0.1:4410 with the real handlers on a temp-folder library
+  seeded from the design desk's public clips (saves and edits work; the key
+  is at `/api/magpie-preview-key`). Any password works except "wrong";
+  `?empty=1` and `?fail=1` show the empty and broken states.
+  `npm run test:magpie` covers the store and the key.
 
 ## Skills in the lab
 - `.claude/skills/` holds Claude Code skills from Jack Roberts' design loop, kept
