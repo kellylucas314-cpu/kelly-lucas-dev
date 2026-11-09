@@ -337,8 +337,8 @@
   }
 
   /* A GitHub repo has no picture worth showing, so its card is a label: a
-     soft color band with the owner, the name set big, one round shape and a
-     wave edge (Kelly, 2026-11-09: "C's layout with A's big name"). The color
+     soft color band on a dot grid with the owner, the name set big, the raw
+     repo name in mono and a wave edge (Kelly, 2026-11-09: "C's layout with A's big name"). The color
      comes from the repo's own name, so a repo keeps it everywhere. */
   const REPO_COLORS = ["teal", "coral", "honey", "sage"];
   function repoColor(repo) {
@@ -360,12 +360,12 @@
   }
   function buildRepoBand(item, className) {
     const band = el("span", className + " repo-band repo-band--" + repoColor(item.repo));
-    band.appendChild(shape("s-rays", "repo-band__shape"));
     const owner = el("span", "repo-band__owner");
     owner.appendChild(icon("i-github", "repo-band__mark"));
     owner.appendChild(el("span", "repo-band__who", item.repo.owner + "/"));
     band.appendChild(owner);
     band.appendChild(el("span", "repo-band__name", item.short));
+    band.appendChild(el("span", "repo-band__slug", item.repo.name));
     band.appendChild(waveEdge());
     return band;
   }
