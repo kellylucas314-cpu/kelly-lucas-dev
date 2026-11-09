@@ -361,7 +361,10 @@
   function buildRepoBand(item, className) {
     const band = el("span", className + " repo-band repo-band--" + repoColor(item.repo));
     band.appendChild(shape("s-rays", "repo-band__shape"));
-    band.appendChild(el("span", "repo-band__owner", item.repo.owner + "/"));
+    const owner = el("span", "repo-band__owner");
+    owner.appendChild(icon("i-github", "repo-band__mark"));
+    owner.appendChild(el("span", "repo-band__who", item.repo.owner + "/"));
+    band.appendChild(owner);
     band.appendChild(el("span", "repo-band__name", item.short));
     band.appendChild(waveEdge());
     return band;
@@ -421,7 +424,7 @@
 
     const body = el("div", "clip__body");
     const meta = el("p", "clip__meta");
-    meta.appendChild(el("span", "kind kind--" + item.shelf, KIND_WORD[item.shelf]));
+    meta.appendChild(el("span", "kind kind--" + item.shelf, item.repo ? "GitHub" : KIND_WORD[item.shelf]));
     if (item.transcript) meta.appendChild(el("span", "kind kind--transcript", "transcript"));
     const when = dateWord(item.clipped);
     if (when) {
@@ -1411,7 +1414,7 @@
     $("sheetTitle").textContent = item.title;
     const meta = $("sheetMeta");
     meta.textContent = "";
-    meta.appendChild(el("span", "kind kind--" + item.shelf, KIND_WORD[item.shelf]));
+    meta.appendChild(el("span", "kind kind--" + item.shelf, item.repo ? "GitHub" : KIND_WORD[item.shelf]));
     if (item.transcript) meta.appendChild(el("span", "kind kind--transcript", "transcript"));
     const when = dateWord(item.clipped);
     if (when) meta.appendChild(el("time", null, when));

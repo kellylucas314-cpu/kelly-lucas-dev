@@ -1213,7 +1213,9 @@ kbd {
 .repo-band--sage { --band: var(--sage-tint); --band-shape: var(--sage); }
 .repo-band__shape { position: absolute; width: 36%; max-width: 150px; right: -7%; top: -18%; color: var(--band-shape); transition: transform 0.8s var(--ease); }
 .clip:hover .repo-band__shape { transform: rotate(30deg); }
-.repo-band__owner { position: absolute; top: 14px; left: 18px; max-width: 62%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--mono); font-size: 12px; }
+.repo-band__owner { position: absolute; top: 14px; left: 14px; max-width: 64%; display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 6px; border-radius: 999px; background: var(--paper); font-family: var(--mono); font-size: 12px; line-height: 1; }
+.repo-band__mark { flex: none; width: 18px; height: 18px; color: var(--navy); }
+.repo-band__who { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .repo-band__name { position: relative; max-width: 88%; font-size: clamp(24px, 2.3vw, 34px); line-height: 1.02; letter-spacing: -0.03em; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
 .repo-band__edge { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 16px; fill: var(--paper); }
 .clip--repo .clip__title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
