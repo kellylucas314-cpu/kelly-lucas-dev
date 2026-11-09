@@ -336,7 +336,39 @@
     return list;
   }
 
+  /* A GitHub repo has no picture worth showing, so its card is a label: a
+     soft color band with the owner, the name set big, one round shape and a
+     wave edge (Kelly, 2026-11-09: "C's layout with A's big name"). The color
+     comes from the repo's own name, so a repo keeps it everywhere. */
+  const REPO_COLORS = ["teal", "coral", "honey", "sage"];
+  function repoColor(repo) {
+    let h = 0;
+    for (const ch of (repo.owner + "/" + repo.name).toLowerCase()) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+    return REPO_COLORS[h % REPO_COLORS.length];
+  }
+  function waveEdge() {
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("viewBox", "0 0 100 12");
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("class", "repo-band__edge");
+    const path = document.createElementNS(ns, "path");
+    path.setAttribute("d", "M0 12V7C8 1 17 1 25 7S42 13 50 7 67 1 75 7 92 13 100 7V12Z");
+    svg.appendChild(path);
+    return svg;
+  }
+  function buildRepoBand(item, className) {
+    const band = el("span", className + " repo-band repo-band--" + repoColor(item.repo));
+    band.appendChild(shape("s-rays", "repo-band__shape"));
+    band.appendChild(el("span", "repo-band__owner", item.repo.owner + "/"));
+    band.appendChild(el("span", "repo-band__name", item.short));
+    band.appendChild(waveEdge());
+    return band;
+  }
+
   function buildPicture(item, className) {
+    if (item.repo) return buildRepoBand(item, className);
     const pic = el("span", className + " clip__pic--" + item.shelf);
     const ph = el("span", "clip__ph");
     ph.appendChild(shape(SHELF[item.shelf].shape, "clip__shape"));
@@ -349,19 +381,14 @@
       img.decoding = "async";
       img.src = item.thumb;
       img.addEventListener("error", () => img.remove(), { once: true });
-      img.addEventListener("load", () => {
-        pic.classList.add("has-img");
-        /* A screenshot of a repo page is zoomed into its top corner, where the
-           name is; a designed share card (about 2:1) is shown whole, uncropped. */
-        if (item.repo) pic.classList.add(img.naturalWidth / img.naturalHeight < 1.85 ? "clip__pic--zoom" : "clip__pic--whole");
-      }, { once: true });
+      img.addEventListener("load", () => pic.classList.add("has-img"), { once: true });
       pic.appendChild(img);
     }
     return pic;
   }
 
   function buildCard(item) {
-    const card = el("article", "clip clip--" + item.shelf);
+    const card = el("article", "clip clip--" + item.shelf + (item.repo ? " clip--repo" : ""));
     card.dataset.id = item.id;
     if (selected.has(item.id)) card.classList.add("is-picked");
     if (finePointer && !item.removed) card.draggable = true;

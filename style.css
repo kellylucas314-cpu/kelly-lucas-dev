@@ -1205,10 +1205,28 @@ kbd {
 .clip__shape { position: absolute; width: 58%; right: -10%; bottom: -24%; color: var(--tile-shape, var(--paper)); transition: transform 0.8s var(--ease); }
 .clip:hover .clip__shape { transform: rotate(30deg); }
 .clip__initials { position: relative; font-size: clamp(34px, 3.4vw, 52px); letter-spacing: -0.04em; line-height: 1; }
-.clip__pic--zoom img { object-position: left top; transform-origin: 0 0; scale: 1.55; }
-.clip__face:hover .clip__pic--zoom img { transform: none; }
-.clip__pic--whole { background: #fff; }
-.clip__pic--whole img { object-fit: contain; }
+/* A GitHub repo is a label, not a screenshot: a soft band with the owner,
+   the name set big, one round shape and a wave edge into the paper card. */
+.repo-band { --band: var(--pale-teal); --band-shape: var(--teal); aspect-ratio: 2 / 1; position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 16px 18px 26px; background: var(--band); color: var(--navy); border-radius: 19px 19px 0 0; }
+.repo-band--coral { --band: var(--pale-coral); --band-shape: var(--coral); }
+.repo-band--honey { --band: var(--honey-tint); --band-shape: var(--honey); }
+.repo-band--sage { --band: var(--sage-tint); --band-shape: var(--sage); }
+.repo-band__shape { position: absolute; width: 36%; max-width: 150px; right: -7%; top: -18%; color: var(--band-shape); transition: transform 0.8s var(--ease); }
+.clip:hover .repo-band__shape { transform: rotate(30deg); }
+.repo-band__owner { position: absolute; top: 14px; left: 18px; max-width: 62%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--mono); font-size: 12px; }
+.repo-band__name { position: relative; max-width: 88%; font-size: clamp(24px, 2.3vw, 34px); line-height: 1.02; letter-spacing: -0.03em; overflow-wrap: anywhere; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
+.repo-band__edge { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 16px; fill: var(--paper); }
+.clip--repo .clip__title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.clip--repo .clip__face { border-radius: 19px 19px 0 0; text-decoration: none; }
+.clip--repo .clip__body { padding-top: 4px; }
+@media (max-width: 560px) { .lib-grid:not(.is-list) .repo-band { aspect-ratio: 5 / 2; } }
+.sheet__picture.repo-band { border-radius: 19px; }
+.is-list .repo-band { aspect-ratio: 16 / 10; padding: 8px; border-radius: 14px; }
+.is-list .clip--repo .clip__face { border-radius: 14px; }
+.is-list .repo-band__owner, .is-list .repo-band__edge { display: none; }
+.is-list .repo-band__name { display: none; }
+.is-list .repo-band__shape { width: 54%; max-width: none; right: 23%; top: 12%; }
+.is-list .clip--repo .clip__title { position: static; width: auto; height: auto; clip-path: none; white-space: normal; }
 .clip__body { display: flex; flex-direction: column; flex: 1; padding: 14px 10px 0; }
 .clip__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 13px; }
 .clip__meta time { font-family: var(--mono); font-size: 12.5px; color: var(--navy-soft); }
