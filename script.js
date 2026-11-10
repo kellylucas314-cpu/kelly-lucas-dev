@@ -278,3 +278,44 @@ if (scene) {
     io.observe(scene);
   }
 }
+
+/* ---------- Home: the race. Lights out from the grid when the Say hello band scrolls into view, then a lap now and then ---------- */
+const racer = $("[data-racer]");
+const cars = racer ? $$(".racer__car", racer) : [];
+if (cars.length && !reducedMotion && cars[0].animate && "IntersectionObserver" in window) {
+  let inView = false;
+  let started = false;
+  const running = new Set();
+  const waiting = new Set();
+  // px per ms: each car has its own pace, so places change over a few laps
+  const pace = cars.map((_, i) => 0.17 - i * 0.006 + Math.random() * 0.012);
+  const live = () => inView && !document.hidden;
+  function lap(car, i, fromGrid) {
+    if (!live()) { waiting.add(i); return; }
+    // the cars face left, so they come in from the right
+    const from = fromGrid ? 0 : racer.clientWidth - car.offsetLeft + 20;
+    const to = -car.offsetLeft - car.offsetWidth - 20;
+    const speed = pace[i] * (0.93 + Math.random() * 0.14);
+    car.classList.add("is-driving");
+    const run = car.animate(
+      [{ transform: `translateX(${from}px)` }, { transform: `translateX(${to}px)` }],
+      { duration: (from - to) / speed, easing: fromGrid ? "cubic-bezier(.5,0,.8,1)" : "linear", fill: "both" }
+    );
+    running.add(run);
+    run.onfinish = () => { running.delete(run); setTimeout(() => lap(car, i, false), 4000 + Math.random() * 8000); };
+  }
+  function update() {
+    if (!live()) { running.forEach((r) => r.pause()); return; }
+    if (!started) {
+      started = true;
+      // lights out: the grid launches a beat after the band comes into view
+      setTimeout(() => cars.forEach((car, i) => lap(car, i, true)), 1600);
+      return;
+    }
+    running.forEach((r) => r.play());
+    waiting.forEach((i) => lap(cars[i], i, false));
+    waiting.clear();
+  }
+  new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; update(); }).observe(racer);
+  document.addEventListener("visibilitychange", update);
+}

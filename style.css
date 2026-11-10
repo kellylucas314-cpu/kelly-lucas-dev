@@ -221,23 +221,35 @@ kbd {
 }
 
 /* ---------- Home: hello and the poster ---------- */
-.hero { position: relative; padding: 26px 0 88px; }
-.hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 640px); gap: 40px; align-items: center; }
+.hero { position: relative; padding: 26px 0 56px; }
+.hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 600px); gap: 40px; align-items: center; }
 .hero__text { position: relative; z-index: 2; max-width: 640px; }
 .hero .lede { margin-top: 30px; max-width: 600px; }
 .hero__acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 38px; }
 
 /* the Magpie note under the hero text */
-.note { display: flex; align-items: center; gap: 22px; max-width: 580px; margin-top: 58px; border-radius: 12px; color: inherit; text-decoration: none; }
-.note__art { position: relative; flex: none; width: 118px; }
+.note { display: flex; align-items: center; gap: 28px; max-width: 660px; margin-top: 64px; border-radius: 12px; color: inherit; text-decoration: none; }
+.note__art { position: relative; flex: none; width: 176px; }
 .note__art .shape { position: absolute; left: 50%; top: 54%; width: 104%; translate: -50% -50%; color: var(--pale-teal); transition: color 0.2s, transform 0.3s; }
 .note__art img { position: relative; width: 100%; transition: transform 0.3s; }
-.note__t { font-size: 26px; line-height: 1.15; letter-spacing: -0.01em; text-decoration: underline transparent; text-decoration-thickness: 1.5px; text-underline-offset: 5px; transition: text-decoration-color 0.15s; }
+.note__t { font-size: 34px; line-height: 1.12; letter-spacing: -0.01em; text-decoration: underline transparent; text-decoration-thickness: 1.5px; text-underline-offset: 5px; transition: text-decoration-color 0.15s; }
 .note:hover .note__t, .note:focus-visible .note__t { text-decoration-color: currentColor; }
 .note:hover .note__art .shape { color: var(--honey); transform: rotate(14deg); }
 .note:hover .note__art img { transform: translateY(-3px); }
 .note__t, .note__d { display: block; }
-.note__d { margin-top: 6px; font-size: 17px; line-height: 1.4; }
+.note__d { margin-top: 8px; font-size: 19px; line-height: 1.4; }
+/* side by side, the text column runs the poster's full height: hello at the top, the Magpie note level with the caption */
+@media (min-width: 961px) {
+  .hero__grid { align-items: stretch; }
+  .hero__text { display: flex; flex-direction: column; }
+  .hero__acts { margin-bottom: 56px; }
+  .hero .note { margin-top: auto; }
+}
+@media (min-width: 1300px) {
+  .hero .note__art { width: 212px; }
+  .hero .note__t { font-size: 40px; }
+  .hero .note__d { font-size: 20px; }
+}
 
 /* the poster: one big place on a sun */
 .poster { position: relative; }
@@ -253,9 +265,9 @@ kbd {
 .orb--splat { width: 12%; left: -4%; top: 57%; color: var(--coral); }
 .orb--squig { width: 13%; right: -2%; top: 40%; color: var(--navy); }
 /* two small places on round shapes, orbiting the sun */
-.poster__cap { position: relative; display: grid; justify-items: center; gap: 12px; margin-top: 22px; font-size: 20px; letter-spacing: -0.01em; text-align: center; }
+.poster__cap { position: relative; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 16px; margin-top: 10px; font-size: 18px; letter-spacing: -0.01em; text-align: center; }
 .poster__cap a { text-underline-offset: 3px; }
-.poster__cap .btn { width: 200px; justify-content: center; }
+.poster__cap .btn { justify-content: center; }
 
 /* the one cursor: a wink */
 .cur { position: absolute; z-index: 4; display: flex; align-items: flex-start; pointer-events: none; animation: bob 7s ease-in-out infinite; }
@@ -329,28 +341,6 @@ kbd {
 .pv__meta { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-size: 15px; }
 .pv__what { min-height: 2.8em; margin-top: 8px; font-size: 18px; }
 .pv .btn { margin-top: 12px; }
-
-/* ---------- Home: places, a scatter of drawings ---------- */
-.scatter { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 28px; row-gap: 40px; align-items: start; margin-top: 80px; }
-.pl figure { position: relative; }
-.pl__art { position: relative; }
-.pl__shape { position: absolute; left: 50%; top: var(--t, 46%); width: var(--s, 78%); translate: -50% -50%; rotate: var(--r, 0deg); color: var(--c, var(--paper)); }
-.pl img { position: relative; width: 100%; }
-.pl figcaption { margin-top: 14px; font-size: 17px; letter-spacing: -0.005em; text-align: center; }
-.pl:nth-child(1) { grid-column: 1 / span 6; grid-row: 1; }
-.pl:nth-child(1) figcaption { font-size: 22px; }
-.pl:nth-child(2) { grid-column: 8 / span 4; grid-row: 1; margin-top: 70px; }
-.pl:nth-child(3) { grid-column: 2 / span 3; grid-row: 2; margin-top: 10px; }
-.pl:nth-child(4) { grid-column: 6 / span 3; grid-row: 2; margin-top: 64px; }
-.pl:nth-child(5) { grid-column: 10 / span 3; grid-row: 2; margin-top: -20px; }
-.pl:nth-child(6) { grid-column: 1 / span 3; grid-row: 3; margin-top: 30px; }
-.pl:nth-child(7) { grid-column: 4 / span 3; grid-row: 3; margin-top: -10px; }
-.pl:nth-child(8) { grid-column: 7 / span 3; grid-row: 3; margin-top: 64px; }
-.pl:nth-child(9) { grid-column: 10 / span 3; grid-row: 3; margin-top: 16px; }
-.places-wrap { position: relative; }
-.pl-deco { position: absolute; pointer-events: none; }
-.pl-deco--a { left: 50%; top: 8%; width: 64px; color: var(--sage); }
-.pl-deco--b { right: 0; top: 4%; width: 84px; color: var(--navy); }
 
 /* ---------- Doors: arched cards (playground and log at home) ---------- */
 .nd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; margin-top: 64px; }
@@ -587,6 +577,18 @@ kbd {
 .bg-honey { background: var(--honey); }
 .bg-sage { background: var(--sage); }
 
+/* ---------- Home: the race. Three small cars at the foot of the Say hello band; they leave the grid when it scrolls into view, then lap now and then (script.js) ---------- */
+.hello:has(.racer) { padding-bottom: 172px; }
+.hello:has(.racer) .books { bottom: 92px; }
+.hello:has(.racer) .d2 { bottom: 110px; }
+.racer { --w: 120px; --step: 112px; --k: 1; position: absolute; left: 0; right: 0; bottom: 30px; height: calc(var(--w) * .36 + 16px * var(--k)); overflow: hidden; pointer-events: none; }
+.racer__car { position: absolute; right: calc(max(var(--gutter), (100% - var(--wrap)) / 2) + var(--g) * var(--step)); bottom: calc(var(--b) * 1px * var(--k)); width: calc(var(--w) * var(--s)); z-index: var(--z); }
+.racer__car img { display: block; width: 100%; height: auto; }
+.racer__wheel { position: absolute; left: var(--x); top: var(--y); width: 14.7%; aspect-ratio: 1; translate: -50% -50%; fill: none; stroke: #042444; stroke-width: 3; stroke-linecap: round; }
+.racer__car.is-driving .racer__wheel { animation: spin .35s linear infinite reverse; }
+.racer__car.is-driving img { animation: rumble .3s ease-in-out infinite; }
+@keyframes rumble { 50% { transform: translateY(-1px); } }
+
 /* ---------- Motion ---------- */
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes bob { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(6px, -5px); } }
@@ -610,12 +612,6 @@ kbd {
   .pj-grid { grid-template-columns: 1fr; }
   .pv { display: none; }
   .pill { font-size: 52px; }
-  .scatter { grid-template-columns: repeat(6, minmax(0, 1fr)); row-gap: 48px; }
-  .pl-deco { display: none; }
-  .pl:nth-child(n) { grid-row: auto; margin-top: 0; }
-  .pl:nth-child(1) { grid-column: 1 / span 6; padding: 0 12%; }
-  .pl:nth-child(2n) { grid-column: 1 / span 3; }
-  .pl:nth-child(2n+3) { grid-column: 4 / span 3; margin-top: 56px; }
   .hello { padding-bottom: 270px; }
   .hello .books { left: 50%; translate: -50% 0; bottom: 40px; width: 210px; }
   .rooms { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -647,12 +643,16 @@ kbd {
   .h1 { font-size: 52px; }
   .hero .lede, .page-hero .lede { font-size: 19px; margin-top: 20px; }
   .hero__acts { margin-top: 26px; gap: 10px; }
-  .note { margin-top: 36px; gap: 16px; }
-  .note__art { width: 92px; }
-  .note__t { font-size: 22px; }
+  .note { margin-top: 40px; gap: 18px; }
+  .note__art { width: 116px; }
+  .note__t { font-size: 25px; }
   .note__d { font-size: 16px; }
-  .poster__cap { font-size: 18px; margin-top: 16px; }
-  .poster__cap [data-place-name] { display: grid; align-content: end; min-height: 3em; }
+  .poster__cap { font-size: 16px; margin-top: 8px; gap: 8px 12px; }
+  .poster__cap .btn { font-size: 15px; padding: 8px 16px; }
+  .hero { padding-bottom: 40px; }
+  .hello:has(.racer) { padding-bottom: 320px; }
+  .hello:has(.racer) .books { bottom: 88px; }
+  .racer { --w: 92px; --step: 80px; --k: .7; bottom: 26px; }
   .orb--quat { right: 28%; }
   .cur b { font-size: 12px; padding: 2px 8px; }
   .band { padding: 84px 0; }
@@ -674,11 +674,6 @@ kbd {
   .row__t { font-size: 19px; }
   .row__meta { display: flex; gap: 16px; grid-column: 2; margin-top: 6px; }
   .row__k, .row__s { font-size: 13px; }
-  .scatter { margin-top: 52px; column-gap: 14px; row-gap: 30px; }
-  .pl:nth-child(1) { padding: 0 2%; }
-  .pl:nth-child(1) figcaption { font-size: 19px; }
-  .pl:nth-child(2n+3) { margin-top: 36px; }
-  .pl figcaption { font-size: 15px; margin-top: 8px; }
   .nd-grid { grid-template-columns: 1fr; gap: 40px; margin-top: 40px; }
   .door__body { padding: 4px 24px 32px; border-radius: 0 0 26px 26px; }
   .loglist li { grid-template-columns: 1fr; gap: 2px; padding: 9px 0; font-size: 16px; }

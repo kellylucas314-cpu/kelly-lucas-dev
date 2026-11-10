@@ -350,7 +350,7 @@ The four colors that carry the shapes. Each is a `.c-*` class for an SVG shape a
 The band tints. A band is one of these from edge to edge, with a wave or scallop at its top.
 - **Pale Teal** (`pale-teal`): the Magpie band at home and the demo band on the Magpie page; the badge in the redraw; the second step tile in a journey; the noise room plate; the desk’s gallery pill and its "mint" tiles.
 - **Pale Coral** (`pale-coral`): the projects band and the Say hello band at home, the rooms band, the "what it clips" band on the Magpie page; tag chips in the redraw; the third step tile; the Playground pill’s tile; the desk’s tool pill, private and pending pills and "lilac" tiles.
-- **Honey Tint** (`honey-tint`): the places band at home, the counts band on the Magpie page and the resources pile on the desk; the desk’s reading pill, its "sand" tiles and the system cards on its paper piles.
+- **Honey Tint** (`honey-tint`): the counts band on the Magpie page and the resources pile on the desk; the desk’s reading pill, its "sand" tiles and the system cards on its paper piles.
 - **Sage Tint** (`sage-tint`): the "Built for one" band on the Magpie page, the whole log, the Heliopolis pile and the closing chapter on the desk, the Design desk pill, the desk’s "sky" tiles and the notebook pages on a paper pile.
 
 ### Neutral
@@ -419,7 +419,7 @@ Grids, all `display: grid`:
 - **Page hero**: text 1fr beside a 520px poster, 48px gap; 44% at 1180; stacked at 960 with the poster first and at most 480px. `.page-hero--plain` is one column.
 - **Magpie at home**: a 560px head and does column beside the art (areas "head art" / "does art"), 72px column gap; halves with a 48px gap at 1180; stacked head, art, does at 960.
 - **Projects**: the list 1fr beside a 440px sticky preview, 80px gap; one column with the preview hidden at 1180. A row is 40px / 1fr / 84px / 128px with a 16px gap and 16px of padding; on a phone it is 76px / 1fr with a 68px round thumbnail in the first column.
-- **Places scatter**: 12 columns, 28px by 40px gaps, nine places placed by hand (the first spans six columns, the rest three or four, with offsets from -20px to 70px); six columns at 1180 (the first full width with 12% side padding, the rest in alternating halves with a 56px stagger); 14px by 30px gaps on a phone.
+- **Places scatter** (removed from the homepage 2026-11-07; kept here for the record): 12 columns, 28px by 40px gaps, nine places placed by hand (the first spans six columns, the rest three or four, with offsets from -20px to 70px); six columns at 1180 (the first full width with 12% side padding, the rest in alternating halves with a 56px stagger); 14px by 30px gaps on a phone.
 - **Doors**: two columns, 48px gap, aligned to the bottom; one column at most 620px wide at 960.
 - **Chapters**: 5fr / 7fr with 48px by 72px gaps and 96px between chapters; one column with 24px gaps and 72px between at 1180. The body is at most 660px (40em when it is prose); the head’s line at most 26em.
 - **Rooms**: three columns, 48px by 32px gaps; two at 1180; one on a phone.

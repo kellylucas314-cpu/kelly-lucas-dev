@@ -39,13 +39,25 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
   deep coral "Private".
 - Copy is direct, warm, sentence case, curly apostrophes. Honest labels: the
   Magpie popup says it is redrawn in HTML, counts say when they were counted,
-  the places band and the colophon say the drawings were made with an image
-  model in Kelly's style.
+  the colophon says the drawings were made with an image model in Kelly's
+  style. The homepage has no places band (Kelly, 2026-11-07: a whole section
+  for the art wasted space); the drawings live on the poster and in the
+  Heliopolis art library, linked from the projects list and the footer.
 - Personality budget: the tab-title message, "Another place", the "Kelly"
-  cursor tag on the poster, the Alt+Shift+M reflex on the homepage, the
+  cursor tag on the poster, the little race at the foot of the homepage's
+  Say hello band (Kelly's side-view car, red dinos and HelioFlux in place of
+  the Red Bull marks, plus two rivals whose leaves are recolored coral and
+  honey; all three are 480px WebPs derived from `race-car.webp`:
+  `race-car-sm.webp`, `race-car-coral.webp`, `race-car-honey.webp`; kept
+  small and low down so it never competes with the poster), the Alt+Shift+M
+  reflex on the homepage, the
   "Clip it" demo on the Magpie page, the magpie 404, and the playground.
 - Motion: the suns turn very slowly (the spin lives on the svg root), the
-  cursor tag bobs, the poster crossfades on click, the clip demo plays
+  cursor tag bobs, the three race cars sit on a starting grid, launch a
+  beat after the Say hello band comes into view, then each laps again every
+  few seconds while it is on screen (parked on the grid without JS or with
+  reduced motion; images load lazily), the poster
+  crossfades on click, the clip demo plays
   once on the Magpie page. `prefers-reduced-motion` turns all of it off and
   nothing is hidden behind JS.
 
@@ -60,8 +72,7 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
   stone and roofs coral, small accents only), snap it to the palette, trim it
   and save it as WebP with alpha. Show Kelly before it ships.
 - A new place on the homepage: add it to `PLACES` in `script.js` (file,
-  size, caption, alt) and, if it should appear in the scatter, to the places
-  list in `index.html`.
+  size, caption, alt).
 - `magpie-drawer-sm.webp` is the 480px copy of the drawer magpie for the
   Magpie note, and the project screenshots in `assets/collection/` have
   320px `-sm.webp` copies for the phone thumbnails. They are derived files
