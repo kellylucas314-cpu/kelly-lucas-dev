@@ -920,6 +920,7 @@
     renderRail();
     renderHead();
     renderSort();
+    renderInbox();
     renderShelves();
     renderTags();
     if (!$("allTags").hidden) renderAllTags();
@@ -981,6 +982,7 @@
       PLAN = null;
     }
     renderSort();
+    renderInbox();
   }
   function sortChips(counts, go) {
     const list = el("ul", "lib-sort__chips");
@@ -1744,6 +1746,143 @@
     }
   }
 
+  /* ---------- links from our chat ----------
+     /brain/inbox.json is a short list of links Claude prepared in chat, each
+     with a note on what it is and when to use it. Nothing is added by
+     itself: a card offers them, one press saves the ones the library does
+     not have yet, and Undo sends them to Trash. */
+  let INBOX = [];
+  let inboxBatch = "";
+  let inboxHad = 0; /* links on the list that the library already holds: left exactly as they are */
+  let inboxState = null; /* { adding, done, total } while saving, { added, failed } after */
+  const inboxLater = () => { try { return localStorage.getItem("magpie-inbox-later") === inboxBatch; } catch { return false; } };
+  /* The same idea of "the same address" as the library's own. */
+  function addressKey(value) {
+    try {
+      const url = new URL(value);
+      url.hash = "";
+      [...url.searchParams.keys()].forEach((name) => { if (/^(utm_|fbclid$|gclid$|mc_|ref$|ref_src$|si$)/i.test(name)) url.searchParams.delete(name); });
+      const query = url.searchParams.toString();
+      return url.hostname.toLowerCase().replace(/^(www|m)\./, "") + url.pathname.replace(/\/+$/, "") + (query ? "?" + query : "");
+    } catch {
+      return "";
+    }
+  }
+  async function loadInbox() {
+    try {
+      const response = await fetch("/brain/inbox.json", { credentials: "same-origin", cache: "no-store" });
+      if (!response.ok) return;
+      const body = await response.json();
+      const batches = Array.isArray(body && body.batches) ? body.batches : [];
+      const have = new Set(ITEMS.map((item) => addressKey(item.url)));
+      const waiting = [];
+      let had = 0;
+      batches.forEach((batch) => {
+        (Array.isArray(batch.items) ? batch.items : []).forEach((entry) => {
+          const url = safeHttpUrl(entry && entry.url);
+          const key = url && addressKey(url);
+          if (!key) return;
+          if (have.has(key)) { had += 1; return; }
+          have.add(key);
+          waiting.push({ url, title: String(entry.title || ""), note: String(entry.note || ""), tags: Array.isArray(entry.tags) ? entry.tags : [], type: String(entry.type || ""), unread: entry.read === false });
+        });
+      });
+      INBOX = waiting;
+      inboxHad = had;
+      inboxBatch = batches.map((batch) => batch.id).join(",") + ":" + waiting.length;
+      renderInbox();
+    } catch {
+      /* no list waiting is the usual state */
+    }
+  }
+  function renderInbox() {
+    const box = $("inboxBanner");
+    if (!box) return;
+    box.textContent = "";
+    box.hidden = true;
+    box.className = "lib-sort lib-sort--inbox";
+    const copy = el("div", "lib-sort__copy");
+    const acts = (...buttons) => {
+      const row = el("div", "btn-row lib-sort__acts");
+      buttons.forEach(([label, act, line]) => {
+        const button = el("button", "btn btn--sm" + (line ? " btn--line" : ""), label);
+        button.type = "button";
+        button.dataset.inbox = act;
+        row.appendChild(button);
+      });
+      return row;
+    };
+    if (inboxState && inboxState.adding) {
+      copy.appendChild(el("h3", "lib-sort__title", "Adding " + inboxState.done + " of " + inboxState.total + "…"));
+      copy.appendChild(el("p", "lib-sort__text", "Magpie is reading each page for its title and picture. Keep this page open."));
+    } else if (inboxState) {
+      const n = inboxState.added.length;
+      box.classList.add("lib-sort--done");
+      copy.appendChild(el("h3", "lib-sort__title", n ? "Added " + plural(n, "link") + "." : "Nothing new to add."));
+      copy.appendChild(el("p", "lib-sort__text", (n ? "Open any of them to read the note on what it is and when to use it." : "")
+        + (inboxState.failed ? " " + plural(inboxState.failed, "link") + " didn’t save. You can try those again." : "")));
+      const buttons = [["Looks good", "ok"]];
+      if (inboxState.failed) buttons.push(["Try the rest", "run", true]);
+      if (n) buttons.push(["Undo", "undo", true]);
+      copy.appendChild(acts(...buttons));
+    } else {
+      const filtered = state.q || state.shelf || state.tag || state.origin;
+      if (!INBOX.length || inboxLater() || filtered || (state.col !== "" && state.col !== "unsorted")) return;
+      copy.appendChild(el("h3", "lib-sort__title", plural(INBOX.length, "link") + " from our chat"));
+      copy.appendChild(el("p", "lib-sort__text", "The links you sent, read and ready, each with a short note on what it is and when to use it. Nothing is added until you say so."
+        + (inboxHad ? " " + (inboxHad === 1 ? "One you already have is" : inboxHad + " you already have are") + " left just as you saved " + (inboxHad === 1 ? "it." : "them.") : "")));
+      const names = el("p", "lib-sort__names", INBOX.slice(0, 6).map((entry) => entry.title || hostOf(entry.url)).join(", ") + (INBOX.length > 6 ? " and " + (INBOX.length - 6) + " more" : ""));
+      copy.appendChild(names);
+      copy.appendChild(acts(["Add them", "run"], ["Not now", "later", true]));
+    }
+    box.appendChild(shape("s-quat", "lib-sort__shape"));
+    box.appendChild(copy);
+    box.hidden = false;
+  }
+  async function runInbox() {
+    const list = INBOX.slice();
+    if (!list.length) return;
+    const added = inboxState && inboxState.added ? inboxState.added.slice() : [];
+    const failed = [];
+    inboxState = { adding: true, done: 0, total: list.length };
+    renderInbox();
+    for (const entry of list) {
+      inboxState.done += 1;
+      renderInbox();
+      try {
+        const response = await fetch("/api/magpie-save", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          /* A page Claude could not read is saved as a plain placeholder
+             and waits in Unsorted; the rest are read for their picture and
+             filed like any new clip. */
+          body: JSON.stringify(entry.unread
+            ? { url: entry.url, title: entry.title, note: entry.note, tags: entry.tags, collection: "unsorted", captureSource: "chat" }
+            : { url: entry.url, titleHint: entry.title, note: entry.note, tags: entry.tags, type: entry.type || undefined, collection: "auto", captureSource: "chat" }),
+        });
+        if (response.status === 401) return goToLogin();
+        const body = await response.json().catch(() => ({}));
+        if (!response.ok || !body.item) throw new Error("not saved");
+        const index = ITEMS.findIndex((item) => item.id === body.item.id);
+        if (index >= 0) ITEMS[index] = prepareOne(body.item, ITEMS[index].order);
+        else ITEMS.push(prepareOne(body.item, ITEMS.length ? Math.max(...ITEMS.map((item) => item.order)) + 1 : 0));
+        if (!body.existed) added.push(body.item.id);
+      } catch {
+        failed.push(entry);
+      }
+    }
+    INBOX = failed;
+    inboxState = { added, failed: failed.length };
+    refresh();
+  }
+  function undoInbox() {
+    const ids = inboxState && inboxState.added ? inboxState.added : [];
+    inboxState = null;
+    if (ids.length) trashClips(ids);
+    loadInbox();
+  }
+
   /* The feather (the Chrome extension) leaves a note on this page when it is
      installed, so connecting is one press: this page hands it the key and
      the feather answers. No feather here: the steps to get one show. */
@@ -1943,6 +2082,22 @@
           try { localStorage.setItem("magpie-sort-later", "1"); } catch { /* it just comes back next time */ }
           renderSort();
           toast("No problem. “Sort into sections” stays in the list on the left.");
+        }
+      });
+    }
+    const inboxBox = $("inboxBanner");
+    if (inboxBox) {
+      inboxBox.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-inbox]");
+        if (!button) return;
+        const act = button.dataset.inbox;
+        if (act === "run") runInbox();
+        else if (act === "undo") undoInbox();
+        else if (act === "ok") { inboxState = null; renderInbox(); }
+        else if (act === "later") {
+          try { localStorage.setItem("magpie-inbox-later", inboxBatch); } catch { /* it comes back next time */ }
+          renderInbox();
+          toast("No problem. They’ll be here next time you open Magpie.");
         }
       });
     }
@@ -2225,6 +2380,7 @@
     if (adding.url) openAdd(adding);
     /* The feather's "Connect" opens this page with ?connect=1. */
     else if (params.has("connect")) openConnect();
+    loadInbox();
   }
 
   start();

@@ -1,0 +1,428 @@
+{
+  "about": "Links Kelly sent in chat, read by Claude and waiting to be added to Magpie. This file is public like the rest of the page: only links that could sit on the public design desk go here, never anything private. Notes are in our own words; the creators' pages are linked, not copied.",
+  "batches": [
+    {
+      "id": "2026-11-10-design-kit",
+      "title": "Design kit: motion, components, prompts and skills",
+      "items": [
+        {
+          "url": "https://motion.dev",
+          "title": "Motion",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "animation",
+            "react",
+            "motion"
+          ],
+          "note": "The animation library that used to be called Framer Motion. It works in React, plain JavaScript and Vue. The core is free; Motion+ is a paid extra.\n\nWhen to use it: a React project that needs things to move with layout (cards that reorder, panels that grow, shared-element transitions). For kellylucas.dev and other no-framework pages, the Web Animations API we already use is enough; reach for this when a project is in React."
+        },
+        {
+          "url": "https://animejs.com",
+          "title": "Anime.js",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "animation",
+            "javascript",
+            "motion"
+          ],
+          "note": "A free animation library for plain JavaScript, with timelines, staggered groups, scroll-linked motion and SVG drawing and morphing.\n\nWhen to use it: a static page (no React) that needs a sequence with several beats, or SVG line work that draws itself. It is the best fit of this batch for a no-build site like Clue d’État or kellylucas.dev, but only when a moment really needs choreography."
+        },
+        {
+          "url": "https://ui.shadcn.com/charts",
+          "title": "shadcn/ui charts",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "components",
+            "charts",
+            "react"
+          ],
+          "note": "Copy-and-paste chart components (bar, line, area, pie, radar and more) built on Recharts, styled to match shadcn/ui.\n\nWhen to use it: a React dashboard that needs decent-looking charts fast and already uses shadcn/ui. The link you sent was cut short in the message, so this is the charts page it pointed toward."
+        },
+        {
+          "url": "https://prompt-motion.com",
+          "title": "Prompt Motion",
+          "type": "web page",
+          "tags": [
+            "design-inspiration",
+            "motion",
+            "prompts",
+            "video"
+          ],
+          "note": "A gallery of short motion videos made with Claude, each shown with the prompt and skills that produced it. Curated by @p4nthera_.\n\nWhen to use it: before asking for an animated explainer or product video. Find one that moves the way you want and borrow the shape of its prompt (one subject that is never cut away from, timing given in beats, a list of what to avoid)."
+        },
+        {
+          "url": "https://ui.shadcn.com",
+          "title": "shadcn/ui",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "components",
+            "react",
+            "foundations"
+          ],
+          "note": "A set of React and Tailwind components you copy into your own code, so you own and can restyle every one. A foundation, not a finished look.\n\nWhen to use it: starting any React app. The catch is that the defaults are what every AI-built app looks like, so change the corner radius, colors and type on day one."
+        },
+        {
+          "url": "https://base-ui.com",
+          "title": "Base UI",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "components",
+            "react",
+            "accessibility",
+            "foundations"
+          ],
+          "note": "Unstyled, accessible React components (dialogs, menus, selects, tabs) with all the keyboard and screen-reader behavior done and no look at all.\n\nWhen to use it: you have your own visual system and only want the hard behavior solved. Good for a product UI where the brand has to be exact."
+        },
+        {
+          "url": "https://www.radix-ui.com",
+          "title": "Radix",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "components",
+            "react",
+            "accessibility",
+            "foundations"
+          ],
+          "note": "Four related kits from WorkOS. Primitives (unstyled accessible parts, what shadcn/ui is built on), Themes (the same parts pre-styled), Icons and Colors.\n\nWhen to use it: Radix Colors is useful even with no React at all, as a reference for building color scales that stay readable. The Primitives are the alternative to Base UI."
+        },
+        {
+          "url": "https://sonner.emilkowal.ski",
+          "title": "Sonner",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "components",
+            "react",
+            "toasts"
+          ],
+          "note": "A small React library for toast messages (the little “Saved” notes that slide in), by Emil Kowalski. One component, one function call.\n\nWhen to use it: any React app that needs to confirm an action. Also worth opening just to study the motion: how the toasts stack, swipe away and pause on hover is the standard to copy."
+        },
+        {
+          "url": "https://vaul.emilkowal.ski",
+          "title": "Vaul",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "components",
+            "react",
+            "mobile"
+          ],
+          "note": "A React drawer that slides up from the bottom of a phone screen and can be dragged shut, by Emil Kowalski.\n\nWhen to use it: a phone-first React app where a side sheet or dialog feels wrong.\n\nHonest label: this site blocks automated readers, so I did not read it directly. This note rests on the component guide you sent."
+        },
+        {
+          "url": "https://cmdk.paco.me",
+          "title": "cmdk",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "components",
+            "react",
+            "command-menu"
+          ],
+          "note": "An unstyled React command menu, the search box that opens on Command+K and lets you jump anywhere by typing.\n\nWhen to use it: an app with enough places and actions that a keyboard jump saves time. Magpie could use the idea one day.\n\nHonest label: the address now forwards to its GitHub page, which I did not follow. This note rests on the component guide you sent."
+        },
+        {
+          "url": "https://number-flow.barvian.me",
+          "title": "NumberFlow",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "components",
+            "react",
+            "numbers",
+            "motion"
+          ],
+          "note": "A component that animates a number from one value to the next, digit by digit, and formats it properly (currency, percent, compact).\n\nWhen to use it: a score, price, counter or stat that changes while someone watches. One limit from its own page: no right-to-left text and no non-Latin digits."
+        },
+        {
+          "url": "https://github.com/emilkowalski/skills",
+          "title": "Emil Kowalski’s agent skills",
+          "type": "web page",
+          "tags": [
+            "agent-skills",
+            "skills",
+            "animation",
+            "design-engineering"
+          ],
+          "note": "17 free skills (MIT) that teach a coding agent Emil Kowalski’s way of doing interface motion and polish. They include skills to add, review, improve and remove animation, one on animation performance, one on Apple-style design, and pick-ui-library, which chooses a component library and only runs when you ask for it.\n\nWhen to use it: a React build where motion matters. Not installed. The install lines you were given, for reference: npx skills@latest add emilkowalski/skills (all of them) or npx skills add https://github.com/emilkowalski/skills --skill pick-ui-library (just the picker)."
+        },
+        {
+          "url": "https://beautifului.dev",
+          "title": "Beautiful UI",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "components",
+            "react",
+            "ai-interfaces"
+          ],
+          "note": "21 free copy-and-paste React components for AI products (chat inputs, streaming text, model pickers and the like), by Turbo, MIT licensed.\n\nWhen to use it: building a chat or agent screen and wanting it to look considered instead of default."
+        },
+        {
+          "url": "https://rareui.in",
+          "title": "RareUI",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "components",
+            "react",
+            "motion"
+          ],
+          "note": "A library of animated React components with a command-line installer, by Swappy. Its own page says both “50+” and “100+”, so treat the count loosely.\n\nWhen to use it: you want one showpiece (an unusual button, card or text effect) on a page. One per page is the rule; more than that reads as a template."
+        },
+        {
+          "url": "https://magicui.design",
+          "title": "Magic UI",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "components",
+            "react",
+            "motion",
+            "landing-pages"
+          ],
+          "note": "150+ animated React components made to sit beside shadcn/ui, free, with a separate paid Pro set of templates.\n\nWhen to use it: a marketing or landing page that needs a moving headline, a logo marquee or an animated grid. Easy to overdo; pick one."
+        },
+        {
+          "url": "https://ui.aceternity.com",
+          "title": "Aceternity UI",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "components",
+            "react",
+            "motion",
+            "landing-pages"
+          ],
+          "note": "118+ free animated React components (3D cards, spotlight effects, glowing backgrounds) with a paid all-access tier. Installs through the shadcn command line.\n\nWhen to use it: a hero that needs one dramatic effect. This is the dark, glowing look much AI-built work already has, so use it sparingly and restyle it."
+        },
+        {
+          "url": "https://21st.dev",
+          "title": "21st.dev",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "components",
+            "react",
+            "marketplace"
+          ],
+          "note": "A marketplace of 12,000+ community React components you can browse by type and copy. The free plan allows two copies a day; paid starts around $6 a month billed yearly.\n\nWhen to use it: you know the part you need (a pricing table, a testimonial wall) and want to see twenty takes on it before choosing."
+        },
+        {
+          "url": "https://griffinwooldridge.com/blog/best-react-ui-component-libraries",
+          "title": "The best React UI component libraries, sorted into three kinds",
+          "type": "article",
+          "tags": [
+            "design",
+            "components",
+            "react",
+            "ai-design"
+          ],
+          "note": "By Griffin Wooldridge (Oct 2026). The map for most of this batch.\n\nThe idea: libraries come in three kinds. Foundations you restyle (shadcn/ui, Base UI, Radix), specialists that do one thing very well (Sonner, Vaul, cmdk, NumberFlow) and designed libraries that arrive with a look (Beautiful UI, RareUI, Magic UI, Aceternity, 21st.dev).\n\nWhat to take from it: name the library in your prompt instead of hoping; change shadcn’s radius, colors and type first; allow one showpiece per page.\n\nWhen to use it: at the start of a React build, to choose the stack in five minutes."
+        },
+        {
+          "url": "https://griffinwooldridge.com/blog/ai-prompts-for-ui-design",
+          "title": "How to prompt AI for UI design",
+          "type": "article",
+          "tags": [
+            "design",
+            "prompts",
+            "ai-design"
+          ],
+          "note": "By Griffin Wooldridge (Aug 2026).\n\nThe idea: show real references instead of adjectives; say who the screen is for and what they are trying to do before describing layout; fix the visual system up front (one accent color, a type scale, one spacing unit, light or dark); name the component library; ask for small specific edits; give a list of things to avoid.\n\nWhen to use it: before writing any design prompt. It is the most reusable piece in this batch, and the avoid list is how we already work (no eyebrows, no shadows, no em dashes)."
+        },
+        {
+          "url": "https://griffinwooldridge.com/blog/ai-ui-design-reference-sites",
+          "title": "Reference sites to feed AI for UI design",
+          "type": "article",
+          "tags": [
+            "design",
+            "references",
+            "ai-design"
+          ],
+          "note": "By Griffin Wooldridge (Sep 2026).\n\nThe idea: gather in this order. Evidence first (Mobbin and Refero, real shipped screens), then components (21st.dev, Beautiful UI), then motion (Transitions.dev).\n\nWhen to use it: when a design feels generic and you need real examples to point at.\n\nHonest label: the article carries Mobbin sponsorship and affiliate links, so weigh that pick accordingly."
+        },
+        {
+          "url": "https://griffinwooldridge.com/blog/claude-motion-graphics-prompts",
+          "title": "What the best Claude motion graphics prompts have in common",
+          "type": "article",
+          "tags": [
+            "design",
+            "motion",
+            "prompts",
+            "video"
+          ],
+          "note": "By Griffin Wooldridge (Oct 2026). A study of the Prompt Motion gallery.\n\nThe idea: six habits of the prompts that work. Keep one object on screen and never cut away from it; let a cursor drive the interface; give timing in beats; include a banned list; use real colors and type instead of “modern”; make each frame depend only on the time, so it renders the same every run. Then check the finished video file, not the preview.\n\nWhen to use it: before asking for any animated explainer."
+        },
+        {
+          "url": "https://griffinwooldridge.com/blog/claude-skills-for-designers",
+          "title": "Claude skills for designers",
+          "type": "article",
+          "tags": [
+            "design",
+            "skills",
+            "ai-design"
+          ],
+          "note": "By Griffin Wooldridge (Mar 2026, updated Sep).\n\nThe idea: a skill is a folder with a SKILL.md that gives Claude a fixed playbook. He walks through five for design work (Frontend Design, Implement Design through Figma, Theme Factory, Brand Guidelines, Canvas Design) plus Skill Creator for writing your own.\n\nWhen to use it: when you want every output to follow the same rules without repeating them. You already have several of these turned on; the next step worth more than any install is a skill of your own built from your brand sheet."
+        },
+        {
+          "url": "https://griffinwooldridge.com/blog/claude-design-tutorial",
+          "title": "Claude Design tutorial for beginners",
+          "type": "article",
+          "tags": [
+            "design",
+            "claude-design",
+            "ai-design",
+            "tutorial"
+          ],
+          "note": "By Griffin Wooldridge (Jul 2026, updated Sep).\n\nThe idea: start with one screen, not a whole app; review the result the way you would a junior designer’s work; change one thing per turn; ground it with real references and real content; then export or hand the design to Claude Code to build.\n\nWhen to use it: your first sessions in Claude Design, or when a session has drifted and needs resetting to one screen."
+        },
+        {
+          "url": "https://griffinwooldridge.com/blog/claude-fable-5-for-ui-design-how-to-get-beautiful-output-every-time",
+          "title": "Getting beautiful UI out of Claude Fable 5",
+          "type": "article",
+          "tags": [
+            "design",
+            "prompts",
+            "ai-design",
+            "claude"
+          ],
+          "note": "By Griffin Wooldridge (Jun 2026, updated Sep).\n\nThe idea: brief the model like a senior design engineer. Design system first, realistic data instead of placeholder text, every state (empty, loading, error), and a clear edge to the task. He also covers when the top model is worth its cost.\n\nWhen to use it: writing a brief for a bigger build.\n\nHonest label: the prices and usage figures are his, not checked."
+        },
+        {
+          "url": "https://griffinwooldridge.com/blog/claude-fable-5-2-ui-design",
+          "title": "Claude Fable 5.2 for UI design: first tests",
+          "type": "article",
+          "tags": [
+            "design",
+            "prompts",
+            "ai-design",
+            "claude"
+          ],
+          "note": "By Griffin Wooldridge (Nov 9, 2026). Launch-day tests: a dashboard, and one landing page in two art directions.\n\nThe idea worth keeping is the shape of his prompt: one self-contained HTML file, the regions of the page named, a target screen size, and an instruction to check its own work at 1440 and 390 pixels wide.\n\nWhen to use it: as a template for a one-shot page prompt.\n\nHonest label: the prices and benchmark numbers are his claims on launch day, not checked."
+        },
+        {
+          "url": "https://impeccable.style",
+          "title": "Impeccable",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "agent-skills",
+            "skills",
+            "design-review"
+          ],
+          "note": "A design skill for coding agents by Paul Bakaus, with about two dozen commands (polish, typeset, layout, colorize, critique, audit and more), a detector that flags AI-looking patterns, and optional hooks that check work automatically. It reads a project’s PRODUCT.md and DESIGN.md, which kellylucas.dev already has.\n\nWhen to use it: a critique or audit pass on an existing interface.\n\nWhere we stand: it is already available in our chat sessions, so there is nothing to install to try it. The automatic hooks are the part I would leave off: they need approval to run on every edit, and your own rules disagree with a few of its defaults."
+        },
+        {
+          "url": "https://impeccable.style/slop",
+          "title": "Impeccable’s gallery of AI design tells",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "design-review",
+            "anti-patterns",
+            "ai-design"
+          ],
+          "note": "A picture gallery of the habits that make a page look machine-made: purple-to-blue gradients, glass panels and glowing orbs, cards inside cards, thick colored side stripes, Inter everywhere, a little label above every headline, em dashes, “supercharge”-style claims, bouncing buttons. 62 detector rules in nine groups.\n\nWhen to use it: as a five-minute checklist before anything ships. Your site rules already ban several of these (eyebrows, shadows, em dashes), which is a good sign.\n\nOne to weigh, not obey: it also lists cream backgrounds and hand-drawn mascots, and both are deliberate parts of your look. A tell is only a problem when it is a default nobody chose."
+        },
+        {
+          "url": "https://transitions.dev",
+          "title": "Transitions.dev",
+          "type": "web page",
+          "tags": [
+            "design-tool",
+            "motion",
+            "animation",
+            "agent-skills"
+          ],
+          "note": "A library of ready interface transitions (menus, dialogs, toasts, tabs, accordions, counters, skeleton to content) by Jakub Antalik, with a builder, a skill for coding agents and a tool that scores a codebase’s motion. Free tier plus a paid Pro tier; the two pages disagree on the count (27+ and 43+).\n\nWhen to use it: you want a dropdown or dialog to open the way good products do and would rather copy a tuned recipe than guess at timings.\n\nNot installed. The install line you were given, for reference: npx skills add Jakubantalik/transitions.dev"
+        },
+        {
+          "url": "https://github.com/vercel-labs/agent-skills",
+          "title": "Vercel’s agent skills (web-design-guidelines)",
+          "type": "web page",
+          "tags": [
+            "agent-skills",
+            "skills",
+            "design-review",
+            "accessibility"
+          ],
+          "note": "Vercel’s free collection of agent skills (MIT). The one you flagged, web-design-guidelines, reviews interface code against 100+ rules: accessibility, focus states, forms, reduced motion, type, images, touch, dark mode.\n\nWhen to use it: a pre-launch review of a site, especially for accessibility. Since your sites deploy on Vercel this is the most natural fit of the skills in this batch.\n\nNot installed. The install line you were given, for reference: npx skills add vercel-labs/agent-skills --skill web-design-guidelines"
+        },
+        {
+          "url": "https://github.com/mobbin/skills",
+          "title": "Mobbin’s search skill",
+          "type": "web page",
+          "tags": [
+            "agent-skills",
+            "skills",
+            "references",
+            "design-research"
+          ],
+          "note": "One skill, mobbin-search, that lets an agent look through Mobbin’s library of real app screenshots before answering a design question, and link what it found. MIT licensed. It needs Mobbin’s own connector set up, which implies a Mobbin account.\n\nWhen to use it: questions like “how do good apps handle onboarding?” where real examples beat opinion. Only worth it if you pay for Mobbin.\n\nNot installed. The install lines you were given, for reference: /plugin marketplace add mobbin/skills then /plugin install mobbin@mobbin"
+        },
+        {
+          "url": "https://github.com/Leonxlnx/taste-skill",
+          "title": "taste-skill",
+          "type": "web page",
+          "tags": [
+            "agent-skills",
+            "skills",
+            "ai-design"
+          ],
+          "note": "A design-taste skill for coding agents, already in your library from an earlier clip. I did not reread it for this batch.\n\nNot installed. The install line you were given, for reference: npx skills add https://github.com/Leonxlnx/taste-skill --skill design-taste-frontend"
+        },
+        {
+          "url": "https://www.dqnamo.com/kitchen",
+          "title": "The Kitchen by dqnamo",
+          "type": "web page",
+          "tags": [
+            "design-inspiration",
+            "inspiration",
+            "ui",
+            "micro-interactions"
+          ],
+          "note": "One designer’s shelf of small interface experiments, about 17 of them: a button that feels pressable, text that scrambles into place, a checkout that prints a receipt, a cassette audio player, hold to confirm, a magnetic drop zone, playing cards, a ticket, a stamp, an animated signature, an iridescent foil effect.\n\nWhen to use it: looking for one tactile, physical-feeling detail to give a page some charm. The receipt, ticket and stamp ideas suit your paper-and-poster style well. No downloads or install; it is for looking and learning."
+        },
+        {
+          "url": "https://bit.ly/4i0wNCh",
+          "title": "Reverse-engineer prompt (not read yet)",
+          "type": "web page",
+          "read": false,
+          "tags": [
+            "prompts",
+            "to-read"
+          ],
+          "note": "Your label: “Reverse-engineer prompt”.\n\nHonest label: I could not read this one. The short link forwards to a Notion page (its address reads “Reverse-engineer Apps, no install”) that only loads in a real browser. Open it yourself and clip it with the feather, and the real text will replace this placeholder."
+        },
+        {
+          "url": "https://bit.ly/4zU5l08",
+          "title": "Claude Image & Video (not read yet)",
+          "type": "web page",
+          "read": false,
+          "tags": [
+            "to-read"
+          ],
+          "note": "Your label: “Claude Image & Video”.\n\nHonest label: I could not read this one. The short link refuses automated readers, so I do not know where it leads. Open it yourself and clip the real page with the feather."
+        },
+        {
+          "url": "https://bit.ly/4jH1y1t",
+          "title": "Free 3D Website Skill (not read yet)",
+          "type": "web page",
+          "read": false,
+          "tags": [
+            "skills",
+            "to-read"
+          ],
+          "note": "Your label: “Free 3D Website Skill”.\n\nHonest label: I could not read this one. The short link forwards to a Notion page that only loads in a real browser, so I cannot confirm what the skill is or that it is free. You already have a 3D scroll-animation skill in this repo (3d-animation-creator), so compare before adding another."
+        }
+      ]
+    }
+  ]
+}

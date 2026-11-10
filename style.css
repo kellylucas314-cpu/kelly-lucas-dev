@@ -1477,6 +1477,9 @@ button.lib-sort__chip:hover { box-shadow: 0 0 0 1.5px var(--navy); }
 .lib-sort__dot { width: 12px; height: 12px; flex: none; border-radius: 50%; background: var(--col); }
 .lib-sort__n { font-size: 12.5px; color: var(--navy-soft); }
 .lib-sort__acts { margin-top: 20px; }
+.lib-sort--inbox .lib-sort__shape { color: var(--coral); }
+.lib-sort--inbox.lib-sort--done .lib-sort__shape { color: var(--sage); }
+.lib-sort__names { max-width: 62ch; margin-top: 10px; font-family: var(--mono); font-size: 12.5px; line-height: 1.6; color: var(--navy-soft); }
 .lib-sort--row { align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; padding: 14px 16px 14px 24px; border-radius: 999px; }
 .lib-sort--row .lib-sort__text, .lib-sort--row .lib-sort__acts { margin-top: 0; }
 .sheet__filed { margin-top: -6px; padding: 10px 14px; border-radius: 16px; background: var(--sage-tint); font-size: 14.5px; line-height: 1.4; }

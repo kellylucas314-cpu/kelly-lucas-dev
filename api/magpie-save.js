@@ -78,6 +78,10 @@ export default async function handler(request, response) {
         ...Object.fromEntries(Object.entries(body).filter(([, value]) => value !== "" && value !== undefined)),
         captureSource: body.captureSource || "library",
       };
+      /* A list prepared ahead of time (the library's "links from our chat")
+         brings a short name of its own, which reads better on a card than
+         a page's long title. The summary and picture still come from the page. */
+      if (typeof body.titleHint === "string" && body.titleHint.trim()) input.title = body.titleHint;
     }
     const clip = cleanClip(input, now);
     const store = backend();

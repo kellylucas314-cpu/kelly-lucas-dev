@@ -206,6 +206,16 @@ Keep it clean. No backup files, no version-numbered copies.
   The popup asks `POST /api/magpie-save { guess: true }` where a page would
   be filed and only asks a library whose `sectionsOn` is set, because an
   older library would save the question as a clip.
+- Links from our chat: `brain/inbox.json` (`{batches:[{id, title, items:[{url,
+  title, note, tags, type, read}]}]}`) is how Claude hands Kelly links it read
+  in a chat session, since a cloud session cannot write to her library. The
+  page shows a card ("N links from our chat"), adds only the ones the library
+  lacks (trashed ones count as had) when she presses "Add them", and Undo
+  sends them to Trash. Notes are in our own words: what it is, when to use it,
+  and an honest label for anything not read (`read: false` saves a plain
+  placeholder into Unsorted). The file is public like the page itself: never
+  put anything private or HelioFlux in it. Emptying `batches` after she has
+  added them is fine but not required.
 - Site icons: `/api/magpie-thumb?icon=<host>` fetches a site's icon once,
   keeps it in `magpie/icons/`, serves only sniffed PNG, JPEG, GIF, WebP or
   ICO (never SVG) and answers 204 when there is none. The page's security

@@ -129,3 +129,25 @@ test("site icons: only real pictures, only public hosts, asked for once", async 
   assert.equal(asked.length, count, "a site with no icon is not asked again for a month");
   assert.equal(await siteIcon("localhost", { store, fetcher, now }), null);
 });
+
+test("the links-from-chat list is well formed and every read link has a section", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const { cleanClip, upsertClip, urlKey } = await import("../lib/magpie-store.mjs");
+  const inbox = JSON.parse(await readFile(new URL("../brain/inbox.json", import.meta.url), "utf8"));
+  const seen = new Set();
+  for (const batch of inbox.batches) {
+    assert.ok(batch.id && Array.isArray(batch.items));
+    for (const entry of batch.items) {
+      assert.match(entry.url, /^https:\/\//, entry.url);
+      assert.ok(entry.title && entry.note.length > 40, entry.url);
+      assert.ok(!/—/.test(entry.title + entry.note), `no em dashes: ${entry.url}`);
+      const key = urlKey(entry.url);
+      assert.ok(!seen.has(key), `listed twice: ${entry.url}`);
+      seen.add(key);
+      if (entry.read === false) continue;
+      const lib = { items: [], collections: [] };
+      const { item } = upsertClip(lib, cleanClip({ ...entry, collection: "auto" }), "2026-11-10T00:00:00.000Z");
+      assert.ok(sectionFor(item).section, `no section for ${entry.url}`);
+    }
+  }
+});
