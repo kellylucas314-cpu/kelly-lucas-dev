@@ -4,8 +4,8 @@
 //   node tests/magpie-preview.mjs          -> http://127.0.0.1:4410
 //   PORT=4411 node tests/magpie-preview.mjs
 //
-// The stand-in library is built from the design desk's public clips
-// (design-library.js), so nothing private is ever read or served. Sign in
+// The stand-in library is built from public design links
+// (tests/fixtures/desk-sample.json), so nothing private is ever read or served. Sign in
 // with any password except "wrong". /brain/gallery.html?empty=1 serves an
 // empty library and ?fail=1 a broken one, to test those states. Saving,
 // filing and collections use the real API code against a temp folder;
@@ -16,7 +16,6 @@ import { mkdir, mkdtemp, readFile, stat, writeFile } from "node:fs/promises";
 import { randomBytes } from "node:crypto";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import vm from "node:vm";
 
 const root = path.resolve(import.meta.dirname, "..");
 const port = Number(process.env.PORT || 4410);
@@ -37,10 +36,7 @@ const TYPES = {
 };
 
 async function sampleLibrary() {
-  const source = await readFile(path.join(root, "design-library.js"), "utf8");
-  const sandbox = { window: {} };
-  vm.runInNewContext(source, sandbox);
-  const desk = sandbox.window.DESIGN_LIBRARY?.items || [];
+  const desk = JSON.parse(await readFile(path.join(root, "tests/fixtures/desk-sample.json"), "utf8")).items || [];
   const kindToType = { video: "video", reading: "article", repo: "github", gallery: "web page", tool: "web page", site: "web page" };
   const origins = ["browser clipper", "browser clipper", "collector", "", "stumbleupon"];
   const items = desk.map((clip, index) => {
@@ -159,8 +155,15 @@ async function api(request, response, url) {
     if (name === "magpie-library") await new Promise((resolve) => setTimeout(resolve, 200));
     return handlers[name](request, response);
   }
+  /* A visitor gets what the real handlers would give one: pictures of the
+     clips on show once the library is open, and never a saved copy. */
   const { canUseLibrary } = await import("../api/_magpie-auth.js");
-  if (!canUseLibrary(request)) return json(response, { error: "Sign in required" }, 401);
+  const { isPublicThumb } = await import("../lib/magpie-public.mjs");
+  const owner = canUseLibrary(request);
+  const library = owner ? null : await currentLibrary();
+  const visitorMay = !owner && library.publicOn && name === "magpie-thumb" &&
+    (url.searchParams.has("icon") || isPublicThumb(library, path.basename(url.searchParams.get("name") || "")));
+  if (!owner && !visitorMay) return json(response, { error: "Sign in required" }, 401);
   if (name === "magpie-thumb" && url.searchParams.has("icon")) {
     /* No open web here, so every site shows its letter: the honest fallback. */
     response.writeHead(204, { "Cache-Control": "no-store" });
@@ -170,7 +173,7 @@ async function api(request, response, url) {
     const thumb = path.basename(url.searchParams.get("name") || "");
     const saved = path.join(dataDir, "magpie/thumbs", thumb);
     const exists = await stat(saved).then(() => true, () => false);
-    return serveFile(response, exists ? saved : path.join(root, "assets/design/thumbs", thumb));
+    return serveFile(response, exists ? saved : path.join(root, "tests/fixtures/thumbs", thumb));
   }
   if (name === "magpie-note") {
     const file = url.searchParams.get("file") || "";

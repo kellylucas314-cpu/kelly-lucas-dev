@@ -1,6 +1,7 @@
 import { get } from "@vercel/blob";
 import { Readable } from "node:stream";
-import { siteIcon } from "../lib/magpie-store.mjs";
+import { readLibrary, siteIcon } from "../lib/magpie-store.mjs";
+import { isPublicThumb } from "../lib/magpie-public.mjs";
 import {
   canUseLibrary,
   requestUrl,
@@ -14,14 +15,16 @@ const DAY = 86_400;
 /* ?icon=<host>: the site's own small icon, fetched once and kept. The
    browser keeps the answer too (a week for an icon, a day for "none"), so a
    page of cards asks once. */
-async function sendIcon(response, host) {
-  const icon = await siteIcon(host).catch(() => null);
+async function sendIcon(response, host, owner) {
+  /* A visitor only gets icons the library already holds: the server never
+     goes out to fetch one on a stranger's say-so. */
+  const icon = await siteIcon(host, { storedOnly: !owner }).catch(() => null);
   response.setHeader("X-Content-Type-Options", "nosniff");
   response.setHeader("Content-Security-Policy", "default-src 'none'; sandbox");
   if (!icon) {
     /* Nothing to show is not an error: the pill keeps the site's letter. */
     response.statusCode = 204;
-    response.setHeader("Cache-Control", `private, max-age=${DAY}`);
+    response.setHeader("Cache-Control", owner ? `private, max-age=${DAY}` : "private, max-age=600");
     return response.end();
   }
   response.statusCode = 200;
@@ -34,11 +37,24 @@ export default async function handler(request, response) {
   if (request.method !== "GET") {
     return sendJson(response, { error: "Method not allowed" }, 405, { Allow: "GET" });
   }
-  if (!canUseLibrary(request)) return unauthorized(response);
-
+  const owner = canUseLibrary(request);
   const query = requestUrl(request).searchParams;
-  if (query.has("icon")) return sendIcon(response, query.get("icon") || "");
   const name = query.get("name") || "";
+  if (!owner) {
+    /* Visitors: nothing unless the library is open, and then only the
+       pictures of clips they can see. */
+    let lib;
+    try {
+      ({ lib } = await readLibrary());
+    } catch {
+      return sendJson(response, { error: "Image is temporarily unavailable" }, 503);
+    }
+    if (!lib.publicOn) return unauthorized(response);
+    if (!query.has("icon") && !(SAFE_IMAGE.test(name) && isPublicThumb(lib, name))) {
+      return sendJson(response, { error: "Image not found" }, 404);
+    }
+  }
+  if (query.has("icon")) return sendIcon(response, query.get("icon") || "", owner);
   if (!SAFE_IMAGE.test(name)) {
     return sendJson(response, { error: "Invalid image" }, 400);
   }

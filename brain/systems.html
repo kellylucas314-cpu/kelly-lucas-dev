@@ -3,18 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Design desk · Kelly Lucas</title>
-  <meta name="description" content="Kelly Lucas’s design desk: a swipe file for UI, kept in public and sorted into five piles by Magpie. The HelioFlux website, Heliopolis, Pretzel Protocol, resources, and examples worth studying." />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>Design systems · Magpie</title>
+  <meta name="description" content="The palettes, type and rules behind Kelly Lucas’s own sites, kept as a room inside Magpie." />
   <meta name="theme-color" content="#f8f6f1" />
-  <meta property="og:title" content="Design desk · Kelly Lucas" />
-  <meta property="og:description" content="Kelly Lucas’s design desk: a swipe file for UI, kept in public and sorted into five piles by Magpie. The HelioFlux website, Heliopolis, Pretzel Protocol, resources, and examples worth studying." />
-  <meta property="og:image" content="https://kellylucas.dev/assets/art/og.jpg" />
-  <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="/assets/art/favicon.svg" type="image/svg+xml" />
   <link rel="preload" href="/assets/fonts/InstrumentSans-Variable.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/assets/art/travel/athens.webp" as="image" type="image/webp" fetchpriority="high" />
   <link rel="stylesheet" href="/style.css" />
-</head><body>
+</head>
+<body class="lib-page lib-page--room">
+  <a class="skip-link" href="#main">Skip to the systems</a>
   <a class="skip-link" href="#main">Skip to content</a>
   <svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
     <defs>
@@ -35,33 +34,27 @@
     </defs>
   </svg>
 
-  <header class="top">
-    <div class="wrap top__in">
-      <a class="mark" href="/" aria-label="Kelly Lucas, home"><svg class="shape c-coral" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-sun"/><circle r="30" fill="var(--navy)"/></svg><span>Kelly Lucas</span></a>
-      <nav class="nav" aria-label="Primary">
-        <a href="/magpie.html">Magpie</a>
-        <a href="/#projects">Projects</a>
-        <a href="/log.html">Log</a>
-        <a href="/playground.html">Playground</a>
-      </nav>
-      <a class="btn btn--sm" href="mailto:hello@kellylucas.dev">Say hello</a>
+  <header class="lib-top">
+    <div class="wrap lib-top__in">
+      <a class="lib-mark" href="/brain/gallery.html" aria-label="Magpie, my library"><svg class="feather" viewBox="0 0 120 120" aria-hidden="true"><g transform="rotate(36 60 60)"><path fill="var(--coral)" d="M60 8 C76 24 84 44 82 64 C81 80 72 96 60 104 L60 8 Z"/><path fill="var(--teal)" d="M60 8 C44 24 36 44 38 64 C39 80 48 96 60 104 L60 8 Z"/><g stroke="var(--paper)" stroke-width="3.4" stroke-linecap="round" fill="none"><path d="M42 38 Q52 42 59 41"/><path d="M39 54 Q51 58 59 56"/><path d="M40 70 Q51 74 59 71"/><path d="M46 86 Q54 88 59 85"/><path d="M78 30 Q68 35 61 34"/><path d="M81 46 Q69 51 61 49"/><path d="M80 62 Q69 66 61 64"/><path d="M74 79 Q66 81 61 78"/></g><path fill="none" stroke="var(--navy)" stroke-width="3" stroke-linecap="round" d="M60 10 C60 40 60 70 58 88 C57 98 54 108 48 116"/></g></svg><span>Magpie</span></a>
+      <a class="lib-top__back" href="/brain/gallery.html"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4 6.5 10l6 6"/></svg>The library</a>
+      <a class="lib-top__home" href="/">kellylucas.dev</a>
     </div>
   </header>
 
   <main id="main" tabindex="-1">
-    <section class="page-hero" aria-labelledby="desk-title">
+    <section class="page-hero" aria-labelledby="room-title">
       <div class="wrap page-hero__grid">
         <div class="page-hero__text">
-          <h1 class="h1" id="desk-title">Design desk</h1>
-          <p class="lede">A swipe file for UI, kept in public. I learn design by paying attention, and this is where I keep what I notice. <a href="/magpie.html">Magpie</a> files every new clip into the right pile on its own.</p>
-          <nav class="pile-pills" aria-label="The piles">
-            <a class="pile-pill pile-pill--website" href="#website"><span class="pile-pill__tile"><svg class="shape " viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-sun"/></svg></span><span class="pile-pill__label">HelioFlux</span><span class="pile-pill__n mono" data-pile-count="website"></span></a>
-            <a class="pile-pill pile-pill--heliopolis" href="#heliopolis"><span class="pile-pill__tile"><svg class="shape " viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-arch"/></svg></span><span class="pile-pill__label">Heliopolis</span><span class="pile-pill__n mono" data-pile-count="heliopolis"></span></a>
-            <a class="pile-pill pile-pill--pretzel" href="#pretzel"><span class="pile-pill__tile"><svg class="shape " viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-quat"/></svg></span><span class="pile-pill__label">Pretzel</span><span class="pile-pill__n mono" data-pile-count="pretzel"></span></a>
-            <a class="pile-pill pile-pill--resources" href="#resources"><span class="pile-pill__tile"><svg class="shape " viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-cog"/></svg></span><span class="pile-pill__label">Resources</span><span class="pile-pill__n mono" data-pile-count="resources"></span></a>
-            <a class="pile-pill pile-pill--examples" href="#examples"><span class="pile-pill__tile"><svg class="shape " viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-ast"/></svg></span><span class="pile-pill__label">Examples</span><span class="pile-pill__n mono" data-pile-count="examples"></span></a>
+          <h1 class="h1" id="room-title">Design systems</h1>
+          <p class="lede">The palettes, type and rules behind my own sites, with the drawings that go with them. The links I learn from are in <a href="/brain/gallery.html">the library</a>, under Design tools and Inspo.</p>
+          <nav class="pile-pills" aria-label="Jump to a site">
+            <a class="pile-pill pile-pill--heliopolis" href="#heliopolis"><span class="pile-pill__tile"><svg class="shape " viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-arch"/></svg></span><span class="pile-pill__label">Heliopolis</span></a>
+            <a class="pile-pill pile-pill--pretzel" href="#pretzel"><span class="pile-pill__tile"><svg class="shape " viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-quat"/></svg></span><span class="pile-pill__label">Pretzel</span></a>
+            <a class="pile-pill pile-pill--resources" href="#notebook"><span class="pile-pill__tile"><svg class="shape " viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-squig"/></svg></span><span class="pile-pill__label">Notebook</span></a>
+            <a class="pile-pill pile-pill--examples" href="#lab"><span class="pile-pill__tile"><svg class="shape " viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-sun"/></svg></span><span class="pile-pill__label">This site</span></a>
           </nav>
-          <noscript><p class="desk-note">The piles are filled in by JavaScript. Without it, the notebook pages below are what’s here.</p></noscript>
+          <noscript><p class="desk-note">The systems are filled in by JavaScript. Without it, the notebook pages below are what’s here.</p></noscript>
         </div>
         <figure class="poster page-hero__art">
           <div class="poster__stage">
@@ -74,45 +67,6 @@
         </figure>
       </div>
     </section>
-
-    <nav class="pilebar" aria-label="Jump to a pile">
-      <div class="wrap pilebar__in">
-        <a class="pilebar__link pilebar__link--website" href="#website"><span class="pilebar__dot" aria-hidden="true"></span>HelioFlux</a>
-        <a class="pilebar__link pilebar__link--heliopolis" href="#heliopolis"><span class="pilebar__dot" aria-hidden="true"></span>Heliopolis</a>
-        <a class="pilebar__link pilebar__link--pretzel" href="#pretzel"><span class="pilebar__dot" aria-hidden="true"></span>Pretzel</a>
-        <a class="pilebar__link pilebar__link--resources" href="#resources"><span class="pilebar__dot" aria-hidden="true"></span>Resources</a>
-        <a class="pilebar__link pilebar__link--videos" href="#videos"><span class="pilebar__dot" aria-hidden="true"></span>Videos</a>
-        <a class="pilebar__link pilebar__link--notebook" href="#notebook"><span class="pilebar__dot" aria-hidden="true"></span>Notebook</a>
-        <a class="pilebar__link pilebar__link--examples" href="#examples"><span class="pilebar__dot" aria-hidden="true"></span>Examples</a>
-        <a class="pilebar__link pilebar__link--lab" href="#lab"><span class="pilebar__dot" aria-hidden="true"></span>This site</a>
-      </div>
-    </nav>
-
-      <section id="website" class="desk-section band band--navy edge" data-section="website">
-        <div class="wrap">
-        <div class="desk-section__head">
-          <h2 class="h2"><svg class="shape desk-badge c-honey" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-sun"/></svg>The HelioFlux website</h2>
-          <p class="desk-section__meta"><a class="text-link" href="https://helioflux.co" target="_blank" rel="noopener noreferrer">helioflux.co<span class="sr-only"> (opens in a new tab)</span></a> <span aria-hidden="true">·</span> the live look, and the next one<span class="desk-count js-count" aria-live="polite"></span></p>
-        </div>
-        <div class="desk-part">
-          <h3 class="desk-sub">The systems</h3>
-          <div class="system-grid js-systems"></div>
-        </div>
-        <div class="desk-part">
-          <h3 class="desk-sub">Documents and the style pack</h3>
-          <div class="doc-grid js-docs"></div>
-        </div>
-        <div class="desk-part">
-          <h3 class="desk-sub">Libraries</h3>
-          <ul class="library-list js-libraries"></ul>
-        </div>
-        <div class="desk-part">
-          <h3 class="desk-sub">Clipped for it</h3>
-          <div class="desk-grid js-cards"></div>
-          <p class="desk-empty js-empty" hidden>Nothing clipped for the website yet.</p>
-        </div>
-        </div>
-      </section>
 
       <section id="heliopolis" class="desk-section band band--sagefull edge" data-section="heliopolis">
         <div class="wrap">
@@ -131,11 +85,6 @@
         <div class="desk-part">
           <h3 class="desk-sub">Libraries</h3>
           <ul class="library-list js-libraries"></ul>
-        </div>
-        <div class="desk-part">
-          <h3 class="desk-sub">Clipped for it</h3>
-          <div class="desk-grid js-cards"></div>
-          <p class="desk-empty js-empty" hidden>Nothing clipped for Heliopolis yet.</p>
         </div>
         </div>
       </section>
@@ -158,41 +107,6 @@
           <h3 class="desk-sub">Libraries</h3>
           <ul class="library-list js-libraries"></ul>
         </div>
-        <div class="desk-part">
-          <h3 class="desk-sub">Clipped for it</h3>
-          <div class="desk-grid js-cards"></div>
-          <p class="desk-empty js-empty" hidden>Nothing clipped for Pretzel yet.</p>
-        </div>
-        </div>
-      </section>
-
-      <section id="resources" class="desk-section band band--pteal edge edge--scallop desk-shelf" data-section="resources" data-part="shelf">
-        <div class="wrap">
-        <div class="desk-section__head">
-          <h2 class="h2"><svg class="shape desk-badge c-teal" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-cog"/></svg>Resources</h2>
-          <p class="desk-section__meta">Galleries I raid, tools I reach for, things I read, repos I keep. Each one has a line on why it is here.</p>
-        </div>
-        <div class="desk-controls">
-          <div class="chip-row" id="shelfChips" role="group" aria-label="Filter the shelf"></div>
-          <label class="desk-search-wrap">
-            <span class="visually-hidden">Search the shelf</span>
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.3"/><path d="m10.5 10.5 3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-            <input type="search" class="desk-search" id="shelfSearch" placeholder="Search the shelf" autocomplete="off" />
-          </label>
-        </div>
-        <p class="desk-count desk-count--line" id="shelfCount" aria-live="polite"></p>
-        <div class="desk-grid" id="shelfGrid"></div>
-        <p class="desk-empty" id="shelfEmpty" hidden></p>
-        </div>
-      </section>
-
-      <section id="videos" class="desk-section band band--dteal edge desk-rewatch" data-section="resources" data-part="videos" aria-labelledby="rewatch-title">
-        <div class="wrap">
-        <div class="desk-section__head">
-          <h2 class="h2" id="rewatch-title"><svg class="shape desk-badge c-honey" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-circle"/></svg>Videos I keep going back to</h2>
-          <p class="desk-section__meta">Some of these notes are still cooking.</p>
-        </div>
-        <div class="video-grid js-videos" id="videoGrid"></div>
         </div>
       </section>
 
@@ -263,24 +177,11 @@
         </div>
       </section>
 
-      <section id="examples" class="desk-section band band--dcoral edge" data-section="examples">
-        <div class="wrap">
-        <div class="desk-section__head">
-          <h2 class="h2"><svg class="shape desk-badge c-honey" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-ast"/></svg>Examples</h2>
-          <p class="desk-section__meta">The sites I open when I forget what good looks like.<span class="desk-count js-count" aria-live="polite"></span></p>
-        </div>
-        <div class="desk-part">
-          <div class="desk-grid js-cards"></div>
-          <p class="desk-empty js-empty" hidden>No examples yet. Clip a site and say why in one line.</p>
-        </div>
-        </div>
-      </section>
-
       <section id="lab" class="desk-section band band--paper edge" data-section="lab">
         <div class="wrap">
         <div class="desk-section__head">
           <h2 class="h2"><svg class="shape desk-badge c-coral" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-sun"/></svg>This site</h2>
-          <p class="desk-section__meta">This site’s own rules, and the rooms next door.</p>
+          <p class="desk-section__meta">kellylucas.dev’s own rules, and the font audition room.</p>
         </div>
         <div class="desk-part">
           <div class="system-grid js-systems"></div>
@@ -292,46 +193,12 @@
         </div>
       </section>
 
-      <section class="desk-how band band--sage edge edge--scallop" aria-labelledby="how-title">
-        <div class="wrap"><div class="chapter">
-        <div class="chapter__head">
-          <h2 class="h2" id="how-title">How this page fills itself</h2>
-          <p>The Chrome feather already existed. Now it knows where things go.</p>
-        </div>
-        <div class="chapter__body">
-          <ol class="journey">
-            <li><div><h3>Clip</h3><p>Hit the Magpie feather on any page. The popup guesses the pile from the address, the tags and what I wrote: the website, Heliopolis, Pretzel, resources or examples. I change it if it guessed wrong, or say <code>not for the desk</code>.</p></div></li>
-            <li><div><h3>Sync</h3><p><code>npm run sync:design</code> rebuilds <code>design-library.js</code> from every desk clip and files each one under its pile. The rules live in <code>lib/desk-rules.json</code>.</p></div></li>
-            <li><div><h3>Push</h3><p>Push to main. Vercel deploys, the piles update, and the video notes fill in.</p></div></li>
-          </ol>
-        </div>
-      </div></div>
-      </section>
-    <section class="next-sec band band--paper edge" aria-labelledby="go-title">
-      <div class="wrap">
-        <h2 class="lede" id="go-title">Where to next</h2>
-      <nav class="pills pills--sm" aria-labelledby="go-title">
-        <a class="pill pill--navy" href="/magpie.html"><span class="ptile bg-coral"><svg class="shape c-navy" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-ast"/></svg></span>Magpie</a>
-        <a class="pill pill--honey" href="/#projects"><span class="ptile bg-navy"><svg class="shape c-paper" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-plus"/></svg></span>All ten projects</a>
-        <a class="pill pill--coral" href="/playground.html"><span class="ptile bg-pale-coral"><svg class="shape c-navy" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-squig"/></svg></span>Playground</a>
-      </nav>
-      </div>
-    </section>
   </main>
 
-  <footer class="foot edge edge--scallop">
-    <div class="wrap">
-      <div class="foot__grid">
-        <div class="foot__brand"><p class="foot__mark"><svg class="shape c-coral" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-sun"/><circle r="30" fill="var(--navy)"/></svg>Kelly Lucas</p></div>
-        <nav aria-labelledby="f1"><h2 id="f1">This site</h2><ul>
-          <li><a href="/magpie.html">Magpie</a></li><li><a href="/#projects">Projects</a></li><li><a href="/playground.html">Playground</a></li><li><a href="/log.html">Log</a></li></ul></nav>
-        <nav aria-labelledby="f2"><h2 id="f2">More</h2><ul>
-          <li><a href="/design.html">Design desk</a></li><li><a href="/heliopolis/index.html">Heliopolis art library</a></li><li><a href="/colophon.html">Colophon</a></li>
-          <li><a href="/brain/gallery.html"><svg class="lock" viewBox="0 0 12 12" aria-hidden="true"><use href="#i-lock"/></svg>My library</a></li></ul></nav>
-        <nav aria-labelledby="f3"><h2 id="f3">Say hello</h2><ul>
-          <li><a href="mailto:hello@kellylucas.dev">hello@kellylucas.dev</a></li><li><a href="https://helioflux.co" target="_blank" rel="noopener noreferrer">HelioFlux<span class="sr-only"> (opens in a new tab)</span></a></li><li><a href="#main">Back to top</a></li></ul></nav>
-      </div>
-      <div class="foot__base"><span>&copy; <span data-year>2026</span> Kelly Lucas. Drawings in my Heliopolis style.</span><span>Set in Instrument Sans and DM Mono.</span></div>
+  <footer class="lib-foot">
+    <div class="wrap lib-foot__in">
+      <p>A room inside Magpie. My own work, kept where I can find it.</p>
+      <p><a href="/brain/gallery.html">The library</a> <span aria-hidden="true">·</span> <a href="/magpie.html">About Magpie</a> <span aria-hidden="true">·</span> <a href="/heliopolis/index.html">Heliopolis art library</a></p>
     </div>
   </footer>
 
@@ -345,9 +212,7 @@
     <a class="lightbox__open" id="lightboxOpen" target="_blank" rel="noopener">Open full size<span class="sr-only"> (opens in a new tab)</span></a>
     <button class="lightbox__btn lightbox__close" id="lightboxClose" type="button" aria-label="Close the picture"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5 5 15"/></svg></button>
   </dialog>
-  <div class="toast" data-toast role="status" aria-live="polite"></div>
-  <script defer src="/design-library.js"></script>
-  <script defer src="/script.js"></script>
-  <script defer src="/design.js"></script>
+  <script defer src="/brain/systems-data.js"></script>
+  <script defer src="/brain/systems.js"></script>
 </body>
 </html>

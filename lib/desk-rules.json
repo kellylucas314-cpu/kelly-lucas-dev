@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "Where a Magpie clip lands on the design desk. Read by scripts/sync-design-library.mjs (lib/desk-sort.mjs) and mirrored into the vault as magpie/desk-rules.json for the Magpie server and the Chrome clipper. A clip tagged desk:<section> always wins; desk:none keeps it off the desk.",
+  "note": "What kind of design clip a page is (gallery, tool, repo, reading, video, site) and which of the old design desk piles it belonged to. The desk page retired on 2026-11-13; Magpie’s sections (lib/magpie-sections.mjs) still read these rules through lib/desk-sort.mjs, and the Mac’s Magpie server and the Chrome clipper keep a copy as magpie/desk-rules.json. A clip tagged desk:<section> always wins; desk:none keeps it out.",
   "sections": {
     "website": {
       "name": "The website",
@@ -267,7 +267,7 @@
       "magicui.design",
       "aceternity.com",
       "impeccable.style",
-      "transitions.dev"
+      "transitions.dev", "duo.alexpate.com", "zoah.com", "relume.io"
     ],
     "reading": [
       "nngroup.com",

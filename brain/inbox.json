@@ -1,5 +1,5 @@
 {
-  "about": "Links Kelly sent in chat, read by Claude and waiting to be added to Magpie. This file is public like the rest of the page: only links that could sit on the public design desk go here, never anything private. Notes are in our own words; the creators' pages are linked, not copied.",
+  "about": "Links waiting to be added to Magpie: ones Kelly sent in chat (read by Claude, notes in our own words) and the hand-picked links from the old design desk (notes are Kelly's own lines from the desk). This file is public like the rest of the page: public design links only, never anything private or HelioFlux. The creators' pages are linked, not copied.",
   "batches": [
     {
       "id": "2026-11-10-design-kit",
@@ -421,6 +421,718 @@
             "to-read"
           ],
           "note": "Your label: “Free 3D Website Skill”.\n\nHonest label: I could not read this one. The short link forwards to a Notion page that only loads in a real browser, so I cannot confirm what the skill is or that it is free. You already have a 3D scroll-animation skill in this repo (3d-animation-creator), so compare before adding another."
+        }
+      ]
+    },
+    {
+      "id": "2026-11-13-design-desk",
+      "title": "The old design desk: hand-picked galleries, tools, reading and examples",
+      "from": "desk",
+      "items": [
+        {
+          "url": "https://www.isomorphiclabs.com/",
+          "title": "Isomorphic Labs",
+          "type": "web page",
+          "tags": [
+            "layout",
+            "typography",
+            "science"
+          ],
+          "note": "The north star for this whole site. Stacked slabs, dot tags, huge quiet type. Deep science that never looks like a hospital."
+        },
+        {
+          "url": "https://linear.app/",
+          "title": "Linear",
+          "type": "web page",
+          "tags": [
+            "clarity",
+            "states",
+            "product",
+            "examples"
+          ],
+          "note": "Clarity. Hover gives you context. A new project greets you with an empty state that guides you instead of a blank screen."
+        },
+        {
+          "url": "https://muz.li/",
+          "title": "Muzli",
+          "type": "web page",
+          "tags": [
+            "design-inspiration"
+          ],
+          "note": "Design inspiration hub, and a browser extension that turns every new tab into a feed of design news."
+        },
+        {
+          "url": "https://medium.muz.li/design-inspiration-resources-2019-1cce24b256e5",
+          "title": "Design inspiration resources, by Muzli",
+          "type": "article",
+          "tags": [
+            "design-inspiration",
+            "lists"
+          ],
+          "note": "Muzli’s long list of inspiration sites. From 2019, so expect a few dead links, but the good ones are still good."
+        },
+        {
+          "url": "https://docs.google.com/spreadsheets/d/13GStMRQfbn5glWVkUPqFtW1oovyKhMDdRKD3m5cstBg/edit?gid=76987904#gid=76987904",
+          "title": "The People’s Design Library",
+          "type": "article",
+          "tags": [
+            "design-inspiration",
+            "lists"
+          ],
+          "note": "A shared Google Sheet of design resources, kept by the community. Tabs for tools, learning, inspiration."
+        },
+        {
+          "url": "https://10015.io/",
+          "title": "10015 Tools",
+          "type": "web page",
+          "tags": [
+            "tools",
+            "color",
+            "css"
+          ],
+          "note": "Small online tools in one box: color, CSS, image and text utilities, no sign-up."
+        },
+        {
+          "url": "https://thecreativecheatsheet.com/designinspo/",
+          "title": "The Creative Cheat Sheet: design inspo",
+          "type": "web page",
+          "tags": [
+            "design-inspiration",
+            "lists"
+          ],
+          "note": "A curated list of places to look when the well runs dry."
+        },
+        {
+          "url": "https://www.reddit.com/r/graphic_design/wiki/index/",
+          "title": "r/graphic_design wiki",
+          "type": "article",
+          "tags": [
+            "research",
+            "graphic-design"
+          ],
+          "note": "The subreddit’s index: resources, tutorials, and the answers to the questions everyone asks first."
+        },
+        {
+          "url": "https://www.cosmos.so/explore",
+          "title": "Cosmos",
+          "type": "web page",
+          "tags": [
+            "visual-inspiration"
+          ],
+          "note": "A visual bookmarking network. Explore is the public feed of what people are saving."
+        },
+        {
+          "url": "https://designresourc.es/",
+          "title": "Design Resources",
+          "type": "web page",
+          "tags": [
+            "design-inspiration",
+            "tools",
+            "lists"
+          ],
+          "note": "A curated directory of design tools and resources by category. Half the tabs on this shelf came from a browse through it."
+        },
+        {
+          "url": "https://www.checklist.design/skill",
+          "title": "The Checklist Design skill",
+          "type": "web page",
+          "tags": [
+            "ai-design",
+            "checklists",
+            "agent-skills"
+          ],
+          "note": "Checklist Design’s hundred-plus checklists as an agent skill: design feedback inside Claude Code, item by item. Available here as /checklist-design."
+        },
+        {
+          "url": "https://github.com/Checklist-Design/skills",
+          "title": "Checklist-Design/skills",
+          "type": "github",
+          "tags": [
+            "ai-design",
+            "checklists",
+            "agent-skills"
+          ],
+          "note": "The source for the Checklist Design skill."
+        },
+        {
+          "url": "https://www.cpgd.xyz/",
+          "title": "CPGD",
+          "type": "web page",
+          "tags": [
+            "brand",
+            "packaging",
+            "examples"
+          ],
+          "note": "The Consumer Packaged Goods Directory. Packaging and brand design, one product at a time."
+        },
+        {
+          "url": "https://theindex.website/",
+          "title": "The Index",
+          "type": "web page",
+          "tags": [
+            "web-design",
+            "design-inspiration"
+          ],
+          "note": "A curated index of well-made websites. Hand-picked for the old design desk; no longer note yet."
+        },
+        {
+          "url": "https://museumdepartment.com/type-foundries",
+          "title": "Museum Department: type foundries",
+          "type": "web page",
+          "tags": [
+            "fonts",
+            "typography"
+          ],
+          "note": "An archive of fonts and the foundries that make them."
+        },
+        {
+          "url": "https://www.recentwork.com/",
+          "title": "Recent Work",
+          "type": "web page",
+          "tags": [
+            "design-inspiration"
+          ],
+          "note": "A feed of recent work from studios and independents."
+        },
+        {
+          "url": "https://www.hexagonbio.com/science/",
+          "title": "Hexagon Bio",
+          "type": "web page",
+          "tags": [
+            "biotech",
+            "science-site",
+            "examples"
+          ],
+          "note": "A platform biotech’s science page. How it explains the technology in one scroll."
+        },
+        {
+          "url": "https://fonts.adobe.com/",
+          "title": "Adobe Fonts",
+          "type": "web page",
+          "tags": [
+            "fonts",
+            "typography"
+          ],
+          "note": "Unlimited fonts with a Creative Cloud plan. The foundries page is the way to browse by maker."
+        },
+        {
+          "url": "https://www.connorlyon.co/tools-resources/50-type-foundries-you-should-bookmark",
+          "title": "50 type foundries you should bookmark",
+          "type": "article",
+          "tags": [
+            "fonts",
+            "typography",
+            "lists"
+          ],
+          "note": "Connor Lyon’s list of independent foundries, for when Google Fonts is not enough."
+        },
+        {
+          "url": "https://lineto.com/features/schema-edition",
+          "title": "Lineto: Schema Edition",
+          "type": "web page",
+          "tags": [
+            "fonts",
+            "typography"
+          ],
+          "note": "A Swiss foundry’s feature on one typeface family. Worth it for how they present type."
+        },
+        {
+          "url": "https://huemint.com/brand-intersection/",
+          "title": "Huemint",
+          "type": "web page",
+          "tags": [
+            "color",
+            "brand"
+          ],
+          "note": "Machine-made color palettes for brands, sites and graphics. Brand intersection mode finds the colors two brands share."
+        },
+        {
+          "url": "https://coolors.co/daeaaa-587d71-000022-ffa630-bedcfe",
+          "title": "A Coolors palette",
+          "type": "web page",
+          "tags": [
+            "color",
+            "palette"
+          ],
+          "note": "Five colors saved on Coolors: pale lime, sage, ink navy, amber, powder blue."
+        },
+        {
+          "url": "https://colors.eva.design/",
+          "title": "Eva Design System colors",
+          "type": "web page",
+          "tags": [
+            "color",
+            "design-systems"
+          ],
+          "note": "Give it one brand color and it generates the semantic set: success, info, warning, danger."
+        },
+        {
+          "url": "https://designresourc.es/inspiration/daniel-sun",
+          "title": "Daniel Sun",
+          "type": "web page",
+          "tags": [
+            "design-inspiration"
+          ],
+          "note": "A designer’s work, as listed on Design Resources."
+        },
+        {
+          "url": "https://colorhunt.co/",
+          "title": "Color Hunt",
+          "type": "web page",
+          "tags": [
+            "color",
+            "palette"
+          ],
+          "note": "Palettes for designers and artists, new ones daily. Sort by popular when in doubt."
+        },
+        {
+          "url": "https://color.adobe.com/explore",
+          "title": "Adobe Color",
+          "type": "web page",
+          "tags": [
+            "color",
+            "palette"
+          ],
+          "note": "Explore palettes and gradients, or extract a palette from a photo."
+        },
+        {
+          "url": "https://sidebar.io/",
+          "title": "Sidebar",
+          "type": "article",
+          "tags": [
+            "design-inspiration",
+            "newsletter"
+          ],
+          "note": "Five design links a day, picked by hand. Hand-picked for the old design desk; no longer note yet."
+        },
+        {
+          "url": "https://www.sketch.com/",
+          "title": "Sketch",
+          "type": "web page",
+          "tags": [
+            "design-tools"
+          ],
+          "note": "The Mac design tool: design, prototype, collaborate, hand off."
+        },
+        {
+          "url": "https://www.interfacecraft.dev/",
+          "title": "Interface Craft",
+          "type": "web page",
+          "tags": [
+            "ui-ux",
+            "craft",
+            "examples"
+          ],
+          "note": "A working library for people designing with uncommon care."
+        },
+        {
+          "url": "https://screensdesign.com/",
+          "title": "ScreensDesign",
+          "type": "web page",
+          "tags": [
+            "ui-ux",
+            "ai-design"
+          ],
+          "note": "An app design library, with an AI screen generator on the side."
+        },
+        {
+          "url": "https://duo.alexpate.com/",
+          "title": "Duo",
+          "type": "web page",
+          "tags": [
+            "color"
+          ],
+          "note": "Colour pairings by Alex Pate, two at a time, each checked for contrast."
+        },
+        {
+          "url": "https://unsplash.com/",
+          "title": "Unsplash",
+          "type": "web page",
+          "tags": [
+            "photos"
+          ],
+          "note": "Free high-resolution photos. Hand-picked for the old design desk; no longer note yet."
+        },
+        {
+          "url": "https://curated.design/",
+          "title": "Curated",
+          "type": "web page",
+          "tags": [
+            "web-design",
+            "design-inspiration"
+          ],
+          "note": "Web design inspiration from real, live websites, filterable by category."
+        },
+        {
+          "url": "https://zoah.com/",
+          "title": "Zoah",
+          "type": "web page",
+          "tags": [
+            "dev-tools"
+          ],
+          "note": "Calls itself the future of software development. Parked here from a tab, not tried yet."
+        },
+        {
+          "url": "https://dub.co/",
+          "title": "dub.co",
+          "type": "web page",
+          "tags": [
+            "states",
+            "onboarding",
+            "examples"
+          ],
+          "note": "The empty dashboard has an animation, a message, and one clear next step. That is the whole lesson on empty states."
+        },
+        {
+          "url": "https://vercel.com/",
+          "title": "Vercel",
+          "type": "web page",
+          "tags": [
+            "feedback",
+            "states",
+            "examples"
+          ],
+          "note": "Deploy, and the status shows up immediately so you know it worked. Success states matter as much as empty ones."
+        },
+        {
+          "url": "https://www.notion.so/",
+          "title": "Notion",
+          "type": "web page",
+          "tags": [
+            "flow",
+            "onboarding",
+            "examples"
+          ],
+          "note": "Built for flow. New teamspace, add your team, or skip. It never traps you in a step."
+        },
+        {
+          "url": "https://godly.website/",
+          "title": "Godly",
+          "type": "web page",
+          "tags": [
+            "web-design",
+            "premium"
+          ],
+          "note": "Premium web design examples, for when Dribbble starts to feel like a wall of shots."
+        },
+        {
+          "url": "https://coolors.co/",
+          "title": "Coolors",
+          "type": "web page",
+          "tags": [
+            "color"
+          ],
+          "note": "Palette generator. Press space until something feels right, then desaturate it a little."
+        },
+        {
+          "url": "https://gsap.com/docs/v3/",
+          "title": "GSAP docs",
+          "type": "web page",
+          "tags": [
+            "motion",
+            "animation"
+          ],
+          "note": "The motion library this site runs on. Reading it one plugin at a time."
+        },
+        {
+          "url": "https://youtu.be/ZsP20PN14O0",
+          "title": "5 Trendy Animations to Steal for Your Next Web Design",
+          "type": "video",
+          "tags": [],
+          "note": "Hand-picked for the old design desk; no longer note yet."
+        },
+        {
+          "url": "https://youtu.be/ADaQuZS04Rc",
+          "title": "Stop Making Pretty UIs. Think Like a Product Designer",
+          "type": "video",
+          "tags": [],
+          "note": "Hand-picked for the old design desk; no longer note yet."
+        },
+        {
+          "url": "https://youtu.be/7sUUzOCv47U",
+          "title": "Mathematically Perfect Typography for Web Design",
+          "type": "video",
+          "tags": [],
+          "note": "Hand-picked for the old design desk; no longer note yet."
+        },
+        {
+          "url": "https://recent.design/",
+          "title": "Recent",
+          "type": "web page",
+          "tags": [
+            "web-design"
+          ],
+          "note": "Godly’s new home, per Jack Roberts’ five shelves. Best of recent design, daily."
+        },
+        {
+          "url": "https://noiced.com/",
+          "title": "Noiced",
+          "type": "web page",
+          "tags": [
+            "web-design"
+          ],
+          "note": "Daily web design inspiration. From Jack’s shelf."
+        },
+        {
+          "url": "https://landing.love/",
+          "title": "Landing.love",
+          "type": "web page",
+          "tags": [
+            "motion",
+            "landing-pages"
+          ],
+          "note": "2,000+ animation-heavy landing pages. Pairs with the pink notebook page."
+        },
+        {
+          "url": "https://minimal.gallery/",
+          "title": "Minimal Gallery",
+          "type": "web page",
+          "tags": [
+            "web-design",
+            "minimal"
+          ],
+          "note": "Hand-picked minimal web design. For when the slab layout needs a diet."
+        },
+        {
+          "url": "https://siteinspire.com/",
+          "title": "Siteinspire",
+          "type": "web page",
+          "tags": [
+            "web-design"
+          ],
+          "note": "Old-school, still one of the cleanest galleries."
+        },
+        {
+          "url": "https://app.notion.com/p/The-Design-Loop-Free-Guide-3b8e8d6bd13781ff8bf2fc06fd5d0aac",
+          "title": "The Design Loop",
+          "type": "article",
+          "tags": [
+            "jack-roberts",
+            "method"
+          ],
+          "note": "Interview, preflight, teardown, loop. Name a specific bar, write mechanisms not adjectives, then let three fresh critics judge the render until all three pass. Installed as /design-loop in this repo."
+        },
+        {
+          "url": "https://app.notion.com/p/The-Brand-Asset-Machine-3b3e8d6bd13781909d92c4d0cafc7c77",
+          "title": "The Brand Asset Machine",
+          "type": "article",
+          "tags": [
+            "jack-roberts",
+            "brand"
+          ],
+          "note": "A skill that interviews you, fixes a palette, then generates a brand’s logo, photography, one motion loop and a texture pack, all inside that palette. Three rules: one product build everywhere, no text in photos, approve the extras."
+        },
+        {
+          "url": "https://app.notion.com/p/Claude-Fable-5-Website-Design-Prompts-3-Levels-37ee8d6bd1378142b27be3a1480dd0d5",
+          "title": "Website Design Prompts, 3 Levels",
+          "type": "article",
+          "tags": [
+            "jack-roberts",
+            "prompts"
+          ],
+          "note": "Level one describes a site in a line, level two recreates a reference, level three extracts a site’s design DNA and rebuilds something original. Level three is the one that matches how this desk works."
+        },
+        {
+          "url": "https://app.notion.com/p/The-AI-Native-Client-CMS-Free-Build-Blueprint-374e8d6bd13781559214ffd5ac6041f6",
+          "title": "The AI-Native Client CMS Build Blueprint",
+          "type": "article",
+          "tags": [
+            "jack-roberts",
+            "cms"
+          ],
+          "note": "Ingest a site, freeze the design as a template, expose only content slots, and run every change through a deterministic validator so a client cannot break the layout. Filed for the day the lab needs an editor."
+        },
+        {
+          "url": "https://easywebsitebuilder.tech/",
+          "title": "Easy Website Builder",
+          "type": "web page",
+          "tags": [
+            "jack-roberts"
+          ],
+          "note": "Jack’s website builder. Saved to try, not yet opened."
+        },
+        {
+          "url": "https://app.notion.com/p/GPT-6-Astra-Is-Here-5-Things-You-NEED-to-Do-With-It-3d2e8d6bd137819f99b2f35862af517b",
+          "title": "Five real jobs for a new model",
+          "type": "article",
+          "tags": [
+            "jack-roberts",
+            "method"
+          ],
+          "note": "Five prompts with a way to check each: find the bottleneck, a one-screen business dashboard, build with the design loop then test like a first-time customer, a filmable UI system from one reference, and a money-leak audit with receipts."
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=2ZwO6LhC0SU",
+          "title": "Website design in three levels, with Jack Roberts",
+          "type": "video",
+          "tags": [],
+          "note": "Hand-picked for the old design desk; no longer note yet."
+        },
+        {
+          "url": "https://www.nngroup.com/articles/",
+          "title": "Nielsen Norman Group",
+          "type": "article",
+          "tags": [
+            "usability",
+            "research"
+          ],
+          "note": "The research-backed canon of usability: heuristics, studies, patterns."
+        },
+        {
+          "url": "https://lawsofux.com/",
+          "title": "Laws of UX",
+          "type": "article",
+          "tags": [
+            "psychology",
+            "principles"
+          ],
+          "note": "One-page summaries of the psychology behind fewer choices, bigger targets, less to remember: Hick, Fitts, Miller."
+        },
+        {
+          "url": "https://www.figma.com/resource-library/ui-design-principles/",
+          "title": "Figma’s UI design principles",
+          "type": "article",
+          "tags": [
+            "principles"
+          ],
+          "note": "A friendly modern overview. Good shared vocabulary."
+        },
+        {
+          "url": "https://baymard.com/",
+          "title": "Baymard Institute",
+          "type": "article",
+          "tags": [
+            "research",
+            "forms"
+          ],
+          "note": "A huge evidence-based UX research library, strongest on e-commerce and forms."
+        },
+        {
+          "url": "https://www.pttrns.com/",
+          "title": "Pttrns",
+          "type": "web page",
+          "tags": [
+            "mobile",
+            "patterns"
+          ],
+          "note": "Mobile UI pattern screenshots by category."
+        },
+        {
+          "url": "https://designsystemsrepo.com/",
+          "title": "Design Systems Repo",
+          "type": "web page",
+          "tags": [
+            "design-systems"
+          ],
+          "note": "A directory of public design systems: how big teams codify all of this."
+        },
+        {
+          "url": "https://uxcellence.com/2017/design-systems-style-guides-pattern-libraries",
+          "title": "UXcellence on design systems",
+          "type": "article",
+          "tags": [
+            "design-systems",
+            "vocabulary"
+          ],
+          "note": "What a design system, a style guide and a pattern library actually are, with examples. Their whole library of UX tools is at uxcellence.com/library."
+        },
+        {
+          "url": "https://atomicdesign.bradfrost.com/",
+          "title": "Atomic Design",
+          "type": "article",
+          "tags": [
+            "design-systems",
+            "book"
+          ],
+          "note": "Brad Frost’s free full book behind modern design systems: atoms to molecules to organisms to pages."
+        },
+        {
+          "url": "https://patternlab.io/",
+          "title": "Pattern Lab",
+          "type": "web page",
+          "tags": [
+            "design-systems"
+          ],
+          "note": "Atomic Design in practice: a living workshop where the reusable pieces get built, viewed and tested. Click around demo.patternlab.io."
+        },
+        {
+          "url": "https://styleguides.io/",
+          "title": "Styleguides.io",
+          "type": "web page",
+          "tags": [
+            "style-guides"
+          ],
+          "note": "Real style guides plus the articles, books and talks about making one."
+        },
+        {
+          "url": "https://www.reddit.com/r/UXDesign/",
+          "title": "r/UXDesign",
+          "type": "article",
+          "tags": [
+            "community"
+          ],
+          "note": "Practitioner discussion. The thread on standardized best practices is a good index."
+        },
+        {
+          "url": "https://myheliopolis.com/meetings/2026-09-17/#home",
+          "title": "Heliopolis meeting room",
+          "type": "web page",
+          "tags": [
+            "mine",
+            "heliopolis"
+          ],
+          "note": "The meeting page I built for 2026-09-17. Learned a ton making it. Kept here to measure the next one against."
+        },
+        {
+          "url": "https://pretzel.thetravelprotocol.com",
+          "title": "Pretzel Protocol",
+          "type": "web page",
+          "tags": [
+            "mine",
+            "trip-atlas",
+            "pretzel"
+          ],
+          "note": "The family trip atlas. Cream, navy, one attention colour, a delight budget of five. Mine, and still teaching me."
+        },
+        {
+          "url": "https://reactbits.dev",
+          "title": "ReactBits",
+          "type": "web page",
+          "tags": [
+            "components",
+            "motion"
+          ],
+          "note": "Unique animated micro-components nobody recognises from a template. Same rule: restyle to the tokens after sniping."
+        },
+        {
+          "url": "https://www.relume.io",
+          "title": "Relume",
+          "type": "web page",
+          "tags": [
+            "wireframes",
+            "ai-design"
+          ],
+          "note": "AI sitemaps and wireframes. Only useful after the five questions are answered, which is the whole point of Jack’s guide."
+        },
+        {
+          "url": "https://higgsfield.ai",
+          "title": "Higgsfield",
+          "type": "web page",
+          "tags": [
+            "ai-video",
+            "brand-assets"
+          ],
+          "note": "AI image and video. The engine behind the Brand Asset Machine, and where the Magpie Collector already lives."
+        },
+        {
+          "url": "https://kie.ai",
+          "title": "Kie.ai",
+          "type": "web page",
+          "tags": [
+            "ai-video",
+            "ai-images"
+          ],
+          "note": "AI images and video by API. The other generator Jack plugs in for hero videos."
         }
       ]
     }

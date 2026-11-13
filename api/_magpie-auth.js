@@ -6,7 +6,9 @@ import {
 } from "node:crypto";
 
 const COOKIE_NAME = "magpie_session";
-const SESSION_SECONDS = 60 * 60 * 24 * 30;
+/* Half a year: Kelly signs in once on a device and then just uses it.
+   Only editing needs this; reading an open library needs nothing. */
+const SESSION_SECONDS = 60 * 60 * 24 * 180;
 
 function header(request, name) {
   if (typeof request.headers?.get === "function") {

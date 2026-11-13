@@ -60,38 +60,46 @@ test("matching is careful", () => {
   assert.equal(kindOf({ url: "https://dribbble.com/", type: "web page" }), "gallery");
 });
 
-test("design-library.js is well formed and every item has a section", () => {
-  const match = read("design-library.js").match(/window\.DESIGN_LIBRARY\s*=\s*(\{[\s\S]*\})\s*;?\s*$/);
+test("the design systems room is well formed, and holds no HelioFlux work", () => {
+  const match = read("brain/systems-data.js").match(/window\.DESIGN_SYSTEMS\s*=\s*(\{[\s\S]*\})\s*;?\s*$/);
   assert.ok(match, "data file shape");
-  const library = JSON.parse(match[1]);
-  const allowed = new Set([...SECTIONS, "lab"]);
-  for (const item of library.items) assert.ok(SECTIONS.includes(item.section), `${item.title || item.url} has no section`);
-  for (const system of library.systems) assert.ok(allowed.has(system.section), `${system.name} has no section`);
-  for (const entry of library.libraries) assert.ok(allowed.has(entry.section), `${entry.name} has no section`);
-  for (const doc of library.docs) {
-    assert.ok(SECTIONS.includes(doc.section), `${doc.title} has no section`);
+  const room = JSON.parse(match[1]);
+  const allowed = new Set(["lab", "heliopolis", "pretzel"]);
+  for (const system of room.systems) assert.ok(allowed.has(system.section), `${system.name} has no section`);
+  for (const entry of room.libraries) assert.ok(allowed.has(entry.section), `${entry.name} has no section`);
+  for (const doc of room.docs) {
+    assert.ok(allowed.has(doc.section), `${doc.title} has no section`);
     assert.ok(doc.title && doc.href, `${doc.title} is missing a link`);
-    const local = (value) => value && !/^(https?:)?\/\//.test(value) && !value.startsWith("/");
-    if (local(doc.href)) assert.ok(existsSync(path.join(root, doc.href)), `${doc.href} is missing`);
-    if (local(doc.thumb)) assert.ok(existsSync(path.join(root, doc.thumb)), `${doc.thumb} is missing`);
-    for (const image of doc.images || []) if (local(image.src)) assert.ok(existsSync(path.join(root, image.src)), `${image.src} is missing`);
+    /* The room lives under /brain/, so every path on this site starts at the root. */
+    const onSite = (value) => value && !/^(https?:)?\/\//.test(value);
+    for (const value of [doc.href, doc.thumb, ...(doc.images || []).map((image) => image.src)]) {
+      if (!onSite(value)) continue;
+      assert.ok(value.startsWith("/"), `${value} must be an absolute path`);
+      if (value.startsWith("/assets/")) assert.ok(existsSync(path.join(root, value)), `${value} is missing`);
+    }
   }
-  /* Site copy never uses em dashes. */
-  const copy = JSON.stringify([library.systems, library.libraries, library.docs, library.manual]);
+  for (const id of allowed) assert.ok(room.systems.some((system) => system.section === id), `no system for ${id}`);
+  const copy = JSON.stringify(room);
   assert.doesNotMatch(copy, /—/);
-  /* The pieces the sections are built from. */
-  assert.ok(library.docs.some((doc) => doc.section === "website" && /HOUSE-STYLE\.pdf$/.test(doc.href)));
-  assert.ok(library.docs.some((doc) => doc.section === "website" && /contact-sheet\.pdf$/.test(doc.href)));
-  assert.ok(library.systems.some((system) => system.section === "pretzel"));
-  assert.ok(library.systems.some((system) => system.section === "heliopolis"));
+  /* This page is public; company work stays out of it. */
+  assert.doesNotMatch(copy, /helioflux/i);
+  assert.equal(existsSync(path.join(root, "assets/design/website")), false, "the HelioFlux pile is off the site");
 });
 
-test("design.html has the five sections and the nav between them", () => {
-  const html = read("design.html");
-  for (const id of SECTIONS) {
+test("the room page has its sections, and the old desk is gone", () => {
+  const html = read("brain/systems.html");
+  for (const id of ["heliopolis", "pretzel", "notebook", "lab"]) {
     assert.match(html, new RegExp(`id="${id}"`), id);
     assert.match(html, new RegExp(`href="#${id}"`), "nav to " + id);
   }
   assert.doesNotMatch(html, /—/);
-  assert.match(html, /data-section="lab"/);
+  assert.doesNotMatch(html, /helioflux/i);
+  assert.match(html, /href="\/brain\/gallery\.html"/);
+  for (const gone of ["design.html", "design.js", "design-library.js"]) assert.equal(existsSync(path.join(root, gone)), false, gone);
+  const vercel = JSON.parse(read("vercel.json"));
+  assert.ok(vercel.redirects.some((entry) => entry.source === "/design.html" && entry.destination === "/brain/systems.html"));
+  /* No site page still points at the old address. */
+  for (const page of ["index.html", "magpie.html", "colophon.html", "log.html", "404.html", "playground.html", "brain/gallery.html"]) {
+    assert.doesNotMatch(read(page), /href="\/design\.html"/, page);
+  }
 });

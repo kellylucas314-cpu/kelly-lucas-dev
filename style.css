@@ -1073,6 +1073,9 @@ kbd {
 .lib-mark:hover .feather { transform: rotate(-12deg) translateY(-2px); }
 .lib-private { font-size: 15px; }
 .lib-top__home { margin-left: auto; font-size: 16px; text-underline-offset: 4px; }
+.lib-top__back { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px 7px 10px; border-radius: 999px; background: var(--pale-teal); font-size: 15px; text-decoration: none; }
+.lib-top__back:hover { box-shadow: inset 0 0 0 1.5px var(--navy); }
+.lib-top__back svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .lib-top .btn { gap: 8px; }
 .lib-top .btn .lock { fill: none; stroke: currentColor; stroke-width: 1.3; }
 
@@ -1483,6 +1486,38 @@ button.lib-sort__chip:hover { box-shadow: 0 0 0 1.5px var(--navy); }
 .lib-sort--row { align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; padding: 14px 16px 14px 24px; border-radius: 999px; }
 .lib-sort--row .lib-sort__text, .lib-sort--row .lib-sort__acts { margin-top: 0; }
 .sheet__filed { margin-top: -6px; padding: 10px 14px; border-radius: 16px; background: var(--sage-tint); font-size: 14.5px; line-height: 1.4; }
+
+/* open to visitors: Kelly gets every tool, a visitor gets the open sections
+   to browse. The tools stay hidden until the page knows who is looking. */
+html:not([data-mode="owner"]) .owner-only { display: none !important; }
+html:not([data-mode="visitor"]) .visitor-only { display: none !important; }
+.lib-preview { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; padding: 10px 20px; background: var(--honey); color: var(--navy); font-size: 15px; text-align: center; }
+.lib-preview a { color: var(--navy); text-underline-offset: 3px; }
+.rail-list--rooms { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--rule); }
+.rail-row--link { text-decoration: none; }
+.rail-row__go { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; color: var(--navy-soft); }
+.rail-row__lock { width: 12px; height: 12px; flex: none; color: var(--navy-soft); }
+.rail-public { display: flex; align-items: center; gap: 10px; width: 100%; margin-top: 14px; padding: 12px 14px; border: 0; border-radius: 20px; background: var(--pale-coral); color: var(--navy); font: inherit; font-size: 15px; text-align: left; cursor: pointer; transition: background 0.15s, box-shadow 0.15s; }
+.rail-public:hover { box-shadow: inset 0 0 0 1.5px var(--navy); }
+.rail-public.is-on { background: var(--pale-teal); }
+.rail-public + .rail-connect, .rail-sort + .rail-public { margin-top: 8px; }
+.lib-sort--public .lib-sort__shape { color: var(--teal); }
+.lib-sort--public.lib-sort--done .lib-sort__shape { color: var(--sage); }
+.lib-held { max-width: 62ch; margin-top: 14px; padding: 12px 16px; border-radius: 18px; background: var(--pale-coral); font-size: 15px; }
+.lib-held summary { cursor: pointer; }
+.lib-held__list { display: grid; gap: 8px; margin-top: 10px; }
+.lib-held__list li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.lib-held__open { padding: 0; border: 0; background: none; color: var(--navy); font: inherit; text-align: left; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.lib-held__why { font-size: 13.5px; color: var(--navy-hover); }
+.lib-held__note { margin-top: 10px; font-size: 13.5px; color: var(--navy-hover); }
+.kind--only { background: var(--pale-coral); }
+.clip__where--still { cursor: default; }
+.clip__where--still:hover { box-shadow: none; }
+.sheet__only { display: flex; align-items: flex-start; gap: 10px; font-size: 15px; line-height: 1.4; cursor: pointer; }
+.sheet__only input { flex: none; width: 18px; height: 18px; margin-top: 2px; accent-color: var(--navy); }
+.sheet__filed--only { margin-top: 0; background: var(--pale-coral); }
+.md--card .md__label { margin: 18px 0 6px; font-family: var(--mono); font-size: 12.5px; font-weight: 400; letter-spacing: 0; color: var(--navy-soft); }
+.md--card .md__label:first-child { margin-top: 0; }
 @media (max-width: 700px) {
   .lib-sort { flex-direction: column; gap: 12px; padding: 20px 18px 22px; border-radius: 24px; }
   .lib-sort__shape { width: 44px; height: 44px; }

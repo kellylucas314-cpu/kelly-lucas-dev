@@ -1,5 +1,6 @@
 import { applyOps, mutate, readLibrary } from "../lib/magpie-store.mjs";
 import { planSections } from "../lib/magpie-sections.mjs";
+import { planPublic } from "../lib/magpie-public.mjs";
 import {
   isAuthenticated,
   isSameOrigin,
@@ -47,6 +48,17 @@ export default async function handler(request, response) {
     }
   }
 
+  /* { plan: "public" }: what opening the library to visitors would show
+     and what it would keep in. Changes nothing. */
+  if (body.plan === "public") {
+    try {
+      const { lib } = await readLibrary();
+      return sendJson(response, { ok: true, ...planPublic(lib) });
+    } catch {
+      return sendJson(response, { error: "Magpie couldn't read the library just now." }, 503);
+    }
+  }
+
   try {
     const { lib, result } = await mutate((library, stamp) => applyOps(library, ops, stamp));
     const changed = new Set(result.changed);
@@ -56,6 +68,9 @@ export default async function handler(request, response) {
       sorted: result.sorted,
       undo: result.undo,
       sectionsOn: Boolean(lib.sectionsOn),
+      publicOn: lib.publicOn || "",
+      publicCollections: Array.isArray(lib.publicCollections) ? lib.publicCollections : [],
+      marked: result.marked,
       collections: lib.collections,
       items: lib.items.filter((item) => changed.has(item.id)),
       removedIds: result.changed.filter((id) => !lib.items.some((item) => item.id === id)),

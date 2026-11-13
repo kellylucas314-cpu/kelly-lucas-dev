@@ -1,0 +1,261 @@
+{
+ "about": "The HelioFlux pile from the old design desk, kept in Git and off the website (docs/ is in .vercelignore).",
+ "systems": [
+  {
+   "name": "HelioFlux",
+   "site": "helioflux.co",
+   "status": "live today",
+   "palette": [
+    {
+     "name": "navy",
+     "hex": "#092743"
+    },
+    {
+     "name": "slate",
+     "hex": "#2F4562"
+    },
+    {
+     "name": "cyan",
+     "hex": "#00A9D6"
+    },
+    {
+     "name": "amber",
+     "hex": "#E8A838"
+    },
+    {
+     "name": "coral",
+     "hex": "#E85A4F"
+    },
+    {
+     "name": "off-white",
+     "hex": "#ECF0FF"
+    }
+   ],
+   "type": "Plus Jakarta Sans for display, DM Sans for body.",
+   "rules": [
+    "Dark, cinematic, premium. Science that feels important.",
+    "Make them feel it before you explain it.",
+    "In-vitro results are in-vitro. Say so every time.",
+    "No startup clichés, no placeholder images, nothing that looks like a template."
+   ],
+   "live": "https://helioflux.co",
+   "doc": "https://github.com/kellylucas314-cpu/helioflux-website",
+   "docLabel": "Source",
+   "section": "website"
+  },
+  {
+   "name": "HelioFlux, the next look",
+   "section": "website",
+   "site": "helioflux.co · playground",
+   "status": "in the playground",
+   "palette": [
+    {
+     "name": "paper",
+     "hex": "#FFFFFF"
+    },
+    {
+     "name": "quiet band",
+     "hex": "#F5F7F3"
+    },
+    {
+     "name": "ink",
+     "hex": "#112751"
+    },
+    {
+     "name": "teal",
+     "hex": "#0A6F7E"
+    },
+    {
+     "name": "sage wash",
+     "hex": "#E4EACE"
+    },
+    {
+     "name": "night",
+     "hex": "#082332"
+    },
+    {
+     "name": "coral",
+     "hex": "#C8553D"
+    }
+   ],
+   "type": "Plus Jakarta Sans 500 for the claims, DM Sans for the reading. No serifs, never bold.",
+   "rules": [
+    "White paper, one navy ink for words and drawings alike, teal for the one thing that matters.",
+    "Flat: 6px controls, 8px images, hairlines instead of boxes. No shadows, gradients or glow.",
+    "The drawing leads. Give it room, never crop it, put the labels on the picture.",
+    "One dark room per page at most. Headlines are claims that tell the story on their own."
+   ],
+   "doc": "assets/design/website/HOUSE-STYLE.pdf",
+   "docLabel": "The house style (PDF)"
+  }
+ ],
+ "libraries": [
+  {
+   "name": "HelioFlux design library",
+   "url": "https://github.com/kellylucas314-cpu/helioflux-design-library",
+   "what": "Everything collected for the investor site: references, visual concepts, the Dala particle studies, written directions, and the seven-page design guide.",
+   "count": "60 references, 24 concepts, 5 studies, 13 ideas",
+   "private": true,
+   "section": "website"
+  }
+ ],
+ "docs": [
+  {
+   "section": "website",
+   "kind": "pdf",
+   "title": "The house style",
+   "href": "assets/design/website/HOUSE-STYLE.pdf",
+   "thumb": "assets/design/website/house-style-cover.jpg",
+   "meta": "8 pages",
+   "what": "Colors, type, shapes and the plate drawings behind the new Science page, the timeline and the recolored Home, with the prompt for drawing new plates."
+  },
+  {
+   "section": "website",
+   "kind": "pdf",
+   "title": "Style pack contact sheet",
+   "href": "assets/design/website/contact-sheet.pdf",
+   "thumb": "assets/design/website/contact-sheet-cover.jpg",
+   "meta": "5 pages",
+   "what": "All 25 files of the style pack on five sheets: the whole pages in strips, the screens, the phone views, the plates."
+  },
+  {
+   "section": "website",
+   "kind": "board",
+   "title": "Four hero options",
+   "href": "assets/design/website/hero-options-desktop.jpg",
+   "thumb": "assets/design/website/hero-options-desktop.jpg",
+   "meta": "board",
+   "what": "Paper plate, dark room, photon by photon, living light. Today’s hero stays until one is picked."
+  },
+  {
+   "section": "website",
+   "kind": "board",
+   "title": "The growth story, re-inked",
+   "href": "assets/design/website/tumor-before-after.jpg",
+   "thumb": "assets/design/website/tumor-before-after.jpg",
+   "meta": "before and after",
+   "what": "The tumor sequence with its ink moved from blue-violet to the plate navy. The vessels stay coral."
+  },
+  {
+   "section": "website",
+   "kind": "page",
+   "title": "The new Science page and timeline",
+   "href": "https://myheliopolis.com/science-preview/science.html",
+   "thumb": "assets/design/website/style-pack/science-screen-00.jpg",
+   "meta": "preview",
+   "private": true,
+   "what": "The draft pages, behind the Heliopolis sign-in for review."
+  },
+  {
+   "section": "website",
+   "kind": "images",
+   "meta": "25 files",
+   "title": "The style pack",
+   "what": "Screenshots and plates for redraws. Hand a few of these and the prompt in the house style to an image model.",
+   "href": "assets/design/website/contact-sheet.pdf",
+   "cta": "Open the contact sheet",
+   "images": [
+    {
+     "src": "assets/design/website/style-pack/plate-1923-onion-roots.jpg",
+     "caption": "plate-1923-onion-roots.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/plate-1934-detector-tests.jpg",
+     "caption": "plate-1934-detector-tests.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/plate-1954-seedlings.jpg",
+     "caption": "plate-1954-seedlings.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/plate-1989-plant-imaging.jpg",
+     "caption": "plate-1989-plant-imaging.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/plate-2004-mouse-imaging.jpg",
+     "caption": "plate-2004-mouse-imaging.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/plate-2017-oxidative-cells.jpg",
+     "caption": "plate-2017-oxidative-cells.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/plate-2018-cell-study.jpg",
+     "caption": "plate-2018-cell-study.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/plate-2025-human-head.jpg",
+     "caption": "plate-2025-human-head.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/plate-living-light-hand-cell-seedling.jpg",
+     "caption": "plate-living-light-hand-cell-seedling.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/growth-story-frame-navy.jpg",
+     "caption": "growth-story-frame-navy.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/night-cell-and-detector-hero.jpg",
+     "caption": "night-cell-and-detector-hero.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/paper-cell-and-detector.jpg",
+     "caption": "paper-cell-and-detector.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/science-screen-00.jpg",
+     "caption": "science-screen-00.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/science-screen-01.jpg",
+     "caption": "science-screen-01.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/science-screen-02.jpg",
+     "caption": "science-screen-02.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/timeline-screen-00.jpg",
+     "caption": "timeline-screen-00.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/timeline-screen-01.jpg",
+     "caption": "timeline-screen-01.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/timeline-screen-02.jpg",
+     "caption": "timeline-screen-02.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/timeline-screen-03.jpg",
+     "caption": "timeline-screen-03.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/timeline-phone-00.jpg",
+     "caption": "timeline-phone-00.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/timeline-phone-01.jpg",
+     "caption": "timeline-phone-01.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/timeline-phone-02.jpg",
+     "caption": "timeline-phone-02.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/home-full-full.jpg",
+     "caption": "home-full-full.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/science-full-full.jpg",
+     "caption": "science-full-full.jpg"
+    },
+    {
+     "src": "assets/design/website/style-pack/timeline-full-full.jpg",
+     "caption": "timeline-full-full.jpg"
+    }
+   ]
+  }
+ ]
+}

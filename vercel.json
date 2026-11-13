@@ -153,6 +153,21 @@
   ],
   "redirects": [
     {
+      "source": "/design.html",
+      "destination": "/brain/systems.html",
+      "permanent": false
+    },
+    {
+      "source": "/design",
+      "destination": "/brain/systems.html",
+      "permanent": false
+    },
+    {
+      "source": "/library",
+      "destination": "/brain/gallery.html",
+      "permanent": false
+    },
+    {
       "source": "/",
       "has": [
         {
