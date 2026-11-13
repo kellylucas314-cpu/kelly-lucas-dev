@@ -1,7 +1,13 @@
 /* kellylucas.dev · Magpie, my library (/brain/gallery.html)
    The one Magpie library. The feather, the Add box and the Mac all save
-   into it; this page reads it from /api/magpie-library (signed-in only) and
-   organises it through /api/magpie-update.
+   into it; this page reads it from /api/magpie-library and organises it
+   through /api/magpie-update.
+
+   Two ways to be here. Kelly, signed in, gets everything and every tool
+   (data-mode="owner"). Once she has opened the library, anyone else gets
+   the open sections to browse and nothing to change (data-mode="visitor"):
+   the server decides what a visitor is sent (lib/magpie-public.mjs), this
+   page only hides the tools.
 
    Left: Unsorted (the inbox), Everything, your own collections (nested,
    colored, drag a card onto one to file it) and Trash. Right: search,
@@ -19,8 +25,8 @@
   const LOGIN = "/brain/login.html";
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = window.matchMedia("(pointer: fine)").matches;
-  const COLORS = ["teal", "coral", "honey", "sage", "navy"];
-  const COLOR_NAME = { teal: "Teal", coral: "Coral", honey: "Honey", sage: "Sage", navy: "Navy" };
+  const COLORS = ["teal", "coral", "honey", "sage", "navy", "deep-teal", "deep-coral"];
+  const COLOR_NAME = { teal: "Teal", coral: "Coral", honey: "Honey", sage: "Sage", navy: "Navy", "deep-teal": "Deep teal", "deep-coral": "Deep coral" };
 
   /* Kinds group Magpie's types. Each one wears its own pair of colors (style.css). */
   const SHELVES = [
@@ -37,6 +43,20 @@
   const state = { q: "", shelf: "", tag: "", origin: "", sort: "new", view: "grid", col: "", limit: BATCH };
   let ITEMS = [];
   let COLLECTIONS = [];
+  /* Sections: Magpie files clips into collections by itself (lib/magpie-sections.mjs). */
+  let SECTIONS_ON = false;
+  /* Who is looking: "owner" (Kelly, signed in) or "visitor". */
+  let MODE = "";
+  let PREVIEW = false;
+  /* Open to visitors: when it was opened, and which collections are. */
+  let PUBLIC_ON = "";
+  let PUBLIC_COLS = new Set();
+  let PUBLIC_PLAN = null;
+  let publicCard = "";
+  let publicResult = null;
+  const isOwner = () => MODE === "owner";
+  let PLAN = null;
+  let sortResult = null;
   let visible = [];
   let tagTotals = [];
   let sheetList = [];
@@ -95,11 +115,6 @@
     } catch {
       return "";
     }
-  };
-  const initials = (title, site) => {
-    const words = String(title || site || "?").replace(/[^\p{L}\p{N} ]/gu, " ").trim().split(/\s+/).filter(Boolean);
-    if (words.length >= 2) return (words[0][0] + words[1][0]).toLowerCase();
-    return (words[0] || "?").slice(0, 2).toLowerCase();
   };
   const plural = (count, one, many) => count.toLocaleString("en-US") + " " + (count === 1 ? one : many || one + "s");
   const dateWord = (value) => {
@@ -197,6 +212,7 @@
     return {
       id: String(item.id || "i" + index),
       order: index,
+      host: hostOf(url).replace(/^www\./, ""),
       raw: item,
       title,
       short,
@@ -209,6 +225,7 @@
       origin,
       collection: String(item.collection || ""),
       removed: Boolean(item.removed),
+      secret: Boolean(item.private),
       clipped: String(item.clippedAt || ""),
       file: String(item.file || ""),
       transcript: Boolean(item.hasTranscript),
@@ -336,45 +353,117 @@
     return list;
   }
 
-  function buildPicture(item, className) {
-    const pic = el("span", className + " clip__pic--" + item.shelf);
-    const ph = el("span", "clip__ph");
-    ph.appendChild(shape(SHELF[item.shelf].shape, "clip__shape"));
-    ph.appendChild(el("span", "clip__initials", initials(item.title, item.site)));
-    pic.appendChild(ph);
-    if (item.thumb) {
+  /* Every card opens with a picture or a label, and both carry a small
+     paper pill that says where the link goes.
+
+     A page with a saved picture shows it, with the site's pill on top. A
+     page without one, and every GitHub repo (which has no picture worth
+     showing), is a label instead: a soft color band on a dot grid with the
+     name set in type and a wave edge (Kelly, 2026-11-09: "C's layout with
+     A's big name", then a thin </> for code). The color comes from the
+     site's or repo's own name, so it keeps it everywhere. */
+  const TINTS = ["teal", "coral", "honey", "sage"];
+  function tintOf(text) {
+    let h = 0;
+    for (const ch of String(text || "").toLowerCase()) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+    return TINTS[h % TINTS.length];
+  }
+  function waveEdge() {
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("viewBox", "0 0 100 12");
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("class", "repo-band__edge");
+    const path = document.createElementNS(ns, "path");
+    path.setAttribute("d", "M0 12V7C8 1 17 1 25 7S42 13 50 7 67 1 75 7 92 13 100 7V12Z");
+    svg.appendChild(path);
+    return svg;
+  }
+  /* The site's own icon is fetched and kept by the library (never by this
+     page from the site itself); until it arrives, or if the site has none,
+     the pill shows the site's first letter. */
+  function sitePill(item) {
+    const host = item.host || item.site || "";
+    const pill = el("span", "site-pill");
+    const dot = el("span", "site-pill__dot site-pill__dot--" + tintOf(host));
+    dot.appendChild(el("span", "site-pill__letter", (host[0] || "?").toUpperCase()));
+    if (/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(item.host)) {
       const img = el("img");
       img.alt = "";
       img.loading = "lazy";
       img.decoding = "async";
-      img.src = item.thumb;
+      img.width = 18;
+      img.height = 18;
+      img.src = "/api/magpie-thumb?icon=" + encodeURIComponent(item.host.toLowerCase());
       img.addEventListener("error", () => img.remove(), { once: true });
-      img.addEventListener("load", () => {
-        pic.classList.add("has-img");
-        /* A screenshot of a repo page is zoomed into its top corner, where the
-           name is; a designed share card (about 2:1) is shown whole, uncropped. */
-        if (item.repo) pic.classList.add(img.naturalWidth / img.naturalHeight < 1.85 ? "clip__pic--zoom" : "clip__pic--whole");
-      }, { once: true });
-      pic.appendChild(img);
+      img.addEventListener("load", () => dot.classList.add("has-icon"), { once: true });
+      dot.appendChild(img);
     }
-    return pic;
+    pill.appendChild(dot);
+    if (host) pill.appendChild(el("span", "site-pill__name", host));
+    return pill;
+  }
+  function buildRepoBand(item, className) {
+    const band = el("span", className + " repo-band repo-band--" + tintOf(item.repo.owner + "/" + item.repo.name));
+    const owner = el("span", "repo-band__owner");
+    owner.appendChild(icon("i-github", "repo-band__mark"));
+    owner.appendChild(el("span", "repo-band__who", item.repo.owner + "/"));
+    band.appendChild(owner);
+    band.appendChild(icon("i-code", "repo-band__code"));
+    band.appendChild(el("span", "repo-band__name", item.short));
+    band.appendChild(el("span", "repo-band__slug", item.repo.name));
+    band.appendChild(waveEdge());
+    return band;
+  }
+
+  function buildPicture(item, className) {
+    if (item.repo) return buildRepoBand(item, className);
+    const band = el("span", className + " repo-band repo-band--site repo-band--" + tintOf(item.host || item.title));
+    band.appendChild(sitePill(item));
+    if (item.shelf === "video") {
+      const play = el("span", "play-badge");
+      play.appendChild(icon("i-play"));
+      band.appendChild(play);
+    }
+    band.appendChild(el("span", "repo-band__name", item.short));
+    band.appendChild(waveEdge());
+    if (item.thumb) {
+      band.classList.add("has-thumb");
+      const img = el("img", "repo-band__img");
+      img.alt = "";
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.src = item.thumb;
+      /* A picture that won't load turns the card into a label. */
+      img.addEventListener("error", () => {
+        img.remove();
+        band.classList.remove("has-thumb");
+        const card = band.closest(".clip");
+        if (card) card.classList.add("clip--label");
+      }, { once: true });
+      band.appendChild(img);
+    }
+    return band;
   }
 
   function buildCard(item) {
-    const card = el("article", "clip clip--" + item.shelf);
+    const card = el("article", "clip clip--" + item.shelf + (item.repo ? " clip--repo" : "") + (item.repo || !item.thumb ? " clip--label" : ""));
     card.dataset.id = item.id;
     if (selected.has(item.id)) card.classList.add("is-picked");
-    if (finePointer && !item.removed) card.draggable = true;
+    if (finePointer && !item.removed && isOwner()) card.draggable = true;
 
-    const check = el("label", "clip__check");
-    const box = el("input");
-    box.type = "checkbox";
-    box.dataset.pick = item.id;
-    box.checked = selected.has(item.id);
-    check.appendChild(box);
-    check.appendChild(el("span", "clip__tick"));
-    check.appendChild(el("span", "sr-only", "Select " + item.title));
-    card.appendChild(check);
+    if (isOwner()) {
+      const check = el("label", "clip__check");
+      const box = el("input");
+      box.type = "checkbox";
+      box.dataset.pick = item.id;
+      box.checked = selected.has(item.id);
+      check.appendChild(box);
+      check.appendChild(el("span", "clip__tick"));
+      check.appendChild(el("span", "sr-only", "Select " + item.title));
+      card.appendChild(check);
+    }
 
     if (item.url) {
       const face = el("a", "clip__face");
@@ -394,15 +483,16 @@
 
     const body = el("div", "clip__body");
     const meta = el("p", "clip__meta");
-    meta.appendChild(el("span", "kind kind--" + item.shelf, KIND_WORD[item.shelf]));
-    if (item.transcript) meta.appendChild(el("span", "kind kind--transcript", "transcript"));
+    meta.appendChild(el("span", "kind kind--" + item.shelf, item.repo ? "GitHub" : KIND_WORD[item.shelf]));
+    if (item.transcript && isOwner()) meta.appendChild(el("span", "kind kind--transcript", "transcript"));
+    if (isOwner() && PUBLIC_ON && item.secret && !item.removed) meta.appendChild(el("span", "kind kind--only", "only me"));
     const when = dateWord(item.clipped);
     if (when) {
       const time = el("time", null, when);
       time.dateTime = item.clipped.slice(0, 10);
       meta.appendChild(time);
     }
-    if (item.site) meta.appendChild(el("span", "clip__site", item.site));
+    if (item.site && !item.repo) meta.appendChild(el("span", "clip__site", item.site));
     body.appendChild(meta);
 
     const heading = el("h3", "clip__title");
@@ -423,19 +513,24 @@
     if (item.tags.length) body.appendChild(buildTags(item, 4));
 
     const foot = el("div", "clip__foot");
-    const where = el("button", "clip__where col--" + (colOf(item.collection)?.color || "none"));
-    where.type = "button";
-    where.dataset.file = item.id;
-    where.setAttribute("aria-haspopup", "menu");
-    where.setAttribute("aria-label", (item.removed ? "In Trash" : "In " + placeName(item.collection)) + ". File “" + item.title + "”");
+    const where = el(isOwner() ? "button" : "span", "clip__where col--" + (colOf(item.collection)?.color || "none"));
     where.appendChild(el("span", "clip__where-dot"));
     where.appendChild(el("span", "clip__where-name", item.removed ? "Trash" : placeName(item.collection)));
-    where.appendChild(icon("i-caret", "clip__where-caret"));
+    if (isOwner()) {
+      where.type = "button";
+      where.dataset.file = item.id;
+      where.setAttribute("aria-haspopup", "menu");
+      where.setAttribute("aria-label", (item.removed ? "In Trash" : "In " + placeName(item.collection)) + ". File “" + item.title + "”");
+      where.appendChild(icon("i-caret", "clip__where-caret"));
+    } else {
+      where.classList.add("clip__where--still");
+    }
     foot.appendChild(where);
-    const read = el("button", "clip__read", item.file ? "Read" : "Open");
+    /* Kelly reads the saved copy; a visitor gets her card and the link. */
+    const read = el("button", "clip__read", !isOwner() ? "More" : item.file ? "Read" : "Open");
     read.type = "button";
     read.dataset.open = item.id;
-    read.appendChild(el("span", "sr-only", (item.file ? " the note: " : " the details: ") + item.title));
+    read.appendChild(el("span", "sr-only", (!isOwner() ? " about " : item.file ? " the note: " : " the details: ") + item.title));
     foot.appendChild(read);
     body.appendChild(foot);
     card.appendChild(body);
@@ -564,14 +659,24 @@
       } else {
         line.appendChild(el("span", "rail-twist rail-twist--none"));
       }
-      line.appendChild(railRow(entry.id, entry.name, { dot: true }));
-      const more = el("button", "rail-more");
-      more.type = "button";
-      more.dataset.more = entry.id;
-      more.setAttribute("aria-haspopup", "menu");
-      more.setAttribute("aria-label", "Options for " + entry.name);
-      more.appendChild(icon("i-dots"));
-      line.appendChild(more);
+      const row = railRow(entry.id, entry.name, { dot: true });
+      /* Once the library is open, a small lock marks what stays Kelly's. */
+      if (isOwner() && PUBLIC_ON && !PUBLIC_COLS.has(entry.id)) {
+        row.classList.add("rail-row--only");
+        const lock = icon("i-lock", "rail-row__lock");
+        row.insertBefore(lock, row.lastChild);
+        row.setAttribute("title", "Only you can see this collection");
+      }
+      line.appendChild(row);
+      if (isOwner()) {
+        const more = el("button", "rail-more");
+        more.type = "button";
+        more.dataset.more = entry.id;
+        more.setAttribute("aria-haspopup", "menu");
+        more.setAttribute("aria-label", "Options for " + entry.name);
+        more.appendChild(icon("i-dots"));
+        line.appendChild(more);
+      }
       li.appendChild(line);
       if (kids.length && !folded.has(entry.id)) li.appendChild(railBranch(entry.id));
       list.appendChild(li);
@@ -585,13 +690,14 @@
     const bottom = $("railBottom");
     if (!top || !tree || !bottom) return;
     top.textContent = "";
-    top.appendChild(el("li")).appendChild(railRow("unsorted", "Unsorted", { icon: "i-inbox", className: "rail-row--unsorted" }));
+    if (isOwner()) top.appendChild(el("li")).appendChild(railRow("unsorted", "Unsorted", { icon: "i-inbox", className: "rail-row--unsorted" }));
     top.appendChild(el("li")).appendChild(railRow("", "Everything", { icon: "i-all" }));
     tree.textContent = "";
     if (COLLECTIONS.length) tree.appendChild(railBranch(""));
-    else tree.appendChild(el("p", "rail-none", "No collections yet. Make one with the plus."));
+    else tree.appendChild(el("p", "rail-none", isOwner() ? "No collections yet. Make one with the plus." : "Nothing is on show yet."));
     bottom.textContent = "";
-    bottom.appendChild(el("li")).appendChild(railRow("trash", "Trash", { icon: "i-trash", className: "rail-row--trash" }));
+    bottom.hidden = !isOwner();
+    if (isOwner()) bottom.appendChild(el("li")).appendChild(railRow("trash", "Trash", { icon: "i-trash", className: "rail-row--trash" }));
     const toggle = $("railToggle");
     if (toggle) {
       toggle.querySelector(".rail-toggle__name").textContent = viewName();
@@ -772,13 +878,15 @@
         button.dataset.act = "clear";
       } else if (!ITEMS.length) {
         $("emptyTitle").textContent = "Nothing clipped yet";
-        $("emptyText").textContent = "Clip a page with the feather, or add a link here, and it lands in Unsorted.";
+        $("emptyText").textContent = "Clip a page with the feather, or add a link here, and Magpie files it for you.";
         button.hidden = false;
         button.textContent = "Add a link";
         button.dataset.act = "add";
       } else if (state.col === "unsorted") {
         $("emptyTitle").textContent = "Unsorted is clear";
-        $("emptyText").textContent = "Everything new has a home. New clips will wait here until you file them.";
+        $("emptyText").textContent = SECTIONS_ON
+          ? "Everything has a home. Magpie files new clips into their sections; only the ones it can’t place wait here."
+          : "Everything new has a home. New clips will wait here until you file them.";
         button.hidden = false;
         button.textContent = "See everything";
         button.dataset.act = "all";
@@ -797,7 +905,7 @@
       }
     }
     const surprise = $("surpriseButton");
-    if (surprise) surprise.disabled = !live().some((item) => item.file);
+    if (surprise) surprise.disabled = !live().some((item) => item.file || !isOwner());
   }
 
   function renderStats() {
@@ -843,10 +951,14 @@
 
   function render(options = {}) {
     if (state.col && !["unsorted", "trash"].includes(state.col) && !colOf(state.col)) state.col = "";
+    if (!isOwner() && ["unsorted", "trash"].includes(state.col)) state.col = "";
     visible = sorted(ITEMS.filter((item) => matches(item)));
     if (!options.keepLimit) state.limit = BATCH;
     renderRail();
     renderHead();
+    renderSort();
+    renderInbox();
+    renderPublic();
     renderShelves();
     renderTags();
     if (!$("allTags").hidden) renderAllTags();
@@ -891,6 +1003,114 @@
     scrollToResults();
   }
 
+  /* ---------- sections: Magpie files clips for you ---------- */
+  const sortLater = () => { try { return localStorage.getItem("magpie-sort-later") === "1"; } catch { return false; } };
+  async function loadPlan() {
+    try {
+      const response = await fetch("/api/magpie-update", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: "sections" }),
+      });
+      if (!response.ok) throw new Error("no plan");
+      PLAN = await response.json();
+      SECTIONS_ON = Boolean(PLAN.on);
+    } catch {
+      PLAN = null;
+    }
+    renderSort();
+    renderInbox();
+  }
+  function sortChips(counts, go) {
+    const list = el("ul", "lib-sort__chips");
+    counts.forEach((entry) => {
+      const li = el("li");
+      const chip = el(go ? "button" : "span", "lib-sort__chip col--" + entry.color);
+      if (go) { chip.type = "button"; chip.dataset.col = entry.target; }
+      chip.appendChild(el("span", "lib-sort__dot"));
+      chip.appendChild(el("span", null, entry.name));
+      if (entry.n) chip.appendChild(el("span", "lib-sort__n mono", String(entry.n)));
+      li.appendChild(chip);
+      list.appendChild(li);
+    });
+    return list;
+  }
+  function sortActions(...buttons) {
+    const row = el("div", "btn-row lib-sort__acts");
+    buttons.forEach(([label, act, line]) => {
+      const button = el("button", "btn btn--sm" + (line ? " btn--line" : ""), label);
+      button.type = "button";
+      button.dataset.sort = act;
+      row.appendChild(button);
+    });
+    return row;
+  }
+  function renderSort() {
+    const box = $("sortBanner");
+    const railButton = $("sortButton");
+    if (!box) return;
+    box.textContent = "";
+    box.hidden = true;
+    box.className = "lib-sort";
+    if (railButton) {
+      const offer = PLAN && !sortResult && (PLAN.first || PLAN.total > 0);
+      railButton.hidden = !offer;
+      if (offer) railButton.lastChild.textContent = PLAN.first ? "Sort into sections" : "File " + plural(PLAN.total, "unsorted clip");
+    }
+    if (sortResult) {
+      box.classList.add("lib-sort--done");
+      box.appendChild(shape("s-sun", "lib-sort__shape spin"));
+      const copy = el("div", "lib-sort__copy");
+      copy.appendChild(el("h3", "lib-sort__title", sortResult.n ? "Done. " + plural(sortResult.n, "clip") + " filed." : "Sections are on."));
+      copy.appendChild(el("p", "lib-sort__text", sortResult.n
+        ? "Have a look around. If a clip is in the wrong place, move it and it stays where you put it."
+        : "Nothing needed moving. New clips will be filed as they arrive."));
+      if (sortResult.counts.length) copy.appendChild(sortChips(sortResult.counts, true));
+      copy.appendChild(sortActions(["Looks good", "ok"], ["Undo", "undo", true]));
+      box.appendChild(copy);
+      box.hidden = false;
+      return;
+    }
+    if (!PLAN) return;
+    const filtered = state.q || state.shelf || state.tag || state.origin;
+    if (PLAN.first && (state.col === "" || state.col === "unsorted") && !filtered && !sortLater()) {
+      box.appendChild(shape("s-sun", "lib-sort__shape spin"));
+      const copy = el("div", "lib-sort__copy");
+      copy.appendChild(el("h3", "lib-sort__title", "Let Magpie sort this for you"));
+      copy.appendChild(el("p", "lib-sort__text", PLAN.total
+        ? "Seven sections, picked for what you save. Magpie can file " + plural(PLAN.total, "clip") + " right now, and every new clip after that. Anything you move yourself stays where you put it."
+        : "Seven sections, picked for what you save. Turn them on and Magpie files every new clip for you. Anything you move yourself stays where you put it."));
+      copy.appendChild(sortChips(PLAN.counts, false));
+      copy.appendChild(sortActions([PLAN.total ? "Sort my library" : "Turn on sections", "run"], ["Not now", "later", true]));
+      box.appendChild(copy);
+      box.hidden = false;
+    } else if (!PLAN.first && PLAN.total > 0 && state.col === "unsorted" && !filtered) {
+      box.classList.add("lib-sort--row");
+      box.appendChild(el("p", "lib-sort__text", "Magpie knows where " + plural(PLAN.total, "of these goes", "of these go") + "."));
+      box.appendChild(sortActions(["File them", "run"]));
+      box.hidden = false;
+    }
+  }
+  async function runSort() {
+    const plan = PLAN;
+    const answer = await change([{ op: "sections.sort" }], null, null);
+    if (!answer) return;
+    SECTIONS_ON = true;
+    sortResult = { n: answer.sorted || 0, undo: answer.undo || [], counts: plan ? plan.counts.filter((entry) => entry.n) : [] };
+    PLAN = { ...(plan || {}), on: true, first: false, total: 0, fromUnsorted: 0 };
+    refresh();
+    const box = $("sortBanner");
+    if (box && !box.hidden) box.querySelector("button")?.focus({ preventScroll: true });
+  }
+  async function undoSort() {
+    const ops = sortResult ? sortResult.undo : [];
+    sortResult = null;
+    if (ops.length) await change(ops, null, "Put back the way it was");
+    await loadPlan();
+    refresh();
+  }
+
   /* ---------- saving changes ---------- */
   async function send(ops) {
     const response = await fetch("/api/magpie-update", {
@@ -908,6 +1128,8 @@
   /* Takes the server's answer as the truth for the clips it touched. */
   function absorb(answer) {
     if (Array.isArray(answer.collections)) COLLECTIONS = answer.collections;
+    if (typeof answer.publicOn === "string") PUBLIC_ON = answer.publicOn;
+    if (Array.isArray(answer.publicCollections)) PUBLIC_COLS = new Set(answer.publicCollections);
     (answer.items || []).forEach((raw) => {
       const index = ITEMS.findIndex((item) => item.id === raw.id);
       if (index >= 0) ITEMS[index] = prepareOne(raw, ITEMS[index].order);
@@ -957,7 +1179,7 @@
     const where = target ? colOf(target)?.name : "Unsorted";
     change(
       [{ op: "move", ids: items.map((item) => item.id), collection: target }],
-      () => items.forEach((item) => { setRaw(item, { collection: target, removed: undefined }); delete item.raw.removed; item.removed = false; }),
+      () => items.forEach((item) => { delete item.raw.filedBy; delete item.raw.filedWhy; setRaw(item, { collection: target, removed: undefined }); delete item.raw.removed; item.removed = false; }),
       (items.length === 1 ? "Filed in " : plural(items.length, "clip") + " filed in ") + where,
       undo,
     );
@@ -1144,6 +1366,15 @@
     if (!entry) return;
     openMenu(anchor, (menu) => {
       menu.appendChild(el("p", "menu-head", entry.name));
+      if (PUBLIC_ON && !/^helioflux$/i.test(entry.id) && !/^helioflux$/i.test(entry.name)) {
+        const open = PUBLIC_COLS.has(id);
+        menu.appendChild(menuItem(open ? "Keep this one private" : "Open to visitors", () => {
+          closeMenu(true);
+          change([{ op: "public.collection", id, on: !open }], null,
+            open ? entry.name + " is only yours now" : "Visitors can see " + entry.name + " now",
+            [{ op: "public.collection", id, on: open }]).then(() => { applyMode(); loadPublicPlan(); });
+        }, { icon: "i-lock" }));
+      }
       menu.appendChild(menuItem("Rename", () => {
         menu.textContent = "";
         menuNameBox(menu, {
@@ -1352,6 +1583,11 @@
   function fillPlaceSelect(select, value, options = {}) {
     if (!select) return;
     select.textContent = "";
+    if (options.auto) {
+      const auto = el("option", null, "Let Magpie pick");
+      auto.value = "auto";
+      select.appendChild(auto);
+    }
     const unsorted = el("option", null, "Unsorted");
     unsorted.value = "";
     select.appendChild(unsorted);
@@ -1375,6 +1611,29 @@
     $("editNote").value = String(item.raw.note || "");
     $("editMsg").textContent = "";
     $("editTrash").textContent = item.removed ? "Restore" : "Move to Trash";
+    const only = $("privateRow");
+    if (only) {
+      /* The switch only means something once the library is open and the
+         clip sits in an open collection. */
+      const openHere = Boolean(PUBLIC_ON) && PUBLIC_COLS.has(item.collection) && !item.removed;
+      only.hidden = !(PUBLIC_ON && !item.removed);
+      $("editPrivate").checked = item.secret || !openHere;
+      $("editPrivate").disabled = !openHere;
+      const why = $("privateWhy");
+      const reason = !openHere && PUBLIC_ON && !item.removed
+        ? (item.collection ? placeName(item.collection) + " is a private collection, so visitors can’t see anything in it." : "Unsorted is never shown to visitors. File it in an open section to show it.")
+        : item.secret && item.raw.privateWhy ? "Magpie kept this one private because " + item.raw.privateWhy + ". Untick the box to show it." : "";
+      why.hidden = !reason;
+      why.textContent = reason;
+    }
+    const filed = $("sheetFiled");
+    if (filed) {
+      const byMagpie = item.raw.filedBy === "magpie" && item.raw.filedWhy && item.collection && !item.removed;
+      filed.hidden = !byMagpie;
+      filed.textContent = byMagpie
+        ? "Magpie filed this in " + placeName(item.collection) + " because " + item.raw.filedWhy + ". Move it anywhere and it stays put."
+        : "";
+    }
   }
 
   async function showNote(item) {
@@ -1384,11 +1643,11 @@
     $("sheetTitle").textContent = item.title;
     const meta = $("sheetMeta");
     meta.textContent = "";
-    meta.appendChild(el("span", "kind kind--" + item.shelf, KIND_WORD[item.shelf]));
+    meta.appendChild(el("span", "kind kind--" + item.shelf, item.repo ? "GitHub" : KIND_WORD[item.shelf]));
     if (item.transcript) meta.appendChild(el("span", "kind kind--transcript", "transcript"));
     const when = dateWord(item.clipped);
     if (when) meta.appendChild(el("time", null, when));
-    if (item.site) meta.appendChild(el("span", "clip__site", item.site));
+    if (item.site && !item.repo) meta.appendChild(el("span", "clip__site", item.site));
 
     const pic = $("sheetPic");
     pic.textContent = "";
@@ -1413,6 +1672,22 @@
       if (typeof sheet.showModal === "function") sheet.showModal();
       else sheet.setAttribute("open", "");
       document.documentElement.classList.add("sheet-open");
+    }
+    if (!isOwner()) {
+      body.className = "md md--card";
+      body.innerHTML = "";
+      const note = String(item.raw.note || "").trim();
+      if (note) {
+        body.appendChild(el("h3", "md__label", "Why I kept it"));
+        note.split(/\n{2,}/).forEach((part) => body.appendChild(el("p", null, part.trim())));
+      }
+      const about = String(item.raw.description || "").trim();
+      if (about && about !== note) {
+        body.appendChild(el("h3", "md__label", "In the page’s own words"));
+        body.appendChild(el("blockquote", null, about));
+      }
+      body.appendChild(el("p", "md__none", "This is my card for the page. The page itself is one press away, at the top."));
+      return;
     }
     if (!item.file) {
       body.className = "md";
@@ -1485,8 +1760,8 @@
     const dialog = $("addDialog");
     $("addUrl").value = prefill.url || "";
     $("addNote").value = prefill.note || "";
-    const here = colOf(state.col) ? state.col : "";
-    fillPlaceSelect($("addCol"), here);
+    const here = colOf(state.col) ? state.col : SECTIONS_ON ? "auto" : "";
+    fillPlaceSelect($("addCol"), here, { auto: SECTIONS_ON });
     $("addMsg").textContent = "";
     $("addMsg").className = "pop__msg";
     $("addSave").disabled = false;
@@ -1524,7 +1799,7 @@
         method: "POST",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, note: $("addNote").value.trim(), collection: $("addCol").value, captureSource: "library" }),
+        body: JSON.stringify({ url, note: $("addNote").value.trim(), collection: $("addCol").value || "unsorted", captureSource: "library" }),
       });
       if (response.status === 401) return goToLogin();
       const body = await response.json().catch(() => ({}));
@@ -1551,6 +1826,396 @@
     }
   }
 
+  /* ---------- links from our chat ----------
+     /brain/inbox.json is a short list of links Claude prepared in chat, each
+     with a note on what it is and when to use it. Nothing is added by
+     itself: a card offers them, one press saves the ones the library does
+     not have yet, and Undo sends them to Trash. */
+  let INBOX = [];
+  let inboxBatch = "";
+  let inboxDesk = false;
+  let inboxHad = 0; /* links on the list that the library already holds: left exactly as they are */
+  let inboxState = null; /* { adding, done, total } while saving, { added, failed } after */
+  const inboxLater = () => { try { return localStorage.getItem("magpie-inbox-later") === inboxBatch; } catch { return false; } };
+  /* The same idea of "the same address" as the library's own. */
+  function addressKey(value) {
+    try {
+      const url = new URL(value);
+      url.hash = "";
+      [...url.searchParams.keys()].forEach((name) => { if (/^(utm_|fbclid$|gclid$|mc_|ref$|ref_src$|si$)/i.test(name)) url.searchParams.delete(name); });
+      const query = url.searchParams.toString();
+      return url.hostname.toLowerCase().replace(/^(www|m)\./, "") + url.pathname.replace(/\/+$/, "") + (query ? "?" + query : "");
+    } catch {
+      return "";
+    }
+  }
+  async function loadInbox() {
+    try {
+      const response = await fetch("/brain/inbox.json", { credentials: "same-origin", cache: "no-store" });
+      if (!response.ok) return;
+      const body = await response.json();
+      const batches = Array.isArray(body && body.batches) ? body.batches : [];
+      const have = new Set(ITEMS.map((item) => addressKey(item.url)));
+      const waiting = [];
+      let had = 0;
+      batches.forEach((batch) => {
+        (Array.isArray(batch.items) ? batch.items : []).forEach((entry) => {
+          const url = safeHttpUrl(entry && entry.url);
+          const key = url && addressKey(url);
+          if (!key) return;
+          if (have.has(key)) { had += 1; return; }
+          have.add(key);
+          if (batch.from === "desk") inboxDesk = true;
+          waiting.push({ url, title: String(entry.title || ""), note: String(entry.note || ""), tags: Array.isArray(entry.tags) ? entry.tags : [], type: String(entry.type || ""), unread: entry.read === false });
+        });
+      });
+      INBOX = waiting;
+      inboxHad = had;
+      inboxBatch = batches.map((batch) => batch.id).join(",") + ":" + waiting.length;
+      renderInbox();
+    } catch {
+      /* no list waiting is the usual state */
+    }
+  }
+  function renderInbox() {
+    const box = $("inboxBanner");
+    if (!box) return;
+    box.textContent = "";
+    box.hidden = true;
+    box.className = "lib-sort lib-sort--inbox";
+    const copy = el("div", "lib-sort__copy");
+    const acts = (...buttons) => {
+      const row = el("div", "btn-row lib-sort__acts");
+      buttons.forEach(([label, act, line]) => {
+        const button = el("button", "btn btn--sm" + (line ? " btn--line" : ""), label);
+        button.type = "button";
+        button.dataset.inbox = act;
+        row.appendChild(button);
+      });
+      return row;
+    };
+    if (inboxState && inboxState.adding) {
+      copy.appendChild(el("h3", "lib-sort__title", "Adding " + inboxState.done + " of " + inboxState.total + "…"));
+      copy.appendChild(el("p", "lib-sort__text", "Magpie is reading each page for its title and picture. Keep this page open."));
+    } else if (inboxState) {
+      const n = inboxState.added.length;
+      box.classList.add("lib-sort--done");
+      copy.appendChild(el("h3", "lib-sort__title", n ? "Added " + plural(n, "link") + "." : "Nothing new to add."));
+      copy.appendChild(el("p", "lib-sort__text", (n ? "Open any of them to read the note on what it is and when to use it." : "")
+        + (inboxState.failed ? " " + plural(inboxState.failed, "link") + " didn’t save. You can try those again." : "")));
+      const buttons = [["Looks good", "ok"]];
+      if (inboxState.failed) buttons.push(["Try the rest", "run", true]);
+      if (n) buttons.push(["Undo", "undo", true]);
+      copy.appendChild(acts(...buttons));
+    } else {
+      const filtered = state.q || state.shelf || state.tag || state.origin;
+      if (!INBOX.length || inboxLater() || filtered || (state.col !== "" && state.col !== "unsorted")) return;
+      copy.appendChild(el("h3", "lib-sort__title", plural(INBOX.length, "link") + (inboxDesk ? " from our chat and the old design desk" : " from our chat")));
+      copy.appendChild(el("p", "lib-sort__text", (inboxDesk
+        ? "The links you sent, read and ready, plus the hand-picked ones from the old design desk with your own line on each. Nothing is added until you say so."
+        : "The links you sent, read and ready, each with a short note on what it is and when to use it. Nothing is added until you say so.")
+        + (inboxHad ? " " + (inboxHad === 1 ? "One you already have is" : inboxHad + " you already have are") + " left just as you saved " + (inboxHad === 1 ? "it." : "them.") : "")));
+      const names = el("p", "lib-sort__names", INBOX.slice(0, 6).map((entry) => entry.title || hostOf(entry.url)).join(", ") + (INBOX.length > 6 ? " and " + (INBOX.length - 6) + " more" : ""));
+      copy.appendChild(names);
+      copy.appendChild(acts(["Add them", "run"], ["Not now", "later", true]));
+    }
+    box.appendChild(shape("s-quat", "lib-sort__shape"));
+    box.appendChild(copy);
+    box.hidden = false;
+  }
+  async function runInbox() {
+    const list = INBOX.slice();
+    if (!list.length) return;
+    const added = inboxState && inboxState.added ? inboxState.added.slice() : [];
+    const failed = [];
+    inboxState = { adding: true, done: 0, total: list.length };
+    renderInbox();
+    for (const entry of list) {
+      inboxState.done += 1;
+      renderInbox();
+      try {
+        const response = await fetch("/api/magpie-save", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          /* A page Claude could not read is saved as a plain placeholder
+             and waits in Unsorted; the rest are read for their picture and
+             filed like any new clip. */
+          body: JSON.stringify(entry.unread
+            ? { url: entry.url, title: entry.title, note: entry.note, tags: entry.tags, collection: "unsorted", captureSource: "chat" }
+            : { url: entry.url, titleHint: entry.title, note: entry.note, tags: entry.tags, type: entry.type || undefined, collection: "auto", captureSource: "chat" }),
+        });
+        if (response.status === 401) return goToLogin();
+        const body = await response.json().catch(() => ({}));
+        if (!response.ok || !body.item) throw new Error("not saved");
+        const index = ITEMS.findIndex((item) => item.id === body.item.id);
+        if (index >= 0) ITEMS[index] = prepareOne(body.item, ITEMS[index].order);
+        else ITEMS.push(prepareOne(body.item, ITEMS.length ? Math.max(...ITEMS.map((item) => item.order)) + 1 : 0));
+        if (!body.existed) added.push(body.item.id);
+      } catch {
+        failed.push(entry);
+      }
+    }
+    INBOX = failed;
+    inboxState = { added, failed: failed.length };
+    refresh();
+  }
+  function undoInbox() {
+    const ids = inboxState && inboxState.added ? inboxState.added : [];
+    inboxState = null;
+    if (ids.length) trashClips(ids);
+    loadInbox();
+  }
+
+  /* ---------- open to visitors ----------
+     Reading can be opened to anyone; changing anything stays Kelly's. The
+     server decides what a visitor is sent. This card shows her the plan
+     first (what opens, what stays in, and which clips look personal), and
+     opening is one press with Undo. */
+  function applyMode() {
+    const root = document.documentElement;
+    root.dataset.mode = MODE;
+    const word = $("libStatusWord");
+    const dot = $("libStatusDot");
+    const open = Boolean(PUBLIC_ON) || !isOwner();
+    if (word) word.textContent = open ? "Open" : "Private";
+    if (dot) dot.className = "dot " + (open ? "dot-live" : "dot-priv");
+    const strip = $("previewStrip");
+    if (strip) {
+      strip.hidden = !PREVIEW;
+      if (PREVIEW && !PUBLIC_ON) strip.firstElementChild.textContent = "This is what a visitor would see if you opened Magpie.";
+    }
+    if (!isOwner()) {
+      const lede = $("libLede");
+      if (lede) lede.textContent = "Everything I’ve kept from the web, in one place: design tools, things worth reading, code, and odd finds. Every card links to the original.";
+      const foot = $("footLine");
+      if (foot) foot.textContent = "Kept by Kelly Lucas with Magpie. Every card links to the page it came from; nothing here is a copy of it.";
+      document.title = "Kelly’s library · Magpie";
+    }
+    const button = $("publicButton");
+    if (button) {
+      $("publicWord").textContent = PUBLIC_ON ? "Open to visitors" : "Open to visitors…";
+      $("publicDot").className = "dot " + (PUBLIC_ON ? "dot-live" : "dot-priv");
+      button.classList.toggle("is-on", Boolean(PUBLIC_ON));
+    }
+  }
+  async function loadPublicPlan() {
+    if (!isOwner()) return;
+    try {
+      const response = await fetch("/api/magpie-update", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: "public" }),
+      });
+      if (!response.ok) return;
+      PUBLIC_PLAN = await response.json();
+    } catch {
+      PUBLIC_PLAN = null;
+    }
+    renderPublic();
+  }
+  function heldList(held) {
+    const details = el("details", "lib-held");
+    details.appendChild(el("summary", null, plural(held.length, "clip") + " Magpie would keep private"));
+    const list = el("ul", "lib-held__list");
+    held.slice(0, 60).forEach((entry) => {
+      const li = el("li");
+      const open = el("button", "lib-held__open", entry.title || entry.site || "Untitled");
+      open.type = "button";
+      open.dataset.open = entry.id;
+      li.appendChild(open);
+      li.appendChild(el("span", "lib-held__why", "because " + entry.why));
+      list.appendChild(li);
+    });
+    if (held.length > 60) list.appendChild(el("li", "lib-held__why", "and " + (held.length - 60) + " more"));
+    details.appendChild(list);
+    details.appendChild(el("p", "lib-held__note", "Open any of them and untick “Only me” to show it."));
+    return details;
+  }
+  function renderPublic() {
+    const box = $("publicBanner");
+    if (!box) return;
+    box.textContent = "";
+    box.hidden = true;
+    box.className = "lib-sort lib-sort--public";
+    if (!isOwner() || !PUBLIC_PLAN || (!publicCard && !publicResult)) return;
+    const plan = PUBLIC_PLAN;
+    const copy = el("div", "lib-sort__copy");
+    const acts = (...buttons) => {
+      const row = el("div", "btn-row lib-sort__acts");
+      buttons.forEach(([label, act, line]) => {
+        if (act === "see") {
+          const link = el("a", "btn btn--sm btn--line", label);
+          link.href = "/brain/gallery.html?view=visitor";
+          link.target = "_blank";
+          link.rel = "noopener";
+          link.appendChild(el("span", "sr-only", " (opens in a new tab)"));
+          row.appendChild(link);
+          return;
+        }
+        const button = el("button", "btn btn--sm" + (line ? " btn--line" : ""), label);
+        button.type = "button";
+        button.dataset.public = act;
+        row.appendChild(button);
+      });
+      return row;
+    };
+    const chips = () => {
+      const row = el("div", "lib-sort__chips");
+      plan.counts.forEach((entry) => {
+        const chip = el("button", "lib-sort__chip col--" + (colOf(entry.id)?.color || "teal"));
+        chip.type = "button";
+        chip.dataset.col = entry.id;
+        chip.appendChild(el("span", "lib-sort__dot"));
+        chip.appendChild(el("span", null, entry.name));
+        chip.appendChild(el("span", "lib-sort__n mono", String(entry.count)));
+        row.appendChild(chip);
+      });
+      return row;
+    };
+    const closedLine = () => {
+      const parts = plan.closed.filter((entry) => entry.count || entry.locked).map((entry) => entry.name + " (" + entry.count + ")");
+      if (plan.unsorted) parts.push("Unsorted (" + plan.unsorted + ")");
+      parts.push("Trash");
+      return "Stays yours: " + parts.join(", ") + ", and the saved copy of every page.";
+    };
+
+    if (publicResult) {
+      box.classList.add("lib-sort--done");
+      copy.appendChild(el("h3", "lib-sort__title", "Magpie is open."));
+      copy.appendChild(el("p", "lib-sort__text", plural(plan.total, "clip") + " in " + plural(plan.counts.length, "section") + " can be seen by anyone with the address."
+        + (publicResult.marked.length ? " " + plural(publicResult.marked.length, "clip") + " looked personal, so Magpie kept " + (publicResult.marked.length === 1 ? "it" : "them") + " private." : "")
+        + " Only you can add, change or delete."));
+      if (plan.held.length) copy.appendChild(heldList(plan.held));
+      copy.appendChild(acts(["Looks good", "ok"], ["See it as a visitor", "see", true], ["Undo", "undo", true]));
+    } else if (!plan.ready && !plan.on) {
+      copy.appendChild(el("h3", "lib-sort__title", "Sort first, then open"));
+      copy.appendChild(el("p", "lib-sort__text", "Visitors see whole sections, so Magpie needs its sections before it can open. Sorting takes one press and has Undo."));
+      copy.appendChild(acts(["Sort into sections", "sort"], ["Not now", "later", true]));
+    } else if (plan.on) {
+      copy.appendChild(el("h3", "lib-sort__title", "Magpie is open to visitors"));
+      copy.appendChild(el("p", "lib-sort__text", plural(plan.total, "clip") + " on show. New clips that Magpie files into an open section show up by themselves; anything that looks personal is kept in. Only you can add, change or delete."));
+      copy.appendChild(chips());
+      copy.appendChild(el("p", "lib-sort__names", closedLine()));
+      if (plan.held.length) copy.appendChild(heldList(plan.held));
+      copy.appendChild(acts(["Done", "ok"], ["See it as a visitor", "see", true], ["Close it again", "close", true]));
+    } else {
+      copy.appendChild(el("h3", "lib-sort__title", "Open Magpie to visitors?"));
+      copy.appendChild(el("p", "lib-sort__text", "No password to look. Anyone with the address can browse these sections and follow the links, with your own notes on each card. Only you can add, change or delete."));
+      copy.appendChild(chips());
+      copy.appendChild(el("p", "lib-sort__names", closedLine()));
+      if (plan.held.length) copy.appendChild(heldList(plan.held));
+      copy.appendChild(acts(["Open it", "open"], ["See it as a visitor first", "see", true], ["Not now", "later", true]));
+    }
+    box.appendChild(shape("s-rays", "lib-sort__shape"));
+    box.appendChild(copy);
+    box.hidden = false;
+  }
+  async function openToVisitors() {
+    try {
+      const answer = await send([{ op: "public.open" }]);
+      absorb(answer);
+      publicResult = { marked: Array.isArray(answer.marked) ? answer.marked : [] };
+      publicCard = "";
+      applyMode();
+      await loadPublicPlan();
+      refresh({ keepLimit: true });
+    } catch (error) {
+      toast(error.message || "Magpie couldn’t open just now.", null, true);
+      renderPublic();
+    }
+  }
+  async function closeToVisitors(unmark) {
+    try {
+      const answer = await send([{ op: "public.close", unmark: unmark || [] }]);
+      absorb(answer);
+      PUBLIC_ON = "";
+      publicResult = null;
+      publicCard = "";
+      applyMode();
+      await loadPublicPlan();
+      refresh({ keepLimit: true });
+      toast("Magpie is private again. Visitors are asked to sign in.");
+    } catch (error) {
+      toast(error.message || "Magpie couldn’t close just now.", null, true);
+      renderPublic();
+    }
+  }
+  function undoOpen() {
+    const marked = publicResult ? publicResult.marked : [];
+    closeToVisitors(marked);
+  }
+
+  /* The feather (the Chrome extension) leaves a note on this page when it is
+     installed, so connecting is one press: this page hands it the key and
+     the feather answers. No feather here: the steps to get one show. */
+  function featherInfo() {
+    const data = document.documentElement.dataset;
+    return data.magpieFeather ? { version: data.magpieFeather, connected: data.magpieFeatherConnected === "1" } : null;
+  }
+  function renderFeather(note, isError) {
+    const info = featherInfo();
+    const stateBox = $("featherState");
+    const acts = $("featherActs");
+    if (!stateBox || !acts) return;
+    $("featherSteps").hidden = Boolean(info);
+    acts.hidden = !info;
+    stateBox.hidden = !info;
+    stateBox.className = "way__state" + (info && info.connected ? " is-on" : "");
+    if (info) {
+      stateBox.textContent = info.connected ? "Connected" : "Not connected yet";
+      $("featherText").textContent = info.connected
+        ? "The feather saves straight into this library. Press it on any page, or press Alt+Shift+M."
+        : "The feather is in this Chrome. One press and it saves straight into this library.";
+      const button = $("featherConnect");
+      button.textContent = info.connected ? "Connect again" : "Connect this Chrome";
+      button.classList.toggle("btn--line", info.connected);
+      button.disabled = false;
+    }
+    const noteBox = $("featherNote");
+    noteBox.textContent = note || "";
+    noteBox.classList.toggle("is-error", Boolean(isError));
+  }
+  async function clipKey() {
+    const response = await fetch("/api/magpie-session?key=1", { credentials: "same-origin", cache: "no-store" });
+    const body = await response.json();
+    if (!body.authenticated) { goToLogin(); return ""; }
+    if (!body.clipKey) throw new Error("no key");
+    return body.clipKey;
+  }
+  let featherWait = 0;
+  async function connectFeather() {
+    const button = $("featherConnect");
+    button.disabled = true;
+    renderFeather("Connecting…");
+    button.disabled = true;
+    try {
+      const key = await clipKey();
+      if (!key) return;
+      window.postMessage({ source: "magpie-library", kind: "connect", key }, location.origin);
+      clearTimeout(featherWait);
+      featherWait = setTimeout(() => renderFeather("The feather didn’t answer. Reload this page and try again.", true), 9000);
+    } catch {
+      renderFeather("The key didn’t load. Try again in a moment.", true);
+    }
+  }
+  window.addEventListener("message", (event) => {
+    if (event.source !== window || event.origin !== location.origin) return;
+    const data = event.data;
+    if (!data || data.source !== "magpie-feather") return;
+    if (data.kind === "hello") renderFeather();
+    if (data.kind === "connected") {
+      clearTimeout(featherWait);
+      if (data.ok) {
+        renderFeather("Done. Clip something and it lands here.");
+        toast("The feather is connected to this library.");
+      } else {
+        renderFeather(String(data.error || "That didn’t work. Try again.").slice(0, 160), true);
+      }
+    }
+  });
+
   async function openConnect() {
     const dialog = $("connectDialog");
     const field = $("connectKey");
@@ -1560,18 +2225,29 @@
     if (bookmarklet) {
       bookmarklet.href = "javascript:location.href='" + location.origin + "/brain/gallery.html?add='+encodeURIComponent(location.href)";
     }
+    const share = $("shareAddress");
+    if (share) share.value = location.origin + "/brain/gallery.html?add=";
+    renderFeather();
     openDialog(dialog);
     try {
-      const response = await fetch("/api/magpie-session?key=1", { credentials: "same-origin", cache: "no-store" });
-      const body = await response.json();
-      if (!body.authenticated) return goToLogin();
-      if (!body.clipKey) throw new Error("no key");
-      field.value = body.clipKey;
+      const key = await clipKey();
+      if (!key) return;
+      field.value = key;
       $("connectCopy").disabled = false;
-      $("connectSite").textContent = location.origin;
+      $("connectSite").textContent = location.host;
     } catch {
       field.value = "The key didn’t load. Close this and try again.";
     }
+  }
+  async function copyFrom(field, button) {
+    try {
+      await navigator.clipboard.writeText(field.value);
+    } catch {
+      field.select();
+      document.execCommand && document.execCommand("copy");
+    }
+    button.textContent = "Copied";
+    setTimeout(() => { button.textContent = "Copy"; }, 1800);
   }
 
   /* ---------- wiring ---------- */
@@ -1655,6 +2331,46 @@
       rail.classList.toggle("is-open", open);
     });
     $("connectButton").addEventListener("click", openConnect);
+    const sortBox = $("sortBanner");
+    if (sortBox) {
+      sortBox.addEventListener("click", (event) => {
+        const chip = event.target.closest("button[data-col]");
+        if (chip) return goTo(chip.dataset.col);
+        const button = event.target.closest("button[data-sort]");
+        if (!button) return;
+        const act = button.dataset.sort;
+        if (act === "run") { button.disabled = true; button.textContent = "Sorting…"; runSort(); }
+        else if (act === "undo") undoSort();
+        else if (act === "ok") { sortResult = null; renderSort(); }
+        else if (act === "later") {
+          try { localStorage.setItem("magpie-sort-later", "1"); } catch { /* it just comes back next time */ }
+          renderSort();
+          toast("No problem. “Sort into sections” stays in the list on the left.");
+        }
+      });
+    }
+    const inboxBox = $("inboxBanner");
+    if (inboxBox) {
+      inboxBox.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-inbox]");
+        if (!button) return;
+        const act = button.dataset.inbox;
+        if (act === "run") runInbox();
+        else if (act === "undo") undoInbox();
+        else if (act === "ok") { inboxState = null; renderInbox(); }
+        else if (act === "later") {
+          try { localStorage.setItem("magpie-inbox-later", inboxBatch); } catch { /* it comes back next time */ }
+          renderInbox();
+          toast("No problem. They’ll be here next time you open Magpie.");
+        }
+      });
+    }
+    const sortButton = $("sortButton");
+    if (sortButton) sortButton.addEventListener("click", () => {
+      try { localStorage.removeItem("magpie-sort-later"); } catch { /* fine */ }
+      if (PLAN && PLAN.first) { goTo(""); $("sortBanner").scrollIntoView({ block: "center", behavior: reduced ? "auto" : "smooth" }); }
+      else runSort();
+    });
     $("placeCrumbs").addEventListener("click", (event) => {
       const crumb = event.target.closest("button[data-col]");
       if (crumb) goTo(crumb.dataset.col);
@@ -1718,7 +2434,7 @@
     });
 
     $("surpriseButton").addEventListener("click", (event) => {
-      const pool = live().filter((item) => item.file);
+      const pool = live().filter((item) => item.file || !isOwner());
       if (!pool.length) return;
       const pick = pool[Math.floor(Math.random() * pool.length)];
       sheetList = [pick];
@@ -1803,6 +2519,7 @@
       if (target === "trash") return;
       moveClips([item.id], target);
       $("editTrash").textContent = "Move to Trash";
+      if ($("sheetFiled")) $("sheetFiled").hidden = true;
     });
     $("sheetEdit").addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -1845,17 +2562,9 @@
     $("addForm").addEventListener("submit", saveAdd);
     $("addCancel").addEventListener("click", () => closeDialog($("addDialog")));
     $("connectClose").addEventListener("click", () => closeDialog($("connectDialog")));
-    $("connectCopy").addEventListener("click", async () => {
-      const field = $("connectKey");
-      try {
-        await navigator.clipboard.writeText(field.value);
-      } catch {
-        field.select();
-        document.execCommand && document.execCommand("copy");
-      }
-      $("connectCopy").textContent = "Copied";
-      setTimeout(() => { $("connectCopy").textContent = "Copy"; }, 1800);
-    });
+    $("connectCopy").addEventListener("click", () => copyFrom($("connectKey"), $("connectCopy")));
+    if ($("shareCopy")) $("shareCopy").addEventListener("click", () => copyFrom($("shareAddress"), $("shareCopy")));
+    if ($("featherConnect")) $("featherConnect").addEventListener("click", connectFeather);
     ["addDialog", "connectDialog"].forEach((id) => {
       const dialog = $(id);
       dialog.addEventListener("click", (event) => { if (event.target === dialog) closeDialog(dialog); });
@@ -1881,8 +2590,50 @@
       try {
         await fetch("/api/magpie-logout", { method: "POST", credentials: "same-origin" });
       } catch { /* the cookie clears either way on the next sign-in */ }
-      location.replace(LOGIN);
+      if (PUBLIC_ON) location.replace("/brain/gallery.html");
+      else location.replace(LOGIN);
     });
+
+    const onlyBox = $("editPrivate");
+    if (onlyBox) {
+      onlyBox.addEventListener("change", () => {
+        const item = sheetItem();
+        if (!item) return;
+        const on = onlyBox.checked;
+        change([{ op: "private", ids: [item.id], on }], () => setRaw(item, { private: on, privateWhy: "" }),
+          on ? "Only you can see this one now" : "Visitors can see this one now",
+          [{ op: "private", ids: [item.id], on: !on }]).then(() => { const fresh = sheetItem(); if (fresh) fillEdit(fresh); loadPublicPlan(); });
+      });
+    }
+    const publicButton = $("publicButton");
+    if (publicButton) {
+      publicButton.addEventListener("click", () => {
+        publicCard = publicCard ? "" : "offer";
+        publicResult = null;
+        if (state.col !== "") state.col = "";
+        render({ keepLimit: true });
+        const box = $("publicBanner");
+        if (box && !box.hidden) box.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+        closeRailOnPhone();
+      });
+    }
+    const publicBox = $("publicBanner");
+    if (publicBox) {
+      publicBox.addEventListener("click", (event) => {
+        const held = event.target.closest("button[data-open]");
+        if (held) { openSheet(held.dataset.open, held); return; }
+        const chip = event.target.closest("button[data-col]");
+        if (chip) { publicCard = ""; publicResult = null; goTo(chip.dataset.col); return; }
+        const button = event.target.closest("button[data-public]");
+        if (!button) return;
+        const act = button.dataset.public;
+        if (act === "open") { button.disabled = true; button.textContent = "Opening…"; openToVisitors(); }
+        else if (act === "close") { button.disabled = true; closeToVisitors(); }
+        else if (act === "undo") undoOpen();
+        else if (act === "sort") { publicCard = ""; renderPublic(); const sortButton = $("sortButton"); if (sortButton) sortButton.click(); }
+        else if (act === "ok" || act === "later") { publicCard = ""; publicResult = null; renderPublic(); }
+      });
+    }
 
     wireDrag();
   }
@@ -1909,17 +2660,24 @@
     const adding = { url: safeHttpUrl(params.get("add") || ""), note: params.get("note") || "" };
     let payload;
     try {
-      const response = await fetch("/api/magpie-library", { credentials: "same-origin", cache: "no-store" });
+      const asVisitor = params.get("view") === "visitor";
+      const response = await fetch("/api/magpie-library" + (asVisitor ? "?view=visitor" : ""), { credentials: "same-origin", cache: "no-store" });
       if (response.status === 401) return goToLogin();
       if (!response.ok) throw new Error("unavailable");
       payload = await response.json();
     } catch {
-      showError("Magpie couldn’t reach the private library. Check the connection and try again.");
+      showError("Magpie couldn’t reach the library. Check the connection and try again.");
       return;
     }
+    MODE = payload && payload.visitor ? "visitor" : "owner";
+    PREVIEW = Boolean(payload && payload.preview);
+    PUBLIC_ON = String((payload && payload.publicOn) || "");
+    PUBLIC_COLS = new Set(Array.isArray(payload && payload.publicCollections) ? payload.publicCollections : []);
+    applyMode();
     const raw = Array.isArray(payload && payload.items) ? payload.items.filter((item) => item && typeof item === "object") : [];
     ITEMS = raw.map(prepareOne);
     COLLECTIONS = Array.isArray(payload.collections) ? payload.collections : [];
+    SECTIONS_ON = Boolean(payload.sectionsOn);
     const counts = computeTags();
     if (state.tag && !counts.has(state.tag)) state.tag = "";
 
@@ -1930,7 +2688,15 @@
     fillOrigins();
     wire();
     render();
+    /* The rest is Kelly's: sorting, adding, the feather, opening to visitors. */
+    if (!isOwner()) return;
+    loadPlan();
+    loadPublicPlan();
     if (adding.url) openAdd(adding);
+    /* The feather's "Connect" opens this page with ?connect=1. */
+    else if (params.has("connect")) openConnect();
+    else if (params.has("visitors")) { publicCard = "offer"; }
+    loadInbox();
   }
 
   start();

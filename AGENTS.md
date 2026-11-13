@@ -79,7 +79,7 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
 
 ## Tech
 - Static HTML/CSS/JS, no frameworks and no build step.
-- Site pages (index, magpie, design, playground, log, colophon, 404) use
+- Site pages (index, magpie, playground, log, colophon, 404) use
   `style.css` and `script.js`: vanilla JS and the Web Animations API, no
   GSAP. Every feature null-checks its targets; pages read fine without JS.
 - Playground rooms (claude, pet, panel, noise, quantum, qrng, quotes) keep the
@@ -99,13 +99,16 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
 
 ## File Structure
 Keep it clean. No backup files, no version-numbered copies.
-- `index.html`, `magpie.html`, `design.html`, `playground.html`, `log.html`,
+- `index.html`, `magpie.html`, `playground.html`, `log.html`,
   `colophon.html`, `404.html`: the site
+- `brain/`: the Magpie library (`gallery.html`, `library.js`), its design
+  systems room (`systems.html`, `systems.js`, `systems-data.js`) and the
+  sign-in page
 - `style.css`, `script.js`: the site's styles and interactions
 - `lab.css`, `lab.js`: the playground rooms' old lab styles and interactions
 - `assets/art/`: the drawings (`travel/`, the Pretzel cities, three magpies),
   the favicon and the share card
-- The seven site pages share one header, footer and SVG sprite; keep them
+- The six site pages share one header, footer and SVG sprite; keep them
   identical across pages when editing (a small generator outside the repo
   wrote them, but they are plain HTML and can be edited by hand)
 - `assets/collection/`: project screenshots, the Magpie feather, clip and room
@@ -118,29 +121,27 @@ Keep it clean. No backup files, no version-numbered copies.
   Heliopolis art library (`kellylucas314-cpu/heliopolis-art-library`, served by
   GitHub Pages). Edit the art there, not here.
 
-## Design desk
-- `design.html` (the design desk) is the public swipe file, in five piles: the HelioFlux
-  website, Heliopolis, Pretzel Protocol, resources, examples (plus "the lab
-  itself", shown as "This site", for this site's own rules). It renders
-  `design-library.js`, a
-  generated data file: `manual` entries are hand-written, `items` is rebuilt
-  by `npm run sync:design` from the Magpie vault. `systems` (one design system
-  per site, with palette and rules), `libraries` (Kelly's own art and font
-  libraries) and `docs` (style PDFs, boards, image strips; files live under
-  `assets/design/<pile>/`) are hand-written and pass through the sync
-  untouched. Every entry carries a `section`. Each pile is a `.band` with
-  its own `.wrap`, paper and tints alternating with wave edges, and the
-  cards are flat fills with no borders, like the rest of the site.
-- Where a clip lands is decided once, in `lib/desk-sort.mjs` from
-  `lib/desk-rules.json`: Kelly's own sites go to their pile; sites tagged or
-  described for a project go there; anything with a design signal is a
-  resource (gallery, tool, repo, reading, video) or an example (a site); the
-  rest stays in the vault. A `desk:<section>` tag on the clip wins and
-  `desk:none` keeps it off. The sync copies the rules into the vault
-  (`magpie/desk-rules.json`) so the Magpie server and the Chrome clipper
-  (which shows the guess in its popup) sort the same way. Tests:
-  `npm run test:design`. Video cards show takeaways from the clip's `## Notes`
-  bullets, or an honest "notes pending" state until those exist.
+## Design systems room
+- The design desk retired on 2026-11-13 (Kelly: "Fold it into Magpie").
+  Design links live in the Magpie library's sections; `/design.html`
+  redirects to the room.
+- `/brain/systems.html` is the design systems room: Kelly's own systems
+  (kellylucas.dev, Heliopolis, Pretzel Protocol), their documents and
+  drawings, the font audition room, and the three notebook pages. It is
+  public, reached from the library's rail, and rendered by
+  `brain/systems.js` from `brain/systems-data.js`, a hand-written data file
+  (`systems`, `libraries`, `docs`; every entry has a `section` of lab,
+  heliopolis or pretzel; files live under `/assets/design/<site>/`, always
+  as absolute paths). Bands: sage (Heliopolis), honey (Pretzel), paper
+  (notebook, this site). Art strips and notebook pages open in the picture
+  viewer. Pages under `/brain/` only load pictures from this site, so a
+  drawing kept elsewhere opens as its local copy.
+- No HelioFlux work in the room or anywhere public (a test checks). The old
+  HelioFlux pile is in `docs/design/helioflux-website/` and
+  `docs/design/helioflux-pile.json`: in Git, off the website.
+- `lib/desk-rules.json` and `lib/desk-sort.mjs` stay: Magpie's sections read
+  them to tell a tool from a gallery from a site. `npm run test:design`
+  covers the rules and the room. `sync:design` and `shots:design` are gone.
 
 ## Skills in the lab
 - `.claude/skills/` holds Claude Code skills from Jack Roberts' design loop, kept

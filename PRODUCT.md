@@ -9,7 +9,7 @@ web
 ## Users
 
 - **Visitors who got Kelly's link**: people meeting Kelly through HelioFlux, fellow builders, friends and family. They want to know who she is and see what she has actually built, in under a minute.
-- **Kelly herself**: the site is her home base. She uses it to reach her own tools (the private Magpie library, the design desk, the AI workspace field guide) and to put each new real project somewhere it can live.
+- **Kelly herself**: the site is her home base. She uses it to reach her own tools (the Magpie library and its design systems room, the AI workspace field guide) and to put each new real project somewhere it can live.
 
 ## Product Purpose
 
@@ -29,7 +29,7 @@ Kelly builds personal tools she runs every day, then puts them on the shelf. The
 
 - Magpie is for Kelly only. Nobody else can install or use it. Do not add "try it", "sign up" or waitlist actions.
 - Existing toy pages (pet, pixel garden, panel, noise room, quantum wing, entropy tap, spark notes, font audition room) stay working but move off the homepage onto a Playground page.
-- Real projects on hand: Magpie, the design desk, YouTube Transcript Generator, AI Workspace Field Guide, Agent Commons (private), Clue d'État trivia game, Boot Camp side-scroller, Heliopolis art library, Command Center.
+- Real projects on hand: Magpie (with its design systems room), YouTube Transcript Generator, AI Workspace Field Guide, Agent Commons (private), Clue d'État trivia game, Boot Camp side-scroller, Heliopolis art library, Command Center.
 - Never expose private Magpie contents: HelioFlux business documents, investor names, Kip-written notes, family names, local paths, server ports, the Collector database IDs.
 
 ## Brand Commitments
@@ -45,7 +45,7 @@ Kelly builds personal tools she runs every day, then puts them on the shelf. The
 ## Evidence on Hand
 
 - Magpie numbers from `kip-workspace/magpie/library.json`: 279 clips, 258 sites, 257 tags, 8 transcripts, 10 papers, 31 personal notes, clipped 2026-02-24 to 2026-08-19. 147 clips are tagged stumbleupon (an imported archive), and all 51 tagged weird are among them.
-- Design desk: 128 cards, 54 fed by Magpie, 117 public thumbnails in `assets/design/thumbs/`.
+- The design desk retired on 2026-11-13: its links moved into the Magpie library and its systems into `/brain/systems.html`. The library can be opened to visitors (read only); HelioFlux, Unsorted, Trash and personal-looking clips never show.
 - `assets/ai-workspace-field-guide.png`, the field guide map.
 - The drawings in `assets/art/` were made with an image model in Kelly's style and say so in the colophon and in their prompt sidecars.
 - There are no screenshots of the Magpie UI. Any depiction of it must be built from public desk thumbnails and labeled as an illustration.
