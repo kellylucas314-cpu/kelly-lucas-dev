@@ -279,61 +279,6 @@ if (scene) {
   }
 }
 
-/* ---------- Home: the film. Fetched when you get near it, played once (muted) when it is in view; the still stands in until then ---------- */
-const film = $("[data-film]");
-const filmVideo = film ? $("[data-film-video]", film) : null;
-const filmCtrls = film ? $("[data-film-ctrls]", film) : null;
-if (filmVideo && filmCtrls && filmVideo.canPlayType && filmVideo.canPlayType("video/mp4")) {
-  const playBtn = $("[data-film-play]", filmCtrls);
-  const soundBtn = $("[data-film-sound]", filmCtrls);
-  const saveData = !!(navigator.connection && navigator.connection.saveData);
-  const auto = !reducedMotion && !saveData && "IntersectionObserver" in window;
-  let inView = false;
-  let userPaused = false;
-  const load = () => {
-    if (filmVideo.src) return;
-    const small = window.matchMedia("(max-width: 760px)").matches;
-    filmVideo.src = (small && filmVideo.dataset.srcSm) || filmVideo.dataset.src;
-    filmVideo.hidden = false;
-  };
-  const play = () => {
-    load();
-    if (filmVideo.ended) filmVideo.currentTime = 0;
-    const started = filmVideo.play();
-    if (started && started.catch) started.catch(() => {});
-  };
-  const label = () => {
-    playBtn.textContent = filmVideo.ended ? "Play again" : filmVideo.paused ? "Play" : "Pause";
-    soundBtn.textContent = filmVideo.muted ? "Turn sound on" : "Turn sound off";
-  };
-  filmCtrls.hidden = false;
-  label();
-  ["play", "pause", "ended", "volumechange"].forEach((type) => filmVideo.addEventListener(type, label));
-  filmVideo.addEventListener("playing", () => filmVideo.classList.add("is-on"), { once: true });
-  playBtn.addEventListener("click", () => {
-    if (filmVideo.paused || filmVideo.ended) { userPaused = false; play(); }
-    else { userPaused = true; filmVideo.pause(); }
-  });
-  soundBtn.addEventListener("click", () => { filmVideo.muted = !filmVideo.muted; label(); });
-  if (auto) {
-    // start fetching a little before it scrolls in, so the first frame is ready
-    const near = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return;
-      load();
-      filmVideo.preload = "auto";
-      near.disconnect();
-    }, { rootMargin: "400px 0px" });
-    near.observe(film);
-    const update = () => {
-      const live = inView && !document.hidden;
-      if (!live) { if (!filmVideo.paused) filmVideo.pause(); return; }
-      if (!userPaused && !filmVideo.ended) play();
-    };
-    new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; update(); }, { threshold: 0.5 }).observe(filmVideo.parentElement);
-    document.addEventListener("visibilitychange", update);
-  }
-}
-
 /* ---------- Home: the race. Lights out from the grid when the Say hello band scrolls into view, then a lap now and then ---------- */
 const racer = $("[data-racer]");
 const cars = racer ? $$(".racer__car", racer) : [];
