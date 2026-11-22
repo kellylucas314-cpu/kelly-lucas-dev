@@ -49,14 +49,20 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
   the Red Bull marks, plus two rivals whose leaves are recolored coral and
   honey; all three are 480px WebPs derived from `race-car.webp`:
   `race-car-sm.webp`, `race-car-coral.webp`, `race-car-honey.webp`; kept
-  small and low down so it never competes with the poster), the Alt+Shift+M
+  small and low down so it never competes with the poster), the Lakeside
+  Grand Prix film under the two doors on the homepage (a 14-second watercolor
+  race made entirely in code; it is a picture, so its blues and purples are
+  the one exception to the eight colors), the Alt+Shift+M
   reflex on the homepage, the
   "Clip it" demo on the Magpie page, the magpie 404, and the playground.
 - Motion: the suns turn very slowly (the spin lives on the svg root), the
   cursor tag bobs, the three race cars sit on a starting grid, launch a
   beat after the Say hello band comes into view, then each laps again every
   few seconds while it is on screen (parked on the grid without JS or with
-  reduced motion; images load lazily), the poster
+  reduced motion; images load lazily), the film is fetched when you scroll
+  near it and plays once, muted, while it is in view (Pause and sound are
+  pills; with reduced motion or Save-Data it waits for Play; without JS the
+  still stands in), the poster
   crossfades on click, the clip demo plays
   once on the Magpie page. `prefers-reduced-motion` turns all of it off and
   nothing is hidden behind JS.
@@ -78,6 +84,13 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
   320px `-sm.webp` copies for the phone thumbnails. They are derived files
   (Pillow, Lanczos, quality 82): regenerate one when its source changes.
   They need no prompt sidecar.
+
+- `assets/art/film/` holds the homepage copies of the Lakeside Grand Prix
+  film: a 1280px MP4, a 720px MP4 for phones and the still. They are derived
+  from the 1080p master with `sh scripts/encode-film.sh <master.mp4>` (needs
+  ffmpeg); rerun it when the master changes. The film is drawn by code on a
+  canvas, not by an image model; its master and source live in the project
+  files under `f1-watercolor/`.
 
 ## Adding a project
 1. Add an `<li>` to the projects list in `index.html` (copy a row): number,

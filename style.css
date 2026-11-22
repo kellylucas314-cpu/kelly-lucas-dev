@@ -95,6 +95,8 @@ p { text-wrap: pretty; }
 h1, h2, h3 { text-wrap: balance; }
 ::selection { background: var(--honey); color: var(--navy); }
 :focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; border-radius: 6px; }
+/* body's clip is handed to the viewport, so the slowly turning suns could still widen a phone page by a few px; main clips them for real */
+main { overflow-x: clip; }
 main:focus { outline: none; }
 .sr-only, .visually-hidden {
   position: absolute !important;
@@ -577,6 +579,14 @@ kbd {
 .bg-honey { background: var(--honey); }
 .bg-sage { background: var(--sage); }
 
+/* ---------- Home: the film. Lakeside Grand Prix sits under the two doors; it loads when you get near it and plays once, muted (script.js) ---------- */
+.film { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 48px; align-items: end; margin-top: 96px; }
+.film__frame { position: relative; aspect-ratio: 16 / 9; border-radius: 28px; overflow: hidden; background: var(--honey-tint); }
+.film__still, .film__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.film__video { opacity: 0; transition: opacity 0.5s var(--ease); }
+.film__video.is-on { opacity: 1; }
+.film__cap p { max-width: 30em; margin-top: 12px; font-size: 17px; }
+.film__cap .btn-row { margin-top: 22px; }
 /* ---------- Home: the race. Three small cars at the foot of the Say hello band; they leave the grid when it scrolls into view, then lap now and then (script.js) ---------- */
 .hello:has(.racer) { padding-bottom: 172px; }
 .hello:has(.racer) .books { bottom: 92px; }
@@ -627,6 +637,7 @@ kbd {
   .mp-grid { grid-template-columns: 1fr; grid-template-areas: "head" "art" "does"; }
   .mp-grid > .mp-art { max-width: 480px; margin-top: 48px; }
   .nd-grid { grid-template-columns: 1fr; max-width: 620px; }
+  .film { grid-template-columns: 1fr; gap: 24px; max-width: 760px; margin-top: 72px; }
   .counts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
@@ -675,6 +686,8 @@ kbd {
   .row__meta { display: flex; gap: 16px; grid-column: 2; margin-top: 6px; }
   .row__k, .row__s { font-size: 13px; }
   .nd-grid { grid-template-columns: 1fr; gap: 40px; margin-top: 40px; }
+  .film { gap: 18px; margin-top: 56px; }
+  .film__frame { border-radius: 20px; }
   .door__body { padding: 4px 24px 32px; border-radius: 0 0 26px 26px; }
   .loglist li { grid-template-columns: 1fr; gap: 2px; padding: 9px 0; font-size: 16px; }
   .pills { gap: 14px; }
