@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Kelly Lucas</title>
+  <meta name="description" content="A little about Kelly Lucas, founder of HelioFlux, in watercolor: a 14-second film painted in code, and the short version of her story." />
+  <meta name="theme-color" content="#f7f2e6" />
+  <meta property="og:title" content="About Kelly Lucas" />
+  <meta property="og:description" content="A little about Kelly Lucas, in watercolor: a 14-second film painted in code, and the short version of her story." />
+  <meta property="og:image" content="https://kellylucas.dev/assets/art/og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/assets/art/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="/assets/fonts/Fraunces-Soft-Italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/InstrumentSans-Variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/art/film/lakeside-grand-prix.webp" as="image" type="image/webp" fetchpriority="high" />
+  <link rel="stylesheet" href="/about.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="top">
+    <div class="wrap top__in">
+      <a class="mark" href="/" aria-label="Kelly Lucas, home"><img src="/assets/art/about/sun.webp" width="520" height="520" alt="" /><span>Kelly Lucas</span></a>
+      <nav class="nav" aria-label="Primary">
+        <a href="/magpie.html">Magpie</a>
+        <a href="/#projects">Projects</a>
+        <a href="/log.html">Log</a>
+        <a href="/playground.html">Playground</a>
+        <a href="/about" aria-current="page">About</a>
+      </nav>
+      <a class="pill pill--sm" href="mailto:hello@kellylucas.dev">Say hello</a>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="hero" aria-labelledby="about-title">
+      <div class="wrap hero__head">
+        <h1 class="title" id="about-title">A little about me.</h1>
+        <p class="lede">The homepage is a poster. This page is a painting. Same Kelly.</p>
+      </div>
+      <figure class="film" data-film>
+        <div class="film__frame">
+          <img class="film__still" src="/assets/art/film/lakeside-grand-prix.webp" width="1280" height="720" decoding="async" fetchpriority="high" alt="A watercolor of three small racing cars lined up on a lakeside track under five red start lights, with mountains and autumn trees behind them and two ducks on the water." />
+          <video class="film__video" data-film-video data-src="/assets/art/film/lakeside-grand-prix.mp4" data-src-sm="/assets/art/film/lakeside-grand-prix-sm.mp4" width="1280" height="720" muted playsinline preload="none" hidden aria-label="Lakeside Grand Prix, a 14-second watercolor film: the lights go out, three cars race along the lake, and the ducks get their water back."></video>
+        </div>
+        <figcaption class="wrap film__cap">
+          <p><strong>Lakeside Grand Prix.</strong> A 14-second watercolor race. Every brushstroke and every sound is code: no footage, no image model.</p>
+          <div class="film__ctrls" data-film-ctrls hidden>
+            <button class="pill pill--sm" type="button" data-film-play>Play</button>
+            <button class="pill pill--sm" type="button" data-film-sound>Turn sound on</button>
+          </div>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="story wrap" aria-label="The short version">
+      <article class="chapter chapter--honey">
+        <div class="chapter__art"><img class="turn" src="/assets/art/about/sun.webp" width="520" height="520" loading="lazy" decoding="async" alt="A loose watercolor sun in honey yellow." /></div>
+        <div class="chapter__text">
+          <h2>By day</h2>
+          <p>I’m the founder of <a href="https://helioflux.co" target="_blank" rel="noopener noreferrer">HelioFlux<span class="sr-only"> (opens in a new tab)</span></a>, where we read the light your cells emit to catch cancer early. Helio means sun, which may explain why one keeps turning up in everything I make.</p>
+          <p class="todo"><span class="todo__tag">Placeholder</span> Kelly: one or two lines on how you got here. The origin story wasn’t in my notes, and I’d rather leave a gap than invent one.</p>
+        </div>
+      </article>
+
+      <article class="chapter chapter--coral">
+        <div class="chapter__art chapter__art--long"><img src="/assets/art/about/car.webp" width="900" height="296" loading="lazy" decoding="async" alt="A small watercolor racing car in honey yellow, parked." /></div>
+        <div class="chapter__text">
+          <h2>After hours</h2>
+          <p>On the side I build small software for exactly one customer: me. <a href="/magpie.html">Magpie</a> is the web clipper I use every day. The <a href="/design.html">design desk</a> is my public swipe file. <a href="https://cluedetat.com" target="_blank" rel="noopener noreferrer">Clue d’État<span class="sr-only"> (opens in a new tab)</span></a> is game-night trivia hosted by Napoleon, hat and all. The Pretzel Protocol is an atlas for a family trip to Berlin, Munich and Prague.</p>
+          <p>None of it is for sale. The rule is real over cute: if it doesn’t work, it doesn’t go on the shelf.</p>
+        </div>
+      </article>
+
+      <article class="chapter chapter--lilac">
+        <div class="chapter__art chapter__art--wide"><img src="/assets/art/about/place.webp" width="1100" height="587" loading="lazy" decoding="async" alt="A small watercolor of purple mountains, autumn trees and a strip of lake." /></div>
+        <div class="chapter__text">
+          <h2>Places, drawn</h2>
+          <p>I collect places. The drawings on the <a href="/">homepage</a> are spots I love, in a fine navy pen style called <a href="/heliopolis/index.html">Heliopolis</a>, which started as the team space I designed for HelioFlux. They’re made with an image model in my style, and the <a href="/colophon.html">colophon</a> says so.</p>
+          <p class="todo"><span class="todo__tag">Placeholder</span> Kelly: where home is, and the next place on your list.</p>
+        </div>
+      </article>
+
+      <article class="chapter chapter--teal">
+        <div class="chapter__art"><img src="/assets/art/about/helmet.webp" width="520" height="520" loading="lazy" decoding="async" alt="A watercolor racing helmet, white with coral and teal bands and a small honey sun." /></div>
+        <div class="chapter__text">
+          <h2>Why a painting</h2>
+          <p>This page began as the film at the top: three small cars, one lake, a driver who gets a close-up, and ducks who get their water back. It was painted in code with Claude, one “more watercolor, please” at a time.</p>
+          <p>It didn’t match the poster on the homepage one bit, so it got a page of its own. The sky, the sun, the mountains and the lake below were painted with the same brushes.</p>
+          <p class="todo"><span class="todo__tag">Placeholder</span> Kelly: your Formula 1 line. Who you cheer for, or why race cars keep showing up around here.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="facts wrap" aria-labelledby="facts-title">
+      <h2 class="sr-only" id="facts-title">A few true things</h2>
+      <ul class="facts__list">
+        <li class="fact fact--sky"><span class="fact__n">14.5</span><span class="fact__l">seconds of film</span></li>
+        <li class="fact fact--coral"><span class="fact__n">3</span><span class="fact__l">cars, no logos, no numbers</span></li>
+        <li class="fact fact--teal"><span class="fact__n">5</span><span class="fact__l">ducks, unbothered</span></li>
+        <li class="fact fact--honey"><span class="fact__n">97</span><span class="fact__l">fonts auditioned for this site</span></li>
+      </ul>
+    </section>
+
+    <section class="hello wrap" id="contact" aria-labelledby="say-title">
+      <h2 class="title title--sm" id="say-title">Say hello</h2>
+      <p>Questions, ideas, a project you think I’d like. My inbox is open.</p>
+      <a class="pill pill--paint" href="mailto:hello@kellylucas.dev">hello@kellylucas.dev</a>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__in">
+      <nav class="foot__nav" aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="/magpie.html">Magpie</a>
+        <a href="/#projects">Projects</a>
+        <a href="/log.html">Log</a>
+        <a href="/playground.html">Playground</a>
+        <a href="/design.html">Design desk</a>
+        <a href="/colophon.html">Colophon</a>
+        <a href="#main">Back to top</a>
+      </nav>
+      <p class="foot__base">&copy; <span data-year>2026</span> Kelly Lucas. Painted in code. Set in Fraunces and Instrument Sans.</p>
+    </div>
+    <div class="lake">
+      <img class="lake__ducks" src="/assets/art/about/ducks.webp" width="760" height="350" loading="lazy" decoding="async" alt="Two watercolor mallards drifting on the lake." />
+    </div>
+  </footer>
+
+  <script defer src="/about.js"></script>
+</body>
+</html>

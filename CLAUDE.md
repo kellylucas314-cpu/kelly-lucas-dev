@@ -114,6 +114,7 @@ Keep it clean. No backup files, no version-numbered copies.
   `colophon.html`, `404.html`: the site
 - `style.css`, `script.js`: the site's styles and interactions
 - `lab.css`, `lab.js`: the playground rooms' old lab styles and interactions
+- `about.html`, `about.css`, `about.js`: the watercolor About page (see below)
 - `assets/art/`: the drawings (`travel/`, the Pretzel cities, three magpies),
   the favicon and the share card
 - The seven site pages share one header, footer and SVG sprite; keep them
@@ -128,6 +129,35 @@ Keep it clean. No backup files, no version-numbered copies.
 - `/heliopolis/*` is not a folder in this repo. `vercel.json` rewrites it to the
   Heliopolis art library (`kellylucas314-cpu/heliopolis-art-library`, served by
   GitHub Pages). Edit the art there, not here.
+
+## About page (the one painting)
+- `about.html` (also served at `/about` by a rewrite in `vercel.json`) is a
+  deliberate break from the poster (Kelly, 2026-11-22: the watercolor film was
+  "so not the aesthetic" of the homepage, so it got its own page). It does not
+  load `style.css` or `script.js`: it has `about.css` and `about.js`, the way
+  the playground rooms keep `lab.css`. Warm watercolor paper (`#f7f2e6`, the
+  film's own paper, with a tiled grey tooth tuned so the film has no visible
+  edge), soft washes, Fraunces italic (OFL, `assets/fonts/Fraunces-*`) for the
+  big words, Instrument Sans for reading, wobbly ink-outline pills. Navy still
+  carries every word; the blues and purples are the painting's.
+- The hero is the Lakeside Grand Prix film, a 14-second watercolor race drawn
+  by code on a canvas (no footage, no image model). `assets/art/film/` holds a
+  1280px MP4, a 720px MP4 for phones and the still, derived from the 1080p
+  master with `sh scripts/encode-film.sh <master.mp4>` (needs ffmpeg). The
+  film is fetched when you are near it and plays once, muted, while it is in
+  view (Pause and sound are pills; with reduced motion or Save-Data it waits
+  for Play; without JS the still stands in).
+- The pictures in `assets/art/about/` (sky, lake, sun, the small mountain
+  painting, ducks, helmet, car, the washes and the paint inside the title) are
+  painted with the film's own brushes by
+  `node scripts/paint-about.cjs <scene.html>` (needs playwright; seeded, so a
+  rerun paints the same pictures). The film's master and `scene.html` live in
+  the project files under `f1-watercolor/`, not in this repo.
+- Motion here: the film, a very slow turn on the sun, a small bob on the
+  ducks. `prefers-reduced-motion` turns it off.
+- Copy that is a note to Kelly, not to visitors, sits in a `.todo` box
+  (dashed, honey). None may ship: replace or delete each one before the page
+  goes live.
 
 ## Design desk
 - `design.html` (the design desk) is the public swipe file, in five piles: the HelioFlux
