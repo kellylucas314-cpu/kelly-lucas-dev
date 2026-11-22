@@ -1,0 +1,337 @@
+/* kellylucas.dev/about
+   The one page that is a painting, not a poster. It keeps its own stylesheet
+   on purpose (the way the playground rooms keep lab.css): watercolor washes
+   on warm paper, a soft serif for the big words, wobbly ink outlines. The
+   pictures in assets/art/about/ are painted by scripts/paint-about.cjs with
+   the same brushes as the film. Navy still carries every word. */
+
+/* ---------- Fonts (self-hosted, OFL) ---------- */
+@font-face {
+  font-family: "Fraunces";
+  src: url("/assets/fonts/Fraunces-Soft-Italic.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fraunces";
+  src: url("/assets/fonts/Fraunces-Soft.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("/assets/fonts/InstrumentSans-Variable.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Mono";
+  src: url("/assets/fonts/DMMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* ---------- Tokens ---------- */
+:root {
+  --paper: #f7f2e6;        /* the film's own paper, so the film has no edge */
+  --navy: #1f355e;
+  --navy-soft: #43527a;
+  --honey: #f1bd45;
+  --coral: #dc5f55;
+  --teal-deep: #1d6f7a;
+  --line: rgba(31, 53, 94, 0.22);
+
+  --serif: "Fraunces", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --sans: "Instrument Sans", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --wrap: 1120px;
+  --gutter: 40px;
+  /* an outline drawn by hand: no two corners alike */
+  --wobble: 255px 22px 225px 20px / 20px 225px 22px 255px;
+  /* paper tooth: a fine grey speckle, tiled, tuned so the sheet matches the film's paper */
+  --tooth: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.62 0 0 0 0 0.57 0 0 0 0 0.62 0.2 0 0 0 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  color-scheme: light;
+  accent-color: var(--navy);
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; background: var(--paper); scroll-behavior: smooth; }
+body {
+  position: relative;
+  margin: 0;
+  background: var(--paper) var(--tooth);
+  color: var(--navy);
+  font-family: var(--sans);
+  font-size: 18px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+/* the sky: one long wash across the top of the sheet, fading out before the film */
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 460px;
+  background: url("/assets/art/about/sky.webp") center top / max(100%, 1200px) auto no-repeat;
+  opacity: 0.62;
+  pointer-events: none;
+}
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration-thickness: 1.5px; text-underline-offset: 4px; text-decoration-color: var(--coral); }
+a:hover { text-decoration-color: var(--navy); }
+h1, h2, p, ul, figure { margin: 0; }
+ul { padding: 0; list-style: none; }
+p { text-wrap: pretty; }
+h1, h2 { text-wrap: balance; }
+strong { font-weight: 600; }
+::selection { background: var(--honey); color: var(--navy); }
+:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; border-radius: 6px; }
+/* the washes lean past the edge of the sheet; main trims them so a phone page never scrolls sideways */
+main { overflow-x: clip; }
+main:focus { outline: none; }
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: absolute; left: 12px; top: -60px; z-index: 20;
+  padding: 10px 16px;
+  background: var(--navy); color: var(--paper);
+  border-radius: 999px;
+  text-decoration: none;
+}
+.skip-link:focus { top: 12px; }
+.wrap { max-width: calc(var(--wrap) + var(--gutter) * 2); margin: 0 auto; padding: 0 var(--gutter); }
+
+/* ---------- Pills: an ink outline, drawn a little crooked ---------- */
+.pill {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 13px 26px;
+  border: 1.5px solid var(--navy);
+  border-radius: var(--wobble);
+  background: transparent;
+  color: var(--navy);
+  font: inherit; font-size: 17px; line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+.pill:hover { background: var(--navy); color: var(--paper); }
+.pill:active { transform: translateY(1px); }
+.pill--sm { padding: 9px 18px; font-size: 16px; }
+/* the one painted pill: a honey wash under the ink line */
+.pill--paint {
+  position: relative; isolation: isolate;
+  border-color: transparent;
+  padding: 22px 40px;
+  font-size: 20px;
+}
+.pill--paint::before {
+  content: ""; position: absolute; z-index: -1; inset: -34px -44px;
+  background: url("/assets/art/about/wash-honey.webp") center / 100% 100% no-repeat;
+  transition: transform 0.4s ease;
+}
+.pill--paint:hover { background: transparent; color: var(--navy); }
+.pill--paint:hover::before { transform: scale(1.06) rotate(-2deg); }
+
+/* ---------- Top ---------- */
+.top { position: relative; z-index: 5; }
+.top__in { display: flex; align-items: center; gap: 34px; height: 78px; }
+.mark { display: flex; align-items: center; gap: 8px; font-size: 20px; letter-spacing: -0.01em; text-decoration: none; }
+.mark img { width: 34px; height: 34px; }
+.nav { display: flex; gap: 28px; font-size: 17px; }
+.nav a { text-decoration: none; }
+.nav a:hover { text-decoration: underline; text-decoration-color: var(--navy); text-underline-offset: 5px; }
+.nav a[aria-current="page"] { text-decoration: underline; text-decoration-color: var(--coral); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.top .pill { margin-left: auto; }
+
+/* ---------- Big painted words ---------- */
+.title {
+  width: fit-content;
+  padding: 0.08em 0.14em 0.16em 0.04em;   /* room for the italic's swashes, so the paint is not cut off */
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "SOFT" 100;
+  font-size: clamp(46px, 6.4vw, 86px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--teal-deep);
+}
+.title--sm { font-size: clamp(44px, 6vw, 76px); }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .title {
+    background: url("/assets/art/about/title-paint.webp") center / 100% 100% no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+/* ---------- Hero: a few words, then the film ---------- */
+.hero { position: relative; padding-top: 18px; }
+.hero__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px 48px; flex-wrap: wrap; }
+.lede { max-width: 17em; padding-bottom: 0.75em; font-family: var(--serif); font-size: 22px; line-height: 1.4; font-variation-settings: "SOFT" 100; }
+
+/* the film already has its own deckled paper edge; the frame only feathers the last few pixels into the page */
+.film { margin: 20px auto 0; max-width: 1240px; }
+.film__frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 1.6%, #000 98.4%, transparent), linear-gradient(to bottom, transparent, #000 2.6%, #000 97.4%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 1.6%, #000 98.4%, transparent), linear-gradient(to bottom, transparent, #000 2.6%, #000 97.4%, transparent);
+  mask-composite: intersect;
+}
+.film__still, .film__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.film__video { opacity: 0; transition: opacity 0.5s ease; }
+.film__video.is-on { opacity: 1; }
+.film__cap { display: flex; align-items: center; justify-content: space-between; gap: 14px 32px; flex-wrap: wrap; margin-top: 10px; font-size: 16px; color: var(--navy-soft); }
+.film__cap p { max-width: 38em; }
+.film__cap strong { color: var(--navy); }
+.film__ctrls { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ---------- The story: four small paintings, four short chapters ---------- */
+.story { padding-top: 72px; }
+.chapter { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 64px; align-items: center; padding: 44px 0; }
+.chapter:nth-child(even) .chapter__art { order: 2; }
+.chapter__art img { width: min(100%, 360px); margin: 0 auto; }
+.chapter__art--wide img { width: min(100%, 520px); }
+.chapter__art--long img { width: min(100%, 460px); }
+.chapter__text { position: relative; isolation: isolate; max-width: 33em; }
+.chapter__text > * + * { margin-top: 0.9em; }
+.chapter h2 {
+  position: relative;
+  width: fit-content;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "SOFT" 100;
+  font-size: clamp(36px, 4.2vw, 50px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+/* each heading sits on its own pool of paint */
+.chapter h2::before {
+  content: ""; position: absolute; z-index: -1;
+  left: -86px; top: -84px; width: 330px; height: 257px;
+  background: var(--wash) center / contain no-repeat;
+  opacity: 0.6;
+}
+.chapter--honey { --wash: url("/assets/art/about/wash-honey.webp"); }
+.chapter--coral { --wash: url("/assets/art/about/wash-coral.webp"); }
+.chapter--lilac { --wash: url("/assets/art/about/wash-lilac.webp"); }
+.chapter--teal { --wash: url("/assets/art/about/wash-teal.webp"); }
+
+/* a note to Kelly, not to the visitor: highlighter and a dashed line, impossible to miss before it ships */
+.todo {
+  padding: 12px 16px;
+  border: 1.5px dashed var(--navy);
+  border-radius: var(--wobble);
+  background: rgba(241, 189, 69, 0.3);
+  font-size: 16px;
+  line-height: 1.5;
+}
+.todo__tag { margin-right: 6px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* ---------- A few true things ---------- */
+.facts { padding-top: 56px; }
+.facts__list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.fact { position: relative; isolation: isolate; display: grid; justify-items: center; align-content: center; gap: 4px; min-height: 210px; padding: 24px 12px; text-align: center; }
+.fact::before {
+  content: ""; position: absolute; z-index: -1; inset: -18px -26px;
+  background: var(--wash) center / 100% 100% no-repeat;
+  opacity: 0.72;
+}
+.fact--sky { --wash: url("/assets/art/about/wash-sky.webp"); }
+.fact--coral { --wash: url("/assets/art/about/wash-coral.webp"); }
+.fact--teal { --wash: url("/assets/art/about/wash-teal.webp"); }
+.fact--honey { --wash: url("/assets/art/about/wash-honey.webp"); }
+.fact:nth-child(even)::before { transform: scaleX(-1) rotate(4deg); }
+.fact__n { font-family: var(--serif); font-style: italic; font-variation-settings: "SOFT" 100; font-size: 60px; line-height: 1; }
+.fact__l { max-width: 13em; font-family: var(--mono); font-size: 13px; line-height: 1.4; }
+
+/* ---------- Say hello ---------- */
+.hello { display: grid; justify-items: center; gap: 14px; padding-top: 120px; padding-bottom: 40px; text-align: center; }
+.hello .pill { margin-top: 34px; }
+
+/* ---------- Foot: a few links, then the lake ---------- */
+.foot { margin-top: 96px; }
+.foot__in { display: grid; justify-items: center; gap: 14px; text-align: center; }
+.foot__nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 26px; font-size: 16px; }
+.foot__nav a { padding: 4px 0; text-decoration: none; }
+.foot__nav a:hover { text-decoration: underline; text-underline-offset: 5px; }
+.foot__base { font-family: var(--mono); font-size: 13px; color: var(--navy-soft); }
+.lake {
+  position: relative;
+  height: clamp(230px, 27vw, 400px);
+  margin-top: 34px;
+  background: url("/assets/art/about/lake.webp") center top / cover no-repeat;
+}
+.lake__ducks { position: absolute; left: 12%; top: 26%; width: clamp(220px, 32vw, 460px); }
+
+/* ---------- Motion: the sun turns very slowly, the ducks bob. Off with reduced motion ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .turn { animation: turn 160s linear infinite; }
+  .lake__ducks { animation: bob 7s ease-in-out infinite; }
+}
+@keyframes turn { to { transform: rotate(360deg); } }
+@keyframes bob { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(5px) rotate(-0.8deg); } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .pill, .pill--paint::before, .film__video { transition: none; }
+}
+
+/* ---------- Narrower ---------- */
+@media (max-width: 900px) {
+  :root { --gutter: 28px; }
+  .top__in { flex-wrap: wrap; gap: 0 16px; height: auto; padding-top: 12px; padding-bottom: 8px; }
+  .mark { order: 1; font-size: 18px; }
+  .top .pill { order: 2; }
+  .nav { order: 3; flex-basis: 100%; flex-wrap: wrap; gap: 0 22px; margin-top: 8px; padding-top: 2px; border-top: 1px solid var(--line); font-size: 16px; }
+  .nav a { padding: 8px 0; }
+  .chapter { gap: 40px; }
+  .facts__list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 24px; }
+}
+
+/* ---------- Phone ---------- */
+@media (max-width: 640px) {
+  :root { --gutter: 20px; }
+  body { font-size: 17px; }
+  .nav { gap: 0 17px; font-size: 15px; }
+  body::before { height: 380px; }
+  .hero { padding-top: 10px; }
+  .hero__head { gap: 4px; }
+  .lede { padding-bottom: 0; font-size: 19px; }
+  .film { margin-top: 14px; }
+  .film__cap { font-size: 15px; }
+  .story { padding-top: 40px; }
+  .chapter { grid-template-columns: 1fr; gap: 26px; padding: 36px 0; }
+  .chapter:nth-child(even) .chapter__art { order: 0; }
+  .chapter__art img { width: min(62%, 240px); }
+  .chapter__art--wide img { width: min(88%, 340px); }
+  .chapter__art--long img { width: min(80%, 300px); }
+  .chapter h2::before { left: -56px; top: -66px; width: 270px; height: 210px; }
+  .fact { min-height: 170px; }
+  .fact::before { inset: -12px -14px; }
+  .fact__n { font-size: 48px; }
+  .hello { padding-top: 84px; }
+  .pill--paint { padding: 20px 26px; font-size: 18px; }
+  .pill--paint::before { inset: -30px -26px; }
+  .foot { margin-top: 72px; }
+  .lake__ducks { left: 8%; top: 30%; width: 62%; }
+}

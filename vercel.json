@@ -186,6 +186,10 @@
   ],
   "rewrites": [
     {
+      "source": "/about",
+      "destination": "/about.html"
+    },
+    {
       "source": "/heliopolis/:path*",
       "destination": "https://kellylucas314-cpu.github.io/heliopolis-art-library/:path*"
     }
