@@ -42,7 +42,10 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
   the colophon says the drawings were made with an image model in Kelly's
   style. The homepage has no places band (Kelly, 2026-11-07: a whole section
   for the art wasted space); the drawings live on the poster and in the
-  Heliopolis art library, linked from the projects list and the footer.
+  Heliopolis art library, linked from the projects grid and the footer.
+  The hero's intro ends with a small "More about me" link to `/about.html`,
+  the watercolor About page (the one page allowed to leave the poster look;
+  the watercolor F1 film lives there, not on the homepage).
 - Personality budget: the tab-title message, "Another place", the "Kelly"
   cursor tag on the poster, the little race at the foot of the homepage's
   Say hello band (Kelly's side-view car, red dinos and HelioFlux in place of
@@ -74,18 +77,22 @@ lives in `PRODUCT.md`; the built visual system is recorded in `DESIGN.md`.
 - A new place on the homepage: add it to `PLACES` in `script.js` (file,
   size, caption, alt).
 - `magpie-drawer-sm.webp` is the 480px copy of the drawer magpie for the
-  Magpie note, and the project screenshots in `assets/collection/` have
-  320px `-sm.webp` copies for the phone thumbnails. They are derived files
-  (Pillow, Lanczos, quality 82): regenerate one when its source changes.
-  They need no prompt sidecar.
+  Magpie note. It is a derived file (Pillow, Lanczos, quality 82):
+  regenerate it when its source changes. It needs no prompt sidecar.
+- Project icons are not drawings: each is a small inline SVG on its card,
+  built from the sprite shapes plus a few hand-written paths, in the site's
+  colors (no image model). The old 1200x750 project screenshots stay in
+  `assets/collection/` for the record; the homepage no longer shows them.
 
 ## Adding a project
-1. Add an `<li>` to the projects list in `index.html` (copy a row): number,
-   title, one-line "what", kind, status dot, `data-img` (a 1200x750 screenshot
-   in `assets/collection/`, privacy-checked), `data-kind` and `data-status`
-   for the preview. External links open in a new tab with a visually hidden
-   "(opens in a new tab)".
-2. Update "All ten projects" and "Ten things I've made" to the new count.
+1. Add an `<li>` to the projects grid (`.pj-cards`) in `index.html` (copy a
+   card): a round icon drawn in a `-100 -100 200 200` viewBox (one base
+   shape from the sprite, one or two shapes on top, the site's colors), the
+   title, a one-line "what", the kind and the status dot. External links open
+   in a new tab with a visually hidden "(opens in a new tab)". The grid is
+   three across on desktop and two on a tablet and a phone (Kelly,
+   2026-11-22: "a little icon for it in a grid", not a list).
+2. Update "All six projects" and "Six things I've made" to the new count.
 3. Add a line to the homepage log door and to `log.html`.
 
 ## Tech

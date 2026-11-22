@@ -54,7 +54,7 @@ Kelly builds personal tools she runs every day, then puts them on the shelf. The
 
 1. Real over cute. Every item on the homepage is something that works and gets used.
 2. Show the tool doing its job. Specifics beat adjectives.
-3. Room to grow. Adding a project is adding a row, not a redesign.
+3. Room to grow. Adding a project is adding a card, not a redesign.
 4. Personal, not corporate. Kelly's voice and a few small surprises stay.
 5. Private stays private.
 
