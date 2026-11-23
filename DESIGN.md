@@ -417,10 +417,10 @@ The page is a stack of full-width bands, each padded 120px above and below (84px
 Grids, all `display: grid`:
 - **Hero**: text 1fr beside a 640px poster, 40px gap, centered; the text column is at most 640px. The poster column narrows to 560px at 1299 and 48% at 1180, then stacks under the text at 960 (poster at most 600px, centered).
 - **Page hero**: text 1fr beside a 520px poster, 48px gap; 44% at 1180; stacked at 960 with the poster first and at most 480px. `.page-hero--plain` is one column.
-- **Magpie at home**: a 560px head and does column beside the art (areas "head art" / "does art"), 72px column gap; halves with a 48px gap at 1180; stacked head, art, does at 960.
-- **Projects**: the list 1fr beside a 440px sticky preview, 80px gap; one column with the preview hidden at 1180. A row is 40px / 1fr / 84px / 128px with a 16px gap and 16px of padding; on a phone it is 76px / 1fr with a 68px round thumbnail in the first column.
+- **Magpie at home**: the head (title, line, status, two buttons) beside 440px of art, 72px column gap (380px and 48px at 1180); under them the does in three columns below a 1px navy rule, then one line of counts. Stacked head, art, does at 960.
+- **Projects**: a grid of cards, three across with 24px gaps, two across at 960 and on a phone (12px gaps).
 - **Places scatter** (removed from the homepage 2026-11-07; kept here for the record): 12 columns, 28px by 40px gaps, nine places placed by hand (the first spans six columns, the rest three or four, with offsets from -20px to 70px); six columns at 1180 (the first full width with 12% side padding, the rest in alternating halves with a 56px stagger); 14px by 30px gaps on a phone.
-- **Doors**: two columns, 48px gap, aligned to the bottom; one column at most 620px wide at 960.
+- **Doors**: the heading in the first third and the two doors side by side in the other two (32px gap, equal height); the heading moves above at 1180 and the doors stack on a phone.
 - **Chapters**: 5fr / 7fr with 48px by 72px gaps and 96px between chapters; one column with 24px gaps and 72px between at 1180. The body is at most 660px (40em when it is prose); the head’s line at most 26em.
 - **Rooms**: three columns, 48px by 32px gaps; two at 1180; one on a phone.
 - **Counts**: three columns, 32px by 40px gaps; two at 960 and on a phone.
@@ -512,17 +512,16 @@ The homepage hero’s right half, `.poster[data-place]`.
 
 ### Magpie at home
 - **Head (`.sec-head`):** headline, a 20px intro 22px below, then the status row (`.mp-meta`, 16px, 22px above). Section heads are at most 760px wide.
-- **Does (`.does`):** three rows (Clip, Two nests at once, Find it again; the rest is on the Magpie page), 44px round tile / text, 16px gap, 20px of padding, a 1px navy rule under each. Tiles are `.bg-coral`, `.bg-honey`, `.bg-sage` with a 24px navy (or paper) shape inside. Keys at 20px weight 500, lines at 16px.
+- **Does (`.does`):** three columns (Clip, Two nests at once, Find it again; the rest is on the Magpie page) under one 1px navy rule, each a 44px round tile beside its text with a 16px gap; one column at 960. Tiles are `.bg-coral`, `.bg-honey`, `.bg-sage` with a 24px navy (or paper) shape inside. Keys at 20px weight 500, lines at 16px.
 - **Art (`.mp-art`):** at most 680px: a coral cog behind the flying magpie turning in reverse over 240s (`.spin--rev`), the drawing at 86%, a sage plus at the top right (13%) and a navy asterisk at the bottom left (15%). 480px at 960, 340px on a phone.
 - **Reflex (`.reflex`):** a 15px navy soft line, 14px below the grid, that answers Alt+Shift+M for 4.2s.
-- **Stats (`.mp-stats`):** 1.15fr / 1fr with 48px gaps, 72px below, a 1px navy rule above with 28px of padding: the big number and its sentence; "Private" and the two buttons ("Made with" lives on the Magpie page). One column on a phone with 36px gaps.
+- **Count (`.mp-count`):** one 16px line under the does: the clip count with the date it was counted, and that the library is private. The big number and the full counts live on the Magpie page.
 - **Chips (`.chips li`):** 15px, 4px by 13px padding, 1px navy border, 999px radius, paper at 50%.
 
 ### Projects (signature)
-- **List (`.pj-list`):** opened and closed by 1px navy rules, one per row. A row is a grid link: a 13px mono number, the title at 22px with its 15px "what" under it, the kind at 14px, the status at 14px with its dot. Hover and focus underline the title (1px, 4px offset).
-- **Active row (`.is-on`):** the number fades out (0.15s) and a honey `s-rays` (22px) takes its place; the preview follows the row on hover or focus.
-- **Preview (`.pv`):** sticky at 40px, in a 440px column: a honey cog (46%) at the top right and a navy asterisk (16%) at the bottom left behind a 16:10 screenshot clipped by `blob-clip`; under it the number and title beside kind and status (15px), the "what" at 18px, and an "Open" pill. Hidden at 1180 and below.
-- **Phone:** the number hides, a 68px circular thumbnail with a 1px navy-at-18% ring spans the first column, and kind and status move to a 13px line under the title.
+- **Card (`.pj`):** the whole card is one link: paper, flat, 32px corners (24px on a phone), 28px of padding. A 104px round icon (68px on a phone), the title at 26px (19px), the "what" at 16px (14px), and kind and status with its dot at 14px pinned to the bottom.
+- **Icons:** one inline SVG per card in a `-100 -100 200 200` viewBox: a base shape from the sprite in a strong color with one or two shapes on top (Magpie a navy feather on a coral cog, Design desk three swatches on a honey bean, HelioFlux a honey sun with a teal cell on navy, Clue d’État a bicorne on sage, Pretzel Protocol a honey pretzel on teal, Heliopolis a coral arch with a navy doorway and a honey sun). Drawn by hand in code, no image model.
+- **Hover and focus:** the card lifts 4px, the icon tips 8 degrees and the title underlines; none of it with reduced motion.
 
 ### Places scatter (signature)
 - **Style (`.scatter`, `.pl`):** nine drawings on round plates in the 12-column grid above, each with a 17px caption (22px under the first) centered 14px below. Each `.pl` sets its plate by inline custom properties: Torres on a teal circle at 80%; Kirkjufell on a honey cog turned -8 degrees; Santorini on a coral bean at 14 degrees and 84%; Florence on a deep teal arch at 70%; Rome on sage rays at 10 degrees and 84%; Athens on a teal bean at -20 degrees and 76%; Istanbul on a honey tint circle at 74%; Edinburgh on a coral cog at 6 degrees and 76%; Copenhagen on a sage arch at 60%, centered 40% down. Two decorations (a 64px sage asterisk at the center top, an 84px navy squiggle at the top right) hide at 1180.

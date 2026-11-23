@@ -95,47 +95,6 @@ if (poster && $("[data-place-img]", poster) && $("[data-place-name]", poster)) {
   }
 }
 
-/* ---------- Home: the project preview follows the row you point at ---------- */
-const list = $("[data-list]");
-const pvImg = $("[data-pv-img]");
-if (list && pvImg) {
-  const n = $("[data-pv-n]");
-  const meta = $("[data-pv-meta]");
-  const what = $("[data-pv-what]");
-  const btn = $("[data-pv-btn]");
-  const items = $$("li", list);
-  const show = (li) => {
-    items.forEach((i) => i.classList.toggle("is-on", i === li));
-    const a = $("a", li);
-    const t = $(".row__t", li).firstChild.textContent.trim();
-    const num = $(".row__n > span", li).textContent;
-    pvImg.src = "/assets/collection/" + li.dataset.img + ".webp";
-    pvImg.alt = li.dataset.alt || "A screenshot of " + t + ".";
-    if (n) n.textContent = num + " / " + t;
-    if (meta) meta.textContent = li.dataset.kind + " / " + li.dataset.status;
-    if (what) what.textContent = $(".row__w", li).textContent;
-    if (btn && a) {
-      btn.href = a.href;
-      btn.textContent = "Open " + t;
-      if (a.target) {
-        btn.target = a.target;
-        btn.rel = a.rel;
-        const sr = document.createElement("span");
-        sr.className = "sr-only";
-        sr.textContent = " (opens in a new tab)";
-        btn.append(sr);
-      } else {
-        btn.removeAttribute("target");
-        btn.removeAttribute("rel");
-      }
-    }
-  };
-  items.forEach((li) => {
-    li.addEventListener("mouseenter", () => show(li));
-    li.addEventListener("focusin", () => show(li));
-  });
-}
-
 /* ---------- Magpie's shortcut, which only works in my browser ---------- */
 const reflex = $("[data-reflex]");
 if (reflex) {

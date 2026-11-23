@@ -53,10 +53,10 @@
       <div class="wrap hero__grid">
         <div class="hero__text">
           <h1 class="h1" id="hello">Hello, I’m Kelly.</h1>
-          <p class="lede">I’m the founder of <a href="https://helioflux.co" target="_blank" rel="noopener noreferrer">HelioFlux<span class="sr-only"> (opens in a new tab)</span></a>, where we read the light your cells emit to catch cancer early. On the side I build software for myself, and I use it every day.</p>
+          <p class="lede">I’m the founder of <a href="https://helioflux.co" target="_blank" rel="noopener noreferrer">HelioFlux<span class="sr-only"> (opens in a new tab)</span></a>, where we read the light your cells emit to catch cancer early. On the side I build software for myself, and I use it every day. <a href="/about.html">More about me</a>.</p>
           <div class="hero__acts">
             <a class="btn" href="#magpie">Meet Magpie</a>
-            <a class="btn btn--line" href="#projects">All ten projects</a>
+            <a class="btn btn--line" href="#projects">All six projects</a>
           </div>
           <a class="note" href="/magpie.html">
             <span class="note__art" aria-hidden="true">
@@ -95,16 +95,11 @@
             <h2 class="h2" id="magpie-title">Magpie, my web clipper and private library.</h2>
             <p>It’s the tool I open most, and it files everything I find into two nests at once.</p>
             <p class="mp-meta"><span><span class="dot dot-use"></span>In use since February 2026</span><span>Built for one</span></p>
+            <div class="btn-row btn-row--after">
+              <a class="btn" href="/magpie.html">Magpie’s full story</a>
+              <a class="btn btn--line" href="/brain/gallery.html"><svg viewBox="0 0 12 12" aria-hidden="true"><use href="#i-lock"/></svg>Open my library</a>
+            </div>
           </div>
-
-          <ul class="does" aria-label="What Magpie does">
-            <li><span class="tile bg-coral"><svg class="shape c-navy" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-ast"/></svg></span>
-              <div><h3>Clip</h3><p>Press the feather, or <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>M</kbd>, on any page. Add tags and a note.</p></div></li>
-            <li><span class="tile bg-honey"><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><g fill="var(--navy)"><circle cx="-42" r="38"/><circle cx="42" r="38"/></g></svg></span>
-              <div><h3>Two nests at once</h3><p>A full Markdown note lands in my Obsidian vault, and a card lands in a searchable gallery. Clip it again and it updates instead of duplicating.</p></div></li>
-            <li><span class="tile bg-sage"><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><g fill="var(--navy)"><circle cx="-40" cy="-30" r="16"/><circle cx="10" cy="-50" r="11"/><circle cx="46" cy="-8" r="19"/><circle cx="-14" cy="22" r="13"/><circle cx="-56" cy="46" r="10"/><circle cx="34" cy="52" r="12"/></g></svg></span>
-              <div><h3>Find it again</h3><p>A searchable gallery and a galaxy map of everything I’ve clipped. Design clips sort themselves onto the public <a href="/design.html">design desk</a>.</p></div></li>
-          </ul>
 
           <figure class="mp-art">
             <svg class="shape mp-art__flower spin spin--rev" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-cog"/></svg>
@@ -113,100 +108,63 @@
             <img src="/assets/art/magpie-flying.webp" width="1200" height="1267" loading="lazy" decoding="async" alt="A drawing of a magpie in flight with a shiny coral bead in its beak." />
           </figure>
         </div>
-        <p class="reflex" data-reflex aria-live="polite"></p>
 
-        <div class="mp-stats">
-          <div>
-            <p class="big-n">279</p>
-            <p>clips from 258 sites. 31 carry my own notes, 10 are papers and 8 are videos with transcripts, filed under 257 tags. Counted Aug 19, 2026.</p>
-          </div>
-          <div>
-            <h3 class="h3">Private</h3>
-            <p>The library sits behind a password. You can’t install Magpie; it’s built for exactly one person.</p>
-            <div class="btn-row">
-              <a class="btn" href="/magpie.html">Magpie’s full story</a>
-              <a class="btn btn--line" href="/brain/gallery.html"><svg viewBox="0 0 12 12" aria-hidden="true"><use href="#i-lock"/></svg>Open my library</a>
-            </div>
-          </div>
-        </div>
+        <ul class="does" aria-label="What Magpie does">
+          <li><span class="tile bg-coral"><svg class="shape c-navy" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-ast"/></svg></span>
+            <div><h3>Clip</h3><p>Press the feather, or <kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>M</kbd>, on any page. Add tags and a note.</p></div></li>
+          <li><span class="tile bg-honey"><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><g fill="var(--navy)"><circle cx="-42" r="38"/><circle cx="42" r="38"/></g></svg></span>
+            <div><h3>Two nests at once</h3><p>A Markdown note lands in my Obsidian vault and a card lands in a searchable gallery.</p></div></li>
+          <li><span class="tile bg-sage"><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><g fill="var(--navy)"><circle cx="-40" cy="-30" r="16"/><circle cx="10" cy="-50" r="11"/><circle cx="46" cy="-8" r="19"/><circle cx="-14" cy="22" r="13"/><circle cx="-56" cy="46" r="10"/><circle cx="34" cy="52" r="12"/></g></svg></span>
+            <div><h3>Find it again</h3><p>Search it, or wander the galaxy map. Design clips sort themselves onto the public <a href="/design.html">design desk</a>.</p></div></li>
+        </ul>
+        <p class="mp-count">279 clips from 258 sites, counted Aug 19, 2026. The library sits behind a password: Magpie is built for exactly one person.</p>
+        <p class="reflex" data-reflex aria-live="polite"></p>
       </div>
     </section>
 
     <section class="band band--pcoral edge" id="projects" aria-labelledby="projects-title">
       <div class="wrap">
         <div class="sec-head">
-          <h2 class="h2" id="projects-title">Ten things I’ve made, Magpie first.</h2>
-          <p>Every line opens the real thing.</p>
+          <h2 class="h2" id="projects-title">Six things I’ve made, Magpie first.</h2>
+          <p>Every card opens the real thing.</p>
         </div>
-        <div class="pj-grid">
-          <ol class="pj-list" data-list>
-          <li class="is-on" data-img="magpie" data-kind="Tool" data-status="In use" data-alt="Magpie, redrawn in HTML: the clipping popup over the gallery."><a class="row" href="/magpie.html">
-            <span class="row__n"><span>01</span><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-rays"/></svg></span>
-            <img class="row__thumb" src="/assets/collection/magpie-sm.webp" width="320" height="200" loading="lazy" alt="" />
-            <span><span class="row__t">Magpie</span><span class="row__w">A web clipper and private library. One click, two nests.</span></span>
-            <span class="row__meta"><span class="row__k">Tool</span><span class="row__s"><span class="dot dot-use"></span>In use</span></span></a></li>
-          <li data-img="design-desk" data-kind="Library" data-status="Live" data-alt="A screenshot of Design desk."><a class="row" href="/design.html">
-            <span class="row__n"><span>02</span><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-rays"/></svg></span>
-            <img class="row__thumb" src="/assets/collection/design-desk-sm.webp" width="320" height="200" loading="lazy" alt="" />
-            <span><span class="row__t">Design desk</span><span class="row__w">A public swipe file for UI, sorted into five piles by Magpie.</span></span>
-            <span class="row__meta"><span class="row__k">Library</span><span class="row__s"><span class="dot dot-live"></span>Live</span></span></a></li>
-          <li data-img="helioflux" data-kind="Site" data-status="Live" data-alt="A screenshot of HelioFlux website."><a class="row" href="https://helioflux.co" target="_blank" rel="noopener noreferrer">
-            <span class="row__n"><span>03</span><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-rays"/></svg></span>
-            <img class="row__thumb" src="/assets/collection/helioflux-sm.webp" width="320" height="200" loading="lazy" alt="" />
-            <span><span class="row__t">HelioFlux website<span class="sr-only"> (opens in a new tab)</span></span><span class="row__w">The website for my company.</span></span>
-            <span class="row__meta"><span class="row__k">Site</span><span class="row__s"><span class="dot dot-live"></span>Live</span></span></a></li>
-          <li data-img="clue" data-kind="Game" data-status="Live" data-alt="A screenshot of Clue d’État."><a class="row" href="https://kellylucas314-cpu.github.io/Jeopardy/" target="_blank" rel="noopener noreferrer">
-            <span class="row__n"><span>04</span><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-rays"/></svg></span>
-            <img class="row__thumb" src="/assets/collection/clue-sm.webp" width="320" height="200" loading="lazy" alt="" />
-            <span><span class="row__t">Clue d’État<span class="sr-only"> (opens in a new tab)</span></span><span class="row__w">Game-night trivia hosted by Napoleon, with 6,600+ original clues.</span></span>
-            <span class="row__meta"><span class="row__k">Game</span><span class="row__s"><span class="dot dot-live"></span>Live</span></span></a></li>
-          <li data-img="guide" data-kind="Guide" data-status="Live" data-alt="A screenshot of AI Workspace Field Guide."><a class="row" href="https://guide.kellylucas.dev" target="_blank" rel="noopener noreferrer">
-            <span class="row__n"><span>05</span><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-rays"/></svg></span>
-            <img class="row__thumb" src="/assets/collection/guide-sm.webp" width="320" height="200" loading="lazy" alt="" />
-            <span><span class="row__t">AI Workspace Field Guide<span class="sr-only"> (opens in a new tab)</span></span><span class="row__w">A calm map of my AI tools, skills, memory and handoffs.</span></span>
-            <span class="row__meta"><span class="row__k">Guide</span><span class="row__s"><span class="dot dot-live"></span>Live</span></span></a></li>
-          <li data-img="pretzel" data-kind="Site" data-status="Live" data-alt="A screenshot of Pretzel Protocol."><a class="row" href="https://pretzel.thetravelprotocol.com" target="_blank" rel="noopener noreferrer">
-            <span class="row__n"><span>06</span><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-rays"/></svg></span>
-            <img class="row__thumb" src="/assets/collection/pretzel-sm.webp" width="320" height="200" loading="lazy" alt="" />
-            <span><span class="row__t">Pretzel Protocol<span class="sr-only"> (opens in a new tab)</span></span><span class="row__w">An atlas for a family trip to Berlin, Munich and Prague, with my drawings.</span></span>
-            <span class="row__meta"><span class="row__k">Site</span><span class="row__s"><span class="dot dot-live"></span>Live</span></span></a></li>
-          <li data-img="heliopolis" data-kind="Library" data-status="Live" data-alt="A screenshot of Heliopolis art library."><a class="row" href="/heliopolis/index.html">
-            <span class="row__n"><span>07</span><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-rays"/></svg></span>
-            <img class="row__thumb" src="/assets/collection/heliopolis-sm.webp" width="320" height="200" loading="lazy" alt="" />
-            <span><span class="row__t">Heliopolis art library</span><span class="row__w">My drawings, the redraws, and the style catalog.</span></span>
-            <span class="row__meta"><span class="row__k">Library</span><span class="row__s"><span class="dot dot-live"></span>Live</span></span></a></li>
-          <li data-img="agent-commons" data-kind="Tool" data-status="Private, sign-in" data-alt="A screenshot of Agent Commons."><a class="row" href="https://agentcommons.kellylucas.dev" target="_blank" rel="noopener noreferrer">
-            <span class="row__n"><span>08</span><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-rays"/></svg></span>
-            <img class="row__thumb" src="/assets/collection/agent-commons-sm.webp" width="320" height="200" loading="lazy" alt="" />
-            <span><span class="row__t">Agent Commons<span class="sr-only"> (opens in a new tab)</span></span><span class="row__w">A shared desk where my AI agents post work and wait on me.</span></span>
-            <span class="row__meta"><span class="row__k">Tool</span><span class="row__s"><span class="dot dot-priv"></span>Private, sign-in</span></span></a></li>
-          <li data-img="transcriber" data-kind="Tool" data-status="Live" data-alt="A screenshot of YouTube Transcript Generator."><a class="row" href="https://kelly-youtube-transcriber.vercel.app" target="_blank" rel="noopener noreferrer">
-            <span class="row__n"><span>09</span><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-rays"/></svg></span>
-            <img class="row__thumb" src="/assets/collection/transcriber-sm.webp" width="320" height="200" loading="lazy" alt="" />
-            <span><span class="row__t">YouTube Transcript Generator<span class="sr-only"> (opens in a new tab)</span></span><span class="row__w">A link in, clean Markdown out.</span></span>
-            <span class="row__meta"><span class="row__k">Tool</span><span class="row__s"><span class="dot dot-live"></span>Live</span></span></a></li>
-          <li data-img="bootcamp" data-kind="Game" data-status="Live" data-alt="A screenshot of Boot Camp."><a class="row" href="/army.html">
-            <span class="row__n"><span>10</span><svg class="shape" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-rays"/></svg></span>
-            <img class="row__thumb" src="/assets/collection/bootcamp-sm.webp" width="320" height="200" loading="lazy" alt="" />
-            <span><span class="row__t">Boot Camp</span><span class="row__w">A one-button side-scroller with flying pigs, playtested by a bot army.</span></span>
-            <span class="row__meta"><span class="row__k">Game</span><span class="row__s"><span class="dot dot-live"></span>Live</span></span></a></li>
-          </ol>
-          <aside class="pv" aria-label="Preview">
-            <div class="pv__stage">
-              <svg class="shape pv__splat" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-cog"/></svg>
-              <svg class="shape pv__ast" viewBox="-100 -100 200 200" aria-hidden="true"><use x="-100" y="-100" width="200" height="200" href="#s-ast"/></svg>
-              <div class="pv__card"><img data-pv-img src="/assets/collection/magpie.webp" width="1200" height="750" loading="lazy" alt="Magpie, redrawn in HTML: the clipping popup over the gallery." /></div>
-            </div>
-            <p class="pv__meta"><span data-pv-n>01 / Magpie</span><span data-pv-meta>Tool / In use</span></p>
-            <p class="pv__what" data-pv-what>A web clipper and private library. One click, two nests.</p>
-            <a class="btn" data-pv-btn href="/magpie.html">Open Magpie</a>
-          </aside>
-        </div>
+        <ol class="pj-cards">
+          <li><a class="pj" href="/magpie.html">
+            <svg class="shape pj__icon" viewBox="-100 -100 200 200" aria-hidden="true"><use class="c-coral" x="-100" y="-100" width="200" height="200" href="#s-cog"/><g transform="rotate(32)"><path fill="none" stroke="var(--navy)" stroke-width="9" stroke-linecap="round" d="M0 60V96"/><path fill="var(--navy)" d="M0-76C30-50 38-10 28 28C22 50 10 64 0 72C-10 64-22 50-28 28C-38-10-30-50 0-76Z"/><path fill="none" stroke="var(--paper)" stroke-width="6" stroke-linecap="round" d="M0-42V58M0-10L16-26M0 16L-16 0M0 40L14 26"/></g><circle cx="-50" cy="-46" r="13" fill="var(--honey)"/></svg>
+            <span class="pj__t">Magpie</span>
+            <span class="pj__w">A web clipper and private library. One click, two nests.</span>
+            <span class="pj__meta"><span>Tool</span><span class="pj__s"><span class="dot dot-use"></span>In use</span></span></a></li>
+          <li><a class="pj" href="/design.html">
+            <svg class="shape pj__icon" viewBox="-100 -100 200 200" aria-hidden="true"><use class="c-honey" x="-100" y="-100" width="200" height="200" href="#s-bean"/><circle cx="-30" cy="14" r="34" fill="var(--navy)"/><circle cx="10" cy="-22" r="34" fill="var(--coral)"/><circle cx="30" cy="30" r="26" fill="var(--paper)"/></svg>
+            <span class="pj__t">Design desk</span>
+            <span class="pj__w">A public swipe file for UI, sorted into five piles by Magpie.</span>
+            <span class="pj__meta"><span>Library</span><span class="pj__s"><span class="dot dot-live"></span>Live</span></span></a></li>
+          <li><a class="pj" href="https://helioflux.co" target="_blank" rel="noopener noreferrer">
+            <svg class="shape pj__icon" viewBox="-100 -100 200 200" aria-hidden="true"><use class="c-navy" x="-100" y="-100" width="200" height="200" href="#s-circle"/><use class="c-honey" x="-64" y="-64" width="128" height="128" href="#s-rays"/><circle r="17" fill="var(--teal)"/></svg>
+            <span class="pj__t">HelioFlux website<span class="sr-only"> (opens in a new tab)</span></span>
+            <span class="pj__w">The website for my company.</span>
+            <span class="pj__meta"><span>Site</span><span class="pj__s"><span class="dot dot-live"></span>Live</span></span></a></li>
+          <li><a class="pj" href="https://cluedetat.com" target="_blank" rel="noopener noreferrer">
+            <svg class="shape pj__icon" viewBox="-100 -100 200 200" aria-hidden="true"><use class="c-sage" x="-100" y="-100" width="200" height="200" href="#s-circle"/><path fill="var(--navy)" d="M-72 40C-64-10-36-40 0-40C36-40 64-10 72 40C50 22 24 16 0 16C-24 16-50 22-72 40Z"/><path fill="none" stroke="var(--honey)" stroke-width="7" stroke-linecap="round" d="M-50 18C-34 10-18 6 0 6C18 6 34 10 50 18"/><circle cx="22" cy="-16" r="13" fill="var(--coral)"/><circle cx="22" cy="-16" r="5" fill="var(--paper)"/></svg>
+            <span class="pj__t">Clue d’État<span class="sr-only"> (opens in a new tab)</span></span>
+            <span class="pj__w">Game-night trivia hosted by Napoleon, with 9,000+ original clues.</span>
+            <span class="pj__meta"><span>Game</span><span class="pj__s"><span class="dot dot-live"></span>Live</span></span></a></li>
+          <li><a class="pj" href="https://pretzel.thetravelprotocol.com" target="_blank" rel="noopener noreferrer">
+            <svg class="shape pj__icon" viewBox="-100 -100 200 200" aria-hidden="true"><use class="c-teal" x="-100" y="-100" width="200" height="200" href="#s-circle"/><path fill="none" stroke="var(--honey)" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" d="M-38 46C-20 22 6-4 16-26C28-54 62-56 70-24C80 14 44 58 0 58C-44 58-80 14-70-24C-62-56-28-54-16-26C-6-4 20 22 38 46"/><g fill="var(--paper)"><circle cx="-56" cy="-32" r="4"/><circle cx="48" cy="-44" r="4"/><circle cx="-22" cy="54" r="4"/><circle cx="62" cy="10" r="4"/><circle cx="-8" cy="-8" r="4"/></g></svg>
+            <span class="pj__t">Pretzel Protocol<span class="sr-only"> (opens in a new tab)</span></span>
+            <span class="pj__w">An atlas for a family trip to Berlin, Munich and Prague, with my drawings.</span>
+            <span class="pj__meta"><span>Site</span><span class="pj__s"><span class="dot dot-live"></span>Live</span></span></a></li>
+          <li><a class="pj" href="/heliopolis/index.html">
+            <svg class="shape pj__icon" viewBox="-100 -100 200 200" aria-hidden="true"><use class="c-coral" x="-100" y="-100" width="200" height="200" href="#s-arch"/><use class="c-navy" x="-42" y="16" width="84" height="84" href="#s-arch"/><use class="c-honey" x="-30" y="-72" width="60" height="60" href="#s-rays"/></svg>
+            <span class="pj__t">Heliopolis art library</span>
+            <span class="pj__w">My drawings, the redraws, and the style catalog.</span>
+            <span class="pj__meta"><span>Library</span><span class="pj__s"><span class="dot dot-live"></span>Live</span></span></a></li>
+        </ol>
       </div>
     </section>
 
     <section class="band band--paper edge edge--scallop" aria-labelledby="nd-title">
-      <div class="wrap">
+      <div class="wrap nd">
         <div class="sec-head"><h2 class="h2" id="nd-title">Next door: the playground and the log.</h2></div>
         <div class="nd-grid">
           <article class="door door--dcoral" id="playground">
@@ -217,7 +175,7 @@
             </div>
             <div class="door__body">
               <h3 class="h3">Playground</h3>
-              <p>The toy rooms live next door, so this page can stay serious-ish: a pixel garden, the pet, the panel, the noise room, the quantum wing, the entropy tap, spark notes and the audition room.</p>
+              <p>The toy rooms live next door, so this page can stay serious-ish: a pixel garden, the pet, the noise room, the quantum wing and more.</p>
               <a class="tlink" href="/playground.html">Go play</a>
             </div>
           </article>
