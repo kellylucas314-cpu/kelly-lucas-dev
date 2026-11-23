@@ -1100,6 +1100,9 @@
     sortResult = { n: answer.sorted || 0, undo: answer.undo || [], counts: plan ? plan.counts.filter((entry) => entry.n) : [] };
     PLAN = { ...(plan || {}), on: true, first: false, total: 0, fromUnsorted: 0 };
     refresh();
+    /* The visitors card reads its own plan: without a fresh one it would
+       still say "Sort first, then open" after sorting. */
+    loadPublicPlan();
     const box = $("sortBanner");
     if (box && !box.hidden) box.querySelector("button")?.focus({ preventScroll: true });
   }
@@ -1109,6 +1112,7 @@
     if (ops.length) await change(ops, null, "Put back the way it was");
     await loadPlan();
     refresh();
+    loadPublicPlan();
   }
 
   /* ---------- saving changes ---------- */
